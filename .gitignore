@@ -1,0 +1,82 @@
+
+# use glob syntax
+
+# reindex folder
+# git update-index --assume-unchanged dir-im-removing/
+# or a specific file
+# git update-index --assume-unchanged config/database.yml
+# or git rm --cached config.php
+
+
+
+
+
+syntax: glob
+
+*.ncrunchproject
+*.obj
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+
+*.cache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.scc
+
+[Dd]ebug*/
+
+[Bb]in
+*/bin/*
+!lib/Castle Windsor 2.0/bin/
+!lib/autofac-contrib/
+
+*/obj/*
+[Rr]elease*/
+_ReSharper*/
+_ReSharper*
+_ReSharper.voda/
+_ReSharper.XLN
+[Tt]humbs.db
+[Tt]est[Rr]esult*
+[Bb]uild[Ll]og.*
+*.[Pp]ublish.xml
+*.resharper
+*.ReSharper
+
+
+
+#ignore StyleCope cache
+#StyleCop.Cache
+[Ss]tyle[Cc]op.[Cc]ache
+
+#ignore merc merge temp files
+*.orig
+
+# ignore temp directories
+[Tt]emp/
+[Tt]mp/
+
+#winword temp files
+~$*.docx
+
+artifacts/
+build/
+buildtasks/
+
+
+
+src/Orchard.Web/App_Data/Dependencies/
+
+
