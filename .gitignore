@@ -80,3 +80,4 @@ buildtasks/
 src/Orchard.Web/App_Data/Dependencies/
 
 
+nopCommerce/Presentation/Nop.Web/Plugins/*/Nop.Pl*.dll
