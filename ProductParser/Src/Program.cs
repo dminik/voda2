@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ProductParser
 {
+	using System.IO;
+	using System.Net;
+	using System.Reflection;
+
 	using OpenQA.Selenium;
 	using OpenQA.Selenium.Firefox;
 
@@ -14,13 +18,21 @@ namespace ProductParser
 	using OpenQA.Selenium.Support.UI;
 
 	class Program
-	{	
+	{
+
+		// Папка для картинок
+		static string imageFolderPath = "..\\..\\ProductsCatalog\\Atoll\\";
+
+
 		static readonly IWebDriver Driver = new FirefoxDriver();
 
 		static void Main(string[] args)
-		{			
+		{
 			// Ссылка на список товаров
 			Driver.Navigate().GoToUrl("http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
+			const bool useFirstThreeProducts = true;
+
+
 
 			bool isNextPage = false;
 
@@ -42,11 +54,11 @@ namespace ProductParser
 				catch (NoSuchElementException)
 				{
 					isNextPage = false;
-				}				
+				}
 			}
-			while (isNextPage);
+			while (isNextPage && !useFirstThreeProducts);
 
-			
+
 
 			var productList = new List<Product>();
 
@@ -57,7 +69,9 @@ namespace ProductParser
 
 				productList.Add(product);
 
-				if(counter++ == 10)
+				counter++;
+
+				if (useFirstThreeProducts && counter > 3)
 					break;
 			}
 
@@ -75,10 +89,13 @@ namespace ProductParser
 			Driver.Navigate().GoToUrl(productLink.Replace("model.xml", "model-spec.xml"));
 
 			var product = new Product();
-			
+
 			// Найти имя товара		
 			product.Title = Driver.FindElement(By.CssSelector("h1.b-page-title")).Text;
 
+			// Скачиваем картинку
+			var imageUrl = Driver.FindElement(By.CssSelector("div.b-model-microcard__img img")).GetAttribute("src");
+			SaveImage(imageUrl, product.Title);
 
 			// Найти спецификации товара	table.b-properties tr
 			var specificationElements = Driver.FindElements(By.CssSelector("table.b-properties tr"));
@@ -98,7 +115,7 @@ namespace ProductParser
 
 				// Value
 				var currentValueElement = currentSpecificationElement.FindElement(By.CssSelector("td.b-properties__value"));
-				
+
 				product.Specifications.Add(currentKeyElement.Text, currentValueElement.Text);
 			}
 
@@ -106,6 +123,29 @@ namespace ProductParser
 			Console.WriteLine(product.ToString() + Environment.NewLine);
 
 			return product;
+		}
+
+		private static void SaveImage(string remoteFileUrl, string productName)
+		{
+			string fileName = productName.Replace('/', '-').Replace('\\', '-').Replace('*', '-').Replace('?', '-').Replace('"', '-').Replace('\'', '-').Replace('<', '-').Replace('>', '-').Replace('|', '-');
+
+			MakeFolder(imageFolderPath);
+			fileName = Path.Combine(imageFolderPath, fileName) + Path.GetExtension(remoteFileUrl);
+
+
+			var webClient = new WebClient();
+			webClient.DownloadFile(remoteFileUrl, fileName);
+		}
+
+		public static string MakeFolder(string path)
+		{
+			System.IO.DirectoryInfo newFolder = new System.IO.DirectoryInfo(path);
+			if (!newFolder.Exists)
+			{
+				newFolder.Create();
+			}
+
+			return path;
 		}
 	}
 }
