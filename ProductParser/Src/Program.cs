@@ -15,47 +15,101 @@ namespace ProductParser
 
 	class Program
 	{
-		static void Main(string[] args)
+		public class Product
 		{
-			// Create a new instance of the Firefox driver.
+			public Product()
+			{
+				Specifications = new Dictionary<string, string>();
+			}
 
-			// Notice that the remainder of the code relies on the interface, 
-			// not the implementation.
+			public string Title { get; set; }
 
-			// Further note that other drivers (InternetExplorerDriver,
-			// ChromeDriver, etc.) will require further configuration 
-			// before this example will work. See the wiki pages for the
-			// individual drivers at http://code.google.com/p/selenium/wiki
-			// for further information.
-			IWebDriver driver = new FirefoxDriver();
+			public Dictionary<string, string> Specifications { get; set; }
 
-			//Notice navigation is slightly different than the Java version
-			//This is because 'get' is a keyword in C#
-			driver.Navigate().GoToUrl("http://www.google.com/");
+			public override string ToString()
+			{
+				var result = new StringBuilder();
 
-			// Find the text input element by its name
-			IWebElement query = driver.FindElement(By.Name("q"));
+				result.Append("----------------------");
+				result.Append("Title: " + Title + Environment.NewLine);
 
-			// Enter something to search for
-			query.SendKeys("Cheese");
+				foreach (var currentSecification in Specifications)
+				{
+					result.Append(currentSecification.Key + " = " + currentSecification.Value + Environment.NewLine);
+				}
 
-			// Now submit the form. WebDriver will find the form for us from the element
-			query.Submit();
+				return result.ToString();
+			}
+		}
 
-			// Google's search is rendered dynamically with JavaScript.
-			// Wait for the page to load, timeout after 10 seconds
-			WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-			wait.Until((d) => { return d.Title.ToLower().StartsWith("cheese"); });
+		static readonly IWebDriver Driver = new FirefoxDriver();
 
-			// Should see: "Cheese - Google Search"
-			System.Console.WriteLine("Page title is: " + driver.Title);
+		static void Main(string[] args)
+		{			
+			// Ссылка на список товаров
+			Driver.Navigate().GoToUrl("http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
+			
+			// Найти все ссылки на товары			
+			var productLinks = Driver.FindElements(By.CssSelector("a.b-offers__name")).Select(s => s.GetAttribute("href")).ToList();
+
+			var productList = new List<Product>();
+
+			int counter = 0;
+			foreach (var currentProductLink in productLinks)
+			{
+				var product = ProcessProductLink(currentProductLink);
+
+				productList.Add(product);
+
+				if(counter++ == 10)
+					break;
+			}
 
 			//Close the browser
-			driver.Quit();
+			Driver.Quit();
 
 			System.Console.WriteLine("Press any key to exit...");
 			System.Console.ReadKey();
 
+		}
+
+		private static Product ProcessProductLink(string productLink)
+		{
+			// Переходим на страницу спецификации товара
+			Driver.Navigate().GoToUrl(productLink.Replace("model.xml", "model-spec.xml"));
+
+			var product = new Product();
+			
+			// Найти имя товара		
+			product.Title = Driver.FindElement(By.CssSelector("h1.b-page-title")).Text;
+
+
+			// Найти спецификации товара	table.b-properties tr
+			var specificationElements = Driver.FindElements(By.CssSelector("table.b-properties tr"));
+
+			foreach (var currentSpecificationElement in specificationElements)
+			{
+				// Key
+				IWebElement currentKeyElement;
+				try
+				{
+					currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector("th.b-properties__label span"));
+				}
+				catch (NoSuchElementException)
+				{
+					continue;
+				}
+
+				// Value
+				var currentValueElement = currentSpecificationElement.FindElement(By.CssSelector("td.b-properties__value"));
+				
+				product.Specifications.Add(currentKeyElement.Text, currentValueElement.Text);
+			}
+
+
+			Console.WriteLine(product.ToString() + Environment.NewLine);
+
+			return product;
 		}
 	}
 }
