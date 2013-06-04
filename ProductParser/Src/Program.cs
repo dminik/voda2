@@ -9,6 +9,7 @@ namespace ProductParser
 	using System.IO;
 	using System.Net;
 	using System.Reflection;
+	using System.Threading;
 
 	using OpenQA.Selenium;
 	using OpenQA.Selenium.Firefox;
@@ -21,7 +22,8 @@ namespace ProductParser
 	{
 
 		// Папка для картинок
-		static string imageFolderPath = "..\\..\\ProductsCatalog\\Atoll\\";
+		static string imageFolderPathBase = "..\\..\\ProductsCatalog\\";
+		static string imageFolderPathForProductList = "Atoll\\";
 
 
 		static readonly IWebDriver Driver = new FirefoxDriver();
@@ -31,7 +33,7 @@ namespace ProductParser
 			// Ссылка на список товаров
 			Driver.Navigate().GoToUrl("http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
 			const bool useFirstThreeProducts = true;
-
+			const int delayInSeconds = 6;
 
 
 			bool isNextPage = false;
@@ -44,10 +46,14 @@ namespace ProductParser
 				var linksFromCurrentPage = Driver.FindElements(By.CssSelector("a.b-offers__name")).Select(s => s.GetAttribute("href")).ToList();
 				productLinks.AddRange(linksFromCurrentPage);
 
+				if (useFirstThreeProducts)
+					break;
+
 				try
 				{
 					// Жммем на следущую страницу, если она есть
 					var nextPage = Driver.FindElement(By.CssSelector("a.b-pager__next"));
+
 					nextPage.Click();
 					isNextPage = true;
 				}
@@ -56,13 +62,13 @@ namespace ProductParser
 					isNextPage = false;
 				}
 			}
-			while (isNextPage && !useFirstThreeProducts);
+			while (isNextPage);
 
 
 
 			var productList = new List<Product>();
 
-			int counter = 0;
+			int counter = 1;
 			foreach (var currentProductLink in productLinks)
 			{
 				var product = ProcessProductLink(currentProductLink);
@@ -71,8 +77,10 @@ namespace ProductParser
 
 				counter++;
 
-				if (useFirstThreeProducts && counter > 3)
+				if (useFirstThreeProducts && counter == 3)
 					break;
+
+				Thread.Sleep(delayInSeconds * 1000);
 			}
 
 			//Close the browser
@@ -95,7 +103,7 @@ namespace ProductParser
 
 			// Скачиваем картинку
 			var imageUrl = Driver.FindElement(By.CssSelector("div.b-model-microcard__img img")).GetAttribute("src");
-			SaveImage(imageUrl, product.Title);
+			product.ImageUrl_1 = SaveImage(imageUrl, product.Title);
 
 			// Найти спецификации товара	table.b-properties tr
 			var specificationElements = Driver.FindElements(By.CssSelector("table.b-properties tr"));
@@ -125,21 +133,25 @@ namespace ProductParser
 			return product;
 		}
 
-		private static void SaveImage(string remoteFileUrl, string productName)
+		private static string SaveImage(string remoteFileUrl, string productName)
 		{
 			string fileName = productName.Replace('/', '-').Replace('\\', '-').Replace('*', '-').Replace('?', '-').Replace('"', '-').Replace('\'', '-').Replace('<', '-').Replace('>', '-').Replace('|', '-');
+			fileName += Path.GetExtension(remoteFileUrl);
 
-			MakeFolder(imageFolderPath);
-			fileName = Path.Combine(imageFolderPath, fileName) + Path.GetExtension(remoteFileUrl);
-
+			var folderPath = Path.Combine(imageFolderPathBase, imageFolderPathForProductList);
+			var imageFolderPath = MakeFolder(folderPath);
+			
+			var fullFileName = Path.Combine(imageFolderPath, fileName) + Path.GetExtension(remoteFileUrl);
 
 			var webClient = new WebClient();
-			webClient.DownloadFile(remoteFileUrl, fileName);
+			webClient.DownloadFile(remoteFileUrl, fullFileName);
+
+			return Path.Combine(imageFolderPathForProductList, fileName);
 		}
 
 		public static string MakeFolder(string path)
 		{
-			System.IO.DirectoryInfo newFolder = new System.IO.DirectoryInfo(path);
+			var newFolder = new System.IO.DirectoryInfo(path);
 			if (!newFolder.Exists)
 			{
 				newFolder.Create();
