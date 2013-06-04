@@ -14,43 +14,39 @@ namespace ProductParser
 	using OpenQA.Selenium.Support.UI;
 
 	class Program
-	{
-		public class Product
-		{
-			public Product()
-			{
-				Specifications = new Dictionary<string, string>();
-			}
-
-			public string Title { get; set; }
-
-			public Dictionary<string, string> Specifications { get; set; }
-
-			public override string ToString()
-			{
-				var result = new StringBuilder();
-
-				result.Append("----------------------");
-				result.Append("Title: " + Title + Environment.NewLine);
-
-				foreach (var currentSecification in Specifications)
-				{
-					result.Append(currentSecification.Key + " = " + currentSecification.Value + Environment.NewLine);
-				}
-
-				return result.ToString();
-			}
-		}
-
+	{	
 		static readonly IWebDriver Driver = new FirefoxDriver();
 
 		static void Main(string[] args)
 		{			
 			// Ссылка на список товаров
 			Driver.Navigate().GoToUrl("http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
+
+			bool isNextPage = false;
+
+			var productLinks = new List<string>();
+
+			do
+			{
+				// Найти все ссылки на товары			
+				var linksFromCurrentPage = Driver.FindElements(By.CssSelector("a.b-offers__name")).Select(s => s.GetAttribute("href")).ToList();
+				productLinks.AddRange(linksFromCurrentPage);
+
+				try
+				{
+					// Жммем на следущую страницу, если она есть
+					var nextPage = Driver.FindElement(By.CssSelector("a.b-pager__next"));
+					nextPage.Click();
+					isNextPage = true;
+				}
+				catch (NoSuchElementException)
+				{
+					isNextPage = false;
+				}				
+			}
+			while (isNextPage);
+
 			
-			// Найти все ссылки на товары			
-			var productLinks = Driver.FindElements(By.CssSelector("a.b-offers__name")).Select(s => s.GetAttribute("href")).ToList();
 
 			var productList = new List<Product>();
 
