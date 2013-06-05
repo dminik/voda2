@@ -1,0 +1,8 @@
+﻿Group: Misc
+FriendlyName: Site parser for YandexMarket products
+SystemName: Misc.YandexMarketParser
+Version: 1.00
+SupportedVersions: 3.00
+Author: dminikk
+DisplayOrder: 1
+FileName: Nop.Plagin.Misc.YandexMarketParser.dll

@@ -82,3 +82,8 @@ src/Orchard.Web/App_Data/Dependencies/
 
 nopCommerce/Presentation/Nop.Web/Plugins/*/Nop.Pl*.dll
 ProductParser/Src/ProductsCatalog/
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Nop.Core.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Nop.Data.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Nop.Services.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Description.txt
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Views/YandexMarketParser/Configure.cshtml

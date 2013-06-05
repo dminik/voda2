@@ -27,3 +27,5 @@ Tax.FixedRate
 Tax.CountryStateZip
 Widgets.GoogleAnalytics
 Widgets.NivoSlider
+Parser.YandexMarket
+Misc.YandexMarketParser
