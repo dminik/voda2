@@ -89,7 +89,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Misc.WebServices
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.NivoSlider", "Plugins\Nop.Plugin.Widgets.NivoSlider\Nop.Plugin.Widgets.NivoSlider.csproj", "{9978B382-0BCD-4621-B6B5-52E0E3B5F464}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Misc.YandexMarketParser", "Plugins\Nop.Plagin.Misc.YandexMarketParser\Nop.Plugin.Misc.YandexMarketParser.csproj", "{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Misc.YandexMarketParser", "Plugins\Nop.Plugin.Misc.YandexMarketParser\Nop.Plugin.Misc.YandexMarketParser.csproj", "{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

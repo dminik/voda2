@@ -1,4 +1,4 @@
-﻿namespace Nop.Plagin.Misc.YandexMarketParser.Models
+﻿namespace Nop.Plugin.Misc.YandexMarketParser.Models
 {
 	using Nop.Web.Framework;
 	using Nop.Web.Framework.Mvc;

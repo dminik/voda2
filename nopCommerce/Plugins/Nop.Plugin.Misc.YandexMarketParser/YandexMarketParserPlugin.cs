@@ -1,4 +1,4 @@
-﻿namespace Nop.Plagin.Misc.YandexMarketParser
+﻿namespace Nop.Plugin.Misc.YandexMarketParser
 {
 	using System;
 	using System.Web.Routing;
@@ -12,7 +12,7 @@
 	using Nop.Services.Shipping;
 	using Nop.Services.Shipping.Tracking;
 
-	public class YandexMarketParserPlagin : BasePlugin, IMiscPlugin
+	public class YandexMarketParserPlugin : BasePlugin, IMiscPlugin
 	{
 		#region Fields
 
@@ -26,7 +26,7 @@
 		#endregion
 
 		#region Ctor
-		public YandexMarketParserPlagin(
+		public YandexMarketParserPlugin(
 			// IShippingService shippingService,
 			//IShippingByWeightService shippingByWeightService,
 			//IPriceCalculationService priceCalculationService, 
@@ -59,7 +59,7 @@
 		{
 			actionName = "Configure";
 			controllerName = "YandexMarketParser";
-			routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plagin.Misc.YandexMarketParser.Controllers" }, { "area", null } };
+			routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", null } };
 		}		
 	}
 }

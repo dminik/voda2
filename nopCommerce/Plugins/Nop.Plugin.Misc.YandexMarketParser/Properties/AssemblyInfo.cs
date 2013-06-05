@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Nop.Plagin.Misc.YandexMarketParser")]
+[assembly: AssemblyTitle("Nop.Plugin.Misc.YandexMarketParser")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Nop.Plagin.Misc.YandexMarketParser")]
+[assembly: AssemblyProduct("Nop.Plugin.Misc.YandexMarketParser")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

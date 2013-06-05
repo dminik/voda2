@@ -5,4 +5,4 @@ Version: 1.00
 SupportedVersions: 3.00
 Author: dminikk
 DisplayOrder: 1
-FileName: Nop.Plagin.Misc.YandexMarketParser.dll
+FileName: Nop.Plugin.Misc.YandexMarketParser.dll

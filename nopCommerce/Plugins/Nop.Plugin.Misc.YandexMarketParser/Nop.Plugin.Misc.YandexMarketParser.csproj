@@ -7,8 +7,8 @@
     <ProjectGuid>{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nop.Plagin.Misc.YandexMarketParser</RootNamespace>
-    <AssemblyName>Nop.Plagin.Misc.YandexMarketParser</AssemblyName>
+    <RootNamespace>Nop.Plugin.Misc.YandexMarketParser</RootNamespace>
+    <AssemblyName>Nop.Plugin.Misc.YandexMarketParser</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Controllers\YandexMarketParserController.cs" />
     <Compile Include="Models\YandexMarketParserModel.cs" />
-    <Compile Include="YandexMarketParserPlagin.cs" />
+    <Compile Include="YandexMarketParserPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,9 +72,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\YandexMarketParser\Configure.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Views\YandexMarketParser\Configure.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.config" />

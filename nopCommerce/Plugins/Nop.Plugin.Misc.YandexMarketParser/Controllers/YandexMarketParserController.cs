@@ -1,4 +1,4 @@
-﻿namespace Nop.Plagin.Misc.YandexMarketParser.Controllers
+﻿namespace Nop.Plugin.Misc.YandexMarketParser.Controllers
 {
 	using System;
 	using System.Collections.Generic;
@@ -9,7 +9,7 @@
 	using System.Web.Mvc;
 
 	using Nop.Core.Domain.Directory;
-	using Nop.Plagin.Misc.YandexMarketParser.Models;
+	using Nop.Plugin.Misc.YandexMarketParser.Models;
 	using Nop.Services.Configuration;
 	using Nop.Services.Directory;
 	using Nop.Services.Localization;
