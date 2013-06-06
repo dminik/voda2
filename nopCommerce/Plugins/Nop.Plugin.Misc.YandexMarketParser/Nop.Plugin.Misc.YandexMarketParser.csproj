@@ -34,16 +34,15 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="WebDriver">
+      <HintPath>..\..\packages\Selenium.WebDriver.2.33.0\lib\net40\WebDriver.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\YandexMarketParserController.cs" />
     <Compile Include="Models\YandexMarketParserModel.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="YandexMarketParserPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -51,10 +50,6 @@
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
       <Project>{6bda8332-939f-45b7-a25e-7a797260ae59}</Project>
       <Name>Nop.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj">
-      <Project>{ccd7f2c9-6a2c-4cf0-8e89-076b8fc0f144}</Project>
-      <Name>Nop.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj">
       <Project>{210541ad-f659-47da-8763-16f36c5cd2f4}</Project>

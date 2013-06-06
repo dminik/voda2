@@ -9,5 +9,47 @@
 
 @using Nop.Core.Infrastructure;
 
+@using (Html.BeginForm())
+{
+    <div>ver___6    </div>
+    <table style="width: 100%;">
+        
+        <tr>
+            <td>                
+                @Model.HelloWord
+            </td>
 
-@Model.HelloWord
+        </tr>
+
+        <tr>
+            <td>                
+                @Model.CatalogName
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>
+                @Html.NopLabelFor(model => model.ProductList, false)
+
+                @foreach (var currentProduct in Model.ProductList)
+                {
+                    <div>@currentProduct.ToString()</div>
+                }
+               
+            </td>
+
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <div>
+                    @Html.CheckBoxFor(model => model.IsTest) 
+                    @Html.LabelFor(model => model.IsTest) 
+                </div> 
+                <input type="submit" name="Parse" class="t-button" value="Parse" />                
+            </td>
+        </tr>
+    </table>
+    
+}

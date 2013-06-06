@@ -56,9 +56,9 @@
 		//	this._measureService = measureService;
 		//	this._measureSettings = measureSettings;
 		//}
-        
-        
 
+
+		[AdminAuthorize]
         [ChildActionOnly]
         public ActionResult Configure()
         {
@@ -69,6 +69,45 @@
 			return View("Nop.Plugin.Misc.YandexMarketParser.Views.YandexMarketParser.Configure", model);
         }
 
-      
+		
+		[HttpPost]
+		[AdminAuthorize]
+		[ChildActionOnly]
+		public ActionResult Configure(YandexMarketParserModel model)
+		{
+			if (!model.IsTest)
+			{
+				if (!ModelState.IsValid) return Configure();
+
+				var parser = new Parser("Atoll");
+				model = parser.Parse();
+			}
+			else
+			{
+				model = new YandexMarketParserModel()
+				{
+					IsTest = true,
+					CatalogName = "testCatalogName",
+					ProductList =
+						new List<Product>()
+							{
+								new Product()
+									{
+										Title = "Product 1",
+										ImageUrl_1 = "url1",
+										Specifications = new Dictionary<string, string>() { { "key1", "value1" }, { "key2", "value2" }, }
+									},
+								new Product()
+									{
+										Title = "Product 2",
+										ImageUrl_1 = "url2",
+										Specifications = new Dictionary<string, string>() { { "key1", "value1" }, { "key2", "value2" }, }
+									}
+							}
+				};
+			}
+
+			return View("Nop.Plugin.Misc.YandexMarketParser.Views.YandexMarketParser.Configure", model);
+		}		
     }
 }

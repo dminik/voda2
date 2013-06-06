@@ -3,7 +3,6 @@ DiscountRequirement.HasAllProducts
 DiscountRequirement.HasOneProduct
 DiscountRequirement.MustBeAssignedToCustomerRole
 CurrencyExchange.MoneyConverter
-ExternalAuth.OpenId
 ExternalAuth.Facebook
 Misc.WebServices
 Payments.CashOnDelivery

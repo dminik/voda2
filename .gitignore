@@ -87,3 +87,5 @@ nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Nop.Data.dll
 nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Nop.Services.dll
 nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Description.txt
 nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Views/YandexMarketParser/Configure.cshtml
+nopCommerce/Presentation/Nop.Web/ProductsCatalog/
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/
