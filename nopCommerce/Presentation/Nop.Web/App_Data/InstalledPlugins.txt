@@ -28,3 +28,4 @@ Widgets.GoogleAnalytics
 Widgets.NivoSlider
 Parser.YandexMarket
 Misc.YandexMarketParser
+ExternalAuth.OpenId
