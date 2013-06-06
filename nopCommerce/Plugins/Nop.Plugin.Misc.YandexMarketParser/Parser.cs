@@ -22,7 +22,7 @@
 		public Parser(string catalogName)
 		{
 			imageFolderPathForProductList = catalogName;
-			imageFolderPathBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog");			 
+			imageFolderPathBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog");
 		}
 
 		// Папка для картинок
@@ -34,80 +34,83 @@
 
 		public YandexMarketParserModel Parse()
 		{
+			YandexMarketParserModel resultModel = null;
 
-
-
-			mDriver = new InternetExplorerDriver();
-
-			// mDriver = new FirefoxDriver();
-			//var binary = new FirefoxBinary("c:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe");
-			//var profile = new FirefoxProfile();
-			//profile.Port = 7056;  
-			//mDriver = new FirefoxDriver(profile);
-
-			Thread.Sleep(5000);
-			// Ссылка на список товаров
-			mDriver.Navigate().GoToUrl("http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
-			Thread.Sleep(5000);
-			const bool useFirstThreeProducts = true;
-			const int delayInSeconds = 6;
-
-
-			bool isNextPage = false;
-
-			var productLinks = new List<string>();
-
-			do
+			try
 			{
-				// Найти все ссылки на товары			
-				var linksFromCurrentPage = mDriver.FindElements(By.CssSelector("a.b-offers__name")).Select(s => s.GetAttribute("href")).ToList();
-				productLinks.AddRange(linksFromCurrentPage);
+				mDriver = new InternetExplorerDriver();
 
-				if (useFirstThreeProducts)
-					break;
+				// mDriver = new FirefoxDriver();
+				//var binary = new FirefoxBinary("c:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe");
+				//var profile = new FirefoxProfile();
+				//profile.Port = 7056;  
+				//mDriver = new FirefoxDriver(profile);
 
-				try
+				Thread.Sleep(5000);
+				// Ссылка на список товаров
+				mDriver.Navigate().GoToUrl("http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
+				Thread.Sleep(5000);
+				const bool useFirstThreeProducts = true;
+				const int delayInSeconds = 6;
+
+
+				bool isNextPage = false;
+
+				var productLinks = new List<string>();
+
+				do
 				{
-					// Жммем на следущую страницу, если она есть
-					var nextPage = mDriver.FindElement(By.CssSelector("a.b-pager__next"));
+					// Найти все ссылки на товары			
+					var linksFromCurrentPage = mDriver.FindElements(By.CssSelector("a.b-offers__name")).Select(s => s.GetAttribute("href")).ToList();
+					productLinks.AddRange(linksFromCurrentPage);
 
-					nextPage.Click();
-					isNextPage = true;
+					if (useFirstThreeProducts)
+						break;
+
+					try
+					{
+						// Жммем на следущую страницу, если она есть
+						var nextPage = mDriver.FindElement(By.CssSelector("a.b-pager__next"));
+
+						nextPage.Click();
+						isNextPage = true;
+					}
+					catch (NoSuchElementException)
+					{
+						isNextPage = false;
+					}
 				}
-				catch (NoSuchElementException)
+				while (isNextPage);
+
+
+
+				var productList = new List<Product>();
+
+				int counter = 1;
+				foreach (var currentProductLink in productLinks)
 				{
-					isNextPage = false;
+					var product = ProcessProductLink(currentProductLink);
+
+					productList.Add(product);
+
+					counter++;
+
+					if (useFirstThreeProducts && counter == 3)
+						break;
+
+					Thread.Sleep(delayInSeconds * 1000);
 				}
-			}
-			while (isNextPage);
 
-
-
-			var productList = new List<Product>();
-
-			int counter = 1;
-			foreach (var currentProductLink in productLinks)
-			{
-				var product = ProcessProductLink(currentProductLink);
-
-				productList.Add(product);
-
-				counter++;
-
-				if (useFirstThreeProducts && counter == 3)
-					break;
-
-				Thread.Sleep(delayInSeconds * 1000);
-			}
-
-			//Close the browser
-			mDriver.Quit();
-
-			var resultModel = new YandexMarketParserModel()
+				resultModel = new YandexMarketParserModel()
 				{
 					CatalogName = imageFolderPathForProductList,
 					ProductList = productList
 				};
+			}
+			finally
+			{				
+				mDriver.Quit();
+			}
 
 			return resultModel;
 		}
@@ -183,7 +186,7 @@
 				{
 					string s = Directory.GetCurrentDirectory();
 					var s2 = Assembly.GetExecutingAssembly().FullName;
-					
+
 					throw;
 
 				}
@@ -194,7 +197,7 @@
 					throw;
 
 				}
-				
+
 			}
 
 			return path;
