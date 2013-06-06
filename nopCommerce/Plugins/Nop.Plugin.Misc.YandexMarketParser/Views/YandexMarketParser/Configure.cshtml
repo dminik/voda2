@@ -11,7 +11,7 @@
 
 @using (Html.BeginForm())
 {
-    <div>ver___6    </div>
+    <div>ver___7    </div>
     <table style="width: 100%;">               
         <tr>
             <td>                
@@ -27,14 +27,19 @@
                 @foreach (var currentProduct in Model.ProductList)
                 {
                     <div>@currentProduct.ToString()</div>
+                    @*<p> <img src="@currentProduct.ImageUrl_1"/> </p>*@
                 }
                
             </td>
-
+             
         </tr>
 
         <tr>
             <td colspan="2">
+                 <div>
+                    @Html.LabelFor(model => model.ParseNotMoreThen) :
+                    @Html.EditorFor(model => model.ParseNotMoreThen) 
+                </div> 
                 <div>
                     @Html.CheckBoxFor(model => model.IsTest) 
                     @Html.LabelFor(model => model.IsTest) 

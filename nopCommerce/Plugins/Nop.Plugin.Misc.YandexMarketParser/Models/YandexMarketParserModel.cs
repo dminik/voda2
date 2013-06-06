@@ -10,6 +10,7 @@
 		public YandexMarketParserModel()
 		{
 			ProductList = new List<Product>();
+			ParseNotMoreThen = 2;
 		}
 
 		public string HelloWord = "bebebe";
@@ -19,5 +20,7 @@
 		public string CatalogName { get; set; }
 
 		public bool IsTest { get; set; }
+
+		public int ParseNotMoreThen { get; set; }		
 	}
 }

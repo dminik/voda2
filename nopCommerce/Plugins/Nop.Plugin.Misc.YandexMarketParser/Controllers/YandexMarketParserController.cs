@@ -79,7 +79,7 @@
 			{
 				if (!ModelState.IsValid) return Configure();
 
-				var parser = new Parser("Atoll");
+				var parser = new Parser("Atoll", model.ParseNotMoreThen);
 				model = parser.Parse();
 			}
 			else

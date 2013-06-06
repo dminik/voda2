@@ -19,11 +19,14 @@
 
 	public class Parser
 	{
-		public Parser(string catalogName)
+		public Parser(string catalogName, int parseNotMoreThen)
 		{
 			imageFolderPathForProductList = catalogName;
 			imageFolderPathBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog");
+			ParseNotMoreThen = parseNotMoreThen;
 		}
+
+		int ParseNotMoreThen { get; set; }
 
 		// Папка для картинок
 		string imageFolderPathBase;
@@ -50,7 +53,7 @@
 				// Ссылка на список товаров
 				mDriver.Navigate().GoToUrl("http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
 				Thread.Sleep(5000);
-				const bool useFirstThreeProducts = true;
+				
 				const int delayInSeconds = 6;
 
 
@@ -64,7 +67,7 @@
 					var linksFromCurrentPage = mDriver.FindElements(By.CssSelector("a.b-offers__name")).Select(s => s.GetAttribute("href")).ToList();
 					productLinks.AddRange(linksFromCurrentPage);
 
-					if (useFirstThreeProducts)
+					if (ParseNotMoreThen <= 10)
 						break;
 
 					try
@@ -95,7 +98,7 @@
 
 					counter++;
 
-					if (useFirstThreeProducts && counter == 3)
+					if (counter > ParseNotMoreThen)
 						break;
 
 					Thread.Sleep(delayInSeconds * 1000);
