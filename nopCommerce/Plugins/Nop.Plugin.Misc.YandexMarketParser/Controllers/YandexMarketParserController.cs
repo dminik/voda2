@@ -10,6 +10,7 @@
 
 	using Nop.Core.Domain.Directory;
 	using Nop.Plugin.Misc.YandexMarketParser.Models;
+	using Nop.Plugin.Misc.YandexMarketParser.Services;
 	using Nop.Services.Configuration;
 	using Nop.Services.Directory;
 	using Nop.Services.Localization;
@@ -17,57 +18,29 @@
 	using Nop.Services.Shipping;
 	using Nop.Web.Framework.Controllers;
 
+	using Telerik.Web.Mvc;
+
 	[AdminAuthorize]
-    public class YandexMarketParserController : Controller
-    {
-		//private readonly IShippingService _shippingService;
-		//private readonly ICountryService _countryService;
-		//private readonly IStateProvinceService _stateProvinceService;
-		//private readonly ShippingByWeightSettings _shippingByWeightSettings;
-		//private readonly IShippingByWeightService _shippingByWeightService;
-		//private readonly ISettingService _settingService;
-		//private readonly ILocalizationService _localizationService;
-		//private readonly IPermissionService _permissionService;
+	public class YandexMarketParserController : Controller
+	{
+		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
 
-		//private readonly ICurrencyService _currencyService;
-		//private readonly CurrencySettings _currencySettings;
-		//private readonly IMeasureService _measureService;
-		//private readonly MeasureSettings _measureSettings;
-
-		//public ShippingByWeightController(IShippingService shippingService,
-		//	ICountryService countryService, IStateProvinceService stateProvinceService,
-		//	ShippingByWeightSettings shippingByWeightSettings,
-		//	IShippingByWeightService shippingByWeightService, ISettingService settingService,
-		//	ILocalizationService localizationService, IPermissionService permissionService,
-		//	ICurrencyService currencyService, CurrencySettings currencySettings,
-		//	IMeasureService measureService, MeasureSettings measureSettings)
-		//{
-		//	this._shippingService = shippingService;
-		//	this._countryService = countryService;
-		//	this._stateProvinceService = stateProvinceService;
-		//	this._shippingByWeightSettings = shippingByWeightSettings;
-		//	this._shippingByWeightService = shippingByWeightService;
-		//	this._settingService = settingService;
-		//	this._localizationService = localizationService;
-		//	this._permissionService = permissionService;
-
-		//	this._currencyService = currencyService;
-		//	this._currencySettings = currencySettings;
-		//	this._measureService = measureService;
-		//	this._measureSettings = measureSettings;
-		//}
+		public YandexMarketParserController(IYandexMarketCategoryService yandexMarketCategoryService)
+		{
+			_yandexMarketCategoryService = yandexMarketCategoryService;
+		}
 
 
 		[AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
-        {
-            var model = new YandexMarketParserModel();
-          
-	        model.HelloWord = "Ne beebe";
+		[ChildActionOnly]
+		public ActionResult Configure()
+		{
+			var model = new YandexMarketParserModel();
+		  
+			model.HelloWord = "Ne beebe";
 
 			return View("Nop.Plugin.Misc.YandexMarketParser.Views.YandexMarketParser.Configure", model);
-        }
+		}
 
 		
 		[HttpPost]
@@ -108,6 +81,55 @@
 			}
 
 			return View("Nop.Plugin.Misc.YandexMarketParser.Views.YandexMarketParser.Configure", model);
+		}
+
+		[HttpPost, GridAction(EnableCustomBinding = true)]
+		public ActionResult CategoryList(GridCommand command)
+		{			
+			var records = _yandexMarketCategoryService.GetAll(command.Page - 1, command.PageSize);
+			var categorysModel = records
+				.Select(x =>
+				{
+					var m = new YandexMarketCategoryModel()
+					{
+						Id = x.Id,
+						Name = x.Name,
+					};
+					
+					return m;
+				})
+				.ToList();
+			var model = new GridModel<YandexMarketCategoryModel>
+			{
+				Data = categorysModel,
+				Total = records.TotalCount
+			};
+
+			return new JsonResult
+			{
+				Data = model
+			};
+		}
+
+		[GridAction(EnableCustomBinding = true)]
+		public ActionResult CategoryUpdate(YandexMarketCategoryModel model, GridCommand command)
+		{			
+			var category = _yandexMarketCategoryService.GetById(model.Id);
+			category.Name = model.Name;
+			
+			_yandexMarketCategoryService.Update(category);
+
+			return CategoryList(command);
+		}
+
+		[GridAction(EnableCustomBinding = true)]
+		public ActionResult CategoryDelete(int id, GridCommand command)
+		{		
+			var category = _yandexMarketCategoryService.GetById(id);
+			if (category != null)
+				_yandexMarketCategoryService.Delete(category);
+
+			return CategoryList(command);
 		}		
-    }
+	}
 }

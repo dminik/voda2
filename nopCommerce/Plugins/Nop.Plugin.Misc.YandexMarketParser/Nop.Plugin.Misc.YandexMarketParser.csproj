@@ -30,8 +30,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\Libraries\Nop.Core\bin\Debug\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\..\Libraries\Nop.Core\bin\Debug\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\Libraries\Nop.Data\bin\Debug\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -39,15 +50,27 @@
     <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.Web.Mvc">
+      <HintPath>..\..\Presentation\Nop.Web\bin\Telerik.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="WebDriver">
       <HintPath>..\..\packages\Selenium.WebDriver.2.33.0\lib\net40\WebDriver.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\YandexMarketParserController.cs" />
+    <Compile Include="Data\EfStartUpTask.cs" />
+    <Compile Include="Data\YandexMarketParserObjectContext.cs" />
+    <Compile Include="Data\YandexMarketCategoryRecordMap.cs" />
+    <Compile Include="DependencyRegistrar.cs" />
+    <Compile Include="Domain\YandexMarketCategoryRecord.cs" />
+    <Compile Include="Models\YandexMarketCategoryModel.cs" />
     <Compile Include="Models\YandexMarketParserModel.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="Services\Extensions.cs" />
+    <Compile Include="Services\YandexMarketCategoryService.cs" />
+    <Compile Include="Services\TaxRateService.cs" />
     <Compile Include="YandexMarketParserPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -55,6 +78,10 @@
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
       <Project>{6bda8332-939f-45b7-a25e-7a797260ae59}</Project>
       <Name>Nop.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj">
+      <Project>{CCD7F2C9-6A2C-4CF0-8E89-076B8FC0F144}</Project>
+      <Name>Nop.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj">
       <Project>{210541ad-f659-47da-8763-16f36c5cd2f4}</Project>
@@ -67,6 +94,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\styles.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Description.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
