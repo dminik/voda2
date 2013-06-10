@@ -9,6 +9,7 @@
 	using System.Web.Mvc;
 
 	using Nop.Core.Domain.Directory;
+	using Nop.Plugin.Misc.YandexMarketParser.Domain;
 	using Nop.Plugin.Misc.YandexMarketParser.Models;
 	using Nop.Plugin.Misc.YandexMarketParser.Services;
 	using Nop.Services.Configuration;
@@ -39,6 +40,16 @@
 		  
 			model.HelloWord = "Ne beebe";
 
+
+
+			var categories = _yandexMarketCategoryService.GetAll();
+			foreach (var c in categories)
+				model.AvailableCategories.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+
+
+
+
+
 			return View("Nop.Plugin.Misc.YandexMarketParser.Views.YandexMarketParser.Configure", model);
 		}
 
@@ -52,15 +63,16 @@
 			{
 				if (!ModelState.IsValid) return Configure();
 
-				var parser = new Parser("Atoll", model.ParseNotMoreThen);
-				model = parser.Parse();
+				var categoryName = _yandexMarketCategoryService.GetById(model.CategoryId).Name;
+				var parser = new Parser(categoryName, model.ParseNotMoreThen);
+				model.ProductList = parser.Parse();				 
 			}
 			else
 			{
 				model = new YandexMarketParserModel()
 				{
 					IsTest = true,
-					CatalogName = "testCatalogName",
+					CategoryId = model.CategoryId,
 					ProductList =
 						new List<Product>()
 							{
@@ -79,6 +91,12 @@
 							}
 				};
 			}
+
+			// Insert data to DB
+			// _yandexMarketCategoryService.Insert(model.CatalogName);
+
+
+
 
 			return View("Nop.Plugin.Misc.YandexMarketParser.Views.YandexMarketParser.Configure", model);
 		}
@@ -130,6 +148,18 @@
 				_yandexMarketCategoryService.Delete(category);
 
 			return CategoryList(command);
-		}		
+		}
+
+		[HttpPost]
+		public ActionResult AddCategory(YandexMarketParserModel model)
+		{
+			var newItem = new YandexMarketCategoryRecord()
+			{
+				Name = model.AddCategoryName
+			};
+			_yandexMarketCategoryService.Insert(newItem);
+
+			return Json(new { Result = true });
+		}
 	}
 }

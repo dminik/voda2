@@ -66,26 +66,16 @@ namespace Nop.Plugin.Misc.YandexMarketParser.Services
 		{
 			string key = string.Format(YANDEXMARKETCATEGORY_ALL_KEY, pageIndex, pageSize);
 
-			try
+			var result = _cacheManager.Get(key, () =>
 			{
+				var query = from tr in this._categoryRepository.Table
+							orderby tr.Name
+							select tr;
+				var records = new PagedList<YandexMarketCategoryRecord>(query, pageIndex, pageSize);
+				return records;
+			});
 
-
-				var result = _cacheManager.Get(key, () =>
-				{
-					var query = from tr in this._categoryRepository.Table
-								orderby tr.Name
-								select tr;
-					var records = new PagedList<YandexMarketCategoryRecord>(query, pageIndex, pageSize);
-					return records;
-				});
-
-				return result;
-			}
-			catch (Exception ex)
-			{
-
-				throw;
-			}
+			return result;
 		}
 
 

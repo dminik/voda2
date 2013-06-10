@@ -37,9 +37,9 @@
 
 		IWebDriver mDriver;
 
-		public YandexMarketParserModel Parse()
+		public List<Product> Parse()
 		{
-			YandexMarketParserModel resultModel = null;
+			var resultProductList = new List<Product>();
 
 			try
 			{
@@ -86,17 +86,13 @@
 					}
 				}
 				while (isNextPage);
-
-
-
-				var productList = new List<Product>();
-
+				
 				int counter = 1;
 				foreach (var currentProductLink in productLinks)
 				{
 					var product = ProcessProductLink(currentProductLink);
 
-					productList.Add(product);
+					resultProductList.Add(product);
 
 					counter++;
 
@@ -104,20 +100,14 @@
 						break;
 
 					Thread.Sleep(delayInSeconds * 1000);
-				}
-
-				resultModel = new YandexMarketParserModel()
-				{
-					CatalogName = imageFolderPathForProductList,
-					ProductList = productList
-				};
+				}				
 			}
 			finally
 			{				
 				mDriver.Quit();
 			}
 
-			return resultModel;
+			return resultProductList;
 		}
 
 		private Product ProcessProductLink(string productLink)

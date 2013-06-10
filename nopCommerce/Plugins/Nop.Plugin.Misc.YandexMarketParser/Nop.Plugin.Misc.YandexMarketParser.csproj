@@ -68,6 +68,7 @@
     <Compile Include="Models\YandexMarketParserModel.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="RouteProvider.cs" />
     <Compile Include="Services\Extensions.cs" />
     <Compile Include="Services\IYandexMarketCategoryService.cs" />
     <Compile Include="Services\YandexMarketCategoryService.cs" />
