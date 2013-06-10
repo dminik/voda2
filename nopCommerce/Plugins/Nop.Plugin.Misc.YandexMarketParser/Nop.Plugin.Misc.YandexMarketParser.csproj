@@ -69,8 +69,8 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Services\Extensions.cs" />
+    <Compile Include="Services\IYandexMarketCategoryService.cs" />
     <Compile Include="Services\YandexMarketCategoryService.cs" />
-    <Compile Include="Services\TaxRateService.cs" />
     <Compile Include="YandexMarketParserPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

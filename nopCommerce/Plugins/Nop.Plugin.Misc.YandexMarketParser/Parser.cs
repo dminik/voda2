@@ -7,6 +7,7 @@
 	using System.Net;
 	using System.Reflection;
 	using System.Threading;
+	using System.Web;
 
 	using Nop.Plugin.Misc.YandexMarketParser.Models;
 
@@ -22,6 +23,7 @@
 		public Parser(string catalogName, int parseNotMoreThen)
 		{
 			imageFolderPathForProductList = catalogName;
+			string filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport",  "StaticFileName");
 			imageFolderPathBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog");
 			ParseNotMoreThen = parseNotMoreThen;
 		}

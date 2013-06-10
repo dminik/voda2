@@ -5,6 +5,7 @@
 
 	using Nop.Core.Domain.Shipping;
 	using Nop.Core.Plugins;
+	using Nop.Plugin.Misc.YandexMarketParser.Data;
 	using Nop.Services.Catalog;
 	using Nop.Services.Common;
 	using Nop.Services.Configuration;
@@ -15,37 +16,38 @@
 	public class YandexMarketParserPlugin : BasePlugin, IMiscPlugin
 	{
 		#region Fields
-
-		//private readonly IShippingService _shippingService;
-		// private readonly IShippingByWeightService _shippingByWeightService;
-		//private readonly IPriceCalculationService _priceCalculationService;
-		//private readonly ShippingByWeightSettings _shippingByWeightSettings;
-		//private readonly ShippingByWeightObjectContext _objectContext;
-		//private readonly ISettingService _settingService;
+		
+		private readonly YandexMarketParserObjectContext _objectContext;
 
 		#endregion
 
 		#region Ctor
-		public YandexMarketParserPlugin(
-			// IShippingService shippingService,
-			//IShippingByWeightService shippingByWeightService,
-			//IPriceCalculationService priceCalculationService, 
-			//ShippingByWeightSettings shippingByWeightSettings,
-			//ShippingByWeightObjectContext objectContext,
-			//ISettingService settingService
-			)
+		public YandexMarketParserPlugin(YandexMarketParserObjectContext objectContext)
 		{
-			//this._shippingService = shippingService;
-			//this._shippingByWeightService = shippingByWeightService;
-			//this._priceCalculationService = priceCalculationService;
-			//this._shippingByWeightSettings = shippingByWeightSettings;
-			//this._objectContext = objectContext;
-			//this._settingService = settingService;
+			_objectContext = objectContext;			
 		}
 		#endregion
 
-	   
-	   
+
+		/// <summary>
+		/// Install plugin
+		/// </summary>
+		public override void Install()
+		{			
+			//data
+			_objectContext.Install();		
+			base.Install();
+		}
+
+		/// <summary>
+		/// Uninstall plugin
+		/// </summary>
+		public override void Uninstall()
+		{		
+			//data
+			_objectContext.Uninstall();			
+			base.Uninstall();
+		}
 
 	   
 	   
