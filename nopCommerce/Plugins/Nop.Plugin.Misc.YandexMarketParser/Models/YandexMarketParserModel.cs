@@ -5,6 +5,7 @@
 	using System.ComponentModel.DataAnnotations;
 	using System.Web.Mvc;
 
+	using Nop.Plugin.Misc.YandexMarketParser.Domain;
 	using Nop.Web.Framework;
 	using Nop.Web.Framework.Mvc;
 
@@ -13,7 +14,7 @@
 		public YandexMarketParserModel()
 		{
 			AvailableCategories = new List<SelectListItem>();
-			ProductList = new List<Product>();
+			ProductList = new List<ProductRecord>();
 			ParseNotMoreThen = 2;
 		}
 
@@ -23,7 +24,7 @@
 		public IList<SelectListItem> AvailableCategories { get; set; }
 
 
-		public List<Product> ProductList { get; set; }
+		public List<ProductRecord> ProductList { get; set; }
 
 		public bool IsTest { get; set; }
 

@@ -15,6 +15,7 @@ namespace Nop.Plugin.Misc.YandexMarketParser.Data
     public class YandexMarketParserObjectContext : DbContext, IDbContext
     {
 		public static string TableNameCategory = "YandexMarketCategory";
+		public static string TableNameProduct = "YandexMarketProduct";
 
         public YandexMarketParserObjectContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
@@ -26,6 +27,7 @@ namespace Nop.Plugin.Misc.YandexMarketParser.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new YandexMarketCategoryRecordMap());
+			modelBuilder.Configurations.Add(new ProductRecordMap());
 
             //disable EdmMetadata generation
             //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
@@ -74,6 +76,15 @@ namespace Nop.Plugin.Misc.YandexMarketParser.Data
                 Database.ExecuteSqlCommand(dbScript);
             }
             SaveChanges();
+
+			tableName = TableNameProduct;
+			if (Database.SqlQuery<int>("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = {0}", tableName).Any<int>())
+			{
+				var dbScript = "DROP TABLE [" + tableName + "]";
+				Database.ExecuteSqlCommand(dbScript);
+			}
+			SaveChanges();
+
             //old way of dropping the table
             //try
             //{

@@ -9,6 +9,7 @@
 	using System.Threading;
 	using System.Web;
 
+	using Nop.Plugin.Misc.YandexMarketParser.Domain;
 	using Nop.Plugin.Misc.YandexMarketParser.Models;
 
 	using OpenQA.Selenium;
@@ -19,7 +20,7 @@
 	// using OpenQA.Selenium.Support.UI;
 
 	public class Parser
-	{
+	{		
 		public Parser(string catalogName, int parseNotMoreThen)
 		{
 			imageFolderPathForProductList = catalogName;
@@ -37,9 +38,9 @@
 
 		IWebDriver mDriver;
 
-		public List<Product> Parse()
+		public List<ProductRecord> Parse()
 		{
-			var resultProductList = new List<Product>();
+			var resultProductList = new List<ProductRecord>();
 
 			try
 			{
@@ -110,13 +111,13 @@
 			return resultProductList;
 		}
 
-		private Product ProcessProductLink(string productLink)
+		private ProductRecord ProcessProductLink(string productLink)
 		{
 			// Переходим на страницу спецификации товара
 			mDriver.Navigate().GoToUrl(productLink.Replace("model.xml", "model-spec.xml"));
 			Thread.Sleep(3000);
 
-			var product = new Product();
+			var product = new ProductRecord();
 
 			// Найти имя товара		
 			product.Title = mDriver.FindElement(By.CssSelector("h1.b-page-title")).Text;
@@ -173,26 +174,7 @@
 			var newFolder = new System.IO.DirectoryInfo(path);
 			if (!newFolder.Exists)
 			{
-				try
-				{
-					newFolder.Create();
-				}
-				catch (IOException ex)
-				{
-					string s = Directory.GetCurrentDirectory();
-					var s2 = Assembly.GetExecutingAssembly().FullName;
-
-					throw;
-
-				}
-				catch (Exception ex)
-				{
-					string s = Directory.GetCurrentDirectory();
-					var s2 = Assembly.GetExecutingAssembly().FullName;
-					throw;
-
-				}
-
+				newFolder.Create();				
 			}
 
 			return path;

@@ -7,6 +7,7 @@
 	using System.Text;
 	using System.Threading;
 	using System.Web.Mvc;
+	using System.Web.Routing;
 
 	using Nop.Core.Domain.Directory;
 	using Nop.Plugin.Misc.YandexMarketParser.Domain;
@@ -36,11 +37,14 @@
 		[ChildActionOnly]
 		public ActionResult Configure()
 		{
+
+			var r = RouteTable.Routes.Where(x => x is Route).Select(s => (s as Route).Url).Where(g => g.Contains("YandexMarketParser")).ToList();		
+
 			var model = new YandexMarketParserModel();
 		  
 			model.HelloWord = "Ne beebe";
 
-
+			//var rr =  Url.RouteUrl("Plugin.Misc.YandexMarketParser.Category.List");
 
 			var categories = _yandexMarketCategoryService.GetAll();
 			foreach (var c in categories)
@@ -65,7 +69,7 @@
 
 				var categoryName = _yandexMarketCategoryService.GetById(model.CategoryId).Name;
 				var parser = new Parser(categoryName, model.ParseNotMoreThen);
-				model.ProductList = parser.Parse();				 
+				model.ProductList = parser.Parse();				
 			}
 			else
 			{
@@ -74,15 +78,15 @@
 					IsTest = true,
 					CategoryId = model.CategoryId,
 					ProductList =
-						new List<Product>()
+						new List<ProductRecord>()
 							{
-								new Product()
+								new ProductRecord()
 									{
 										Title = "Product 1",
 										ImageUrl_1 = "url1",
 										Specifications = new Dictionary<string, string>() { { "key1", "value1" }, { "key2", "value2" }, }
 									},
-								new Product()
+								new ProductRecord()
 									{
 										Title = "Product 2",
 										ImageUrl_1 = "url2",
@@ -92,18 +96,16 @@
 				};
 			}
 
-			// Insert data to DB
-			// _yandexMarketCategoryService.Insert(model.CatalogName);
-
-
-
+			var categories = _yandexMarketCategoryService.GetAll();
+			foreach (var c in categories)
+				model.AvailableCategories.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
 
 			return View("Nop.Plugin.Misc.YandexMarketParser.Views.YandexMarketParser.Configure", model);
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult CategoryList(GridCommand command)
-		{			
+		public ActionResult ListCategory(GridCommand command)
+		{
 			var records = _yandexMarketCategoryService.GetAll(command.Page - 1, command.PageSize);
 			var categorysModel = records
 				.Select(x =>
@@ -113,7 +115,7 @@
 						Id = x.Id,
 						Name = x.Name,
 					};
-					
+
 					return m;
 				})
 				.ToList();
@@ -130,36 +132,26 @@
 		}
 
 		[GridAction(EnableCustomBinding = true)]
-		public ActionResult CategoryUpdate(YandexMarketCategoryModel model, GridCommand command)
-		{			
+		public ActionResult UpdateCategory(YandexMarketCategoryModel model, GridCommand command)
+		{
 			var category = _yandexMarketCategoryService.GetById(model.Id);
 			category.Name = model.Name;
-			
+
 			_yandexMarketCategoryService.Update(category);
 
-			return CategoryList(command);
+			return ListCategory(command);
 		}
 
 		[GridAction(EnableCustomBinding = true)]
-		public ActionResult CategoryDelete(int id, GridCommand command)
-		{		
+		public ActionResult DeleteCategory(int id, GridCommand command)
+		{
 			var category = _yandexMarketCategoryService.GetById(id);
 			if (category != null)
 				_yandexMarketCategoryService.Delete(category);
 
-			return CategoryList(command);
+			return ListCategory(command);
 		}
 
-		[HttpPost]
-		public ActionResult AddCategory(YandexMarketParserModel model)
-		{
-			var newItem = new YandexMarketCategoryRecord()
-			{
-				Name = model.AddCategoryName
-			};
-			_yandexMarketCategoryService.Insert(newItem);
-
-			return Json(new { Result = true });
-		}
+		
 	}
 }

@@ -1,20 +1,30 @@
-﻿namespace Nop.Plugin.Misc.YandexMarketParser.Models
+﻿namespace Nop.Plugin.Misc.YandexMarketParser.Domain
 {
 	using System;
 	using System.Collections.Generic;
+	using System.ComponentModel;
+	using System.ComponentModel.DataAnnotations;
 	using System.Text;
 
-	public class Product
+	using Nop.Core;
+
+	public partial class ProductRecord : BaseEntity
 	{		
-		public Product()
+		public ProductRecord()
 		{
 			this.Specifications = new Dictionary<string, string>();
 		}
 
+		[DisplayName("Название")]
+		[StringLength(100)]
+		[Required(ErrorMessage = "Поле обязательно к заполнению")]
 		public string Title { get; set; }
 
 		public Dictionary<string, string> Specifications { get; set; }
 
+		[DisplayName("Рисунок1")]
+		[StringLength(1000)]
+		// [Required(ErrorMessage = "Поле обязательно к заполнению")]
 		public string ImageUrl_1 { get; set; }
 
 

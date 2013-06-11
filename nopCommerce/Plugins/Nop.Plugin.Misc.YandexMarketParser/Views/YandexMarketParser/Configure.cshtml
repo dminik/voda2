@@ -23,7 +23,7 @@
 
 @helper TabGeneral()
 {
-    <div>ver___7    </div>
+    <div>ver___1    </div>
     <table style="width: 100%;">
         <tr>
             <td class="adminTitle">
@@ -71,6 +71,11 @@
         <tr>
             <td>
                 @* ReSharper disable ConvertToLambdaExpression *@
+                @{
+                    var routeDictionaryForGrid = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } };
+                    var controllerNameForGrid = "YandexMarketParser";
+                       
+                }
                 @(Html.Telerik().Grid<YandexMarketCategoryModel>().Name("YandexMarketCategory-grid").DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id")).Columns(columns =>
                       {
                           columns.Bound(x => x.Name).Width(200);
@@ -84,9 +89,9 @@
                           { x.Mode(GridEditMode.InLine); }).DataBinding(dataBinding =>
                               {
                                   dataBinding.Ajax()
-                                             .Select("CategoryList", "YandexMarketParser", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } })
-                                             .Update("CategoryUpdate", "YandexMarketParser", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } })
-                                             .Delete("CategoryDelete", "YandexMarketParser", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } });
+                                             .Select("ListCategory", controllerNameForGrid, new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } })
+                                             .Update("UpdateCategory", controllerNameForGrid, new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } })
+                                             .Delete("DeleteCategory", controllerNameForGrid, new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } });
                               })
                       .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both)).EnableCustomBinding(true))
                 @* ReSharper restore ConvertToLambdaExpression *@
@@ -119,7 +124,7 @@
                 $.ajax({
                     cache: false,
                     type: 'POST',
-                    url: '@Url.RouteUrl("Plugin.Misc.YandexMarketParser.AddCategory")',
+                    url: '@Url.RouteUrl("Plugin.Misc.YandexMarketParser.Category.Add")',
                     data: $(this.form).serialize(),
                     dataType: 'json',
                     success: function (data) {
