@@ -11,7 +11,7 @@
 		public void RegisterRoutes(RouteCollection routes)
 		{
 			routes.MapRoute("Plugin.Misc.YandexMarketParser.Category.Add",
-				 "Plugins/YandexMarketParser/CategoryAdd",
+				 "Plugins/YandexMarketParser/Category/Add",
 				 new { controller = "YandexMarketCategory", action = "Add" },
 				 new[] { "Nop.Plugin.Misc.YandexMarketParser.Controllers" }
 			);

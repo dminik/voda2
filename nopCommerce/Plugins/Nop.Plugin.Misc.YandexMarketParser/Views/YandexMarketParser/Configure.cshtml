@@ -23,7 +23,7 @@
 
 @helper TabGeneral()
 {
-    <div>ver___1    </div>
+    <div>ver___2    </div>
     <table style="width: 100%;">
         <tr>
             <td class="adminTitle">
@@ -73,7 +73,7 @@
                 @* ReSharper disable ConvertToLambdaExpression *@
                 @{
                     var routeDictionaryForGrid = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } };
-                    var controllerNameForGrid = "YandexMarketParser";
+                    var controllerNameForGrid = "YandexMarketCategory";
                        
                 }
                 @(Html.Telerik().Grid<YandexMarketCategoryModel>().Name("YandexMarketCategory-grid").DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id")).Columns(columns =>
