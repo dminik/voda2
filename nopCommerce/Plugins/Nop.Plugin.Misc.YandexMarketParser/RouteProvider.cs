@@ -14,25 +14,7 @@
 				 "Plugins/YandexMarketParser/Category/Add",
 				 new { controller = "YandexMarketCategory", action = "Add" },
 				 new[] { "Nop.Plugin.Misc.YandexMarketParser.Controllers" }
-			);
-
-			//routes.MapRoute("Plugin.Misc.YandexMarketParser.Category.List",
-			//	 "Plugins/YandexMarketParser/Category/List",
-			//	 new { controller = "Category", action = "List" },
-			//	 new[] { "Nop.Plugin.Misc.YandexMarketParser.Controllers" }
-			//);
-
-			//routes.MapRoute("Plugin.Misc.YandexMarketParser.Category.Update",
-			//	 "Plugins/YandexMarketParser/Category/Update",
-			//	 new { controller = "Category", action = "Update" },
-			//	 new[] { "Nop.Plugin.Misc.YandexMarketParser.Controllers" }
-			//);
-
-			//routes.MapRoute("Plugin.Misc.YandexMarketParser.Category.Delete",
-			//	 "Plugins/YandexMarketParser/Category/Delete",
-			//	 new { controller = "Category", action = "Delete" },
-			//	 new[] { "Nop.Plugin.Misc.YandexMarketParser.Controllers" }
-			//);
+			);		
 		}
 		public int Priority
 		{
