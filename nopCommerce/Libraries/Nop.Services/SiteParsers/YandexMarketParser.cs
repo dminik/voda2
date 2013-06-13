@@ -1,4 +1,4 @@
-п»їnamespace Nop.Core.SiteParsers
+namespace Nop.Services.SiteParsers
 {
 	using System;
 	using System.Collections.Generic;
@@ -9,6 +9,7 @@
 	using System.Web;
 
 	using Nop.Core.Domain.YandexMarket;
+	using Nop.Services.Logging;
 
 	using OpenQA.Selenium;
 	using OpenQA.Selenium.IE;
@@ -17,26 +18,32 @@
 	// using OpenQA.Selenium.Support.UI;
 
 	public class Parser
-	{		
-		public Parser(string catalogName, int parseNotMoreThen)
+	{
+		public Parser(string catalogName, int categoryId, int parseNotMoreThen, ILogger logger)
 		{
 			this.imageFolderPathForProductList = catalogName;
 			string filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport",  "StaticFileName");
 			this.imageFolderPathBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog");
 			this.ParseNotMoreThen = parseNotMoreThen;
+			_logger = logger;
+			CategoryId = categoryId;
 		}
 
 		int ParseNotMoreThen { get; set; }
-
-		// РџР°РїРєР° РґР»СЏ РєР°СЂС‚РёРЅРѕРє
+		int CategoryId { get; set; }
+		
+		// Папка для картинок
 		string imageFolderPathBase;
 		string imageFolderPathForProductList;
 
+		private ILogger _logger;
 
 		IWebDriver mDriver;
 
 		public List<YandexMarketProductRecord> Parse()
 		{
+			_logger.Debug("Start Parsing...");
+
 			var resultProductList = new List<YandexMarketProductRecord>();
 
 			try
@@ -50,33 +57,42 @@
 				//mDriver = new FirefoxDriver(profile);
 
 				Thread.Sleep(5000);
-				// РЎСЃС‹Р»РєР° РЅР° СЃРїРёСЃРѕРє С‚РѕРІР°СЂРѕРІ
-				this.mDriver.Navigate().GoToUrl("http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
+				// Ссылка на список товаров
+				this.mDriver.Navigate()
+				    .GoToUrl(
+					    "http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
 				Thread.Sleep(5000);
-				
-				const int delayInSeconds = 6;
 
+				_logger.Debug("Have page 1 with liks");
+
+				const int delayInSeconds = 6;
 
 				bool isNextPage = false;
 
 				var productLinks = new List<string>();
 
+				int pageLinksCounter = 1;
+
 				do
 				{
-					// РќР°Р№С‚Рё РІСЃРµ СЃСЃС‹Р»РєРё РЅР° С‚РѕРІР°СЂС‹			
-					var linksFromCurrentPage = this.mDriver.FindElements(By.CssSelector("a.b-offers__name")).Select(s => s.GetAttribute("href")).ToList();
+					// Найти все ссылки на товары			
+					var linksFromCurrentPage =
+						Enumerable.ToList<string>(
+							this.mDriver.FindElements(By.CssSelector("a.b-offers__name")).Select(s => s.GetAttribute("href")));
 					productLinks.AddRange(linksFromCurrentPage);
 
-					if (this.ParseNotMoreThen <= 10)
-						break;
+					if (this.ParseNotMoreThen <= 10) break;
+
+					_logger.Debug("Have page " + pageLinksCounter + " with liks");
 
 					try
 					{
-						// Р–РјРјРµРј РЅР° СЃР»РµРґСѓС‰СѓСЋ СЃС‚СЂР°РЅРёС†Сѓ, РµСЃР»Рё РѕРЅР° РµСЃС‚СЊ
+						// Жммем на следущую страницу, если она есть
 						var nextPage = this.mDriver.FindElement(By.CssSelector("a.b-pager__next"));
 
 						nextPage.Click();
 						isNextPage = true;
+						pageLinksCounter++;
 					}
 					catch (NoSuchElementException)
 					{
@@ -84,49 +100,64 @@
 					}
 				}
 				while (isNextPage);
-				
-				int counter = 1;
+
+				_logger.Debug("Have " + productLinks.Count + " liks");
+
+				int productCounter = 1;
 				foreach (var currentProductLink in productLinks)
 				{
-					var product = this.ProcessProductLink(currentProductLink);
+					_logger.Debug("Proceeding product " + productCounter);
+
+					var product = this.CreateProduct(currentProductLink);
 
 					resultProductList.Add(product);
 
-					counter++;
+					productCounter++;
 
-					if (counter > this.ParseNotMoreThen)
-						break;
+					if (productCounter > this.ParseNotMoreThen) break;
 
 					Thread.Sleep(delayInSeconds * 1000);
-				}				
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.Debug(ex.Message, ex);
+				throw;
 			}
 			finally
 			{				
 				this.mDriver.Quit();
 			}
 
+			_logger.Debug("End Parsing.");
+
 			return resultProductList;
 		}
 
-		private YandexMarketProductRecord ProcessProductLink(string productLink)
+		private YandexMarketProductRecord CreateProduct(string productLink)
 		{
-			// РџРµСЂРµС…РѕРґРёРј РЅР° СЃС‚СЂР°РЅРёС†Сѓ СЃРїРµС†РёС„РёРєР°С†РёРё С‚РѕРІР°СЂР°
-			this.mDriver.Navigate().GoToUrl(productLink.Replace("model.xml", "model-spec.xml"));
+			// Переходим на страницу спецификации товара
+			var pageUrl = productLink.Replace("model.xml", "model-spec.xml");
+			this.mDriver.Navigate().GoToUrl(pageUrl);
 			Thread.Sleep(3000);
 
+			_logger.Debug("Have page " + pageUrl);
 			var product = new YandexMarketProductRecord();
+			product.YandexMarketCategoryRecordId = CategoryId;
 
-			// РќР°Р№С‚Рё РёРјСЏ С‚РѕРІР°СЂР°		
+			// Найти имя товара		
 			product.Name = this.mDriver.FindElement(By.CssSelector("h1.b-page-title")).Text;
 
-			// РЎРєР°С‡РёРІР°РµРј РєР°СЂС‚РёРЅРєСѓ
+			// Скачиваем картинку
 			var imageUrl = this.mDriver.FindElement(By.CssSelector("div.b-model-microcard__img img")).GetAttribute("src");
 			Thread.Sleep(3000);
 			imageUrl = this.mDriver.FindElement(By.CssSelector("div.b-model-microcard__img img")).GetAttribute("src");
 			product.ImageUrl_1 = this.SaveImage(imageUrl, product.Name);
 
-			// РќР°Р№С‚Рё СЃРїРµС†РёС„РёРєР°С†РёРё С‚РѕРІР°СЂР°	table.b-properties tr
+			// Найти спецификации товара	table.b-properties tr
 			var specificationElements = this.mDriver.FindElements(By.CssSelector("table.b-properties tr"));
+
+			_logger.Debug("Have product " + product.Name + ". Start getting " + specificationElements.Count + " specs...");
 
 			foreach (var currentSpecificationElement in specificationElements)
 			{
@@ -161,7 +192,11 @@
 			var fullFileName = Path.Combine(imageFolderPath, fileName);
 
 			var webClient = new WebClient();
+
+			_logger.Debug("Image will be saved to " + fullFileName + "...");
 			webClient.DownloadFile(remoteFileUrl, fullFileName);
+
+			_logger.Debug("Image saved");
 
 			return Path.Combine(this.imageFolderPathForProductList, fileName);
 		}

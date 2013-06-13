@@ -286,7 +286,6 @@
     <Compile Include="Html\CodeFormatter\VisualBasicFormat.cs" />
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
-    <Compile Include="SiteParsers\YandexMarketParser.cs" />
     <Compile Include="PersistentCollection.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
     <Compile Include="Plugins\PluginFileParser.cs" />

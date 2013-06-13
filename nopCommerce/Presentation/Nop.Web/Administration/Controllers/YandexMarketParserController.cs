@@ -7,8 +7,10 @@
 	using System.Web.Mvc;
 
 	using Nop.Admin.Models.YandexMarket;
+	using Nop.Core.Domain.Logging;
 	using Nop.Core.Domain.YandexMarket;
-	using Nop.Core.SiteParsers;
+	using Nop.Services.Logging;
+	using Nop.Services.SiteParsers;
 	using Nop.Services.YandexMarket;
 	using Nop.Web.Framework.Controllers;
 
@@ -17,13 +19,16 @@
 	{
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
 		private readonly IYandexMarketProductService _yandexMarketProductService;
+		private readonly ILogger _logger;
 
 		public YandexMarketParserController(
 			IYandexMarketCategoryService yandexMarketCategoryService,
-			IYandexMarketProductService yandexMarketProductService)
+			IYandexMarketProductService yandexMarketProductService,
+			ILogger logger)
 		{
-			this._yandexMarketCategoryService = yandexMarketCategoryService;
-			this._yandexMarketProductService = yandexMarketProductService;
+			_yandexMarketCategoryService = yandexMarketCategoryService;
+			_yandexMarketProductService = yandexMarketProductService;
+			_logger = logger;
 		}
 
 
@@ -32,42 +37,49 @@
 		public ActionResult Configure()
 		{
 			var model = new YandexMarketParserModel();
-			model.AvailableCategories =GetCategoriesForDDL();
+			model.AvailableCategories = GetCategoriesForDDL();
 
 			return View(model);
 		}
 
-		
+
 		//[AdminAuthorize]
 		//[ChildActionOnly]
 		[HttpPost]
 		public ActionResult Parse(YandexMarketParserModel model)
 		{
+			_logger.Debug("---  PARSE START...");
+
 			if (!this.ModelState.IsValid)
 				throw new Exception("ModelState.IsNOTValid");
 
+			var productList = new List<YandexMarketProductRecord>();
+
+
+			if (model.IsTest)
+			{
+				productList = CreateTestProductList(model.CategoryId);
+			}
+			else
+			{
+				var categoryName = _yandexMarketCategoryService.GetById(model.CategoryId).Name;
+				var parser = new Parser(categoryName, model.CategoryId, model.ParseNotMoreThen, _logger);
+				productList = parser.Parse();
+			}
 
 			using (var tsTransScope = new TransactionScope())
 			{
-				var productList = new List<YandexMarketProductRecord>();
+				_logger.Debug("Deleting old products...");
 				_yandexMarketProductService.DeleteByCategory(model.CategoryId);
 
-				if (model.IsTest)
-				{
-					productList = CreateTestProductList(model.CategoryId);					
-				}
-				else
-				{
-					var categoryName = _yandexMarketCategoryService.GetById(model.CategoryId).Name;
-					var parser = new Parser(categoryName, model.ParseNotMoreThen);
-					productList = parser.Parse();
-				}
-
+				_logger.Debug("Saving new " + productList.Count + " products...");
 				_yandexMarketProductService.InsertList(productList);
+
+				_logger.Debug("+++ PARSE DONE.");
 
 				tsTransScope.Complete();
 				return Json(new { Result = true });
-			}			
+			}
 		}
 
 		private List<YandexMarketProductRecord> CreateTestProductList(int categoryId)
@@ -102,7 +114,7 @@
 			var result = new List<SelectListItem>();
 			result.Add(new SelectListItem() { Text = "---", Value = "0" });
 
-			var categories =_yandexMarketCategoryService.GetAll();
+			var categories = _yandexMarketCategoryService.GetAll();
 			List<SelectListItem> ddlList = categories.Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString() }).ToList();
 			result.AddRange(ddlList);
 

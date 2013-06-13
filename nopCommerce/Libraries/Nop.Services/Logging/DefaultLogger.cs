@@ -59,7 +59,7 @@ namespace Nop.Services.Logging
             switch(level)
             {
                 case LogLevel.Debug:
-                    return false;
+                    return true;
                 default:
                     return true;
             }

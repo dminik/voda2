@@ -104,11 +104,14 @@
                     @Html.LabelFor(model => model.IsTest)
                 </div>
                 <input type="submit" id="Parse" class="t-button" value="Parse" />
+                <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif">
                 
                  <script type="text/javascript">
                      $(function () {
                          $('#Parse').click(function () {
                              $.ajax({
+                                 beforeSend: function () { $('#parsingIndicator').show(); },
+                                 complete: function () { $('#parsingIndicator').hide(); },
                                  cache: false,
                                  type: 'POST',
                                  url: '@Url.Action("Parse", "YandexMarketParser")',
