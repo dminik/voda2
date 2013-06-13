@@ -1,4 +1,4 @@
-﻿namespace Nop.Plugin.Misc.YandexMarketParser.Controllers
+﻿namespace Nop.Admin.Controllers
 {
 	using System.Linq;
 	using System.Web.Mvc;
@@ -17,7 +17,7 @@
 
 		public YandexMarketProductController(IYandexMarketProductService yandexMarketProductService)
 		{
-			_yandexMarketProductService = yandexMarketProductService;
+			this._yandexMarketProductService = yandexMarketProductService;
 		}
 
 
@@ -27,7 +27,7 @@
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult ListProduct(int categoryId, GridCommand command)
 		{
-			var records = _yandexMarketProductService.GetByCategory(categoryId, command.Page - 1, command.PageSize);
+			var records = this._yandexMarketProductService.GetByCategory(categoryId, command.Page - 1, command.PageSize);
 			var productsModel = records
 				.Select(x =>
 					{
@@ -57,24 +57,24 @@
 		[GridAction(EnableCustomBinding = true)]
 		public ActionResult UpdateProduct(YandexMarketProductRecord model, GridCommand command)
 		{
-			var product = _yandexMarketProductService.GetById(model.Id);
+			var product = this._yandexMarketProductService.GetById(model.Id);
 			product.Name = model.Name;
 
-			_yandexMarketProductService.Update(product);
+			this._yandexMarketProductService.Update(product);
 
-			return ListProduct(model.YandexMarketCategoryRecordId, command);
+			return this.ListProduct(model.YandexMarketCategoryRecordId, command);
 		}
 
 		[GridAction(EnableCustomBinding = true)]
 		public ActionResult DeleteProduct(int id, GridCommand command)
 		{
-			var product = _yandexMarketProductService.GetById(id);
+			var product = this._yandexMarketProductService.GetById(id);
 			int categoryId = product.YandexMarketCategoryRecordId;
 
 			if (product != null)
-				_yandexMarketProductService.Delete(product);
+				this._yandexMarketProductService.Delete(product);
 
-			return ListProduct(categoryId, command);
+			return this.ListProduct(categoryId, command);
 		}
 	}
 }

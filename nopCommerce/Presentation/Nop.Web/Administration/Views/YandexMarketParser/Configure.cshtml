@@ -40,12 +40,15 @@
             <td>
                 @* ReSharper disable ConvertToLambdaExpression *@
                 @{                   
-                    const string controllerNameForProductGrid = "YandexMarketProduct";
-                    const string productGridName = "YandexMarketProduct-grid";
                     
-                    
+                    const string productGridName = "YandexMarketProduct-grid";                                        
                 }
-                @(Html.Telerik().Grid<YandexMarketProductModel>().Name(productGridName).DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id")).Columns(columns =>
+
+                @(Html.Telerik().Grid<YandexMarketProductModel>()
+                .Name(productGridName)
+                .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
+                .Columns(columns =>
                       {
                           columns.Bound(x => x.Name).Width(200);
                           columns.Command(commands =>
@@ -54,22 +57,30 @@
                                   commands.Delete().Text("Удалить");
                               }).Width(180);
 
-                      }).Editable(x =>
-                          { x.Mode(GridEditMode.InLine); }).DataBinding(dataBinding =>
+                      })
+                 .Editable(x => { x.Mode(GridEditMode.InLine); })
+                 .DataBinding(dataBinding =>
                               {
+                                  const string controllerNameForProductGrid = "YandexMarketProduct";
                                   dataBinding.Ajax()
-                                             .Select("ListProduct", controllerNameForProductGrid, new RouteValueDictionary()
-                                                {                                                    
-                                                    { "categoryId", Model.CategoryId }
-                                                })
+                                             .Select("ListProduct", controllerNameForProductGrid)
                                              .Update("UpdateProduct", controllerNameForProductGrid)
                                              .Delete("DeleteProduct", controllerNameForProductGrid);
                               })
-                      .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both)).EnableCustomBinding(true))
+                 .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both))
+                 .EnableCustomBinding(true))
                 @* ReSharper restore ConvertToLambdaExpression *@
 
 
                 <script type="text/javascript">
+                    
+                    function onDataBinding(e) {
+                        var searchModel = {
+                            categoryId: $('#@Html.FieldIdFor(model => model.CategoryId)').val()
+                        };
+                        e.data = searchModel;
+                    }
+
                     $(function () {
                         $("#@Html.FieldIdFor(model => model.CategoryId)").change(function () {
                             var grid = $("#@productGridName");
