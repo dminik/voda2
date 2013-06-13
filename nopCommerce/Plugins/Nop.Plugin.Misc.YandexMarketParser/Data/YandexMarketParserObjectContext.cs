@@ -16,6 +16,7 @@ namespace Nop.Plugin.Misc.YandexMarketParser.Data
     {
 		public static string TableNameCategory = "YandexMarketCategory";
 		public static string TableNameProduct = "YandexMarketProduct";
+		public static string TableNameSpec = "YandexMarketSpec";
 
         public YandexMarketParserObjectContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
@@ -28,6 +29,7 @@ namespace Nop.Plugin.Misc.YandexMarketParser.Data
         {
             modelBuilder.Configurations.Add(new YandexMarketCategoryRecordMap());
 			modelBuilder.Configurations.Add(new ProductRecordMap());
+			modelBuilder.Configurations.Add(new YandexMarketSpecRecordMap());
 
             //disable EdmMetadata generation
             //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
@@ -69,37 +71,23 @@ namespace Nop.Plugin.Misc.YandexMarketParser.Data
             //It's required to set initializer to null (for SQL Server Compact).
             //otherwise, you'll get something like "The model backing the 'your context name' context has changed since the database was created. Consider using Code First Migrations to update the database"
             Database.SetInitializer<YandexMarketParserObjectContext>(null);
-			string tableName = TableNameCategory;
-            if (Database.SqlQuery<int>("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = {0}", tableName).Any<int>())
-            {
-                var dbScript = "DROP TABLE [" + tableName + "]";
-                Database.ExecuteSqlCommand(dbScript);
-            }
-            SaveChanges();
-
-			tableName = TableNameProduct;
-			if (Database.SqlQuery<int>("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = {0}", tableName).Any<int>())
-			{
-				var dbScript = "DROP TABLE [" + tableName + "]";
-				Database.ExecuteSqlCommand(dbScript);
-			}
-			SaveChanges();
-
-            //old way of dropping the table
-            //try
-            //{
-            //    //we place it in try-catch here because previous versions of Froogle didn't have any tables
-            //    var dbScript = "DROP TABLE GoogleProduct";
-            //    Database.ExecuteSqlCommand(dbScript);
-            //    SaveChanges();
-            //}
-            //catch
-            //{
-            //}
+	       
+			DropTable(TableNameCategory);
+			DropTable(TableNameSpec);
+			DropTable(TableNameProduct);
         }
 
+		private void DropTable(string tableName)
+		{			
+			if (this.Database.SqlQuery<int>("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = {0}", tableName).Any<int>())
+			{
+				var dbScript = "DROP TABLE [" + tableName + "]";
+				this.Database.ExecuteSqlCommand(dbScript);
+			}
+			this.SaveChanges();
+		}
 
-        public IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters) where TEntity : BaseEntity, new()
+		public IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters) where TEntity : BaseEntity, new()
         {
             throw new NotImplementedException();
         }

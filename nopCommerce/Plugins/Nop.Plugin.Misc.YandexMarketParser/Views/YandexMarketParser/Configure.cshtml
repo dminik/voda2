@@ -4,6 +4,7 @@
     Html.AddCssFileParts("~/Plugins/Misc.YandexMarketParser/Content/styles.css");  
 }
 @model YandexMarketParserModel
+@using Nop.Plugin.Misc.YandexMarketParser.Domain
 @using Nop.Plugin.Misc.YandexMarketParser.Models;
 @using Nop.Web.Framework;
 
@@ -23,7 +24,7 @@
 
 @helper TabGeneral()
 {
-    <div>ver___2    </div>
+    <div>ver___4   </div>
     <table style="width: 100%;">
         <tr>
             <td class="adminTitle">
@@ -42,12 +43,72 @@
                 @foreach (var currentProduct in Model.ProductList)
                 {
                     <div>@currentProduct.ToString()</div>
-@*<p> <img src="@currentProduct.ImageUrl_1"/> </p>*@
                 }
 
             </td>
 
         </tr>
+
+
+        <tr>
+            <td>
+                @* ReSharper disable ConvertToLambdaExpression *@
+                @{
+                    var routeDictionaryForGrid = new RouteValueDictionary()
+                        {
+                            { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" },
+                            { "area", "" }
+                        };
+                    var routeDictionaryForGridList = new RouteValueDictionary()
+                        {
+                            { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" },
+                            { "area", "" },
+                            { "categoryId", Model.CategoryId }
+                        };
+
+                    const string controllerNameForProductGrid = "YandexMarketProduct";
+                    const string productGridName = "YandexMarketProduct-grid";
+                    
+                    
+                }
+                @(Html.Telerik().Grid<YandexMarketProductModel>().Name(productGridName).DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id")).Columns(columns =>
+                      {
+                          columns.Bound(x => x.Name).Width(200);
+                          columns.Command(commands =>
+                              {
+                                  commands.Edit().Text("Редактировать");
+                                  commands.Delete().Text("Удалить");
+                              }).Width(180);
+
+                      }).Editable(x =>
+                          { x.Mode(GridEditMode.InLine); }).DataBinding(dataBinding =>
+                              {
+                                  dataBinding.Ajax()
+                                             .Select("ListProduct", controllerNameForProductGrid, new RouteValueDictionary()
+                        {
+                            { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" },
+                            { "area", "" },
+                            { "categoryId", Model.CategoryId }
+                        })
+                                             .Update("UpdateProduct", controllerNameForProductGrid, routeDictionaryForGrid)
+                                             .Delete("DeleteProduct", controllerNameForProductGrid, routeDictionaryForGrid);
+                              })
+                      .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both)).EnableCustomBinding(true))
+                @* ReSharper restore ConvertToLambdaExpression *@
+
+
+                <script type="text/javascript">
+                    $(function () {
+                        $("#@Html.FieldIdFor(model => model.CategoryId)").change(function () {
+                            var grid = $("#@productGridName");
+                            grid.data('tGrid').ajaxRequest();
+                        });
+                    });
+                </script>
+
+            </td>
+        </tr>
+
 
         <tr>
             <td colspan="2">
@@ -73,8 +134,7 @@
                 @* ReSharper disable ConvertToLambdaExpression *@
                 @{
                     var routeDictionaryForGrid = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } };
-                    var controllerNameForGrid = "YandexMarketCategory";
-                       
+                    const string controllerNameForGrid = "YandexMarketCategory";
                 }
                 @(Html.Telerik().Grid<YandexMarketCategoryModel>().Name("YandexMarketCategory-grid").DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id")).Columns(columns =>
                       {
@@ -89,9 +149,9 @@
                           { x.Mode(GridEditMode.InLine); }).DataBinding(dataBinding =>
                               {
                                   dataBinding.Ajax()
-                                             .Select("ListCategory", controllerNameForGrid, new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } })
-                                             .Update("UpdateCategory", controllerNameForGrid, new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } })
-                                             .Delete("DeleteCategory", controllerNameForGrid, new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } });
+                                             .Select("ListCategory", controllerNameForGrid, routeDictionaryForGrid)
+                                             .Update("UpdateCategory", controllerNameForGrid, routeDictionaryForGrid)
+                                             .Delete("DeleteCategory", controllerNameForGrid, routeDictionaryForGrid);
                               })
                       .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both)).EnableCustomBinding(true))
                 @* ReSharper restore ConvertToLambdaExpression *@

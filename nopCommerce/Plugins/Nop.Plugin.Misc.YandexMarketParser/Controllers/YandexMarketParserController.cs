@@ -9,6 +9,7 @@
 	using System.Web.Mvc;
 	using System.Web.Routing;
 
+	using Nop.Core;
 	using Nop.Core.Domain.Directory;
 	using Nop.Plugin.Misc.YandexMarketParser.Domain;
 	using Nop.Plugin.Misc.YandexMarketParser.Models;
@@ -26,10 +27,14 @@
 	public class YandexMarketParserController : Controller
 	{
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
+		private readonly IYandexMarketProductService _yandexMarketProductService;
 
-		public YandexMarketParserController(IYandexMarketCategoryService yandexMarketCategoryService)
+		public YandexMarketParserController(
+			IYandexMarketCategoryService yandexMarketCategoryService,
+			IYandexMarketProductService yandexMarketProductService)
 		{
 			_yandexMarketCategoryService = yandexMarketCategoryService;
+			_yandexMarketProductService = yandexMarketProductService;
 		}
 
 
@@ -37,73 +42,73 @@
 		[ChildActionOnly]
 		public ActionResult Configure()
 		{
-
-			var r = RouteTable.Routes.Where(x => x is Route).Select(s => (s as Route).Url).Where(g => g.Contains("YandexMarketParser")).ToList();		
-
 			var model = new YandexMarketParserModel();
-		  
-			model.HelloWord = "Ne beebe";
-
-			//var rr =  Url.RouteUrl("Plugin.Misc.YandexMarketParser.Category.List");
-
-			var categories = _yandexMarketCategoryService.GetAll();
-			foreach (var c in categories)
-				model.AvailableCategories.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
-
-
-
-
+			model.AvailableCategories = GetCategoriesForDDL();
 
 			return View("Nop.Plugin.Misc.YandexMarketParser.Views.YandexMarketParser.Configure", model);
 		}
 
-		
 		[HttpPost]
 		[AdminAuthorize]
 		[ChildActionOnly]
 		public ActionResult Configure(YandexMarketParserModel model)
 		{
-			if (!model.IsTest)
-			{
-				if (!ModelState.IsValid) return Configure();
+			if (!ModelState.IsValid)
+				return Configure();
 
-				var categoryName = _yandexMarketCategoryService.GetById(model.CategoryId).Name;
-				var parser = new Parser(categoryName, model.ParseNotMoreThen);
-				model.ProductList = parser.Parse();				
+			if (model.IsTest)
+			{				
+				model.ProductList = CreateTestProductList(model.CategoryId);
+				_yandexMarketProductService.InsertList(model.ProductList);
 			}
 			else
 			{
-				model = new YandexMarketParserModel()
-				{
-					IsTest = true,
-					CategoryId = model.CategoryId,
-					ProductList =
-						new List<ProductRecord>()
-							{
-								new ProductRecord()
-									{
-										Title = "Product 1",
-										ImageUrl_1 = "url1",
-										Specifications = new Dictionary<string, string>() { { "key1", "value1" }, { "key2", "value2" }, }
-									},
-								new ProductRecord()
-									{
-										Title = "Product 2",
-										ImageUrl_1 = "url2",
-										Specifications = new Dictionary<string, string>() { { "key1", "value1" }, { "key2", "value2" }, }
-									}
-							}
-				};
+				var categoryName = _yandexMarketCategoryService.GetById(model.CategoryId).Name;
+				var parser = new Parser(categoryName, model.ParseNotMoreThen);
+				model.ProductList = parser.Parse();
 			}
-
-			var categories = _yandexMarketCategoryService.GetAll();
-			foreach (var c in categories)
-				model.AvailableCategories.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
 
 			return View("Nop.Plugin.Misc.YandexMarketParser.Views.YandexMarketParser.Configure", model);
 		}
 
-		
-		
+		private List<YandexMarketProductRecord> CreateTestProductList(int categoryId)
+		{
+			return new List<YandexMarketProductRecord>()
+					{
+						new YandexMarketProductRecord(
+								"Product 1",
+								"url1",		
+								categoryId,
+									new List<YandexMarketSpecRecord>()
+										{
+											new YandexMarketSpecRecord("key1", "value1"),
+											new YandexMarketSpecRecord("key2", "value2")
+										}
+							),
+							new YandexMarketProductRecord(
+								"Product 2",
+								"url1",		
+								categoryId,
+									new List<YandexMarketSpecRecord>()
+										{
+											new YandexMarketSpecRecord("key1", "value1"),
+											new YandexMarketSpecRecord("key2", "value2")
+										}
+							)
+					};
+		}
+
+		private List<SelectListItem> GetCategoriesForDDL()
+		{
+			var result = new List<SelectListItem>();
+			result.Add(new SelectListItem() { Text = "---", Value = "0" });
+
+			var categories = this._yandexMarketCategoryService.GetAll();
+			List<SelectListItem> ddlList = categories.Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString() }).ToList();
+			result.AddRange(ddlList);
+
+			return result;
+		}
+
 	}
 }

@@ -17,6 +17,8 @@ namespace Nop.Plugin.Misc.YandexMarketParser
 		public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
 		{
 			builder.RegisterType<YandexMarketCategoryService>().As<IYandexMarketCategoryService>().InstancePerHttpRequest();
+			builder.RegisterType<YandexMarketProductService>().As<IYandexMarketProductService>().InstancePerHttpRequest();
+
 
 			//data layer
 			var dataSettingsManager = new DataSettingsManager();
@@ -46,6 +48,16 @@ namespace Nop.Plugin.Misc.YandexMarketParser
 			//override required repository with our custom context
 			builder.RegisterType<EfRepository<YandexMarketCategoryRecord>>()
 				.As<IRepository<YandexMarketCategoryRecord>>()
+				.WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_YandexMarketParserObjectContext"))
+				.InstancePerHttpRequest();
+
+			builder.RegisterType<EfRepository<YandexMarketProductRecord>>()
+				.As<IRepository<YandexMarketProductRecord>>()
+				.WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_YandexMarketParserObjectContext"))
+				.InstancePerHttpRequest();
+
+			builder.RegisterType<EfRepository<YandexMarketSpecRecord>>()
+				.As<IRepository<YandexMarketSpecRecord>>()
 				.WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_YandexMarketParserObjectContext"))
 				.InstancePerHttpRequest();
 		}

@@ -43,6 +43,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -58,19 +59,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\YandexMarketProductController.cs" />
     <Compile Include="Controllers\YandexMarketCategoryController.cs" />
     <Compile Include="Controllers\YandexMarketParserController.cs" />
+    <Compile Include="Data\YandexMarketSpecRecordMap.cs" />
     <Compile Include="Data\ProductRecordMap.cs" />
     <Compile Include="Data\EfStartUpTask.cs" />
     <Compile Include="Data\YandexMarketParserObjectContext.cs" />
     <Compile Include="Data\YandexMarketCategoryRecordMap.cs" />
     <Compile Include="DependencyRegistrar.cs" />
+    <Compile Include="Domain\YandexMarketSpecRecord.cs" />
     <Compile Include="Domain\YandexMarketCategoryRecord.cs" />
+    <Compile Include="Models\YandexMarketSpecModel.cs" />
+    <Compile Include="Models\YandexMarketProductModel.cs" />
     <Compile Include="Models\YandexMarketCategoryModel.cs" />
     <Compile Include="Models\YandexMarketParserModel.cs" />
-    <Compile Include="Domain\ProductRecord.cs" />
+    <Compile Include="Domain\YandexMarketProductRecord.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="RouteProvider.cs" />
+    <Compile Include="Services\YandexMarketProductService.cs" />
+    <Compile Include="Services\IYandexMarketProductService.cs" />
     <Compile Include="Services\Extensions.cs" />
     <Compile Include="Services\IYandexMarketCategoryService.cs" />
     <Compile Include="Services\YandexMarketCategoryService.cs" />

@@ -38,9 +38,9 @@
 
 		IWebDriver mDriver;
 
-		public List<ProductRecord> Parse()
+		public List<YandexMarketProductRecord> Parse()
 		{
-			var resultProductList = new List<ProductRecord>();
+			var resultProductList = new List<YandexMarketProductRecord>();
 
 			try
 			{
@@ -111,22 +111,22 @@
 			return resultProductList;
 		}
 
-		private ProductRecord ProcessProductLink(string productLink)
+		private YandexMarketProductRecord ProcessProductLink(string productLink)
 		{
 			// Переходим на страницу спецификации товара
 			mDriver.Navigate().GoToUrl(productLink.Replace("model.xml", "model-spec.xml"));
 			Thread.Sleep(3000);
 
-			var product = new ProductRecord();
+			var product = new YandexMarketProductRecord();
 
 			// Найти имя товара		
-			product.Title = mDriver.FindElement(By.CssSelector("h1.b-page-title")).Text;
+			product.Name = mDriver.FindElement(By.CssSelector("h1.b-page-title")).Text;
 
 			// Скачиваем картинку
 			var imageUrl = mDriver.FindElement(By.CssSelector("div.b-model-microcard__img img")).GetAttribute("src");
 			Thread.Sleep(3000);
 			imageUrl = mDriver.FindElement(By.CssSelector("div.b-model-microcard__img img")).GetAttribute("src");
-			product.ImageUrl_1 = SaveImage(imageUrl, product.Title);
+			product.ImageUrl_1 = SaveImage(imageUrl, product.Name);
 
 			// Найти спецификации товара	table.b-properties tr
 			var specificationElements = mDriver.FindElements(By.CssSelector("table.b-properties tr"));
@@ -147,7 +147,7 @@
 				// Value
 				var currentValueElement = currentSpecificationElement.FindElement(By.CssSelector("td.b-properties__value"));
 
-				product.Specifications.Add(currentKeyElement.Text, currentValueElement.Text);
+				product.Specifications.Add(new YandexMarketSpecRecord(currentKeyElement.Text, currentValueElement.Text));
 			}
 
 			return product;

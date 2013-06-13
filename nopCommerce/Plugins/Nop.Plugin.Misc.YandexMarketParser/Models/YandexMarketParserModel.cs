@@ -14,8 +14,10 @@
 		public YandexMarketParserModel()
 		{
 			AvailableCategories = new List<SelectListItem>();
-			ProductList = new List<ProductRecord>();
+			ProductList = new List<YandexMarketProductRecord>();
 			ParseNotMoreThen = 2;
+			IsTest = true;
+			CategoryId = 1;
 		}
 
 		public string HelloWord = "bebebe";
@@ -24,7 +26,7 @@
 		public IList<SelectListItem> AvailableCategories { get; set; }
 
 
-		public List<ProductRecord> ProductList { get; set; }
+		public List<YandexMarketProductRecord> ProductList { get; set; }
 
 		public bool IsTest { get; set; }
 
@@ -33,8 +35,7 @@
 
 
 		[DisplayName("Имя категории")]
-		[StringLength(40)]
-		[Required(ErrorMessage = "Поле обязательно к заполнению")]
+		[StringLength(40)]		
 		public string AddCategoryName { get; set; }	
 
 
