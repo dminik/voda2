@@ -55,14 +55,14 @@
 		}
 
 		[GridAction(EnableCustomBinding = true)]
-		public ActionResult UpdateProduct(YandexMarketProductRecord model, GridCommand command)
+		public ActionResult UpdateProduct(YandexMarketProductModel model, GridCommand command)
 		{
 			var product = this._yandexMarketProductService.GetById(model.Id);
 			product.Name = model.Name;
 
 			this._yandexMarketProductService.Update(product);
 
-			return this.ListProduct(model.YandexMarketCategoryRecordId, command);
+			return this.ListProduct(product.YandexMarketCategoryRecordId, command);
 		}
 
 		[GridAction(EnableCustomBinding = true)]
