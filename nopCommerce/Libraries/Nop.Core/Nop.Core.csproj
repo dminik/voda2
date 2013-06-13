@@ -85,10 +85,16 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebDriver">
+      <HintPath>..\..\packages\Selenium.WebDriver.2.33.0\lib\net40\WebDriver.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
     <Compile Include="Domain\Vendors\Vendor.cs" />
+    <Compile Include="Domain\YandexMarket\YandexMarketCategoryRecord.cs" />
+    <Compile Include="Domain\YandexMarket\YandexMarketProductRecord.cs" />
+    <Compile Include="Domain\YandexMarket\YandexMarketSpecRecord.cs" />
     <Compile Include="IStoreContext.cs" />
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
     <Compile Include="Domain\Cms\WidgetSettings.cs" />
@@ -279,6 +285,7 @@
     <Compile Include="Html\CodeFormatter\VisualBasicFormat.cs" />
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
+    <Compile Include="SiteParsers\YandexMarketParser.cs" />
     <Compile Include="PersistentCollection.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
     <Compile Include="Plugins\PluginFileParser.cs" />

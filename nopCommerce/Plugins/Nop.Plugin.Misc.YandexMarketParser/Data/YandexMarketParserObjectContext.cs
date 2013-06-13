@@ -28,7 +28,7 @@ namespace Nop.Plugin.Misc.YandexMarketParser.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new YandexMarketCategoryRecordMap());
-			modelBuilder.Configurations.Add(new ProductRecordMap());
+			modelBuilder.Configurations.Add(new YandexMarketProductRecordMap());
 			modelBuilder.Configurations.Add(new YandexMarketSpecRecordMap());
 
             //disable EdmMetadata generation

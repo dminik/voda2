@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Favorites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <folders />
+  <favorites>
+    <Favorite>
+      <name>YandexMarketCategoryRecord.cs</name>
+      <path>Plugins\Nop.Plugin.Misc.YandexMarketParser\Domain\YandexMarketCategoryRecord.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Plugins\Nop.Plugin.Misc.YandexMarketParser\Domain\YandexMarketCategoryRecord.cs</absolutePath>
+    </Favorite>
+    <Favorite>
+      <name>sitemap.config</name>
+      <path>Presentation\Nop.Web\Administration\sitemap.config</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\sitemap.config</absolutePath>
+    </Favorite>
+  </favorites>
+</Favorites>

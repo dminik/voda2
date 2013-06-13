@@ -84,6 +84,9 @@
     <Compile Include="Mapping\Shipping\ShipmentMap.cs" />
     <Compile Include="Mapping\Shipping\ShipmentOrderProductVariantMap.cs" />
     <Compile Include="Mapping\Tasks\ScheduleTaskMap.cs" />
+    <Compile Include="Mapping\YandexMarket\YandexMarketCategoryRecordMap.cs" />
+    <Compile Include="Mapping\YandexMarket\YandexMarketProductRecordMap.cs" />
+    <Compile Include="Mapping\YandexMarket\YandexMarketSpecRecordMap.cs" />
     <Compile Include="SqlServerDataProvider.cs" />
     <Compile Include="SqlCeDataProvider.cs" />
     <Compile Include="IDbContext.cs" />

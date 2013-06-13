@@ -63,7 +63,7 @@
     <Compile Include="Controllers\YandexMarketCategoryController.cs" />
     <Compile Include="Controllers\YandexMarketParserController.cs" />
     <Compile Include="Data\YandexMarketSpecRecordMap.cs" />
-    <Compile Include="Data\ProductRecordMap.cs" />
+    <Compile Include="Data\YandexMarketProductRecordMap.cs" />
     <Compile Include="Data\EfStartUpTask.cs" />
     <Compile Include="Data\YandexMarketParserObjectContext.cs" />
     <Compile Include="Data\YandexMarketCategoryRecordMap.cs" />

@@ -57,7 +57,9 @@ using Nop.Web.Framework.UI.Editor;
 
 namespace Nop.Web.Framework
 {
-    public class DependencyRegistrar : IDependencyRegistrar
+	using Nop.Services.YandexMarket;
+
+	public class DependencyRegistrar : IDependencyRegistrar
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
@@ -128,6 +130,9 @@ namespace Nop.Web.Framework
             builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerHttpRequest();
 
             //services
+			builder.RegisterType<YandexMarketCategoryService>().As<IYandexMarketCategoryService>().InstancePerHttpRequest();
+			builder.RegisterType<YandexMarketProductService>().As<IYandexMarketProductService>().InstancePerHttpRequest();
+
             builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerHttpRequest();
             builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();
             builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerHttpRequest();

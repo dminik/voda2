@@ -4,9 +4,9 @@ namespace Nop.Plugin.Misc.YandexMarketParser.Data
 
 	using Nop.Plugin.Misc.YandexMarketParser.Domain;
 
-	public partial class ProductRecordMap : EntityTypeConfiguration<YandexMarketProductRecord>
+	public partial class YandexMarketProductRecordMap : EntityTypeConfiguration<YandexMarketProductRecord>
     {
-		public ProductRecordMap()
+		public YandexMarketProductRecordMap()
         {
 			this.ToTable(YandexMarketParserObjectContext.TableNameProduct);
             this.HasKey(x => x.Id);
