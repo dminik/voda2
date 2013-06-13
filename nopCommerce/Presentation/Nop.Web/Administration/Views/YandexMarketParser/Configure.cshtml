@@ -30,7 +30,7 @@
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CategoryId):
             </td>
-            <td class="adminData">
+            <td class="adminData">                
                 @Html.DropDownListFor(model => model.CategoryId, Model.AvailableCategories)
                 @Html.ValidationMessageFor(model => model.CategoryId)
             </td>
@@ -103,7 +103,30 @@
                     @Html.CheckBoxFor(model => model.IsTest)
                     @Html.LabelFor(model => model.IsTest)
                 </div>
-                <input type="submit" name="Parse" class="t-button" value="Parse" />
+                <input type="submit" id="Parse" class="t-button" value="Parse" />
+                
+                 <script type="text/javascript">
+                     $(function () {
+                         $('#Parse').click(function () {
+                             $.ajax({
+                                 cache: false,
+                                 type: 'POST',
+                                 url: '@Url.Action("Configure", "YandexMarketParser")',
+                                 data: $(this.form).serialize(),
+                                 dataType: 'json',
+                                 success: function (data) {
+                                     var grid = $("#@productGridName");
+                                     grid.data('tGrid').ajaxRequest();
+                                 },
+                                 error: function (xhr, ajaxOptions, thrownError) {
+                                     alert('Failed to Parse.');
+                                 }
+                             });
+                             return false;
+                         });
+                     });
+                 </script>   
+
             </td>
         </tr>
     </table>
@@ -182,5 +205,7 @@
             });
         });
     </script>
+ 
     
+   
 }

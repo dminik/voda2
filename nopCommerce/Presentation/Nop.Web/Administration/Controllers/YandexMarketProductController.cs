@@ -17,17 +17,14 @@
 
 		public YandexMarketProductController(IYandexMarketProductService yandexMarketProductService)
 		{
-			this._yandexMarketProductService = yandexMarketProductService;
+			_yandexMarketProductService = yandexMarketProductService;
 		}
 
-
-
-
-
+		
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult ListProduct(int categoryId, GridCommand command)
 		{
-			var records = this._yandexMarketProductService.GetByCategory(categoryId, command.Page - 1, command.PageSize);
+			var records =_yandexMarketProductService.GetByCategory(categoryId, command.Page - 1, command.PageSize);
 			var productsModel = records
 				.Select(x =>
 					{
@@ -57,24 +54,24 @@
 		[GridAction(EnableCustomBinding = true)]
 		public ActionResult UpdateProduct(YandexMarketProductModel model, GridCommand command)
 		{
-			var product = this._yandexMarketProductService.GetById(model.Id);
+			var product =_yandexMarketProductService.GetById(model.Id);
 			product.Name = model.Name;
 
 			this._yandexMarketProductService.Update(product);
 
-			return this.ListProduct(product.YandexMarketCategoryRecordId, command);
+			return ListProduct(product.YandexMarketCategoryRecordId, command);
 		}
 
 		[GridAction(EnableCustomBinding = true)]
 		public ActionResult DeleteProduct(int id, GridCommand command)
 		{
-			var product = this._yandexMarketProductService.GetById(id);
+			var product =_yandexMarketProductService.GetById(id);
 			int categoryId = product.YandexMarketCategoryRecordId;
 
 			if (product != null)
 				this._yandexMarketProductService.Delete(product);
 
-			return this.ListProduct(categoryId, command);
+			return ListProduct(categoryId, command);
 		}
 	}
 }

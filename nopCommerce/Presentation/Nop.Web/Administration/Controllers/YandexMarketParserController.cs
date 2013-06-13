@@ -30,9 +30,9 @@
 		public ActionResult Configure()
 		{
 			var model = new YandexMarketParserModel();
-			model.AvailableCategories = this.GetCategoriesForDDL();
+			model.AvailableCategories =GetCategoriesForDDL();
 
-			return this.View(model);
+			return View(model);
 		}
 
 		
@@ -42,21 +42,21 @@
 		public ActionResult Configure(YandexMarketParserModel model)
 		{
 			if (!this.ModelState.IsValid)
-				return this.Configure();
+				return Configure();
 
 			if (model.IsTest)
 			{				
-				var productList = this.CreateTestProductList(model.CategoryId);
+				var productList =CreateTestProductList(model.CategoryId);
 				this._yandexMarketProductService.InsertList(productList);
 			}
 			else
 			{
-				var categoryName = this._yandexMarketCategoryService.GetById(model.CategoryId).Name;
+				var categoryName =_yandexMarketCategoryService.GetById(model.CategoryId).Name;
 				var parser = new Parser(categoryName, model.ParseNotMoreThen);
 				// model.ProductList = parser.Parse();
 			}
 
-			return this.View(model);
+			return Json(new { Result = true });
 		}
 
 		private List<YandexMarketProductRecord> CreateTestProductList(int categoryId)
@@ -91,7 +91,7 @@
 			var result = new List<SelectListItem>();
 			result.Add(new SelectListItem() { Text = "---", Value = "0" });
 
-			var categories = this._yandexMarketCategoryService.GetAll();
+			var categories =_yandexMarketCategoryService.GetAll();
 			List<SelectListItem> ddlList = categories.Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString() }).ToList();
 			result.AddRange(ddlList);
 

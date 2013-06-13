@@ -18,7 +18,7 @@
 		}
 		
 		public int CategoryId { get; set; }
-		public IList<SelectListItem> AvailableCategories { get; set; }		
+		public List<SelectListItem> AvailableCategories { get; set; }		
 
 		public bool IsTest { get; set; }
 
