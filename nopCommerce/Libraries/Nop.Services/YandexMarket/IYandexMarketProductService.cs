@@ -16,6 +16,8 @@ namespace Nop.Services.YandexMarket
 		/// <param name="record">Tax rate</param>
 		void Delete(YandexMarketProductRecord record);
 
+		void DeleteByCategory(int categoryId);
+
 		/// <summary>
 		/// Gets all tax rates
 		/// </summary>

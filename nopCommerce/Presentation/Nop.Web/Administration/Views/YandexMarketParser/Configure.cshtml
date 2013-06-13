@@ -111,7 +111,7 @@
                              $.ajax({
                                  cache: false,
                                  type: 'POST',
-                                 url: '@Url.Action("Configure", "YandexMarketParser")',
+                                 url: '@Url.Action("Parse", "YandexMarketParser")',
                                  data: $(this.form).serialize(),
                                  dataType: 'json',
                                  success: function (data) {

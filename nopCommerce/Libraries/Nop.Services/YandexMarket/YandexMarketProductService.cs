@@ -12,7 +12,7 @@ namespace Nop.Services.YandexMarket
 	/// <summary>
 	/// Tax rate service
 	/// </summary>
-	public partial class YandexMarketProductService : IYandexMarketProductService
+	public sealed partial class YandexMarketProductService : IYandexMarketProductService
 	{
 		#region Constants
 		private const string YANDEXMARKETProduct_ALL_KEY = "Nop.YandexMarketProduct.all-{0}-{1}";
@@ -48,7 +48,7 @@ namespace Nop.Services.YandexMarket
 		/// Deletes a tax rate
 		/// </summary>
 		/// <param name="product">Tax rate</param>
-		public virtual void Delete(YandexMarketProductRecord product)
+		public void Delete(YandexMarketProductRecord product)
 		{
 			if (product == null)
 				throw new ArgumentNullException("YandexMarketProductRecord");
@@ -58,11 +58,19 @@ namespace Nop.Services.YandexMarket
 			this._cacheManager.RemoveByPattern(YANDEXMARKETProduct_PATTERN_KEY);
 		}
 
+		public void DeleteByCategory(int categoryId)
+		{
+			var itemsToDelete = GetByCategory(categoryId).ToList();
+			itemsToDelete.ForEach(Delete);			
+		}
+
+
+
 		/// <summary>
 		/// Gets all tax rates
 		/// </summary>
 		/// <returns>Tax rates</returns>
-		public virtual IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue)
+		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue)
 		{
 			string key = string.Format(YANDEXMARKETProduct_ALL_KEY, pageIndex, pageSize);
 
@@ -85,7 +93,7 @@ namespace Nop.Services.YandexMarket
 		/// </summary>
 		/// <param name="productId">Tax rate identifier</param>
 		/// <returns>Tax rate</returns>
-		public virtual YandexMarketProductRecord GetById(int productId)
+		public YandexMarketProductRecord GetById(int productId)
 		{
 			if (productId == 0)
 				return null;
@@ -97,7 +105,7 @@ namespace Nop.Services.YandexMarket
 		/// Inserts a tax rate
 		/// </summary>
 		/// <param name="product">Tax rate</param>
-		public virtual void Insert(YandexMarketProductRecord product)
+		public void Insert(YandexMarketProductRecord product)
 		{
 			if (product == null)
 				throw new ArgumentNullException("product");
@@ -107,7 +115,7 @@ namespace Nop.Services.YandexMarket
 			this._cacheManager.RemoveByPattern(YANDEXMARKETProduct_PATTERN_KEY);
 		}
 
-		public virtual void InsertList(IEnumerable<YandexMarketProductRecord> recordList)
+		public void InsertList(IEnumerable<YandexMarketProductRecord> recordList)
 		{
 			foreach (var yandexMarketProductRecord in recordList) 
 				this.Insert(yandexMarketProductRecord);
@@ -117,7 +125,7 @@ namespace Nop.Services.YandexMarket
 		/// Updates the tax rate
 		/// </summary>
 		/// <param name="product">Tax rate</param>
-		public virtual void Update(YandexMarketProductRecord product)
+		public void Update(YandexMarketProductRecord product)
 		{
 			if (product == null)
 				throw new ArgumentNullException("product");

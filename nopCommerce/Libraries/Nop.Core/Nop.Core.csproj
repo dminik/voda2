@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
+    <Compile Include="Data\IRepositoryExtensions.cs" />
     <Compile Include="Domain\Vendors\Vendor.cs" />
     <Compile Include="Domain\YandexMarket\YandexMarketCategoryRecord.cs" />
     <Compile Include="Domain\YandexMarket\YandexMarketProductRecord.cs" />

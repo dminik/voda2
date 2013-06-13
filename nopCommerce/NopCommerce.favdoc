@@ -17,5 +17,10 @@
       <path>Presentation\Nop.Web\Administration\Controllers\YandexMarketParserController.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\YandexMarketParserController.cs</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>YandexMarketProductService.cs</name>
+      <path>Libraries\Nop.Services\YandexMarket\YandexMarketProductService.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\YandexMarket\YandexMarketProductService.cs</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>

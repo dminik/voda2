@@ -1,7 +1,9 @@
 ﻿namespace Nop.Admin.Controllers
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Transactions;
 	using System.Web.Mvc;
 
 	using Nop.Admin.Models.YandexMarket;
@@ -39,24 +41,33 @@
 		//[AdminAuthorize]
 		//[ChildActionOnly]
 		[HttpPost]
-		public ActionResult Configure(YandexMarketParserModel model)
+		public ActionResult Parse(YandexMarketParserModel model)
 		{
 			if (!this.ModelState.IsValid)
-				return Configure();
+				throw new Exception("ModelState.IsNOTValid");
 
-			if (model.IsTest)
-			{				
-				var productList =CreateTestProductList(model.CategoryId);
-				this._yandexMarketProductService.InsertList(productList);
-			}
-			else
+
+			using (var tsTransScope = new TransactionScope())
 			{
-				var categoryName =_yandexMarketCategoryService.GetById(model.CategoryId).Name;
-				var parser = new Parser(categoryName, model.ParseNotMoreThen);
-				// model.ProductList = parser.Parse();
-			}
+				var productList = new List<YandexMarketProductRecord>();
+				_yandexMarketProductService.DeleteByCategory(model.CategoryId);
 
-			return Json(new { Result = true });
+				if (model.IsTest)
+				{
+					productList = CreateTestProductList(model.CategoryId);					
+				}
+				else
+				{
+					var categoryName = _yandexMarketCategoryService.GetById(model.CategoryId).Name;
+					var parser = new Parser(categoryName, model.ParseNotMoreThen);
+					productList = parser.Parse();
+				}
+
+				_yandexMarketProductService.InsertList(productList);
+
+				tsTransScope.Complete();
+				return Json(new { Result = true });
+			}			
 		}
 
 		private List<YandexMarketProductRecord> CreateTestProductList(int categoryId)
