@@ -60,7 +60,7 @@ namespace Nop.Services.SiteParsers
 			return shopSpecList;
 		}
 
-		public IList<SpecificationAttribute> GetNewYandexSpecsOnly(IList<SpecificationAttribute> fullSpecList)
+		public List<SpecificationAttribute> GetNewYandexSpecsOnly(IList<SpecificationAttribute> fullSpecList)
 		{
 			var resultNewSpecList = new List<SpecificationAttribute>();
 

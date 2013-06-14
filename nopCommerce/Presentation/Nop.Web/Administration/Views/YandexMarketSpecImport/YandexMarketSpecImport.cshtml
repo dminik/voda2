@@ -1,0 +1,49 @@
+﻿@model Nop.Admin.Models.YandexMarket.YandexMarketSpecImportModel
+
+<div>
+    @Html.NopLabelFor(model => model.CategoryId):
+    @Html.DropDownListFor(model => model.CategoryId, Model.AvailableCategories)
+
+    <script type="text/javascript">
+        $(function () {
+            $("#@Html.FieldIdFor(model => model.CategoryId)").change(function () {
+                $("#onlyNew").click();
+            });
+        });
+    </script>
+</div>
+
+<input type="button" id="onlyNew" class="t-button" value="Отобразить только новые" />
+
+<div class="placetags">
+    <ul></ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#onlyNew').click(function () {
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("GetNewSpecs", "YandexMarketSpecImport")',
+                data: { categoryId: $('#@Html.FieldIdFor(model => model.CategoryId)').val() },
+                dataType: 'json',
+                success: function (data) {
+
+                    $('.placetags').html('');
+
+                    var i = 0;
+                    $.each(data, function () {
+                        $('.placetags').append("<li>" + data[i].Name + "</li>");
+                        i++;
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                }
+            });
+            return false;
+        });
+    });
+</script>

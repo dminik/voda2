@@ -37,7 +37,7 @@
 		public ActionResult Configure()
 		{
 			var model = new YandexMarketParserModel();
-			model.AvailableCategories = GetCategoriesForDDL();
+			model.AvailableCategories = _yandexMarketCategoryService.GetCategoriesForDDL();
 
 			return View(model);
 		}
@@ -108,18 +108,5 @@
 							)
 					};
 		}
-
-		private List<SelectListItem> GetCategoriesForDDL()
-		{
-			var result = new List<SelectListItem>();
-			result.Add(new SelectListItem() { Text = "---", Value = "0" });
-
-			var categories = _yandexMarketCategoryService.GetAll();
-			List<SelectListItem> ddlList = categories.Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString() }).ToList();
-			result.AddRange(ddlList);
-
-			return result;
-		}
-
 	}
 }

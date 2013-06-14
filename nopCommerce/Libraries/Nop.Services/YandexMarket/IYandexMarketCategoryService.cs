@@ -1,5 +1,8 @@
 namespace Nop.Services.YandexMarket
 {
+	using System.Collections.Generic;
+	using System.Web.Mvc;
+
 	using Nop.Core;
 	using Nop.Core.Domain.YandexMarket;
 
@@ -39,5 +42,7 @@ namespace Nop.Services.YandexMarket
 		/// </summary>
 		/// <param name="taxRate">Tax rate</param>
 		void Update(YandexMarketCategoryRecord taxRate);
+
+		List<SelectListItem> GetCategoriesForDDL();
 	}
 }

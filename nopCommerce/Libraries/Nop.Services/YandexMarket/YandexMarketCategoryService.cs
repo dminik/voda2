@@ -1,7 +1,9 @@
 namespace Nop.Services.YandexMarket
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
+	using System.Web.Mvc;
 
 	using Nop.Core;
 	using Nop.Core.Caching;
@@ -118,6 +120,19 @@ namespace Nop.Services.YandexMarket
 
 			this._cacheManager.RemoveByPattern(YANDEXMARKETCATEGORY_PATTERN_KEY);
 		}
+
+		public List<SelectListItem> GetCategoriesForDDL()
+		{
+			var result = new List<SelectListItem>();
+			result.Add(new SelectListItem() { Text = "---", Value = "0" });
+
+			var categories = GetAll();
+			var ddlList = categories.Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString() }).ToList();
+			result.AddRange(ddlList);
+
+			return result;
+		}
+
 		#endregion
 	}
 }

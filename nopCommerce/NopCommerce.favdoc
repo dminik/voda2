@@ -32,5 +32,10 @@
       <path>Tests\Nop.Parser.Tests\TestYandexMarketSpecMapper.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Tests\Nop.Parser.Tests\TestYandexMarketSpecMapper.cs</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>YandexMarketSpecImportController.cs</name>
+      <path>Presentation\Nop.Web\Administration\Controllers\YandexMarketSpecImportController.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\YandexMarketSpecImportController.cs</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>

@@ -156,7 +156,7 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Common\FulltextService.cs" />
-    <Compile Include="SiteParsers\YandexMarketCategoryMapper.cs" />
+    <Compile Include="SiteParsers\YandexMarketSpecMapper.cs" />
     <Compile Include="SiteParsers\YandexMarketParser.cs" />
     <Compile Include="Vendors\VendorService.cs" />
     <Compile Include="Vendors\IVendorService.cs" />
