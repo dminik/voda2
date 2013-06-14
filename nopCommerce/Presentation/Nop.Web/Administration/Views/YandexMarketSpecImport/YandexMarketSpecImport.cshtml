@@ -30,11 +30,23 @@
                 dataType: 'json',
                 success: function (data) {
 
-                    $('.placetags').html('');
+                    var place = $('.placetags');
+                    place.html('');
 
                     var i = 0;
                     $.each(data, function () {
-                        $('.placetags').append("<li>" + data[i].Name + "</li>");
+                        
+                        var specLi = $('<li>').append(data[i].Name);
+                        var specOptUl = $('<ul>');
+                        specLi.append(specOptUl);
+                        place.append(specLi);
+                        
+                        var k = 0;
+                        $.each(data[i].SpecificationAttributeOptions, function () {
+                            specOptUl.append("<li>" + data[i].SpecificationAttributeOptions[k].Name + "</li>");
+                            k++;
+                        });
+
                         i++;
                     });
 
