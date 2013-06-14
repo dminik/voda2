@@ -48,24 +48,24 @@ namespace Nop.Services.SiteParsers
 
 			try
 			{
-				this.mDriver = new InternetExplorerDriver();
+				mDriver = new InternetExplorerDriver();
+				mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(15));
 
 				// mDriver = new FirefoxDriver();
 				//var binary = new FirefoxBinary("c:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe");
 				//var profile = new FirefoxProfile();
 				//profile.Port = 7056;  
 				//mDriver = new FirefoxDriver(profile);
-
-				Thread.Sleep(5000);
+				
 				// —сылка на список товаров
 				this.mDriver.Navigate()
 				    .GoToUrl(
 					    "http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
-				Thread.Sleep(5000);
+				Thread.Sleep(3000);
 
 				_logger.Debug("Have page 1 with liks");
 
-				const int delayInSeconds = 6;
+				const int delayInSeconds = 4;
 
 				bool isNextPage = false;
 
