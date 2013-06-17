@@ -2,6 +2,7 @@
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Web.Helpers;
 	using System.Web.Mvc;
 
 	using Nop.Admin.Models.YandexMarket;
@@ -73,12 +74,9 @@
 				{
 					_specificationAttributeService.InsertSpecificationAttribute(curSpecAttr);					
 				}
-
-				
-				
 			}
-			
-			return new EmptyResult();
+
+			return Content("Success!");
 		}
 
 

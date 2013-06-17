@@ -7,6 +7,7 @@
 	using System.Web.Mvc;
 
 	using Nop.Admin.Models.YandexMarket;
+	using Nop.Core.Domain.Catalog;
 	using Nop.Core.Domain.Logging;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Logging;
@@ -81,7 +82,7 @@
 				return Json(new { Result = true });
 			}
 		}
-
+		
 		private List<YandexMarketProductRecord> CreateTestProductList(int categoryId)
 		{
 			return new List<YandexMarketProductRecord>()

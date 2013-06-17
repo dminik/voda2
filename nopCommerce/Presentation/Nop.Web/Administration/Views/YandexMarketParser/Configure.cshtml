@@ -30,7 +30,7 @@
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CategoryId):
             </td>
-            <td class="adminData">                
+            <td class="adminData">
                 @Html.DropDownListFor(model => model.CategoryId, Model.AvailableCategories)
                 @Html.ValidationMessageFor(model => model.CategoryId)
             </td>
@@ -73,7 +73,7 @@
 
 
                 <script type="text/javascript">
-                    
+
                     function onDataBinding(e) {
                         var searchModel = {
                             categoryId: $('#@Html.FieldIdFor(model => model.CategoryId)').val()
@@ -104,17 +104,49 @@
                     @Html.LabelFor(model => model.IsTest)
                 </div>
                 <input type="submit" id="Parse" class="t-button" value="Parse" />
+                <input type="submit" id="btnImportProductList" class="t-button" value="Import Product List" />
+
                 <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif">
-                
-                 <script type="text/javascript">
-                     $(function () {
-                         $('#Parse').click(function () {
-                             $.ajax({
-                                 beforeSend: function () { $('#parsingIndicator').show(); },
-                                 complete: function () { $('#parsingIndicator').hide(); },
-                                 cache: false,
-                                 type: 'POST',
-                                 url: '@Url.Action("Parse", "YandexMarketParser")',
+
+
+
+
+
+
+
+
+
+                <script type="text/javascript">
+                    $(function () {
+
+                        $('#btnImportProductList').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("ImportProductList", "YandexMarketProduct")',
+                                data: { categoryId: $('#@Html.FieldIdFor(model => model.CategoryId)').val() },
+                                dataType: 'json',
+                                success: function (data) {
+                                    alert(data);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(thrownError);
+                                }
+                            });
+                            return false;
+                        });
+
+
+
+                        $('#Parse').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("Parse", "YandexMarketParser")',
                                  data: $(this.form).serialize(),
                                  dataType: 'json',
                                  success: function (data) {
@@ -127,8 +159,8 @@
                              });
                              return false;
                          });
-                     });
-                 </script>   
+                    });
+                </script>
 
             </td>
         </tr>
@@ -181,7 +213,7 @@
         </tr>
 
         <tr>
-            <td colspan="2" >
+            <td colspan="2">
                 <input type="button" id="add" class="t-button" value="Добавить" />
             </td>
         </tr>

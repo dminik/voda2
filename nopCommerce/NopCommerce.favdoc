@@ -37,5 +37,10 @@
       <path>Presentation\Nop.Web\Administration\Controllers\YandexMarketSpecImportController.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\YandexMarketSpecImportController.cs</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>YandexMarketSpecImport.cshtml</name>
+      <path>Presentation\Nop.Web\Administration\Views\YandexMarketSpecImport\YandexMarketSpecImport.cshtml</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Views\YandexMarketSpecImport\YandexMarketSpecImport.cshtml</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>

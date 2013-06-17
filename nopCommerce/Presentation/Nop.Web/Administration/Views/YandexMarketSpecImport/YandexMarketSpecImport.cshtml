@@ -68,7 +68,8 @@
                 url: '@Url.Action("ApplyImport", "YandexMarketSpecImport")',
                 data: { categoryId: $('#@Html.FieldIdFor(model => model.CategoryId)').val() },
                 dataType: 'json',
-                success: function (data) {                    
+                success: function (data) {
+                    alert(data);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     alert(thrownError);
