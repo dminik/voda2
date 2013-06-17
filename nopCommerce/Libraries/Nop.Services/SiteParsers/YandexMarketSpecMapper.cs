@@ -35,26 +35,38 @@ namespace Nop.Services.SiteParsers
 		{
 			// Возвращает спецификаций магазина, дополненные из Яндекса
 
+
+
 			var yandexMarketSpecList = _yandexMarketSpecService.GetByCategory(categoryId);
 			var shopSpecList = _shopSpecService.GetSpecificationAttributes();
 
-			foreach (var curYaSpec in yandexMarketSpecList)
+			try
 			{
-				// Find Spec
-				var existedShopSpec = shopSpecList.SingleOrDefault(x => x.Name == curYaSpec.Key);
-				if (existedShopSpec == null)
+
+				foreach (var curYaSpec in yandexMarketSpecList)
 				{
-					existedShopSpec = new SpecificationAttribute() { Name = curYaSpec.Key };
-					shopSpecList.Add(existedShopSpec);
+					// Find Spec
+					var existedShopSpec = shopSpecList.SingleOrDefault(x => x.Name == curYaSpec.Key);
+					if (existedShopSpec == null)
+					{
+						existedShopSpec = new SpecificationAttribute() { Name = curYaSpec.Key };
+						shopSpecList.Add(existedShopSpec);
+					}
+
+					// Find Spec option
+					var existedShopSpecOpt = existedShopSpec.SpecificationAttributeOptions.SingleOrDefault(x => x.Name == curYaSpec.Value);
+					if (existedShopSpecOpt == null)
+					{
+						existedShopSpecOpt = new SpecificationAttributeOption() { Name = curYaSpec.Value };
+						existedShopSpec.SpecificationAttributeOptions.Add(existedShopSpecOpt);
+					}
 				}
 
-				// Find Spec option
-				var existedShopSpecOpt = existedShopSpec.SpecificationAttributeOptions.SingleOrDefault(x => x.Name == curYaSpec.Value);
-				if (existedShopSpecOpt == null)
-				{
-					existedShopSpecOpt = new SpecificationAttributeOption(){ Name = curYaSpec.Value };
-					existedShopSpec.SpecificationAttributeOptions.Add(existedShopSpecOpt);
-				}
+			}
+			catch (Exception)
+			{
+
+				throw;
 			}
 
 			return shopSpecList;
@@ -66,16 +78,16 @@ namespace Nop.Services.SiteParsers
 
 			foreach (var curSpec in fullSpecList)
 			{
-				var newSpec = new SpecificationAttribute() { Name = curSpec.Name };
+				var newSpec = new SpecificationAttribute() { Name = curSpec.Name, Id =  curSpec.Id };
 				foreach (var curSpecOpt in curSpec.SpecificationAttributeOptions)
 				{
-					if(curSpecOpt.Id > 0)
+					if (curSpecOpt.Id > 0)
 						continue;
 
 					newSpec.SpecificationAttributeOptions.Add(curSpecOpt);
 				}
 
-				if(newSpec.SpecificationAttributeOptions.Any())
+				if (newSpec.SpecificationAttributeOptions.Any())
 					resultNewSpecList.Add(newSpec);
 			}
 			return resultNewSpecList;

@@ -14,6 +14,7 @@
 </div>
 
 <input type="button" id="onlyNew" class="t-button" value="Отобразить только новые" />
+<input type="button" id="btnApplyImport" class="t-button" value="Применить" />
 
 <div class="placetags">
     <ul></ul>
@@ -57,5 +58,23 @@
             });
             return false;
         });
+        
+
+
+        $('#btnApplyImport').click(function () {
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("ApplyImport", "YandexMarketSpecImport")',
+                data: { categoryId: $('#@Html.FieldIdFor(model => model.CategoryId)').val() },
+                dataType: 'json',
+                success: function (data) {                    
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                }
+            });
+              return false;
+          });
     });
 </script>
