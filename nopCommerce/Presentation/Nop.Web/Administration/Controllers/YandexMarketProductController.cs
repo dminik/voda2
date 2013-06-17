@@ -94,49 +94,79 @@
 				ImportYaProduct(curYaProduct);
 			}
 
-			return Content("Success!");
+			return Content("Success");
 		}
 
 		private void ImportYaProduct(YandexMarketProductRecord yaProduct)
 		{
+			Product product;
+			var variant = _productService.GetProductVariantBySku(yaProduct.Name);
+			bool isUpdating = variant != null;
 
-			//product				
-			var product = new Product
-				{
-					CreatedOnUtc = DateTime.UtcNow,
-					UpdatedOnUtc = DateTime.UtcNow,
-					Name = yaProduct.Name,
-					Published = true,
-				};
+			if (isUpdating)
+			{
+				product = variant.Product;	
+			}
+			else
+			{				
+				product = new Product
+					{
+						CreatedOnUtc = DateTime.UtcNow,
+						Published = true, 
+					};
 
-			_productService.InsertProduct(product);
+				variant = new ProductVariant
+					{
+						ProductId = product.Id,
+						Published = true,
+						DisplayOrder = 1,
+						CreatedOnUtc = DateTime.UtcNow
+					};
+			}
+
+			//product										
+			product.UpdatedOnUtc = DateTime.UtcNow;
+			product.Name = yaProduct.Name;
+
+			//variant						
+			variant.UpdatedOnUtc = DateTime.UtcNow;
+			variant.Sku = yaProduct.Name;
 
 			//search engine name
 			var seName = product.ValidateSeName(product.Name, product.Name, true);
 			_urlRecordService.SaveSlug(product, seName, 0);
 
-			//variant
-			var variant = new ProductVariant()
+			
+			// Save
+			if (isUpdating)
 			{
-				ProductId = product.Id,
-				Published = true,
-				DisplayOrder = 1,
-				CreatedOnUtc = DateTime.UtcNow,
-				UpdatedOnUtc = DateTime.UtcNow,
-			};
+				_productService.UpdateProduct(product);
+				_productService.UpdateProductVariant(variant);
+			}
+			else
+			{
+				_productService.InsertProduct(product);
+				variant.ProductId = product.Id;
+				_productService.InsertProductVariant(variant);
 
-			_productService.InsertProductVariant(variant);
+				// Category
+				const int categoryId = 19;
+				LinkProductToCategory(categoryId, product.Id);
+			}
+			
+		}
 
-			// Category
-			const int categoryId = 19;
+
+		private void LinkProductToCategory(int categoryId, int productId)
+		{
 			var productCategory = new ProductCategory()
-			{
-				ProductId = product.Id,
-				CategoryId = categoryId,
-				IsFeaturedProduct = false,
-				DisplayOrder = 1
-			};
-			_categoryService.InsertProductCategory(productCategory);
+				{
+					ProductId = productId,
+					CategoryId = categoryId,
+					IsFeaturedProduct = false,
+					DisplayOrder = 1
+				};
+				_categoryService.InsertProductCategory(productCategory);
 		}
 	}
 }

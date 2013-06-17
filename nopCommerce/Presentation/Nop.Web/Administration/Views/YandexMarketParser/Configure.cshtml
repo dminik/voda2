@@ -127,7 +127,7 @@
                                 type: 'POST',
                                 url: '@Url.Action("ImportProductList", "YandexMarketProduct")',
                                 data: { categoryId: $('#@Html.FieldIdFor(model => model.CategoryId)').val() },
-                                dataType: 'json',
+                                dataType: 'text',
                                 success: function (data) {
                                     alert(data);
                                 },
