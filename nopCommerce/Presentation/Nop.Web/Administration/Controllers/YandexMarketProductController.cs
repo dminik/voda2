@@ -1,6 +1,7 @@
 ﻿namespace Nop.Admin.Controllers
 {
 	using System;
+	using System.IO;
 	using System.Linq;
 	using System.Web.Mvc;
 
@@ -9,6 +10,7 @@
 	using Nop.Core.Domain.Catalog;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Catalog;
+	using Nop.Services.Media;
 	using Nop.Services.Security;
 	using Nop.Services.Seo;
 	using Nop.Services.YandexMarket;
@@ -23,16 +25,22 @@
 		private readonly IProductService _productService;
 		private readonly IUrlRecordService _urlRecordService;
 		private readonly ICategoryService _categoryService;
+		private readonly IManufacturerService _manufacturerService;
+		private readonly IPictureService _pictureService;
 
 		public YandexMarketProductController(IYandexMarketProductService yandexMarketProductService,
 			IProductService productService,
 			IUrlRecordService urlRecordService,
-			ICategoryService categoryService)
+			ICategoryService categoryService,
+			IManufacturerService manufacturerService, 
+			IPictureService pictureService)
 		{
 			_yandexMarketProductService = yandexMarketProductService;
 			this._productService = productService;
 			this._urlRecordService = urlRecordService;
 			this._categoryService = categoryService;
+			this._manufacturerService = manufacturerService;
+            this._pictureService = pictureService;
 		}
 
 		#region Grid actions
@@ -131,7 +139,7 @@
 			//variant						
 			variant.UpdatedOnUtc = DateTime.UtcNow;
 			variant.Sku = yaProduct.Name;
-
+			
 			//search engine name
 			var seName = product.ValidateSeName(product.Name, product.Name, true);
 			_urlRecordService.SaveSlug(product, seName, 0);
@@ -153,9 +161,29 @@
 				const int categoryId = 19;
 				LinkProductToCategory(categoryId, product.Id);
 			}
-			
+			 
+			SavePicture(product, yaProduct.ImageUrl_1);
 		}
 
+		private void SavePicture(Product product, string pictureSourceUrl)
+		{
+			if (_pictureService.GetPicturesByProductId(product.Id).Any())
+				return;
+
+			pictureSourceUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog", pictureSourceUrl);
+			
+			var productPicture = new ProductPicture();
+			productPicture.DisplayOrder = 1;						
+
+			productPicture.Picture = _pictureService.InsertPicture(
+				System.IO.File.ReadAllBytes(pictureSourceUrl),
+				"image/jpeg",
+				_pictureService.GetPictureSeName(product.Name),
+				true);
+			
+			product.ProductPictures.Add(productPicture);
+			_productService.UpdateProduct(product);
+		}
 
 		private void LinkProductToCategory(int categoryId, int productId)
 		{
