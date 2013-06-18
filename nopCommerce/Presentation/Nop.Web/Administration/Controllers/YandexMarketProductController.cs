@@ -115,6 +115,7 @@
 			var variant = _productService.GetProductVariantBySku(yaProduct.Name);
 			bool isUpdating = variant != null;
 
+			// create or update item
 			if (isUpdating)
 			{
 				product = variant.Product;	
@@ -150,8 +151,8 @@
 			var seName = product.ValidateSeName(product.Name, product.Name, true);
 			_urlRecordService.SaveSlug(product, seName, 0);
 
-			
-			// Save
+
+			// Insert or Updating
 			if (isUpdating)
 			{
 				_productService.UpdateProduct(product);
@@ -162,16 +163,12 @@
 				_productService.InsertProduct(product);
 				variant.ProductId = product.Id;
 				_productService.InsertProductVariant(variant);
-
-				// Category
+				
 				const int categoryId = 19;
-				LinkProductToCategory(categoryId, product.Id);
-			}
-			 
-			SavePicture(product, yaProduct.ImageUrl_1);
-
-			SaveSpecList(product, yaProduct.Specifications);
-
+				SaveCategory(categoryId, product.Id);
+				SaveSpecList(product, yaProduct.Specifications);
+				SavePicture(product, yaProduct.ImageUrl_1);
+			}			 			
 		}
 
 		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList)
@@ -229,7 +226,7 @@
 			_productService.UpdateProduct(product);
 		}
 
-		private void LinkProductToCategory(int categoryId, int productId)
+		private void SaveCategory(int categoryId, int productId)
 		{
 			var productCategory = new ProductCategory()
 				{
