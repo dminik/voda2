@@ -1,6 +1,7 @@
 ﻿namespace Nop.Admin.Controllers
 {
 	using System;
+	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using System.Web.Mvc;
@@ -27,20 +28,23 @@
 		private readonly ICategoryService _categoryService;
 		private readonly IManufacturerService _manufacturerService;
 		private readonly IPictureService _pictureService;
+		private readonly ISpecificationAttributeService _specificationAttributeService;
 
 		public YandexMarketProductController(IYandexMarketProductService yandexMarketProductService,
 			IProductService productService,
 			IUrlRecordService urlRecordService,
 			ICategoryService categoryService,
 			IManufacturerService manufacturerService, 
-			IPictureService pictureService)
+			IPictureService pictureService,
+			ISpecificationAttributeService specificationAttributeService)
 		{
 			_yandexMarketProductService = yandexMarketProductService;
 			this._productService = productService;
 			this._urlRecordService = urlRecordService;
 			this._categoryService = categoryService;
 			this._manufacturerService = manufacturerService;
-            this._pictureService = pictureService;
+			this._pictureService = pictureService;
+			_specificationAttributeService = specificationAttributeService;
 		}
 
 		#region Grid actions
@@ -128,7 +132,9 @@
 						ProductId = product.Id,
 						Published = true,
 						DisplayOrder = 1,
-						CreatedOnUtc = DateTime.UtcNow
+						CreatedOnUtc = DateTime.UtcNow,
+						OrderMinimumQuantity = 1,
+						OrderMaximumQuantity = 10
 					};
 			}
 
@@ -163,6 +169,44 @@
 			}
 			 
 			SavePicture(product, yaProduct.ImageUrl_1);
+
+			SaveSpecList(product, yaProduct.Specifications);
+
+		}
+
+		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList)
+		{
+			var allSpecAttrList = _specificationAttributeService.GetSpecificationAttributes();
+
+			foreach (var yandexMarketSpecRecord in specList)
+			{
+				var attributeOptionId = FindAttributeOptionId(yandexMarketSpecRecord.Key, yandexMarketSpecRecord.Value, allSpecAttrList);
+
+				var psa = new ProductSpecificationAttribute()
+				{
+					SpecificationAttributeOptionId = attributeOptionId,
+					ProductId = product.Id,					
+					AllowFiltering = true,	
+					ShowOnProductPage = true,
+				};
+
+				_specificationAttributeService.InsertProductSpecificationAttribute(psa);
+			}			
+		}
+
+		private int FindAttributeOptionId(string attrName, string attrOptName, IEnumerable<SpecificationAttribute> allSpecAttrList)
+		{			
+			var resultAttrName = allSpecAttrList.SingleOrDefault(x => x.Name == attrName);
+
+			if (resultAttrName == null)
+				throw new Exception("Cant find Product attribute by name " + attrName);
+			
+			var resultAttrOptName = resultAttrName.SpecificationAttributeOptions.SingleOrDefault(s => s.Name == attrOptName);
+
+			if (resultAttrOptName == null)
+				throw new Exception("Cant find Product attributeOpt by name " + attrOptName);
+		
+			return resultAttrOptName.Id;			
 		}
 
 		private void SavePicture(Product product, string pictureSourceUrl)
