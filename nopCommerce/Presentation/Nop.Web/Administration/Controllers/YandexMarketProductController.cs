@@ -1,10 +1,12 @@
 ﻿namespace Nop.Admin.Controllers
 {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using System.Web.Mvc;
+	using System.Xml.Linq;
 
 	using Nop.Admin.Models.Catalog;
 	using Nop.Admin.Models.YandexMarket;
@@ -34,7 +36,7 @@
 			IProductService productService,
 			IUrlRecordService urlRecordService,
 			ICategoryService categoryService,
-			IManufacturerService manufacturerService, 
+			IManufacturerService manufacturerService,
 			IPictureService pictureService,
 			ISpecificationAttributeService specificationAttributeService)
 		{
@@ -118,14 +120,14 @@
 			// create or update item
 			if (isUpdating)
 			{
-				product = variant.Product;	
+				product = variant.Product;
 			}
 			else
-			{				
+			{
 				product = new Product
 					{
 						CreatedOnUtc = DateTime.UtcNow,
-						Published = true, 
+						Published = true,
 					};
 
 				variant = new ProductVariant
@@ -142,11 +144,14 @@
 			//product										
 			product.UpdatedOnUtc = DateTime.UtcNow;
 			product.Name = yaProduct.Name;
+			product.ShortDescription = CreateShortDescription(yaProduct.Specifications);
 
 			//variant						
 			variant.UpdatedOnUtc = DateTime.UtcNow;
 			variant.Sku = yaProduct.Name;
-			
+			variant.Name = yaProduct.Name;
+
+
 			//search engine name
 			var seName = product.ValidateSeName(product.Name, product.Name, true);
 			_urlRecordService.SaveSlug(product, seName, 0);
@@ -163,12 +168,34 @@
 				_productService.InsertProduct(product);
 				variant.ProductId = product.Id;
 				_productService.InsertProductVariant(variant);
-				
+
 				const int categoryId = 19;
 				SaveCategory(categoryId, product.Id);
 				SaveSpecList(product, yaProduct.Specifications);
 				SavePicture(product, yaProduct.ImageUrl_1);
-			}			 			
+			}
+		}
+
+		private string CreateShortDescription(IEnumerable<YandexMarketSpecRecord> specList)
+		{			
+			var attribsForShortDescription = new List<string>()
+				{
+					"Тип фильтра",
+					"Число ступеней очистки",
+					"Отдельный кран"
+				};
+
+			var ulShortDescription = new XElement("ul");
+			var xmlShortDescription = 
+				new XElement("div", new XAttribute("class", "ShortDescription"),
+					ulShortDescription);
+			
+			foreach (var yandexMarketSpecRecord in specList.Where(yandexMarketSpecRecord => attribsForShortDescription.Contains(yandexMarketSpecRecord.Key)))
+			{
+				ulShortDescription.Add(new XElement("li", yandexMarketSpecRecord.Key + ": " + yandexMarketSpecRecord.Value));
+			}
+
+			return xmlShortDescription.ToString();
 		}
 
 		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList)
@@ -182,28 +209,28 @@
 				var psa = new ProductSpecificationAttribute()
 				{
 					SpecificationAttributeOptionId = attributeOptionId,
-					ProductId = product.Id,					
-					AllowFiltering = true,	
+					ProductId = product.Id,
+					AllowFiltering = true,
 					ShowOnProductPage = true,
 				};
 
 				_specificationAttributeService.InsertProductSpecificationAttribute(psa);
-			}			
+			}
 		}
 
 		private int FindAttributeOptionId(string attrName, string attrOptName, IEnumerable<SpecificationAttribute> allSpecAttrList)
-		{			
+		{
 			var resultAttrName = allSpecAttrList.SingleOrDefault(x => x.Name == attrName);
 
 			if (resultAttrName == null)
 				throw new Exception("Cant find Product attribute by name " + attrName);
-			
+
 			var resultAttrOptName = resultAttrName.SpecificationAttributeOptions.SingleOrDefault(s => s.Name == attrOptName);
 
 			if (resultAttrOptName == null)
 				throw new Exception("Cant find Product attributeOpt by name " + attrOptName);
-		
-			return resultAttrOptName.Id;			
+
+			return resultAttrOptName.Id;
 		}
 
 		private void SavePicture(Product product, string pictureSourceUrl)
@@ -212,16 +239,16 @@
 				return;
 
 			pictureSourceUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog", pictureSourceUrl);
-			
+
 			var productPicture = new ProductPicture();
-			productPicture.DisplayOrder = 1;						
+			productPicture.DisplayOrder = 1;
 
 			productPicture.Picture = _pictureService.InsertPicture(
 				System.IO.File.ReadAllBytes(pictureSourceUrl),
 				"image/jpeg",
 				_pictureService.GetPictureSeName(product.Name),
 				true);
-			
+
 			product.ProductPictures.Add(productPicture);
 			_productService.UpdateProduct(product);
 		}
@@ -235,7 +262,7 @@
 					IsFeaturedProduct = false,
 					DisplayOrder = 1
 				};
-				_categoryService.InsertProductCategory(productCategory);
+			_categoryService.InsertProductCategory(productCategory);
 		}
 	}
 }
