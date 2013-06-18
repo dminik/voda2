@@ -1373,6 +1373,40 @@
     <Content Include="Themes\print.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Themes\Voda\Content\ie6.css" />
+    <Content Include="Themes\Voda\Content\ie7.css" />
+    <Content Include="Themes\Voda\Content\images\ajax_loader_large.gif" />
+    <Content Include="Themes\Voda\Content\images\ajax_loader_small.gif" />
+    <Content Include="Themes\Voda\Content\images\arrow-up.png" />
+    <Content Include="Themes\Voda\Content\images\bbeditor-button-bg.gif" />
+    <Content Include="Themes\Voda\Content\images\bullet-left.gif" />
+    <Content Include="Themes\Voda\Content\images\bullet-right.gif" />
+    <Content Include="Themes\Voda\Content\images\closelabel.gif" />
+    <Content Include="Themes\Voda\Content\images\download-sample-bg.gif" />
+    <Content Include="Themes\Voda\Content\images\forum-footer-bg.gif" />
+    <Content Include="Themes\Voda\Content\images\forum-header-bg.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-arrow-r.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-close-notification-bar.png" />
+    <Content Include="Themes\Voda\Content\images\ico-delete.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-edit.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-forum-post-add.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-forum-post-high.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-forum-post.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-forum-watch.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-forum.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-move-topic.gif" />
+    <Content Include="Themes\Voda\Content\images\ico-pm.png" />
+    <Content Include="Themes\Voda\Content\images\ico-rss.gif" />
+    <Content Include="Themes\Voda\Content\images\loading.gif" />
+    <Content Include="Themes\Voda\Content\images\logo.gif" />
+    <Content Include="Themes\Voda\Content\images\nextlabel.gif" />
+    <Content Include="Themes\Voda\Content\images\prevlabel.gif" />
+    <Content Include="Themes\Voda\Content\images\progress-step-active.gif" />
+    <Content Include="Themes\Voda\Content\images\progress-step-inactive.gif" />
+    <Content Include="Themes\Voda\Content\images\star-x-active.gif" />
+    <Content Include="Themes\Voda\Content\images\star-x-inactive.gif" />
+    <Content Include="Themes\Voda\Content\styles.css" />
+    <Content Include="Themes\Voda\Content\styles.rtl.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
