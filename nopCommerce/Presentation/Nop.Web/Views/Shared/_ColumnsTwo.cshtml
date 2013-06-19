@@ -40,6 +40,13 @@
         @Html.Widget("left_side_column_after_category_navigation")
         @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })        
         @Html.Action("NewsletterBox", "Newsletter")
+
+        if (IsSectionDefined("product_filters"))
+        {
+            @RenderSection("product_filters")
+        }
+        
+        
         @Html.Widget("left_side_column_after")
     }
 </div>
