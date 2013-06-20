@@ -10,6 +10,26 @@
             <strong>@T("Filtering.SpecificationFilter")</strong>
         </div>
         <div class="filter-content">
+            
+            @if (Model.AlreadyFilteredItems.Count > 0)
+            {
+                <div class="already-filtered-items">
+                    <div class="filter-title">
+                        @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
+                    </div>
+                    @foreach (var item in Model.AlreadyFilteredItems)
+                    {
+                        <div class="item">
+                            <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
+                        </div>
+                    }
+                
+                    <div class="remove-filter">
+                        <a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>
+                    </div>
+                </div>
+            }
+
             @if (Model.NotFilteredItems.Count > 0)
             {
                 <div class="available-items">
@@ -32,23 +52,7 @@
                     }
                 </div>
             }
-            @if (Model.AlreadyFilteredItems.Count > 0)
-            {
-                <div class="already-filtered-items">
-                    <div class="filter-title">
-                        @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
-                    </div>
-                    @foreach (var item in Model.AlreadyFilteredItems)
-                    {
-                        <div class="item">
-                            <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
-                        </div>
-                    }
-                </div>
-                <div class="remove-filter">
-                    <a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>
-                </div>
-            }
+            
         </div>
     </div>
 }
