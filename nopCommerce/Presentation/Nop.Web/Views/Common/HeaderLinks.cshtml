@@ -26,6 +26,16 @@
             </script>
             }
         }
+        
+         @if (Model.WishlistEnabled)
+        {
+            <li>
+                <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
+                    <span class="cart-label">@T("Wishlist")</span>
+                    <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+                </a>
+            </li>
+        }
         @if (Model.ShoppingCartEnabled)
         {
             <li id="topcartlink">
@@ -35,15 +45,7 @@
                 </a>
             </li>
         }
-        @if (Model.WishlistEnabled)
-        {
-            <li>
-                <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
-                    <span class="cart-label">@T("Wishlist")</span>
-                    <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
-                </a>
-            </li>
-        }
+       
         @Html.Widget("header_links_after")
     </ul>
     @if (Model.ShoppingCartEnabled)
