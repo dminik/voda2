@@ -10,6 +10,12 @@
     <div class="footer-disclaimer">
         @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
     </div>
+    
+    @*dminikk*@
+    <div class="footer-site-map">
+        <a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a>
+    </div>
+
     <div class="footer-store-theme">
         @Html.Action("StoreThemeSelector", "Common")
     </div>

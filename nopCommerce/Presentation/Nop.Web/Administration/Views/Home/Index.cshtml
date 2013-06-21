@@ -70,11 +70,13 @@
                 </tr>
             </table>
         </td>
-        @if (!Model.IsLoggedInAsVendor)
+        @*@if (!Model.IsLoggedInAsVendor)
         {
-            <td class="rightcol">
+            @*dminikk*@
+           @* <td class="rightcol">
+                
                 @Html.Action("NopCommerceNews", "Home")
-            </td>
+            </td>*@
         }
     </tr>
     @Html.Widget("admin_dashboard_bottom")

@@ -932,7 +932,6 @@
     <Content Include="Scripts\2013.1.219\telerik.treeview.min.js" />
     <Content Include="Scripts\2013.1.219\telerik.upload.min.js" />
     <Content Include="Scripts\2013.1.219\telerik.window.min.js" />
-    <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
     <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
     <Content Include="Content\Images\flags\ae.png" />
@@ -1181,11 +1180,6 @@
     <Content Include="Content\Images\flags\za.png" />
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-close-notification-bar.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-18-black.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-18-white.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-36-black.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-36-white.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -1201,24 +1195,10 @@
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.css" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.min.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile-1.2.0.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile-1.2.0.min.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.2.0.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.2.0.min.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.theme-1.2.0.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.theme-1.2.0.min.css" />
     <Content Include="Scripts\jquery-ui-1.10.0.js" />
     <Content Include="Scripts\jquery-ui-1.10.0.min.js" />
     <Content Include="Scripts\jquery.mobile-1.2.0.js" />
     <Content Include="Scripts\jquery.mobile-1.2.0.min.js" />
-    <Content Include="Themes\DefaultClean\Content\images\bullet-left.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\bullet-right.gif" />
-    <Content Include="Themes\DefaultClean\Content\styles.rtl.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\DefaultClean\Content\ie6.css" />
-    <Content Include="Themes\DefaultClean\Content\ie7.css" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-rss.gif" />
     <Content Include="Content\Images\default-image.gif" />
     <Content Include="Content\install\images\install-synchronizing.gif" />
     <Content Include="Content\Images\uploaded\placeholder.txt" />
@@ -1333,48 +1313,6 @@
     <Content Include="Scripts\public.onepagecheckout.js" />
     <Content Include="Scripts\public.common.js" />
     <Content Include="Scripts\slimbox2.js" />
-    <Content Include="Themes\DefaultClean\Content\images\ajax_loader_large.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ajax_loader_small.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\bbeditor-button-bg.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\download-sample-bg.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\closelabel.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\forum-footer-bg.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\forum-header-bg.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-arrow-r.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-delete.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-edit.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-forum-post-add.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-forum-post-high.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-forum-post.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-forum-watch.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-forum.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-move-topic.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\ico-pm.png" />
-    <Content Include="Themes\DefaultClean\Content\images\arrow-up.png" />
-    <Content Include="Themes\DefaultClean\Content\images\loading.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\logo.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\nextlabel.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\prevlabel.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\progress-step-active.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\progress-step-inactive.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\star-x-active.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\star-x-inactive.gif" />
-    <Content Include="Themes\DefaultClean\Content\styles.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\Mobile\Content\images\ico-forum-post-high.gif" />
-    <Content Include="Themes\Mobile\Content\images\ico-forum-post.gif" />
-    <Content Include="Themes\Mobile\Content\images\ico-forum.gif" />
-    <Content Include="Themes\Mobile\Content\images\star-x-active.gif" />
-    <Content Include="Themes\Mobile\Content\images\star-x-inactive.gif" />
-    <Content Include="Themes\Mobile\Content\styles.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\print.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\Voda\Content\ie6.css" />
-    <Content Include="Themes\Voda\Content\ie7.css" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_small.gif" />
     <Content Include="Themes\Voda\Content\images\arrow-up.png" />
@@ -1450,11 +1388,6 @@
     <Content Include="App_Data\Pdf\FreeSerif.ttf" />
     <Content Include="Views\Shared\_Root.Mobile.cshtml" />
     <Content Include="Views\Home\Index.Mobile.cshtml" />
-    <Content Include="Themes\Mobile\theme.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Mobile\Views\Shared\Head.Mobile.cshtml" />
-    <Content Include="Themes\Mobile\Views\Web.config" />
     <Content Include="Views\Common\StoreThemeSelector.cshtml" />
     <Content Include="Views\Catalog\CategoryNavigation.Mobile.cshtml" />
     <Content Include="Views\Catalog\CategoryTemplate.ProductsInGridOrLines.Mobile.cshtml" />
@@ -1588,10 +1521,6 @@
       <Project>{75FD4163-333C-4DD5-854D-2EF294E45D94}</Project>
       <Name>Nop.Web.Framework</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\DefaultClean\theme.config" />
-    <Content Include="Themes\DefaultClean\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Catalog\CategoryTemplate.ProductsInGridOrLines.cshtml" />
@@ -1771,7 +1700,6 @@
     <Content Include="Views\Common\StoreClosed.cshtml" />
     <Content Include="Views\Common\StoreClosed.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\_CheckoutAttributes.Mobile.cshtml" />
-    <Content Include="Themes\DefaultClean\Views\Shared\Head.cshtml" />
     <Content Include="Views\Common\AdminHeaderLinks.cshtml" />
     <Content Include="Views\Common\PageNotFound.cshtml" />
     <Content Include="Views\Common\PageNotFound.Mobile.cshtml" />
