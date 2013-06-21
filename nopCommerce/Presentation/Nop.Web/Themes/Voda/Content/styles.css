@@ -92,6 +92,7 @@ ul.language-list li:hover{cursor:pointer;}
 .search-box ul li{list-style:none outside none;float:left;margin:0;padding:0;}
 .search-box-text{background:none repeat scroll 0 0 #FFF;width:300px;border:1px solid #E3E3E3;padding:4px 5px;vertical-align:top;font-size:12px;}
 .search-box-button{padding:4px 5px;background:none repeat scroll 0 0 #F6F6F4;border:1px solid #D3D3D3;border-radius:2px 2px 2px 2px;color:#353434;cursor:pointer;font-size:12px;margin-bottom:2px;width:70px;}
+a.search-box-advanced-link { text-decoration:underline;}
 /* override some jQuery UI style */
 .search-box .ui-autocomplete-loading{background:white url('images/ajax_loader_small.gif') right center no-repeat;}
 .ui-autocomplete{z-index:10 !important;} /*ensure that z-index is more than .nivoSlider a.nivo-imageLink used on the home page*/

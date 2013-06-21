@@ -1406,7 +1406,6 @@
     <Content Include="Themes\Voda\Content\images\star-x-active.gif" />
     <Content Include="Themes\Voda\Content\images\star-x-inactive.gif" />
     <Content Include="Themes\Voda\Content\styles.css" />
-    <Content Include="Themes\Voda\Content\styles.rtl.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
