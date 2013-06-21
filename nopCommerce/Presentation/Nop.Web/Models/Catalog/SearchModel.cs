@@ -14,6 +14,9 @@ namespace Nop.Web.Models.Catalog
 
             this.AvailableCategories = new List<SelectListItem>();
             this.AvailableManufacturers = new List<SelectListItem>();
+
+			// dminikk
+	        As = true;
         }
 
         public string Warning { get; set; }

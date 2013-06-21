@@ -8,8 +8,12 @@
         <li><a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a>
         </li>
     }
-    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
-    <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+    
+     @*dminikik*@
+    @* <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>*@   
+    @*<li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>*@
+    
+
     @if (Model.BlogEnabled)
     {
         <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>

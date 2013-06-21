@@ -57,13 +57,15 @@
                             @Html.LabelFor(model => model.Isc)
                         </div>
                     }
-                    @if (Model.AvailableManufacturers.Count > 0)
+                    
+                    @* dminikk*@
+                   @* @if (Model.AvailableManufacturers.Count > 0)
                     {
                         <div class="inputs">
                             @Html.LabelFor(model => model.Mid, new { }, ":")
                             @Html.DropDownListFor(model => model.Mid, Model.AvailableManufacturers)
                         </div>
-                    }
+                    }*@
                     <div class="inputs">
                         <label>@T("Search.PriceRange"):</label>
                         <span class="price-range">
