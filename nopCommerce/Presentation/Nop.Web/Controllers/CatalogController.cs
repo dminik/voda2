@@ -2795,7 +2795,9 @@ namespace Nop.Web.Controllers
             //activity log
             _customerActivityService.InsertActivity("PublicStore.AddToCompareList", _localizationService.GetResource("ActivityLog.PublicStore.AddToCompareList"), product.Name);
 
-            return RedirectToRoute("CompareProducts");
+			// dminikk
+            //return RedirectToRoute("CompareProducts");
+	        return new EmptyResult();
         }
 
         public ActionResult RemoveProductFromCompareList(int productId)
