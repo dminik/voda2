@@ -42,5 +42,10 @@
       <path>Presentation\Nop.Web\Administration\Views\YandexMarketSpecImport\YandexMarketSpecImport.cshtml</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Views\YandexMarketSpecImport\YandexMarketSpecImport.cshtml</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>styles.css</name>
+      <path>Presentation\Nop.Web\Themes\Voda\Content\styles.css</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Themes\Voda\Content\styles.css</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>

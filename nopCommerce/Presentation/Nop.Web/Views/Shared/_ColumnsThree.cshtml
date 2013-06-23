@@ -39,8 +39,12 @@
         @Html.Widget("left_side_column_before")
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
         @Html.Widget("left_side_column_after_category_navigation")
-        @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
-        @Html.Action("PopularProductTags", "Catalog")
+
+        //dminikk 
+        // @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
+        // @Html.Action("PopularProductTags", "Catalog")
+            
+        
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
         @Html.Widget("left_side_column_after")
     }
@@ -59,8 +63,11 @@
     {
         @Html.Widget("right_side_column_before")
         @Html.Action("NewsletterBox", "Newsletter")
-        @Html.Action("RecentlyViewedProductsBlock", "Catalog")        
-        @Html.Action("InfoBlock", "Common")    
+        @Html.Action("RecentlyViewedProductsBlock", "Catalog")    
+        
+        //dminikk    
+        //@Html.Action("InfoBlock", "Common")    
+        
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
         @Html.Widget("right_side_column_after")
     }
