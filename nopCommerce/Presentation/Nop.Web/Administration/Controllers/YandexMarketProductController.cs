@@ -16,6 +16,7 @@
 	using Nop.Services.Media;
 	using Nop.Services.Security;
 	using Nop.Services.Seo;
+	using Nop.Services.SiteParsers;
 	using Nop.Services.YandexMarket;
 	using Nop.Web.Framework.Controllers;
 
@@ -200,6 +201,8 @@
 
 		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList)
 		{
+			
+
 			var allSpecAttrList = _specificationAttributeService.GetSpecificationAttributes();
 
 			foreach (var yandexMarketSpecRecord in specList)
@@ -210,7 +213,7 @@
 				{
 					SpecificationAttributeOptionId = attributeOptionId,
 					ProductId = product.Id,
-					AllowFiltering = true,
+					AllowFiltering = YandexMarketHelpers.GetAllowFilteringForProductSelector().Contains(yandexMarketSpecRecord.Key),
 					ShowOnProductPage = true,
 				};
 
