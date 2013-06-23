@@ -10,7 +10,7 @@
             <strong>@T("Filtering.SpecificationFilter")</strong>
         </div>
         <div class="filter-content">
-            
+
             @if (Model.AlreadyFilteredItems.Count > 0)
             {
                 <div class="already-filtered-items">
@@ -23,7 +23,7 @@
                             <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
                         </div>
                     }
-                
+
                     <div class="remove-filter">
                         <a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>
                     </div>
@@ -44,15 +44,22 @@
 
                             @foreach (var spec in groupList)
                             {
-                                <li class="item">
-                                    <a href="@spec.FilterUrl">@spec.SpecificationAttributeOptionName</a>
-                                </li>
+@*<li class="item">*@
+@*dminikk*@
+@*<a href="@spec.FilterUrl">@spec.SpecificationAttributeOptionName</a> *@
+                                <div>
+                                    <input type="checkbox" onclick="window.location.href = '@spec.FilterUrl    '"/>
+                                    <span>@spec.SpecificationAttributeOptionName</span>
+                                </div>
+
+@*</li>*@
                             }
                         </ul> 
                     }
                 </div>
             }
-            
+
         </div>
     </div>
 }
+
