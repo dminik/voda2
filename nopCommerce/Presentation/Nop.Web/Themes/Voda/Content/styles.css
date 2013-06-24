@@ -64,10 +64,20 @@ input[type="text"]:disabled{background:none repeat scroll 0 0 #FFF;}
 .header .ico-cart{padding-left:10px;padding-bottom:5px;}
 .header .ico-wishlist{padding-left:10px;padding-bottom:5px;}
 .header .ico-cart:hover *,.header .ico-wishlist:hover *{text-decoration:underline;cursor:pointer;}
-.header .ico-cart span,.header .ico-wishlist span{float:left;}
+.header .ico-cart span,.header .ico-wishlist span{float:left;text-decoration: underline;}
+
 .header-logo{margin-top:5px;float:left;text-align:left;}
-a.logo{background:url("images/Shkola_Vodi.png") no-repeat scroll 0 0 / cover transparent;display:block;width:520px;height:195px; text-decoration:none;left: -7px;position: relative;top: 48px;  }
+
+
+.logo{background:url("images/Shkola_Vodi.png") no-repeat scroll 0 0 / cover transparent;display:block;width:520px;height:178px; text-decoration:none;left: -7px;position: relative;top: -28px;  }
+
+
 .header-selectors-wrapper{text-align:right;float:right;width:500px;margin-top:10px;clear:both;}
+
+.header-phone-work-time{ width: 300px;height: 25px;color: yellow;position: relative;left: 240px;top: -9px;}
+.header-phone{font-size: 25px;}
+.header-work-time{font-size: 15px;}
+
 .currency-selector{float:right;}
 .language-selector{float:right;}
 .tax-display-type-selector{float:right;}
@@ -75,13 +85,14 @@ ul.language-list{display:inline;line-height:25px;}
 ul.language-list li{list-style:none;display:inline;padding:0 5px;float:left;}
 ul.language-list li .selected{border:solid 1px #ccc!important;}
 ul.language-list li:hover{cursor:pointer;}
-.header-links-wrapper{position:relative;float:right;text-align:right;width:auto;}
+.header-links-wrapper{position:relative;float:right;text-align:right;width:auto;text-decoration:underline;}
 .header-links{float:right;padding:0px;margin:10px 0;display:inline-table;}
 .header-links ul{padding:0;margin:0;float:left;}
 .header-links ul li{list-style:none outside none;display:inline;padding-right:2px;margin-left:10px;float:left;}
-.header-links a{color:#AF0304;text-decoration:none;float:left;}
+.header-links a{color:#AFFF04;text-decoration:underline;float:left;}
 .header-links a:hover{color:#AF0304;text-decoration:underline;}
 .header-links a.account{color:#AF0304;}
+.auth-links{ float: right;}
 .admin-header-links{padding:5px;margin-bottom:-15px; text-align:center;}
 .admin-header-links .administration{font-weight:bold;}
 .admin-header-links .impersonate{display:block; color:#E44097; margin-bottom:10px;}

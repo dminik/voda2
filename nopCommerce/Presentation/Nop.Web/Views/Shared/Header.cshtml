@@ -1,8 +1,12 @@
 ﻿<div class="header">
     @Html.Widget("header")
     <div class="header-logo">
-        <a href="@Url.RouteUrl("HomePage")" class="logo">&nbsp; </a>
-    </div>
+        <div class="header-phone-work-time">
+            <div class="header-phone" >Киев: (093) 796-70-38</div>
+            <div class="header-work-time">Без выходных с 10:00 до 21:00</div>
+        </div>
+         <a href="@Url.RouteUrl("HomePage")" class="logo">&nbsp; </a>
+        </div>
     <div class="header-links-wrapper">
         @Html.Action("HeaderLinks", "Common")
         @Html.Action("FlyoutShoppingCart", "ShoppingCart")
