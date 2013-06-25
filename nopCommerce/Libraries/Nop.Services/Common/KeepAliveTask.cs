@@ -24,7 +24,7 @@ namespace Nop.Services.Common
 		{
 			// dminikk
 			// string url = _storeContext.CurrentStore.Url + "keepalive/index";
-			string url = "localhost/keepalive/index";
+			string url = "http://localhost/keepalive/index";
 			
 			using (var wc = new WebClient())
 			{
