@@ -208,7 +208,9 @@ namespace Nop.Web
                 return;
 
             //keep alive page requested (we ignore it to prevent creating a guest customer records)
-            string keepAliveUrl = string.Format("{0}keepalive", webHelper.GetStoreLocation());
+			// dminikk
+            // string keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
+			string keepAliveUrl = "localhost/keepalive/index";
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
