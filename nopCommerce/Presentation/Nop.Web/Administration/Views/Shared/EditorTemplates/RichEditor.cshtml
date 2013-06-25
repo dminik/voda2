@@ -16,6 +16,7 @@
         tinyMCE.init({
 
             // General options
+                       
             mode: "exact",
             elements: "@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)",
             theme: "advanced",
@@ -36,6 +37,10 @@
 
             // Example content CSS (should be your site CSS)
             //content_css : "css/content.css",
+            //dminikk
+            //content_css: "/Administration/Content/styles.css",
+            content_css: "/Themes/Voda/Content/styles_reset.css?" + new Date().getTime(),
+           
             convert_urls: false,
 
             // Drop lists for link/image/media/template dialogs

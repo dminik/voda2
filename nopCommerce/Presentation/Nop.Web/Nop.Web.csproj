@@ -1313,6 +1313,7 @@
     <Content Include="Scripts\public.onepagecheckout.js" />
     <Content Include="Scripts\public.common.js" />
     <Content Include="Scripts\slimbox2.js" />
+    <Content Include="Themes\Voda\Content\styles_reset.css" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_small.gif" />
     <Content Include="Themes\Voda\Content\images\arrow-up.png" />
