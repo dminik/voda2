@@ -1,0 +1,246 @@
+﻿@{
+    // Layout = "";
+
+    //Html.AddCssFileParts("~/Plugins/Misc.YandexMarketParser/Content/styles.css");  
+}
+@model Nop.Admin.Models.YandexMarket.YandexMarketParserModel
+@using Nop.Admin.Models.YandexMarket
+
+@using Nop.Web.Framework;
+
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI
+@using Telerik.Web.Mvc.UI
+
+@using (Html.BeginForm())
+{
+    @Html.Telerik().TabStrip().Name("googlebase-configure").Items(x =>
+    {
+        x.Add().Text("Основное").Content(TabGeneral().ToHtmlString()).Selected(true);
+        x.Add().Text("Категории").Content(TabCategory().ToHtmlString());
+    })   
+}
+
+
+@helper TabGeneral()
+{
+    <div>ver___5   </div>
+    <table style="width: 100%;">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CategoryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CategoryId, Model.AvailableCategories)
+                @Html.ValidationMessageFor(model => model.CategoryId)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @* ReSharper disable ConvertToLambdaExpression *@
+                @{                   
+                    
+                    const string productGridName = "YandexMarketProduct-grid";                                        
+                }
+
+                @(Html.Telerik().Grid<YandexMarketProductModel>()
+                .Name(productGridName)
+                .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
+                .Columns(columns =>
+                      {
+                          columns.Bound(x => x.Name).Width(200);
+                          columns.Command(commands =>
+                              {
+                                  commands.Edit().Text("Редактировать");
+                                  commands.Delete().Text("Удалить");
+                              }).Width(180);
+
+                      })
+                 .Editable(x => { x.Mode(GridEditMode.InLine); })
+                 .DataBinding(dataBinding =>
+                              {
+                                  const string controllerNameForProductGrid = "YandexMarketProduct";
+                                  dataBinding.Ajax()
+                                             .Select("ListProduct", controllerNameForProductGrid)
+                                             .Update("UpdateProduct", controllerNameForProductGrid)
+                                             .Delete("DeleteProduct", controllerNameForProductGrid);
+                              })
+                 .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both))
+                 .EnableCustomBinding(true))
+                @* ReSharper restore ConvertToLambdaExpression *@
+
+
+                <script type="text/javascript">
+
+                    function onDataBinding(e) {
+                        var searchModel = {
+                            categoryId: $('#@Html.FieldIdFor(model => model.CategoryId)').val()
+                        };
+                        e.data = searchModel;
+                    }
+
+                    $(function () {
+                        $("#@Html.FieldIdFor(model => model.CategoryId)").change(function () {
+                            var grid = $("#@productGridName");
+                            grid.data('tGrid').ajaxRequest();
+                        });
+                    });
+                </script>
+
+            </td>
+        </tr>
+
+
+        <tr>
+            <td colspan="2">
+                <div>
+                    @Html.LabelFor(model => model.ParseNotMoreThen) :
+                    @Html.EditorFor(model => model.ParseNotMoreThen)
+                </div>
+                <div>
+                    @Html.CheckBoxFor(model => model.IsTest)
+                    @Html.LabelFor(model => model.IsTest)
+                </div>
+                <input type="submit" id="Parse" class="t-button" value="Parse" />
+                <input type="submit" id="btnImportProductList" class="t-button" value="Import Product List" />
+
+                <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif">
+
+
+
+
+
+
+
+
+
+                <script type="text/javascript">
+                    $(function () {
+
+                        $('#btnImportProductList').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("ImportProductList", "YandexMarketProduct")',
+                                data: { categoryId: $('#@Html.FieldIdFor(model => model.CategoryId)').val() },
+                                dataType: 'text',
+                                success: function (data) {
+                                    alert(data);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(thrownError);
+                                }
+                            });
+                            return false;
+                        });
+
+
+
+                        $('#Parse').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("Parse", "YandexMarketParser")',
+                                 data: $(this.form).serialize(),
+                                 dataType: 'json',
+                                 success: function (data) {
+                                     var grid = $("#@productGridName");
+                                     grid.data('tGrid').ajaxRequest();
+                                 },
+                                 error: function (xhr, ajaxOptions, thrownError) {
+                                     alert('Failed to Parse.');
+                                 }
+                             });
+                             return false;
+                         });
+                    });
+                </script>
+
+            </td>
+        </tr>
+    </table>
+}
+
+@helper TabCategory()
+{
+    <table class="adminContent">
+        <tr>
+            <td>
+                @* ReSharper disable ConvertToLambdaExpression *@
+                @{
+                    var routeDictionaryForGrid = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } };
+                    const string controllerNameForGrid = "YandexMarketCategory";
+                }
+                @(Html.Telerik().Grid<YandexMarketCategoryModel>().Name("YandexMarketCategory-grid").DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id")).Columns(columns =>
+                      {
+                          columns.Bound(x => x.Name).Width(200);
+                          columns.Command(commands =>
+                              {
+                                  commands.Edit().Text("Редактировать");
+                                  commands.Delete().Text("Удалить");
+                              }).Width(180);
+
+                      }).Editable(x =>
+                          { x.Mode(GridEditMode.InLine); }).DataBinding(dataBinding =>
+                              {
+                                  dataBinding.Ajax()
+                                             .Select("ListCategory", controllerNameForGrid)
+                                             .Update("UpdateCategory", controllerNameForGrid)
+                                             .Delete("DeleteCategory", controllerNameForGrid);
+                              })
+                      .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both)).EnableCustomBinding(true))
+                @* ReSharper restore ConvertToLambdaExpression *@
+
+            </td>
+        </tr>
+    </table>
+    
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddCategoryName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddCategoryName)
+                @Html.ValidationMessageFor(model => model.AddCategoryName)
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <input type="button" id="add" class="t-button" value="Добавить" />
+            </td>
+        </tr>
+    </table>
+    
+    <script type="text/javascript">
+        $(function () {
+            $('#add').click(function () {
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.Action("Add", "YandexMarketCategory")',
+                    data: $(this.form).serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        var grid = $("#YandexMarketCategory-grid");
+                        grid.data('tGrid').ajaxRequest();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to add record.');
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+ 
+    
+   
+}
