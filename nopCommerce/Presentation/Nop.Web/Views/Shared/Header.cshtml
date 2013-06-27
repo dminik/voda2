@@ -1,31 +1,43 @@
-﻿<div class="header">
+﻿<div class="header header-left">
     @Html.Widget("header")
-    <div class="header-logo">
-        <div class="header-phone-work-time">
-            <div class="header-phone" >Киев: (093) 796-70-38  <span class="phone-logo-life">Life:)</span></div>
-            <div class="header-work-time">Без выходных с 10:00 до 21:00</div>
-        </div>
-        <div class="header-about">Просто об очистке воды</div>
-         <a href="@Url.RouteUrl("HomePage")" class="logo">&nbsp; </a>
-        </div>
-    <div class="header-links-wrapper">
-        @Html.Action("HeaderLinks", "Common")
-        @Html.Action("FlyoutShoppingCart", "ShoppingCart")
-    </div>
-    <div class="header-selectors-wrapper">
-        <div class="tax-display-type-selector">
-            @Html.Action("TaxTypeSelector", "Common")
-        </div>
-        <div class="currency-selector">
-            @Html.Action("CurrencySelector", "Common")
-        </div>
-        <div class="language-selector">
-            @Html.Action("LanguageSelector", "Common")
-        </div>
-        @Html.Widget("header_selectors")
-    </div>
-    <div class="search-box">
-        @Html.Action("SearchBox", "Catalog")
+    <div class="header-logo header-left">        
+        <a href="@Url.RouteUrl("HomePage")" class="logo">        
+            <div class="header-phone-work-time">
+                <div class="header-phone" ><span>Киев: (093) 796-70-38 </span><span class="phone-logo-life">Life:)</span></div>
+                <div class="header-work-time">Без выходных с 10:00 до 21:00</div>
+            </div>
+            <div class="header-about">Просто об очистке воды</div>        
+        </a>
     </div>
     
+    
+    
+    <div class="header-right">
+
+        <div class="header-links-wrapper">
+            @Html.Action("HeaderLinks", "Common")
+           @* @Html.Action("FlyoutShoppingCart", "ShoppingCart")*@
+        </div>
+    
+
+        <div class="header-selectors-wrapper">
+            <div class="tax-display-type-selector">
+                @Html.Action("TaxTypeSelector", "Common")
+            </div>
+            <div class="currency-selector">
+                @Html.Action("CurrencySelector", "Common")
+            </div>
+            <div class="language-selector">
+                @Html.Action("LanguageSelector", "Common")
+            </div>
+            @Html.Widget("header_selectors")
+        </div>
+    
+    
+        <div class="search-box">
+            @Html.Action("SearchBox", "Catalog")
+        </div>
+
+    </div>
+
 </div>
