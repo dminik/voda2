@@ -52,5 +52,10 @@
       <path>Libraries\Nop.Services\SiteParsers\YandexMarketHelpers.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\YandexMarketHelpers.cs</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>Menu.cshtml</name>
+      <path>Presentation\Nop.Web\Views\Common\Menu.cshtml</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Views\Common\Menu.cshtml</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>

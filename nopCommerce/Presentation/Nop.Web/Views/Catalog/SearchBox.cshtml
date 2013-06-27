@@ -6,7 +6,7 @@
            value="@T("Search.SearchBox.Tooltip")" name="q"  onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" onblur="if(this.value=='') {this.value = '@T("Search.SearchBox.Tooltip")';}" />
     <input type="submit" class="button-1 search-box-button" value="@T("Search")" />
     //dminikk
-    <a class="search-box-advanced-link" href="@Url.RouteUrl("ProductSearch")">Расширенный поиск</a>
+    <div class="search-box-advanced"><a class="search-box-advanced-link" href="@Url.RouteUrl("ProductSearch")">Расширенный поиск</a></div>
     <script type="text/javascript">
 
         function check_small_search_form() {
