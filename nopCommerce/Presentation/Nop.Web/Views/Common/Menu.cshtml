@@ -16,7 +16,7 @@
     @*dminikik*@
     <li><a href="@Url.RouteUrl("Topic", new { SystemName = "shippinginfo" })">Доставка и установка</a></li>
     <li><a href="@Url.RouteUrl("Topic", new { SystemName = "service" })">Замена фильтров</a></li>
-    <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })">@T("AboutUs")</a></li>
+   @* <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })">О Компании</a></li>*@
 
     @if (Model.BlogEnabled)
     {
@@ -27,6 +27,6 @@
         <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
     }
     @*dminikk*@
-   @* <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>*@
+    <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
     @Html.Widget("header_menu_after")
 </ul>

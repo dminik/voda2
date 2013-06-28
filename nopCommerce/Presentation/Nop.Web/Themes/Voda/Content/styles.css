@@ -750,7 +750,7 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 
 /* CONTACTS */
 .contact-page{}
-.contact-page .page-body{padding:15px;margin-bottom:15px;border:1px solid #eee;}
+.contact-page .page-body{padding:15px;margin-bottom:15px;border:1px solid #eee; background-color: powderblue;}
 .contact-page .result{font-weight:bold;}
 .contact-page .form-fields{zoom:1;}
 .contact-page .form-fields:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}

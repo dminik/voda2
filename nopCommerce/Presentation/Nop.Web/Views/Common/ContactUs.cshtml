@@ -65,3 +65,31 @@
         @Html.Widget("contactus_bottom")
     </div>
 </div>
+
+
+@*<script src="http://api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU" type="text/javascript"></script>*@
+@*<script type="text/javascript" charset="utf-8" src="//api-maps.yandex.ru/services/constructor/1.0/js/?sid=pUeNo6Mglk1QtvGXwGYHUKR_qhXnnza0&width=390&height=240"></script>*@
+
+<script type="text/javascript">
+var myMap;
+
+// Дождёмся загрузки API и готовности DOM.
+ymaps.ready(init);
+
+function init () {
+    // Создание экземпляра карты и его привязка к контейнеру с
+    // заданным id ("map").
+    myMap = new ymaps.Map('map', {
+        // При инициализации карты обязательно нужно указать
+        // её центр и коэффициент масштабирования.
+        center:[55.76, 37.64], // Москва
+        zoom:10
+    });
+
+    document.getElementById('destroyButton').onclick = function () {
+        // Для уничтожения используется метод destroy.
+        myMap.destroy();
+    };
+
+}
+</script>
