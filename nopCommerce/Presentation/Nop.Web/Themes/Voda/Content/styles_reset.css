@@ -112,3 +112,23 @@ td.fieldname{font-size:12px;}
 .content-paragraph_1{padding-bottom:5px; }
 .content-paragraph_2{padding-bottom:4px; padding-left:4px;}
 .content-paragraph_3{padding-bottom:3px; padding-left:4px;}
+
+
+.Vodoochistka_Diagramma 
+{
+	width: 100%;
+	height: auto;
+	text-align: center;
+}
+
+.Vodoochistka_Diagramma img
+{
+	width: 100%;
+	height: auto;
+}
+
+.Vodoochistka_Diagramma a
+{
+	data-fancybox-width: 1000;
+	data-fancybox-height: 500;
+}
