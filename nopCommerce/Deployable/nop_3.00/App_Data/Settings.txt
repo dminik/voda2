@@ -1,2 +1,0 @@
-DataProvider: sqlserver
-DataConnectionString: workstation id=nopComm4.mssql.somee.com;packet size=4096;user id=dminikk_SQLLogin_3;pwd=8aidvqq6z7;data source=nopComm4.mssql.somee.com;persist security info=False;initial catalog=nopComm4;MultipleActiveResultSets=True

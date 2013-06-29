@@ -90,3 +90,7 @@ nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Views/YandexMar
 nopCommerce/Presentation/Nop.Web/ProductsCatalog/
 nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/
 nopCommerce/Presentation/Nop.Web/Content/Images/Thumbs/
+nopCommerce/Presentation/Nop.Web/Plugins/Payments.AuthorizeNet/Nop.Plugin.Payments.AuthorizeNet.XmlSerializers.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Shipping.UPS/Nop.Plugin.Shipping.UPS.XmlSerializers.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Shipping.Fedex/Nop.Plugin.Shipping.Fedex.XmlSerializers.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Payments.PayPalDirect/Nop.Plugin.Payments.PayPalDirect.XmlSerializers.dll
