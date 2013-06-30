@@ -1313,6 +1313,8 @@
     <Content Include="Scripts\slimbox2.js" />
     <Content Include="Themes\Voda\Content\images\main.jpg" />
     <Content Include="Themes\Voda\Content\images\Shkola_Vodi.png" />
+    <Content Include="Themes\Voda\Content\images\Vodoochistka_Diagramma_big.png" />
+    <Content Include="Themes\Voda\Content\images\Vodoochistka_Diagramma_small.png" />
     <Content Include="Themes\Voda\Content\styles_reset.css" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_small.gif" />
