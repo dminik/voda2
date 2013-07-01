@@ -66,6 +66,11 @@
                         @Html.Action("ShareButton", "Catalog")
                         @Html.Widget("productdetails_overview_bottom")
                     </div>
+                    
+                    <div class="under-review">
+                        <div class="shipping-free"><span>Доставка и установка<br/> БЕСПЛАТНО!</span></div>
+                        <div class="is-exist"><span>Товар в наличии</span></div>
+                    </div>
                     @if (!String.IsNullOrEmpty(Model.FullDescription))
                     {
                         <div class="full-description" itemprop="description">

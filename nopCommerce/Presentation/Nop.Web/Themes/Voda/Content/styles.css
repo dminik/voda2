@@ -860,18 +860,29 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 .product-details-page{border:1px solid #d3d3d3;margin-top:10px;padding:10px;}
 .product-collateral{margin-top:10px;margin-bottom:10px;clear:both; padding-top: 22px;}
 .product-essential{}
-.product-details-page .gallery{float:left;width:200px; margin-bottom: 5px;}
-.product-details-page .gallery .picture{}
-.product-details-page .gallery .picture-thumbs{margin-top:10px;}
+.product-details-page .gallery{float:left; margin-bottom: 5px;}
+.product-details-page .gallery .picture {
+	display: inline-block;
+    vertical-align: top;
+    width: 67%;
+}
+.product-details-page .gallery .picture-thumbs{
+	display: inline-block;
+    margin-top: 10px;
+    width: 29%;}
 .product-details-page .gallery .picture-thumbs a{margin-right:3px;}
-.product-details-page .overview{float:right;width:270px;margin:5px 5px 10px;padding:10px;border:1px solid #eee;}
-.product-details-page .product-name{color:#5C5B5B;font-size:1.3em;margin-bottom:0.3em;padding-top:10px;}
-.product-details-page .short-description,.product-details-page .manufacturers,.product-details-page .sku,.product-details-page .manufacturer-part-number,.product-details-page .stock,.product-details-page .gtin{color:#555;margin-bottom:.3em;font-size:1.1em;}
+.product-details-page .overview{float:right;width:56%;margin:5px 5px 10px;padding:10px;border:1px solid #eee;border-radius: 14px;}
+.product-details-page .product-name{color:#5C5B5B;font-size:1.3em;margin-bottom:0.3em;padding-top:10px;border-bottom: 3px solid;}
+.product-details-page .short-description,.product-details-page .manufacturers,.product-details-page .sku,.product-details-page .manufacturer-part-number,.product-details-page .stock,.product-details-page .gtin
+{color:#555;margin-bottom:.3em;font-size:1.1em;}
 .product-details-page .ShortDescription{margin-left:25px;}
+.product-details-page .short-description
+{margin-left:25px;font-size:1.2em; }
 
 
 .product-gallery-price {
 	float: left;
+	width:39%;
 }
 .product-details-page .gallery .picture img {
 	width: 100%;
@@ -885,8 +896,20 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 
 
 
+.product-details-page .under-review {
+	float: right;
+	width:56%;
+}
 
+.product-details-page .shipping-free {
+	font-size: 2em;
+	color: red;
+}
 
+.product-details-page .is-exist {
+	font-size: 2em;
+	color: goldenrod;
+}
 
 
 .product-details-page .full-description{border:1px solid #eee;clear:both;color:#555;margin-bottom:.3em;padding:5px;}
@@ -905,7 +928,7 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 .product-details-page .product-variant-list{/*float: left;clear: none;*/clear:both;padding:0px 0;border:0;margin-bottom:0px;text-align: center;}
 .product-details-page .product-variant-list .product-variant-line{border:1px solid #EEEEEE;zoom:1;}
 .product-details-page .product-variant-list .product-variant-line:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
-.add-to-cart-button{padding:5px 10px;cursor:pointer;background:#7DB72F;background:-webkit-gradient(linear,left top,left bottom,from(#7DB72F),to(#4E7D0E));background:-moz-linear-gradient(top,#7DB72F,#4E7D0E);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7DB72F',endColorstr='#4E7D0E');color:#fff;text-shadow:none;border-color:#999;border:0 none;font-weight:700;font-size:1.3em;margin-top:-5px;margin-left:35px;}
+.add-to-cart-button{padding:5px 10px;cursor:pointer;background:#7DB72F;background:-webkit-gradient(linear,left top,left bottom,from(#7DB72F),to(#4E7D0E));background:-moz-linear-gradient(top,#7DB72F,#4E7D0E);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7DB72F',endColorstr='#4E7D0E');color:#fff;text-shadow:none;border-color:#999;border:0 none;font-weight:700;font-size:2.3em;margin-top:-5px;margin-left:35px;border-radius: 10px;}
 .product-details-page .product-variant-list .add-to-cart-button{margin-top:3px;margin-left:0;}
 .add-to-cart-button:hover{color:#fff;}
 .add-to-wishlist-button{margin-top:10px;margin-bottom: 10px;}
