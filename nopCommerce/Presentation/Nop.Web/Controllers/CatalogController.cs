@@ -36,10 +36,13 @@ using Nop.Services.Logging;
 using Nop.Web.Framework.Events;
 using Nop.Services.Events;
 using Nop.Services.Stores;
+using System.Xml.Linq;
 
 namespace Nop.Web.Controllers
 {
-    public partial class CatalogController : BaseNopController
+	using System.Collections;
+
+	public partial class CatalogController : BaseNopController
     {
 		#region Fields
 
@@ -472,18 +475,46 @@ namespace Nop.Web.Controllers
                 return model;
             });
         }
-        
+
+		[NonAction]
+		protected string CreateShortDescriptionSpecs(IList<ProductSpecificationModel> specList)
+		{
+			var attribsForShortDescription = _catalogSettings.SpecToDisplayInShortDescription.Split(';').ToList();
+				//{
+				//	"Тип фильтра",
+				//	"Число ступеней очистки",
+				//	"Отдельный кран"
+				//};
+
+			
+
+			var ulShortDescription = new XElement("ul");
+			var xmlShortDescription =
+				new XElement("div", new XAttribute("class", "ShortDescription"),
+					ulShortDescription);
+
+			foreach (var yandexMarketSpecRecord in specList.Where(yandexMarketSpecRecord => attribsForShortDescription.Contains(yandexMarketSpecRecord.SpecificationAttributeName)))
+			{
+				ulShortDescription.Add(new XElement("li", yandexMarketSpecRecord.SpecificationAttributeName + ": " + yandexMarketSpecRecord.SpecificationAttributeOption));
+			}
+
+			return xmlShortDescription.ToString();
+		}
+
         [NonAction]
         protected ProductDetailsModel PrepareProductDetailsPageModel(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
-            
+
+			var modelSpecs = PrepareProductSpecificationModel(product);
+	        var shortDescriptionSpecs = CreateShortDescriptionSpecs(modelSpecs);
+			
             var model = new ProductDetailsModel()
             {
                 Id = product.Id,
                 Name = product.GetLocalized(x => x.Name),
-                ShortDescription = product.GetLocalized(x => x.ShortDescription),
+				ShortDescription = product.GetLocalized(x => x.ShortDescription) + shortDescriptionSpecs,
                 FullDescription = product.GetLocalized(x => x.FullDescription),
                 MetaKeywords = product.GetLocalized(x => x.MetaKeywords),
                 MetaDescription = product.GetLocalized(x => x.MetaDescription),

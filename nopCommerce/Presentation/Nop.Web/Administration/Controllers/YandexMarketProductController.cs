@@ -178,7 +178,9 @@
 		}
 
 		private string CreateShortDescription(IEnumerable<YandexMarketSpecRecord> specList)
-		{			
+		{
+			return "";
+		
 			var attribsForShortDescription = new List<string>()
 				{
 					"Тип фильтра",

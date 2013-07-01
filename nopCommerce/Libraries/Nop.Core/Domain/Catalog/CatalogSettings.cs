@@ -258,5 +258,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the value indicating how many manufacturers to display in manufacturers block
         /// </summary>
         public int ManufacturersBlockItemsToDisplay { get; set; }
+
+		/// <summary>
+		/// Gets or sets the value indicating what specs will automaticaly show in short desc. It String with semicol divider.
+		/// </summary>
+		public string SpecToDisplayInShortDescription { get; set; }
     }
 }
