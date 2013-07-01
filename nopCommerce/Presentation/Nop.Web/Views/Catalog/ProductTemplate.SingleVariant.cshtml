@@ -30,8 +30,29 @@
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id" data-productvariantid="@defaultProductVariant.Id">
                 <div class="product-essential">
                     @Html.Widget("productdetails_before_pictures")
-                    <!--product pictures-->
-                    @Html.Partial("_ProductDetailsPictures", Model)
+
+                    <div class="product-gallery-price">
+                        @Html.Partial("_ProductDetailsPictures", Model)
+                        @Html.Widget("productdetails_before_collateral")
+                        <div class="product-collateral">
+                            @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = defaultProductVariant.Id })
+                            @{
+            var dataDictAttributes = new ViewDataDictionary();
+            dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", defaultProductVariant.Id);
+                                @Html.Partial("_ProductAttributes", defaultProductVariant.ProductVariantAttributes, dataDictAttributes)                  
+                            }
+                            @{
+            var dataDictGiftCard = new ViewDataDictionary();
+            dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", defaultProductVariant.Id);
+                                @Html.Partial("_GiftCardInfo", defaultProductVariant.GiftCard, dataDictGiftCard)
+                            }
+                            @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
+                            @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
+                            @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
+                            @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
+                        </div>
+                    </div>
+
                     @Html.Widget("productdetails_after_pictures")
                     <div class="overview">
                         <div class="product-name">
@@ -57,12 +78,12 @@
                         <!--sample download-->
                         @Html.Partial("_DownloadSample", defaultProductVariant)
                         @{
-                            var dataDictPrice = new ViewDataDictionary();
-                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", defaultProductVariant.Id);
+                        var dataDictPrice = new ViewDataDictionary();
+                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", defaultProductVariant.Id);
                             @Html.Partial("_ProductVariantPrice", defaultProductVariant.ProductVariantPrice, dataDictPrice)
                             
-                            var dataDictAddToCart = new ViewDataDictionary();
-                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", defaultProductVariant.Id);
+                        var dataDictAddToCart = new ViewDataDictionary();
+                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", defaultProductVariant.Id);
                             @Html.Partial("_ProductVariantAddToCart", defaultProductVariant.AddToCart, dataDictAddToCart)                    
                         }
                         @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
@@ -77,24 +98,7 @@
                         </div>
                     }
                 </div>
-                @Html.Widget("productdetails_before_collateral")
-                <div class="product-collateral">
-                    @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = defaultProductVariant.Id })
-                    @{
-                        var dataDictAttributes = new ViewDataDictionary();
-                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", defaultProductVariant.Id);
-                        @Html.Partial("_ProductAttributes", defaultProductVariant.ProductVariantAttributes, dataDictAttributes)                  
-                    }
-                    @{
-                        var dataDictGiftCard = new ViewDataDictionary();
-                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", defaultProductVariant.Id);
-                        @Html.Partial("_GiftCardInfo", defaultProductVariant.GiftCard, dataDictGiftCard)
-                    }
-                    @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
-                    @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
-                    @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
-                    @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
-                </div>
+
             </div>
         }
         @Html.Widget("productdetails_bottom")

@@ -27,9 +27,23 @@
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
                     @Html.Widget("productdetails_before_pictures")
-                    <!--product pictures-->
-                    @Html.Partial("_ProductDetailsPictures", Model)
-                    @Html.Widget("productdetails_after_pictures")
+
+                    <div class="product-gallery-price">
+                        @Html.Partial("_ProductDetailsPictures", Model)
+                        @Html.Widget("productdetails_after_pictures")
+
+                        <!--product variants-->
+                        <div class="product-variant-list">
+                            @foreach (var variant in Model.ProductVariantModels)
+                            {
+                                var dataDictVariant = new ViewDataDictionary();
+                                dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
+                                @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
+                            }
+                        </div>
+
+                    </div>
+
                     <div class="overview">
                         <div class="product-name">
                             <h1 itemprop="name">
@@ -61,15 +75,7 @@
                 </div>
                 @Html.Widget("productdetails_before_collateral")
                 <div class="product-collateral">
-                    <!--product variants-->
-                    <div class="product-variant-list">
-                        @foreach (var variant in Model.ProductVariantModels)
-                        {
-                            var dataDictVariant = new ViewDataDictionary();
-                            dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
-                            @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
-                        }
-                    </div>
+
                     @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
