@@ -32,6 +32,32 @@ function setClickToCompareCheckBox(checkBoxId, urlToAdd, urlToRemove) {
     });
 }
 
+function setClickToCompareDeleteButton(buttonId, urlToRemove) {
+    var button = $('#' + buttonId);   
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            url: urlToRemove,
+            data: { productId: button.prop("id") },
+            dataType: 'json',
+            success: function (data) {
+                
+                // delete product column
+                $('td[product-id="' + buttonId + '"]').remove();
+                
+                // increase compare product counter
+                var counterSpan = $('.compare-list-count');
+                var oldVal = parseInt(counterSpan.html());
+                var newVal = oldVal - 1;
+                $('.compare-list-count').html(newVal);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(thrownError);
+            }
+        });            
+}
+
+
 function getE(name) {
     //Obsolete since nopCommerce 2.60. But still here for backwards compatibility (in case of some plugin developers used it in their plugins or customized solutions)
     if (document.getElementById)
