@@ -494,6 +494,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-list .product-item .prices .actual-price{color:#B80709;}
 .product-list .product-item .prices .old-price{color:#5C5B5B;text-decoration:line-through;}
 .product-list .product-item .buttons{padding-top:20px;}
+.product-list .product-item .more-details{ text-decoration: underline;margin-left: 10px; padding-top: 10px;font-size: 1.2em;}
 
 
 /* FEATURED PRODUCTS */
@@ -506,7 +507,8 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .category-page .page-title,.manufacturer-list-page .page-title,.manufacturer-page .page-title,.product-tag-page .page-title,.product-tags-all-page .page-title{border-bottom:0 none;clear:both;}
 .product-tags-all-page .product-tags-list li{display:inline;}
 .product-tags-all-page .product-tags-list li a{text-decoration:none;margin:0 2px 0 0;}
-.category-page .category-description,.manufacturer-page .manufacturer-description{color:#555;font-size:1.1em;}
+.category-page .category-description,.manufacturer-page .manufacturer-description{color:#555;font-size:1.1em; border: 1px solid rgb(238, 238, 238);
+    border-radius: 4px 4px 4px 4px;margin-bottom: 34px;padding-left: 25px;}
 .sub-category-grid,.manufacturer-grid{margin-left:auto;margin-right:auto;width:auto;margin-bottom:15px;zoom:1;}
 .sub-category-grid:after,.manufacturer-grid:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 .sub-category-grid a,.manufacturer-grid a{color:#555;font-size:1.2em;font-weight:700;}
@@ -544,6 +546,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-spec-filter .remove-filter a{font-weight:700;color:#b80709;}
 div.product-filters div.filter-content div.available-items ul.group li.title{ margin-top: 20px;}
 .already-filtered-items{border: 5px solid cornflowerblue;}
+.compare-list-count-block { float: right;text-decoration: underline;}
 
 /* COMPARE PRODUCTS */
 .compare-products-page{}

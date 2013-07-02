@@ -12,7 +12,7 @@
         Html.AddCanonicalUrlParts(categoryUrl);
     }
 
-    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;    
 }
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
@@ -111,6 +111,12 @@
         </div>
         @Html.Widget("categorydetails_before_filters")
        
+        <div class="compare-list-count-block">
+             <a href="@Url.RouteUrl("CompareProducts")">
+                              @T("Products.Compare.List")
+                        (<span class="compare-list-count">@Model.CompareListCount</span>)
+             </a>
+         </div>
 
         @Html.Widget("categorydetails_before_product_list")
         @*product list*@
@@ -151,7 +157,7 @@
 
 
 @section product_filters {
-     <div class="product-filters-wrapper">
+     <div class="product-filters-wrapper ">
             @*filtering*@
             @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
             {

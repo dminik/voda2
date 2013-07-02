@@ -22,6 +22,7 @@ namespace Nop.Web.Models.Catalog
         public string MetaDescription { get; set; }
         public string MetaTitle { get; set; }
         public string SeName { get; set; }
+		public int CompareListCount { get; set; }
         
         public PictureModel PictureModel { get; set; }
 
@@ -35,6 +36,7 @@ namespace Nop.Web.Models.Catalog
         public IList<ProductOverviewModel> FeaturedProducts { get; set; }
         public IList<ProductOverviewModel> Products { get; set; }
         
+
 
 		#region Nested Classes
 

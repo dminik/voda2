@@ -27,6 +27,9 @@
         </h2>
         <div class="description">
             @Html.Raw(Model.ShortDescription)
+            <div class="more-details">
+                <a  href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" >Подробнее...</a>
+            </div>
         </div>
         <div class="add-info">
             <div class="prices">
