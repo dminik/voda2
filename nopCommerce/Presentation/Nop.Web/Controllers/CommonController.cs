@@ -67,6 +67,7 @@ namespace Nop.Web.Controllers
         private readonly HttpContextBase _httpContext;
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
+		private readonly ICompareProductsService _compareProductsService;
 
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
@@ -93,7 +94,9 @@ namespace Nop.Web.Controllers
             ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
             IThemeProvider themeProvider, IForumService forumService,
             IGenericAttributeService genericAttributeService, IWebHelper webHelper,
-            IPermissionService permissionService, IMobileDeviceHelper mobileDeviceHelper,
+			IPermissionService permissionService, 
+			ICompareProductsService compareProductsService, 
+			IMobileDeviceHelper mobileDeviceHelper,
             HttpContextBase httpContext, ICacheManager cacheManager,
             ICustomerActivityService customerActivityService, CustomerSettings customerSettings, 
             TaxSettings taxSettings, CatalogSettings catalogSettings,
@@ -124,6 +127,7 @@ namespace Nop.Web.Controllers
             this._httpContext = httpContext;
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
+	        this._compareProductsService = compareProductsService;
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -380,6 +384,9 @@ namespace Nop.Web.Controllers
                     .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList()
                     .GetTotalProducts(),
+
+				CompareListItems =  _compareProductsService.GetComparedProducts().Count,
+
                 AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
                 UnreadPrivateMessages = unreadMessage,
                 AlertMessage = alertMessage,
