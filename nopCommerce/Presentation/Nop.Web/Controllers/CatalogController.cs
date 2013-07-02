@@ -2842,7 +2842,7 @@ namespace Nop.Web.Controllers
 
             _compareProductsService.RemoveProductFromCompareList(productId);
 
-            return RedirectToRoute("CompareProducts");
+			return new EmptyResult();
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
@@ -2881,7 +2881,8 @@ namespace Nop.Web.Controllers
 
             var model = new AddToCompareListModel()
             {
-                ProductId = productId
+                ProductId = productId,
+				IsInCompareList = _compareProductsService.GetComparedProducts().Any(p => p.Id == productId)
             };
 
             return PartialView("CompareProductsButton", model);

@@ -2,6 +2,29 @@
 ** nopCommerce custom js functions
 */
 
+function setClickToCompareCheckBox(checkBoxId, urlToAdd, urlToRemove) {
+    var checkBox = $('#' + checkBoxId);
+    checkBox.click(function () {
+
+        var url = checkBox.prop("checked") ? urlToAdd : urlToRemove;
+        
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            url: url,
+            data: { productId: checkBox.val() },
+            dataType: 'json',
+            success: function(data) {
+                //alert(data);
+                checkBox.attr("selected", $(checkBox).prop("checked"));
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(thrownError);
+            }
+        });
+        return true;
+    });
+}
 
 function getE(name) {
     //Obsolete since nopCommerce 2.60. But still here for backwards compatibility (in case of some plugin developers used it in their plugins or customized solutions)

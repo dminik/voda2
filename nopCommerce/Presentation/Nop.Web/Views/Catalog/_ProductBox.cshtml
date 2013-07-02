@@ -42,6 +42,7 @@
                 {
                     <input type="button" value="@(Model.ProductPrice.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" class="button-2 product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart('@addtocartlink    ');return false;" />
                 }
+                @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
             </div>
             @Html.Widget("productbox_add_info")
         </div>
