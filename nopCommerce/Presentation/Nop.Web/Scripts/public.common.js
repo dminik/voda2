@@ -15,8 +15,14 @@ function setClickToCompareCheckBox(checkBoxId, urlToAdd, urlToRemove) {
             data: { productId: checkBox.val() },
             dataType: 'json',
             success: function(data) {
-                //alert(data);
+                
                 checkBox.attr("selected", $(checkBox).prop("checked"));
+                
+                // increase compare product counter
+                var counterSpan = $('.compare-list-count');
+                var oldVal = parseInt(counterSpan.html());
+                var newVal = checkBox.prop("checked") ? oldVal + 1 : oldVal - 1;
+                $('.compare-list-count').html(newVal);                
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(thrownError);
