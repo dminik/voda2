@@ -43,7 +43,11 @@
         //dminikk 
         // @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
         // @Html.Action("PopularProductTags", "Catalog")
-            
+        
+        if (IsSectionDefined("product_filters"))
+        {
+            @RenderSection("product_filters")
+        }
         
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
         @Html.Widget("left_side_column_after")
@@ -63,6 +67,12 @@
     {
         @Html.Widget("right_side_column_before")
         @Html.Action("NewsletterBox", "Newsletter")
+
+        if (IsSectionDefined("featured_products"))
+        {
+            @RenderSection("featured_products")
+        }
+                
         @Html.Action("RecentlyViewedProductsBlock", "Catalog")    
         
         //dminikk    

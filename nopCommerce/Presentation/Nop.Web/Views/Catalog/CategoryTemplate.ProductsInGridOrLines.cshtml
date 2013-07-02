@@ -1,6 +1,6 @@
 ﻿@model CategoryModel
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
@@ -81,25 +81,7 @@
                 }
             </div>
         }
-        @Html.Widget("categorydetails_before_featured_products")
-        @*featured products*@
-        @if (Model.FeaturedProducts.Count > 0)
-        {
-            <div class="product-grid featured-product-grid">
-                <div class="title">
-                    <strong>@T("Products.FeaturedProducts")</strong>
-                </div>
-                <div>
-                    @foreach (var item in Model.FeaturedProducts)
-                    {
-                        <div class="item-box">
-                            @Html.Partial("_ProductBox", item)
-                        </div>
-                    }
-                </div>
-            </div>
-        }
-        @Html.Widget("categorydetails_after_featured_products")
+       
         <div class="product-selectors">
             @*view mode*@
             @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
@@ -181,4 +163,26 @@
                 @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
             }
         </div>
+}
+
+@section featured_products {
+    @Html.Widget("categorydetails_before_featured_products")
+    @*featured products*@
+    @if (Model.FeaturedProducts.Count > 0)
+    {
+        <div class="product-grid featured-product-grid block">
+            <div class="title">
+                <strong>@T("Products.FeaturedProducts")</strong>
+            </div>
+            <div>
+                @foreach (var item in Model.FeaturedProducts)
+                {
+                    <div class="item-box">
+                        @Html.Partial("_ProductBox", item)
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    @Html.Widget("categorydetails_after_featured_products")
 }
