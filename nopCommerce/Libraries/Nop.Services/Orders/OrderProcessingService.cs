@@ -823,7 +823,8 @@ namespace Nop.Services.Orders
 
                 //payment workflow
                 IPaymentMethod paymentMethod = null;
-                if (!skipPaymentWorkflow)
+				// dminikk
+                if (false) // !skipPaymentWorkflow)
                 {
                     paymentMethod = _paymentService.LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
                     if (paymentMethod == null)
@@ -860,7 +861,8 @@ namespace Nop.Services.Orders
 
                 //process payment
                 ProcessPaymentResult processPaymentResult = null;
-                if (!skipPaymentWorkflow)
+				// dminikk 
+                if (false) //!skipPaymentWorkflow)
                 {
                     if (!processPaymentRequest.IsRecurringPayment)
                     {

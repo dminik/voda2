@@ -21,15 +21,15 @@
         <ol class="opc" id="checkout-steps">
             <li id="opc-billing" class="tab-section allow">
                 <div class="step-title">
-                    <span class="number">1</span>
-                    <h2>@T("Checkout.BillingAddress")</h2>
+                    <span class="before-step-number">Шаг</span><span class="number">1</span>
+                    <h2>Адрес доставки@*@T("Checkout.BillingAddress")*@</h2>
                 </div>
                 <div id="checkout-step-billing" class="step a-item" style="display: none;">
                     <form id="co-billing-form" action="">
-                    <div id="checkout-billing-load">
-                        @Html.Action("OpcBillingForm", "Checkout")
-                        @*billing address content will be loaded here*@
-                    </div>
+                        <div id="checkout-billing-load">
+                            @Html.Action("OpcBillingForm", "Checkout")
+                            @*billing address content will be loaded here*@
+                        </div>
                     </form>
                     <script type="text/javascript">
                         Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/');
@@ -38,12 +38,13 @@
                         }
                     </script>
                     <div class="buttons" id="billing-buttons-container">
-                        <input type="button" title="@T("Common.Continue")" class="button-1 new-address-next-step-button" onclick="Billing.save()" value="@T("Common.Continue")" />
+                        <input type="button" title="@T("Common.Continue")" class="button-1 new-address-next-step-button " onclick="Billing.save()" value="@T("Common.Continue")" />
                         <span class="please-wait" id="billing-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
                     </div>
                 </div>
             </li>
-            @if (Model.ShippingRequired)
+
+           @* @if (Model.ShippingRequired)
             {
                 <li id="opc-shipping" class="tab-section">
                     <div class="step-title">
@@ -53,7 +54,7 @@
                     <div id="checkout-step-shipping" class="step a-item" style="display: none;">
                         <form action="" id="co-shipping-form">
                         <div id="checkout-shipping-load">
-                            @*shipping address content will be loaded here*@
+                           
                         </div>
                         </form>
                         <script type="text/javascript">
@@ -78,7 +79,7 @@
                     <div id="checkout-step-shipping-method" class="step a-item" style="display: none;">
                         <form id="co-shipping-method-form" action="">
                         <div id="checkout-shipping-method-load">
-                            @*shipping methods content will be loaded here*@
+                           
                         </div>
                         <script type="text/javascript">
                             ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
@@ -101,7 +102,7 @@
                 <div id="checkout-step-payment-method" class="step a-item" style="display: none;">
                     <form action="" id="co-payment-method-form">
                     <div id="checkout-payment-method-load">
-                        @*payment methods content will be loaded here*@ Payment is not required
+                       Payment is not required
                     </div>
                     </form>
                     <script type="text/javascript">
@@ -123,7 +124,7 @@
                 <div id="checkout-step-payment-info" class="step a-item" style="display: none;">
                     <form action="" id="co-payment-info-form">
                     <div id="checkout-payment-info-load">
-                        @*payment info content will be loaded here*@ Payment is not required
+                        Payment is not required
                     </div>
                     </form>
                     <script type="text/javascript">
@@ -136,15 +137,15 @@
                         <span class="please-wait" id="payment-info-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
                     </div>
                 </div>
-            </li>
+            </li>*@
             <li id="opc-confirm_order" class="tab-section">
                 <div class="step-title">
-                    <span class="number">@(Model.ShippingRequired ? "6" : "4")</span>
+                    <span class="before-step-number">Шаг</span><span class="number">2@*@(Model.ShippingRequired ? "6" : "4")*@</span>
                     <h2>@T("Checkout.ConfirmOrder")</h2>
                 </div>
                 <div id="checkout-step-confirm-order" class="step a-item" style="display: none;">
                     <div id="checkout-confirm-order-load">
-                        @*confirm order content will be loaded here*@
+                       
                     </div>
                     <script type="text/javascript">
                         ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@(storeLocation)checkout/completed/');
@@ -152,7 +153,7 @@
                     <div class="buttons" id="confirm-order-buttons-container">
                         <p class="back-link">
                             <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
-                        <input type="button" class="button-1 confirm-order-next-step-button" onclick="ConfirmOrder.save()" value="@T("Common.Confirm")" />
+                        <input type="button" class="button-1 confirm-order-next-step-button product-box-add-to-cart-button" onclick="ConfirmOrder.save()" value="@T("Common.Confirm")" />
                         <span class="please-wait" id="confirm-order-please-wait" style="display: none;">@T("Checkout.SubmittingOrder")</span>
                     </div>
                 </div>

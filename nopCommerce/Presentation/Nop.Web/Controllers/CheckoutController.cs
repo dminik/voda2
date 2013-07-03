@@ -1092,21 +1092,21 @@ namespace Nop.Web.Controllers
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 }
 
-                if (cart.RequiresShipping())
-                {
-                    //shipping is required
-                    var shippingAddressModel = PrepareShippingAddressModel();
-                    return Json(new
-                    {
-                        update_section = new UpdateSectionJsonModel()
-                        {
-                            name = "shipping",
-                            html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
-                        },
-                        goto_section = "shipping"
-                    });
-                }
-                else
+				//if (cart.RequiresShipping())
+				//{
+				//	//shipping is required
+				//	var shippingAddressModel = PrepareShippingAddressModel();
+				//	return Json(new
+				//	{
+				//		update_section = new UpdateSectionJsonModel()
+				//		{
+				//			name = "shipping",
+				//			html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+				//		},
+				//		goto_section = "shipping"
+				//	});
+				//}
+				//else
                 {
                     //shipping is not required
                     _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
@@ -1114,54 +1114,54 @@ namespace Nop.Web.Controllers
 
                     //Check whether payment workflow is required
                     //we ignore reward points during cart total calculation
-                    bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
-                    if (isPaymentWorkflowRequired)
-                    {
-                        //payment is required
-                        var paymentMethodModel = PreparePaymentMethodModel(cart);
+                    //bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
+					//if (isPaymentWorkflowRequired)
+					//{
+					//	//payment is required
+					//	var paymentMethodModel = PreparePaymentMethodModel(cart);
 
-                        if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
-                            paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
-                        {
-                            //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
-                            //so customer doesn't have to choose a payment method
+					//	if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
+					//		paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
+					//	{
+					//		//if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
+					//		//so customer doesn't have to choose a payment method
 
-                            var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
-                            _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                                SystemCustomerAttributeNames.SelectedPaymentMethod,
-                                selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
+					//		var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
+					//		_genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
+					//			SystemCustomerAttributeNames.SelectedPaymentMethod,
+					//			selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
 
-                            var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
-                            if (paymentMethodInst == null || !paymentMethodInst.IsPaymentMethodActive(_paymentSettings))
-                                throw new Exception("Selected payment method can't be parsed");
+					//		var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
+					//		if (paymentMethodInst == null || !paymentMethodInst.IsPaymentMethodActive(_paymentSettings))
+					//			throw new Exception("Selected payment method can't be parsed");
 
 
-                            var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
-                            return Json(new
-                            {
-                                update_section = new UpdateSectionJsonModel()
-                                {
-                                    name = "payment-info",
-                                    html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
-                                },
-                                goto_section = "payment_info"
-                            });
-                        }
-                        else
-                        {
-                            //customer have to choose a payment method
-                            return Json(new
-                            {
-                                update_section = new UpdateSectionJsonModel()
-                                {
-                                    name = "payment-method",
-                                    html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
-                                },
-                                goto_section = "payment_method"
-                            });
-                        }
-                    }
-                    else
+					//		var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
+					//		return Json(new
+					//		{
+					//			update_section = new UpdateSectionJsonModel()
+					//			{
+					//				name = "payment-info",
+					//				html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+					//			},
+					//			goto_section = "payment_info"
+					//		});
+					//	}
+					//	else
+					//	{
+					//		//customer have to choose a payment method
+					//		return Json(new
+					//		{
+					//			update_section = new UpdateSectionJsonModel()
+					//			{
+					//				name = "payment-method",
+					//				html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+					//			},
+					//			goto_section = "payment_method"
+					//		});
+					//	}
+					//}
+					//else
                     {
                         //payment is not required
                         _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -1602,12 +1602,13 @@ namespace Nop.Web.Controllers
                 var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
                 if (processPaymentRequest == null)
                 {
+					// dminikk
                     //Check whether payment workflow is required
-                    if (IsPaymentWorkflowRequired(cart))
-                    {
-                        throw new Exception("Payment information is not entered");
-                    }
-                    else
+					//if (IsPaymentWorkflowRequired(cart))
+					//{
+					//	throw new Exception("Payment information is not entered");
+					//}
+					//else
                         processPaymentRequest = new ProcessPaymentRequest();
                 }
 

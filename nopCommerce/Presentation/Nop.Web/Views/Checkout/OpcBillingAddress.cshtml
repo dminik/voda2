@@ -5,7 +5,7 @@
     @if (Model.ExistingAddresses.Count > 0)
     {
         <div class="section select-billing-address">
-            <label for="billing-address-select">@T("Checkout.SelectBillingAddressOrEnterNewOne")</label>
+           @* <label for="billing-address-select">@T("Checkout.SelectBillingAddressOrEnterNewOne")</label>*@
             <div>
                 <select name="billing_address_id" id="billing-address-select" class="address-select"
                     title="" onchange="Billing.newAddress(!this.value)">
