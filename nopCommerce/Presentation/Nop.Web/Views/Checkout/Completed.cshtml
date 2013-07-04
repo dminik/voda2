@@ -11,26 +11,32 @@
     {
         @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Complete })
     }
-    <div class="page-title">
+@* <div class="page-title">
         <h1>@T("Checkout.ThankYou")</h1>
-    </div>
+    </div>*@
+
     <div class="page-body checkout-data">
         @Html.Widget("checkout_completed_top")
         <div class="section order-completed">
             <div class="title">
-                <strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
+                @*<strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>*@
+                <div><strong>Ваш заказ успешно принят. </strong></div>
+                <div><strong>На Вашу почту было отправлено описание заказа. </strong></div>
+                <div>
+                    В течении получаса с Вами свяжется наш менеджер и Вы сможете обсудить более подробно условия заказа и согласовать время доставки.                    
+                </div>
             </div>
             <ul class="details">
                 <li>
-                    @T("Checkout.OrderNumber"): @Model.OrderId
+                    @* @T("Checkout.OrderNumber"): @Model.OrderId*@
+                    Номер заказа: @Model.OrderId
+                    <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })" class="order-details-link" >Подробнее...</a>
+                    <div><span>Так же Вы можете посмотреть все Ваши заказы в вашем </span><a class="account" href="/customer/info">профиле</a>.</div>
                 </li>
-                <li>
+                @* <li>
                     <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
-                </li>
+                </li>*@
             </ul>
-            <div class="buttons">
-                <input type="button" value="@T("Checkout.Continue")" class="button-2 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
-            </div>
         </div>
         @Html.Widget("checkout_completed_bottom")
     </div>

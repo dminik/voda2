@@ -368,7 +368,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .checkout-data .order-completed{text-align:left;border:1px solid #EEE;height:auto;padding:10px;}
 .checkout-data .order-completed ul{margin-bottom:10px;}
 .checkout-data .order-completed li{margin:5px 0;list-style:none;}
-.checkout-data .order-completed a{color:#B80709;text-decoration: none;}
+.checkout-data .order-completed a{color:#B80709;text-decoration: underline;}
 .order-progress{height:40px;margin:0 auto;text-align:center;border-bottom:solid 2px #f3f3f3;display: none;}
 .order-progress ul{padding:0;margin:0;}
 .order-progress ul li{list-style:none;display:inline;padding:5px 20px 0;}
