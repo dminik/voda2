@@ -660,6 +660,16 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+		[ChildActionOnly]
+		public ActionResult YandexGoogleCounters()
+		{
+#if DEBUG
+			return new EmptyResult();
+#else
+			return View();
+#endif
+		}
+
         /// <summary>
         /// Change presentation layer (desktop or mobile version)
         /// </summary>
