@@ -35,7 +35,7 @@
                     </div>
                     <div class="buttons">
                         <input type="button" class="button-1 checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />
-                        <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="@T("Account.Register")" />
+                        <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="Быстрая регистрация @*@T("Account.Register")*@" />
                     </div>
                 </div>
             }
@@ -49,7 +49,7 @@
                         @T("Account.Login.NewCustomerText")
                     </div>
                     <div class="buttons">
-                        <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="@T("Account.Register")" />
+                        <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="Быстрая регистрация" @* @T("Account.Register") *@ />
                     </div>
                 </div>
             }

@@ -565,9 +565,10 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 .login-page .page-body{color:#555;}
 .login-page .title{margin:-17px 0 14px;zoom:1;}
 .login-page .title strong{font-size:12px;background:#fff;}
+
 .login-page .customer-blocks:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
-.login-page .new-wrapper{float:left;width:46%;min-height:240px;padding:10px;border:1px solid #eee;margin-bottom:15px;border-radius:5px;}
-.login-page .returning-wrapper{float:right;width:46%;min-height:240px;padding:10px;border:1px solid #eee;margin-bottom:15px;border-radius:5px;}
+.login-page .new-wrapper{float:left;width:46%;min-height:207px;padding:10px;border:1px solid #eee;margin-bottom:15px;border-radius:5px;}
+.login-page .returning-wrapper{float:right;width:46%;min-height:207px;padding:10px;border:1px solid #eee;margin-bottom:15px;border-radius:5px;}
 .login-page .new-wrapper .text{line-height:20px;}
 .login-page .new-wrapper .buttons{float:right;margin:30px 30px 5px 30px;}
 .login-page .checkout-as-guest-or-register-block ul{padding-left:30px;}
@@ -577,7 +578,7 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 .login-page .returning-wrapper label{width:100px;display:inline-block;margin-right:10px;white-space:nowrap;vertical-align:middle;font-weight:700;}
 .login-page .email,.login-page .username,.login-page .password{width:170px;}
 .login-page .returning-customer .reversed label{width:auto;font-weight:400;}
-.login-page .forgot-password{display:block;margin-top:20px;font-weight:700;}
+.login-page .forgot-password{display:block;margin-top:20px;font-weight:700;text-decoration: underline;}
 .login-page .field-validation-error{display:block;}
 .external-auth-errors{text-align:center;border:solid 1px #d3d3d3;vertical-align:top;width:100%;color:Red;margin-bottom:20px;}
 .external-auth-errors ul{padding:0px;}
