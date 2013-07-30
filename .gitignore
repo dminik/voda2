@@ -96,3 +96,4 @@ nopCommerce/Presentation/Nop.Web/Plugins/Shipping.Fedex/Nop.Plugin.Shipping.Fede
 nopCommerce/Presentation/Nop.Web/Plugins/Payments.PayPalDirect/Nop.Plugin.Payments.PayPalDirect.XmlSerializers.dll
 nopCommerce/Deployable/*
 nopCommerce/Presentation/Nop.Web/VirtualTours/*
+PhotoSite/Publish/*
