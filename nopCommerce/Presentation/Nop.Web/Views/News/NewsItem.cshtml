@@ -21,7 +21,9 @@
             @Html.Raw(Model.Full)
         </div>
         @Html.Widget("newsitem_page_before_comments")
-        @if (Model.AllowComments)
+        
+        
+       @if (Model.AllowComments)        
         {
             <div class="fieldset new-comment">
                 <div class="title">

@@ -170,7 +170,7 @@ namespace Nop.Admin.Controllers
             PrepareStoresMappingModel(model, null, false);
             //default values
             model.Published = true;
-            model.AllowComments = true;
+            model.AllowComments = false;
             return View(model);
         }
 

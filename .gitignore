@@ -94,3 +94,5 @@ nopCommerce/Presentation/Nop.Web/Plugins/Payments.AuthorizeNet/Nop.Plugin.Paymen
 nopCommerce/Presentation/Nop.Web/Plugins/Shipping.UPS/Nop.Plugin.Shipping.UPS.XmlSerializers.dll
 nopCommerce/Presentation/Nop.Web/Plugins/Shipping.Fedex/Nop.Plugin.Shipping.Fedex.XmlSerializers.dll
 nopCommerce/Presentation/Nop.Web/Plugins/Payments.PayPalDirect/Nop.Plugin.Payments.PayPalDirect.XmlSerializers.dll
+nopCommerce/Deployable/*
+nopCommerce/Presentation/Nop.Web/VirtualTours/*

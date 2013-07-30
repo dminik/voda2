@@ -10,8 +10,9 @@
 <div class="page news-list-page">
     <div class="page-title">
         <a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a>
-        <h1>@T("News")</h1>
+        <h1>Полезные статьи о воде и фильтрах</h1>
     </div>
+    <hr/>
     <div class="page-body">
         @Html.Widget("newslist_page_before_items")
         <div class="news-items">
@@ -28,7 +29,7 @@
                         @Html.Raw(item.Short)
                     </div>
                     <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })" class="read-more">
-                        @T("News.MoreInfo")</a>
+                        Подробнее...</a>
                     @Html.Widget("newslist_page_inside_item")
                 </div>
             }
