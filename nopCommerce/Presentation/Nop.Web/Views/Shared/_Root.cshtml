@@ -9,11 +9,11 @@
     <div class="master-wrapper-content">
         <script type="text/javascript">
             AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
-        </script>
-        @Html.Partial("Header")
+        </script>       
         <div class="header-menu">
             @Html.Action("Menu", "Common")
         </div>
+        @Html.Partial("Header")
         @Html.Widget("content_before")
         @*ajax loading window*@
         <div class="ajax-loading-block-window" style="display: none">

@@ -3,14 +3,21 @@
     <div class="header-logo header-left">        
         <a href="@Url.RouteUrl("HomePage")" class="logo">        
             <div class="header-phone-work-time">
-                <div class="header-phone" ><span>Киев: (093) 796-70-38 </span><span class="phone-logo-life">Life:)</span></div>
+                <div class="header-phone" ><span>Киев: (097)172-62-77 </span><span class="phone-logo-life"></span></div>
                 <div class="header-work-time">Без выходных с 10:00 до 21:00</div>
+                <div class="header-email">E-mail: ask.fotoprofi@gmail.com</div>
+                <div class="header-skype">Skype: foto.profi</div>
             </div>
             <div class="header-favicon">
-                <img alt="ШколаВоды" src="/favicon.gif" />
+                <img alt="favicon" src="/favicon.gif" />
             </div>
-            <div class="header-about">Просто об очистке воды</div>        
+            <div class="header-about">Интернет-магазин специализированного фото и видео оборудования</div>      
+                          
         </a>
+        
+        <div class="search-box">
+            @Html.Action("SearchBox", "Catalog")
+        </div>
     </div>
     
     
@@ -36,12 +43,8 @@
             @Html.Widget("header_selectors")
         </div>
     
-    
-        <div class="search-box">
-            @Html.Action("SearchBox", "Catalog")
-        </div>
-        
-         @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+
+        @Html.Action("FlyoutShoppingCart", "ShoppingCart")
     </div>
 
 </div>
