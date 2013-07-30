@@ -5,10 +5,10 @@
 /* HEADER AND MENU */
 .header {
 	padding:0;
-	height:200px; 
+	height:110px; 
 	/*background-image: url("images/main.jpg");*/
 	background-size: cover;
-
+	border-bottom: medium solid black;
 }
 .header-favicon{ display: inline;position: absolute;left:10px;top: 10px;}
 .header .icon{vertical-align:bottom;}
@@ -29,10 +29,10 @@
 .logo{
 	background: url("images/logo.png") no-repeat scroll -7px -29px / 362px auto transparent;
 	display: inline-block;
-	height: 60%;
+	height: 100%;
 	opacity: 0.9;
 	text-decoration: none;
-	width: 100%;
+	width: 40%;
 	position: relative;
 }
 
@@ -49,7 +49,7 @@
 	position: relative;
 }
 
-.header-phone-work-time{ width: auto ;color: black;position: absolute;left: 657px;top: 16px; display: inline-block;}
+.header-phone-work-time{ width: auto ;color: black;position: absolute;left: 800px;top: 85px; display: inline-block;}
 .header-phone{font-size: 25px; width: 310px;}
 .phone-logo-life{ color: red; background: url("images/kievstar.jpg") no-repeat scroll 0px -0px / 35px auto transparent;  padding-left: 40px;}
 .header-work-time{font-size: 15px;}
@@ -59,10 +59,10 @@
 	display: inline-block;
 	font-size: 14px;
 	position: absolute;
-	left: 334px;
+	left: 0px;
 	opacity: 0.56;
 	position: relative;
-	top: 13px;
+	top: -52px;
 	width: 184px;
 }
 
@@ -108,9 +108,9 @@ ul.language-list li:hover{cursor:pointer;}
 .search-text{border:1px solid #eee;vertical-align:top;padding:5px 0 5px 5px;font-size:12px;width:100%;}
 .search-box{    
 	position: relative;
-	left: 350px;
-	bottom: 57px;
-	opacity: 0.87; background:none repeat scroll 0 0 #FFFFFF;width:auto;display: inline-block;;padding:7px 7px 5px;-o-border-radius:3px;-icab-border-radius:3px;-khtml-border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
+	left: 327px;
+	top: -53px;
+	opacity: 0.87; background:none repeat scroll 0 0 #FFFFFF;width:288px;display: block;padding:7px 7px 5px;-o-border-radius:3px;-icab-border-radius:3px;-khtml-border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
 .search-box ul{margin:0;padding:0;float:right;}
 .search-box ul li{list-style:none outside none;float:left;margin:0;padding:0;}
 .search-box-text{background:none repeat scroll 0 0 #FFF;width:200px;border:1px solid #E3E3E3;opacity: 0.87; padding:4px 5px;vertical-align:top;font-size:12px;}
