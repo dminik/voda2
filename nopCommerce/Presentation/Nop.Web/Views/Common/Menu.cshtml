@@ -15,9 +15,10 @@
     
     @*dminikik*@
     
-    <li><a href="@Url.RouteUrl("NewsArchive")">Полезные статьи</a></li>
-    <li><a href="@Url.RouteUrl("Topic", new { SystemName = "shippinginfo" })">Доставка и установка</a></li>
-    <li><a href="@Url.RouteUrl("Topic", new { SystemName = "service" })">Замена фильтров</a></li>
+    @*<li><a href="@Url.RouteUrl("NewsArchive")">Полезные статьи</a></li>*@
+    <li><a href="@Url.RouteUrl("Topic", new { SystemName = "shippinginfo" })">Доставка и оплата</a></li>
+    @*<li><a href="@Url.RouteUrl("Topic", new { SystemName = "service" })">Замена фильтров</a></li>*@
+     <li><a href="@Url.RouteUrl("Topic", new { SystemName = "garanty" })">Гарантия</a></li>
    @* <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })">О Компании</a></li>*@
 
     @if (Model.BlogEnabled)
