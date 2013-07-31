@@ -15,7 +15,20 @@
                     <div class="picture">
                         <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                             <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl"
-                                    title="@item.PictureModel.Title" /></a>
+                                 title="@item.PictureModel.Title" /></a>
+                    </div>
+                    
+                    <div class="sub-categories">
+                         @foreach (var subCategory in item.SubCategories)
+                         {
+                             <h1 class="sub-category-title">
+                                <a href="@Url.RouteUrl("Category", new { SeName = subCategory.SeName })" title="@subCategory.PictureModel.Title">
+                                    @subCategory.Name
+                                </a>
+                            </h1>
+                             
+                             
+                         }
                     </div>
                 </div>
             </div>

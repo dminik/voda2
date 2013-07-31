@@ -1007,36 +1007,7 @@ namespace Nop.Web.Controllers
 
 
             //subcategories
-            model.SubCategories = _categoryService
-                .GetAllCategoriesByParentCategoryId(categoryId)
-                .Select(x =>
-                {
-                    var subCatName = x.GetLocalized(y => y.Name);
-                    var subCatModel = new CategoryModel.SubCategoryModel()
-                    {
-                        Id = x.Id,
-                        Name = subCatName,
-                        SeName = x.GetSeName(),
-                    };
-
-                    //prepare picture model
-                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
-                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-                    subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
-                    {
-                        var pictureModel = new PictureModel()
-                        {
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(x.PictureId),
-                            ImageUrl = _pictureService.GetPictureUrl(x.PictureId, pictureSize),
-                            Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName),
-                            AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName)
-                        };
-                        return pictureModel;
-                    });
-
-                    return subCatModel;
-                })
-                .ToList();
+			model.SubCategories = this.GetSubCategories(categoryId);
 
 
 
@@ -1105,7 +1076,44 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        [ChildActionOnly]
+		private IList<CategoryModel.SubCategoryModel> GetSubCategories(int categoryId)
+		{
+			return this._categoryService.GetAllCategoriesByParentCategoryId(categoryId).Select(
+				x =>
+					{
+						var subCatName = x.GetLocalized(y => y.Name);
+						var subCatModel = new CategoryModel.SubCategoryModel() { Id = x.Id, Name = subCatName, SeName = x.GetSeName(), };
+
+						//prepare picture model
+						int pictureSize = this._mediaSettings.CategoryThumbPictureSize;
+						var categoryPictureCacheKey = string.Format(
+							ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY,
+							x.Id,
+							pictureSize,
+							true,
+							this._workContext.WorkingLanguage.Id,
+							this._webHelper.IsCurrentConnectionSecured(),
+							this._storeContext.CurrentStore.Id);
+						subCatModel.PictureModel = this._cacheManager.Get(
+							categoryPictureCacheKey,
+							() =>
+								{
+									var pictureModel = new PictureModel()
+										{
+											FullSizeImageUrl = this._pictureService.GetPictureUrl(x.PictureId),
+											ImageUrl = this._pictureService.GetPictureUrl(x.PictureId, pictureSize),
+											Title = string.Format(this._localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName),
+											AlternateText =
+												string.Format(this._localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName)
+										};
+									return pictureModel;
+								});
+
+						return subCatModel;
+					}).ToList();
+		}
+
+		[ChildActionOnly]
         public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
         {
             //get active category
@@ -1168,6 +1176,14 @@ namespace Nop.Web.Controllers
                         };
                         return pictureModel;
                     });
+
+					//Get category children
+					var categoryChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id)
+				   .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
+				   .ToList();
+
+					//subcategories
+					catModel.SubCategories = this.GetSubCategories(x.Id);
 
                     return catModel;
                 })
