@@ -73,28 +73,32 @@
     {
         <script type="text/javascript">
             $(document).ready(function () {
-                $('.header-right').on('mouseenter', '.ico-cart', function () {
+                $('.header-links').on('mouseenter', '.ico-cart', function () {
                     $('#flyout-cart').addClass('active');
                 });
-                $('.header-right').on('mouseleave', '.ico-cart', function () {
+                $('.header-links').on('mouseleave', '.ico-cart', function () {
                     $('#flyout-cart').removeClass('active');
                 });
-                $('.header-right').on('mouseenter', '#flyout-cart', function () {
+                $('.header-links').on('mouseenter', '#flyout-cart', function () {
                     $('#flyout-cart').addClass('active');
                 });
-                $('.header-right').on('mouseleave', '#flyout-cart', function () {
+                $('.header-links').on('mouseleave', '#flyout-cart', function () {
                     $('#flyout-cart').removeClass('active');
                 });
             });
         </script>
     }
     
-    @*<div id="topcartlink">
+    <div id="topcartlink">
         <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
             <span class="cart-label">@T("ShoppingCart")</span>
             <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
         </a>
-    </div>*@
+    </div>
+    
+    
+    @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+
 </div>
 
 

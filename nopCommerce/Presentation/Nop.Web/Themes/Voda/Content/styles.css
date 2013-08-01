@@ -16,10 +16,10 @@
 .header .ico-login{padding-left:10px;padding-bottom:5px;}
 .header .ico-logout{padding-left:10px;padding-bottom:5px;}
 .header .ico-inbox{padding-left:10px;padding-bottom:5px;}
-.header .ico-cart{background: url("images/bg-cart.png") no-repeat scroll 0px 0px / 45px auto transparent; padding-left:30px;padding-bottom:35px;position: relative;top: 20px;}
+.ico-cart{background: url("images/bg-cart.png") no-repeat scroll 0px 0px / 45px auto transparent; padding-left:30px;padding-bottom:35px;position: relative;top: 20px;}
 .header .ico-wishlist{padding-left:10px;padding-bottom:5px;}
-.header .ico-cart:hover *,.header .ico-wishlist:hover *{text-decoration:underline;cursor:pointer;}
-.header .ico-cart span,.header .ico-wishlist span{text-decoration: underline;}
+.ico-cart:hover *,.header .ico-wishlist:hover *{text-decoration:underline;cursor:pointer;}
+.ico-cart span,.header .ico-wishlist span{text-decoration: underline;}
 .cart-label { display: none;}
 .cart-qty { position: relative;top: 0px;left: 0px;color: red;}
 
@@ -45,11 +45,11 @@
 	height: 100%;
 	vertical-align: top;
 	text-align: right;
-	width: 34.7%;
+	width: 27.7%;
 	position: relative;
 }
 
-.header-phone-work-time{ width: auto ;color: black;position: relative;left: 678px;top: -106px; display: inline-block;}
+.header-phone-work-time{ width: auto ;color: black;position: relative;left: 553px;top: -106px; display: inline-block;}
 .header-phone{font-size: 25px; width: 310px;}
 .phone-logo-life{ color: red; background: url("images/kievstar.jpg") no-repeat scroll 0px -0px / 35px auto transparent;  padding-left: 40px;}
 .header-work-time{font-size: 15px;}
@@ -59,7 +59,7 @@
 	display: inline-block;
 	font-size: 14px;
 	position: absolute;
-	left: 0px;
+	left: 8px;
 	opacity: 0.56;
 	position: relative;
 	top: -52px;
@@ -81,13 +81,14 @@ ul.language-list li:hover{cursor:pointer;}
   display: inline-block;
   float: right;
   height: 26px;
-  opacity: 0.69;
+  opacity: 0.94;
   position: relative;
   right: 0;
   text-align: right;
   text-decoration: underline;
   top: 3px;
   width: auto;
+  z-index: 10000000;
 }
 .header-links {
   display: inline-table;
@@ -114,7 +115,7 @@ ul.language-list li:hover{cursor:pointer;}
 .search-text{border:1px solid #eee;vertical-align:top;padding:5px 0 5px 5px;font-size:12px;width:100%;}
 .search-box{    
 	position: relative;
-	left: 327px;
+	left: 244px;
 	top: -127px;
 	opacity: 0.87; background:none repeat scroll 0 0 #FFFFFF;width:288px;display: block;padding:7px 7px 5px;-o-border-radius:3px;-icab-border-radius:3px;-khtml-border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
 .search-box ul{margin:0;padding:0;float:right;}
