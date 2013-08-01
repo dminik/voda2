@@ -12,6 +12,9 @@
         </script>       
         <div class="header-menu">
             @Html.Action("Menu", "Common")
+            <div class="header-links-wrapper">
+                @Html.Action("HeaderLinks", "Common")
+            </div> 
         </div>
         @Html.Partial("Header")
         @Html.Widget("content_before")

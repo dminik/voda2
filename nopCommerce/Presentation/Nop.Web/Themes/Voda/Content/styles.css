@@ -75,22 +75,28 @@ ul.language-list{display:inline;line-height:25px;}
 ul.language-list li{list-style:none;display:inline;padding:0 5px;}
 ul.language-list li .selected{border:solid 1px #ccc!important;}
 ul.language-list li:hover{cursor:pointer;}
-.header-links-wrapper{
-	   background: none repeat scroll 0 0 rgb(0, 152, 126);
-	border-radius: 9px 9px 9px 9px;
-	display: inline-block;
-	opacity: 0.69; 
-	text-align: right;
-	text-decoration: underline;   
-	width: auto;
-	position: absolute;
-	right: 5px;
-	top: -29px;  
-	height: 26px;  
+.header-links-wrapper {
+  background: none repeat scroll 0 0 rgb(0, 152, 126);
+  border-radius: 9px 9px 9px 9px;
+  display: inline-block;
+  float: right;
+  height: 26px;
+  opacity: 0.69;
+  position: relative;
+  right: 0;
+  text-align: right;
+  text-decoration: underline;
+  top: 3px;
+  width: auto;
 }
-.header-links{padding-right: 10px;;margin:6px 0;display:inline-table;}
+.header-links {
+  display: inline-table;
+  margin: 0;
+  padding-top: 3px;
+  vertical-align: middle;
+}
 .header-links ul{padding:0;margin:0;}
-.header-links ul li{list-style:none outside none;display:inline;padding-right:2px;margin-left:10px;}
+.header-links ul li{list-style:none outside none;display:inline; padding: 1px 2px;;margin-left:10px;}
 .header-links a{color:#AFFF04;text-decoration:underline;}
 .header-links a:hover{color:#AFFF04;text-decoration:underline;}
 .header-links a.account{color:#AFFF04;text-decoration:underline;}
