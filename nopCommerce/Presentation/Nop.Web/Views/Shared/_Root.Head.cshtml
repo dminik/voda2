@@ -39,11 +39,24 @@
     <!--Copyright (c) 2008-2013-->
 </head>
     <body>
+        @*BEGIN Siteheart CODE*@
+        <script type="text/javascript"> _shcp = []; _shcp.push({ widget_id: 613901, widget: "Chat" }); (function () { var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true; hcc.src = ("https:" == document.location.protocol ? "https" : "http") + "://widget.siteheart.com/apps/js/sh.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hcc, s.nextSibling); })();</script>
+        @*<form method="POST" accept-charset="utf-8" id="siteheart_button_613901" action="https://siteheart.com/webconsultation/613901?" target="siteheart_button_613901"><input name="_charset_" type="hidden"><input name="data[your_name]" value="your_value" type="hidden"> <img src="http://webindicator.siteheart.com/webindicator/help9?ent=613901&company=613901" border="0" style="cursor:pointer;" alt="SiteHeart" onclick="window.open('about:blank','siteheart_button_613901','width=500,height=400,resizable=1') ;document.getElementById('siteheart_button_613901').submit();"/> </form>*@
         
+        @* END Siteheart CODE *@
+
         @Html.Action("YandexGoogleCounters", "Common")
 
         @RenderBody()
         @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
         @Html.NopScripts(this.Url, ResourceLocation.Foot)
+        
+        <!-- BEGIN JIVOSITE CODE {literal} -->
+       @* <script type='text/javascript'>
+            (function () {
+                var widget_id = '76897';
+                var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/' + widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);
+            })();</script>*@
+        <!-- {/literal} END JIVOSITE CODE -->
     </body>
 </html>
