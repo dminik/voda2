@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_Root.Head.cshtml";
+    Html.AppendScriptParts("~/Scripts/toTop.js");
 }
 @Html.Widget("body_start_html_tag_after")
 @Html.Partial("_Notifications")
@@ -30,8 +31,18 @@
         @Html.Action("EuCookieLaw", "Common")
     </div>
     @Html.Action("Footer", "Common")
+    
+    <a id="toTop" style="display: block;">▲ Наверх</a>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#toTop").scrollToTop();
+        });
+    </script>
+
 </div>
 @Html.Widget("body_end_html_tag_before")
+
 
 
 
