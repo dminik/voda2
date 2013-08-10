@@ -1,6 +1,11 @@
 ﻿@model CategoryNavigationModel
 @using Nop.Web.Models.Catalog;
 
+@{   
+    Html.AppendScriptParts("~/Scripts/sitemapstyler/sitemapstyler.js");
+    Html.AppendCssFileParts("~/Scripts/sitemapstyler/sitemapstyler.css");
+}
+
 @functions{
     public bool BreadCrumbContainsCurrentCategoryId(CategoryNavigationModel.CategoryModel category)
     {
@@ -31,8 +36,10 @@
             }
         </a>
         @{
-            if (category.Id == Model.CurrentCategoryId ||
-                category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0)
+            if (category.Id == Model.CurrentCategoryId 
+                || 1==1
+               // || category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0
+                )
             {
                 if (category.SubCategories.Count > 0)
                 {
@@ -54,7 +61,7 @@
             <strong>@T("Categories")</strong>
         </div>
         <div class="listbox">
-            <ul class="list">
+            <ul id="sitemap" class="list menu menu-my-menu">
                 @foreach (var category in Model.Categories)
                 {
                     @RenderCategoryLine(category)

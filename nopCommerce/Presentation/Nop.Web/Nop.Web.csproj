@@ -1193,6 +1193,10 @@
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.css" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.min.css" />
+    <Content Include="Scripts\sitemapstyler\collapsed.gif" />
+    <Content Include="Scripts\sitemapstyler\expanded.gif" />
+    <Content Include="Scripts\sitemapstyler\sitemapstyler.css" />
+    <Content Include="Scripts\sitemapstyler\sitemapstyler.js" />
     <Content Include="Scripts\toTop.js" />
     <Content Include="Scripts\jquery-ui-1.10.0.js" />
     <Content Include="Scripts\jquery-ui-1.10.0.min.js" />
@@ -1720,6 +1724,7 @@
     <Content Include="Themes\Voda\Views\Shared\Head.cshtml" />
     <Content Include="Themes\Voda\Views\Web.config" />
     <Content Include="Views\Common\YandexGoogleCounters.cshtml" />
+    <Content Include="Views\Common\OnLineConsultant.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
