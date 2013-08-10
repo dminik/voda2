@@ -670,6 +670,16 @@ namespace Nop.Web.Controllers
 #endif
 		}
 
+		[ChildActionOnly]
+		public ActionResult OnLineConsultant()
+		{
+#if DEBUG
+			return new EmptyResult();
+#else
+			return View();
+#endif
+		}
+
         /// <summary>
         /// Change presentation layer (desktop or mobile version)
         /// </summary>
