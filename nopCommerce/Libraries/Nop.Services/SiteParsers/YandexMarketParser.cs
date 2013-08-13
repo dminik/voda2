@@ -19,7 +19,7 @@ namespace Nop.Services.SiteParsers
 
 	public class Parser
 	{
-		public Parser(string catalogName, int categoryId, int parseNotMoreThen, ILogger logger)
+		public Parser(string catalogName, int categoryId, int parseNotMoreThen, string productsPageUrl, ILogger logger)
 		{
 			this.imageFolderPathForProductList = catalogName;
 			string filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport",  "StaticFileName");
@@ -27,10 +27,12 @@ namespace Nop.Services.SiteParsers
 			this.ParseNotMoreThen = parseNotMoreThen;
 			_logger = logger;
 			CategoryId = categoryId;
+			ProductsPageUrl = productsPageUrl;
 		}
 
 		int ParseNotMoreThen { get; set; }
 		int CategoryId { get; set; }
+		string ProductsPageUrl { get; set; }
 		
 		// Папка для картинок
 		string imageFolderPathBase;
@@ -58,9 +60,7 @@ namespace Nop.Services.SiteParsers
 				//mDriver = new FirefoxDriver(profile);
 				
 				// Ссылка на список товаров
-				this.mDriver.Navigate()
-				    .GoToUrl(
-					    "http://market.yandex.ua/guru.xml?CMD=-RR=0,0,0,0-PF=1801946~EQ~sel~12561075-VIS=70-CAT_ID=975896-EXC=1-PG=10&hid=90582");
+				this.mDriver.Navigate().GoToUrl(ProductsPageUrl);
 				Thread.Sleep(3000);
 
 				_logger.Debug("Have page 1 with liks");
@@ -83,7 +83,7 @@ namespace Nop.Services.SiteParsers
 
 					if (this.ParseNotMoreThen <= 10) break;
 
-					_logger.Debug("Have page " + pageLinksCounter + " with liks");
+					_logger.Debug("Have page " + pageLinksCounter + " with links");
 
 					try
 					{
@@ -154,8 +154,8 @@ namespace Nop.Services.SiteParsers
 			imageUrl = this.mDriver.FindElement(By.CssSelector("div.b-model-microcard__img img")).GetAttribute("src");
 			product.ImageUrl_1 = this.SaveImage(imageUrl, product.Name);
 
-			// Найти спецификации товара	table.b-properties tr
-			var specificationElements = this.mDriver.FindElements(By.CssSelector("table.b-properties tr"));
+			// Найти спецификации товара	table.b-properties tr   
+			var specificationElements = this.mDriver.FindElements(By.CssSelector("table.b-properties tr:has(th.b-properties__label)"));
 
 			_logger.Debug("Have product " + product.Name + ". Start getting " + specificationElements.Count + " specs...");
 
@@ -164,19 +164,22 @@ namespace Nop.Services.SiteParsers
 				// Key
 				IWebElement currentKeyElement;
 				try
-				{
-					currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector("th.b-properties__label span"));
+				{					
+					currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector(".b-properties__label span"));					
 				}
 				catch (NoSuchElementException)
 				{
+					_logger.Debug("not key");
 					continue;
 				}
 
-				// Value
-				var currentValueElement = currentSpecificationElement.FindElement(By.CssSelector("td.b-properties__value"));
-
-				product.Specifications.Add(new YandexMarketSpecRecord(currentKeyElement.Text, currentValueElement.Text));
+				// Value				
+				var currentValueElement = currentSpecificationElement.FindElement(By.CssSelector(".b-properties__value"));
+				
+				product.Specifications.Add(new YandexMarketSpecRecord(currentKeyElement.Text, currentValueElement.Text));				
 			}
+
+			_logger.Debug("Finished getting specs.");
 
 			return product;
 		}
