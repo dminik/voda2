@@ -10,6 +10,7 @@
 	using Nop.Core.Domain.Catalog;
 	using Nop.Core.Domain.Logging;
 	using Nop.Core.Domain.YandexMarket;
+	using Nop.Services.Catalog;
 	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers;
 	using Nop.Services.YandexMarket;
@@ -19,16 +20,19 @@
 	public class YandexMarketParserController : Controller
 	{
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
+		private readonly ICategoryService _shopCategoryService;
 		private readonly IYandexMarketProductService _yandexMarketProductService;
 		private readonly ILogger _logger;
 
 		public YandexMarketParserController(
 			IYandexMarketCategoryService yandexMarketCategoryService,
 			IYandexMarketProductService yandexMarketProductService,
+			ICategoryService shopCategoryService,
 			ILogger logger)
 		{
 			_yandexMarketCategoryService = yandexMarketCategoryService;
 			_yandexMarketProductService = yandexMarketProductService;
+			_shopCategoryService = shopCategoryService;
 			_logger = logger;
 		}
 
@@ -38,8 +42,11 @@
 		public ActionResult Configure()
 		{
 			var model = new YandexMarketParserModel();
-			model.AvailableCategories = _yandexMarketCategoryService.GetCategoriesForDDL();
-
+			model.AvailableParserCategories = _yandexMarketCategoryService.GetCategoriesForDDL();
+			model.AvailableShopCategories =
+				_shopCategoryService.GetAllCategories()
+				                    .Select(x => new SelectListItem() { Selected = false, Text = x.Name, Value = x.Id.ToString() }).ToList();
+  
 			return View(model);
 		}
 
@@ -59,19 +66,19 @@
 
 			if (model.IsTest)
 			{
-				productList = CreateTestProductList(model.CategoryId);
+				productList = CreateTestProductList(model.ParserCategoryId);
 			}
 			else
 			{
-				var categoryName = _yandexMarketCategoryService.GetById(model.CategoryId).Name;
-				var parser = new Parser(categoryName, model.CategoryId, model.ParseNotMoreThen, _logger);
+				var categoryName = _yandexMarketCategoryService.GetById(model.ParserCategoryId).Name;
+				var parser = new Parser(categoryName, model.ParserCategoryId, model.ParseNotMoreThen, _logger);
 				productList = parser.Parse();
 			}
 
 			using (var tsTransScope = new TransactionScope())
 			{
 				_logger.Debug("Deleting old products...");
-				_yandexMarketProductService.DeleteByCategory(model.CategoryId);
+				_yandexMarketProductService.DeleteByCategory(model.ParserCategoryId);
 
 				_logger.Debug("Saving new " + productList.Count + " products...");
 				_yandexMarketProductService.InsertList(productList);

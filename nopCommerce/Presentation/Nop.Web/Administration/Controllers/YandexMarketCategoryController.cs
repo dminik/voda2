@@ -79,7 +79,7 @@
 		{
 			var newItem = new YandexMarketCategoryRecord()
 			{
-				Name = model.AddCategoryName
+				Name = model.AddParserCategoryName
 			};
 			this._yandexMarketCategoryService.Insert(newItem);
 

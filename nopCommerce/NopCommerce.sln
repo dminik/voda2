@@ -89,8 +89,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Misc.WebServices
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.NivoSlider", "Plugins\Nop.Plugin.Widgets.NivoSlider\Nop.Plugin.Widgets.NivoSlider.csproj", "{9978B382-0BCD-4621-B6B5-52E0E3B5F464}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Misc.YandexMarketParser", "Plugins\Nop.Plugin.Misc.YandexMarketParser\Nop.Plugin.Misc.YandexMarketParser.csproj", "{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Parser.Tests", "Tests\Nop.Parser.Tests\Nop.Parser.Tests.csproj", "{7DBC7238-8BB7-4C49-B0B5-1ED4ABE3AA0B}"
 EndProject
 Global
@@ -469,15 +467,6 @@ Global
 		{9978B382-0BCD-4621-B6B5-52E0E3B5F464}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9978B382-0BCD-4621-B6B5-52E0E3B5F464}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9978B382-0BCD-4621-B6B5-52E0E3B5F464}.Release|x86.ActiveCfg = Release|Any CPU
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E}.Release|x86.ActiveCfg = Release|Any CPU
 		{7DBC7238-8BB7-4C49-B0B5-1ED4ABE3AA0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7DBC7238-8BB7-4C49-B0B5-1ED4ABE3AA0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DBC7238-8BB7-4C49-B0B5-1ED4ABE3AA0B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -534,7 +523,6 @@ Global
 		{446FED73-BCA1-4D8F-BC13-EA1507C7EF29} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{E9253D76-D037-4C53-9B91-EC6EB7EE1A2C} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{9978B382-0BCD-4621-B6B5-52E0E3B5F464} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
-		{A468A3FA-2AE6-430D-87D3-FE6815A4A49E} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(NDepend) = preSolution
 		Project = ".\NopCommerce.ndproj"

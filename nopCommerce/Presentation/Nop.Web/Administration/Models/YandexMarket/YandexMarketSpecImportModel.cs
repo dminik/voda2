@@ -12,10 +12,10 @@
 		public YandexMarketSpecImportModel()
 		{
 			this.AvailableCategories = new List<SelectListItem>();						
-			this.CategoryId = 1;
+			this.ParserCategoryId = 1;
 		}
 		
-		public int CategoryId { get; set; }
+		public int ParserCategoryId { get; set; }
 		
 		public List<SelectListItem> AvailableCategories { get; set; }		
 	}

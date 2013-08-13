@@ -54,9 +54,9 @@
 
 		[HttpPost]
 		[GridAction(EnableCustomBinding = true)]
-		public ActionResult ListProduct(int categoryId, GridCommand command)
+		public ActionResult ListProduct(int parserCategoryId, GridCommand command)
 		{
-			var records = _yandexMarketProductService.GetByCategory(categoryId, command.Page - 1, command.PageSize);
+			var records = _yandexMarketProductService.GetByCategory(parserCategoryId, command.Page - 1, command.PageSize);
 			var productsModel = records.Select(
 				x =>
 				{
@@ -90,29 +90,29 @@
 		public ActionResult DeleteProduct(int id, GridCommand command)
 		{
 			var product = _yandexMarketProductService.GetById(id);
-			int categoryId = product.YandexMarketCategoryRecordId;
+			int parserCategoryId = product.YandexMarketCategoryRecordId;
 
 			if (product != null) this._yandexMarketProductService.Delete(product);
 
-			return ListProduct(categoryId, command);
+			return ListProduct(parserCategoryId, command);
 		}
 
 		#endregion
 
 		[HttpPost]
-		public ActionResult ImportProductList(int categoryId)
+		public ActionResult ImportProductList(int parserCategoryId, int shopCategoryId)
 		{
-			var records = _yandexMarketProductService.GetByCategory(categoryId);
+			var records = _yandexMarketProductService.GetByCategory(parserCategoryId);
 
 			foreach (var curYaProduct in records)
 			{
-				ImportYaProduct(curYaProduct);
+				ImportYaProduct(curYaProduct, shopCategoryId);
 			}
 
 			return Content("Success");
 		}
 
-		private void ImportYaProduct(YandexMarketProductRecord yaProduct)
+		private void ImportYaProduct(YandexMarketProductRecord yaProduct, int shopCategoryId)
 		{
 			Product product;
 			var variant = _productService.GetProductVariantBySku(yaProduct.Name);
@@ -169,9 +169,8 @@
 				_productService.InsertProduct(product);
 				variant.ProductId = product.Id;
 				_productService.InsertProductVariant(variant);
-
-				const int categoryId = 19;
-				SaveCategory(categoryId, product.Id);
+				
+				SaveCategory(shopCategoryId, product.Id);
 				SaveSpecList(product, yaProduct.Specifications);
 				SavePicture(product, yaProduct.ImageUrl_1);
 			}
@@ -258,12 +257,12 @@
 			_productService.UpdateProduct(product);
 		}
 
-		private void SaveCategory(int categoryId, int productId)
+		private void SaveCategory(int shopCategoryId, int productId)
 		{
 			var productCategory = new ProductCategory()
 				{
 					ProductId = productId,
-					CategoryId = categoryId,
+					CategoryId = shopCategoryId,
 					IsFeaturedProduct = false,
 					DisplayOrder = 1
 				};
