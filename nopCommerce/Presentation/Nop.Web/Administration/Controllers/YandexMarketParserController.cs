@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Net;
 	using System.Transactions;
 	using System.Web.Mvc;
 
@@ -14,6 +15,7 @@
 	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers;
 	using Nop.Services.YandexMarket;
+	using Nop.Web.Framework;
 	using Nop.Web.Framework.Controllers;
 
 	[AdminAuthorize]
@@ -71,7 +73,7 @@
 			else
 			{
 				var categoryName = _yandexMarketCategoryService.GetById(model.ParserCategoryId).Name;
-				var parser = new Parser(categoryName, model.ParserCategoryId, model.ParseNotMoreThen, _logger);
+				var parser = new Parser(categoryName, model.ParserCategoryId, model.ParseNotMoreThen, model.ProductsPageUrl, _logger);
 				productList = parser.Parse();
 			}
 

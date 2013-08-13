@@ -25,7 +25,7 @@
 		[DisplayName("Доступные категории магазина")]
 		public List<SelectListItem> AvailableShopCategories { get; set; }
 
-		[DisplayName("Имя категории парсера к которой привяжутся спарсенные товары")]
+		[DisplayName("Текущая категория парсера")]
 		public int ParserCategoryId { get; set; }
 
 		[DisplayName("Доступные категории парсера")]
@@ -37,7 +37,11 @@
 		[DisplayName("Спарсить не более чем n товаров, затем остановится")]
 		public int ParseNotMoreThen { get; set; }
 
-
+		[DisplayName("URL списка товаров для распасивания")]
+		[StringLength(200)]
+		[MinLength(4)]
+		[Required]
+		public string ProductsPageUrl { get; set; }	
 
 		[DisplayName("Имя категории парсера")]
 		[StringLength(40)]		

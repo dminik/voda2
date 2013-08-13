@@ -1,7 +1,8 @@
 ﻿@{
-    // Layout = "";
+        // Layout = "";
 
-    //Html.AddCssFileParts("~/Plugins/Misc.YandexMarketParser/Content/styles.css");  
+        //Html.AddCssFileParts("~/Plugins/Misc.YandexMarketParser/Content/styles.css");  
+    Html.EnableClientValidation(); 
 }
 @model Nop.Admin.Models.YandexMarket.YandexMarketParserModel
 @using Nop.Admin.Models.YandexMarket
@@ -15,10 +16,10 @@
 @using (Html.BeginForm())
 {
     @Html.Telerik().TabStrip().Name("googlebase-configure").Items(x =>
-    {
-        x.Add().Text("Категории парсера").Content(TabCategory().ToHtmlString());
-        x.Add().Text("Парсер").Content(this.TabParser().ToHtmlString()).Selected(true);      
-    })   
+{
+    x.Add().Text("Категории парсера").Content(TabCategory().ToHtmlString());
+    x.Add().Text("Парсер").Content(this.TabParser().ToHtmlString()).Selected(true);
+})   
 }
 
 
@@ -132,24 +133,24 @@
                       .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                       .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
                       .Columns(columns =>
+                      {
+                          columns.Bound(x => x.Name).Width(200);
+                          columns.Command(commands =>
                           {
-                              columns.Bound(x => x.Name).Width(200);
-                              columns.Command(commands =>
-                                  {
-                                      commands.Edit().Text("Редактировать");
-                                      commands.Delete().Text("Удалить");
-                                  }).Width(180);
+                              commands.Edit().Text("Редактировать");
+                              commands.Delete().Text("Удалить");
+                          }).Width(180);
 
-                          })
+                      })
                       .Editable(x => { x.Mode(GridEditMode.InLine); })
                       .DataBinding(dataBinding =>
-                          {
-                              const string controllerNameForProductGrid = "YandexMarketProduct";
-                              dataBinding.Ajax()
-                                         .Select("ListProduct", controllerNameForProductGrid)
-                                         .Update("UpdateProduct", controllerNameForProductGrid)
-                                         .Delete("DeleteProduct", controllerNameForProductGrid);
-                          })
+                      {
+                          const string controllerNameForProductGrid = "YandexMarketProduct";
+                          dataBinding.Ajax()
+                                     .Select("ListProduct", controllerNameForProductGrid)
+                                     .Update("UpdateProduct", controllerNameForProductGrid)
+                                     .Delete("DeleteProduct", controllerNameForProductGrid);
+                      })
                       .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both))
                       .EnableCustomBinding(true))
                 @* ReSharper restore ConvertToLambdaExpression *@
@@ -194,8 +195,13 @@
                     @Html.CheckBoxFor(model => model.IsTest)
                     @Html.LabelFor(model => model.IsTest)
                 </div>
+                <div>
+                    @Html.LabelFor(model => model.ProductsPageUrl)
+                    @Html.TextBoxFor(model => model.ProductsPageUrl, new { style = "width: 100%;" })
+                    @Html.ValidationMessageFor(model => model.ProductsPageUrl)
+                </div>
 
-                <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты" />  <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
+                <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты со страницы и сохранить в текущую категорию парсера" />  <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
                 <input type="button" id="onlyNew" class="t-button" value="Шаг 2. Отобразить только новые спарсенные спецификации, которые еще не существуют в интернет-магазине" /><br/>              
                 <input type="button" id="btnApplyImport" class="t-button" value="Шаг 3. Импортнуть новые спецификации в интернет-магазин" /> <br /> 
                 <input type="submit" id="btnImportProductList" class="t-button" value="Шаг 4. Импортнуть новые товары в интернет-магазин  в категорию: " />
@@ -309,7 +315,7 @@
                                     grid.data('tGrid').ajaxRequest();
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to Parse.');
+                                    alert('Failed to Parse. ' + xhr.responseText);
                                 }
                             });
                             return false;
