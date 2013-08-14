@@ -5,11 +5,38 @@
 	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations;
 	using System.Text;
+	using System.Web.Mvc;
 
 	using Nop.Web.Framework.Mvc;
 
+	public static class ListExtention
+	{
+		// Call like     var html = ToHtmlList(people, x => x.LastName, x => x.FirstName);
+		public static string ToHtmlList<T>(this List<T> list, params Func<T, object>[] fxns)
+		{
+			var sb = new StringBuilder();
+			sb.Append("<TABLE>\n");
+			foreach (var item in list)
+			{
+				sb.Append("<TR>\n");
+				foreach (var fxn in fxns)
+				{
+					sb.Append("<TD>");
+					sb.Append(fxn(item));
+					sb.Append("</TD>");
+				}
+				sb.Append("</TR>\n");
+			}
+			sb.Append("</TABLE>");
+
+			return sb.ToString();
+		}
+	}
+
 	public class YandexMarketProductModel : BaseNopEntityModel
 	{
+		
+
 		public YandexMarketProductModel()
 		{
 			this.Specifications = new List<YandexMarketSpecModel>();
@@ -37,9 +64,26 @@
 		[DisplayName("Категория")]
 		public int YandexMarketCategoryRecordId { get; set; }
 
+		private List<YandexMarketSpecModel> specifications;
 		[DisplayName("Спецификации")]		
-		public List<YandexMarketSpecModel> Specifications { get; set; }
+		public List<YandexMarketSpecModel> Specifications
+		{
+			get
+			{
+				return specifications;
+			}
+			set
+			{
+				specifications = value;
+				SpecificationsHtml = Specifications.ToHtmlList(spec => spec.Key, spec => spec.Value);
+			}
+		}
+
+		public string SpecificationsHtml { get; set; }
 			
+
+		//.ToHtmlList(spec => spec.Key, spec => spec.Value)
+
 		public override string ToString()
 		{
 			var result = new StringBuilder();

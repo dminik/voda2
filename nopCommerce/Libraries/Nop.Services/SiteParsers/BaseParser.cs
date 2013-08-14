@@ -13,6 +13,7 @@ namespace Nop.Services.SiteParsers
 
 	using OpenQA.Selenium;
 	using OpenQA.Selenium.IE;
+	using OpenQA.Selenium.Support.UI;
 
 	public abstract class BaseParser
 	{
@@ -58,7 +59,7 @@ namespace Nop.Services.SiteParsers
 			try
 			{
 				mDriver = new InternetExplorerDriver();
-				mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(15));
+				mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(60));
 
 				// mDriver = new FirefoxDriver();
 				//var binary = new FirefoxBinary("c:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe");
@@ -170,7 +171,16 @@ namespace Nop.Services.SiteParsers
 				IWebElement currentKeyElement;
 				try
 				{					
-					currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecKeyInProductPage));					
+					currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecKeyInProductPage));
+					while (currentKeyElement.Text == "")
+					{
+						var x = ((OpenQA.Selenium.Remote.RemoteWebElement)(currentKeyElement)).LocationOnScreenOnceScrolledIntoView.X;
+						if(x==0)
+							continue;
+						Thread.Sleep(1000);
+						currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecKeyInProductPage));
+					}
+
 				}
 				catch (NoSuchElementException)
 				{
@@ -180,7 +190,12 @@ namespace Nop.Services.SiteParsers
 
 				// Value				
 				var currentValueElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecValInProductPage));
+
+
 				
+				//WebDriverWait wait = new WebDriverWait(mDriver, 10);
+				//IWebElement element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(""), ));
+
 				product.Specifications.Add(new YandexMarketSpecRecord(currentKeyElement.Text, currentValueElement.Text));				
 			}
 
@@ -191,7 +206,7 @@ namespace Nop.Services.SiteParsers
 
 		private string SaveImage(string remoteFileUrl, string productName)
 		{
-			string fileName = productName.Replace('/', '-').Replace('\\', '-').Replace('*', '-').Replace('?', '-').Replace('"', '-').Replace('\'', '-').Replace('<', '-').Replace('>', '-').Replace('|', '-');
+			string fileName = productName.Replace('/', '-').Replace('\\', '-').Replace('*', '-').Replace('?', '-').Replace('"', '-').Replace('\'', '-').Replace('<', '-').Replace('>', '-').Replace('|', '-').Replace(' ', '_');
 			fileName += Path.GetExtension(remoteFileUrl);
 
 			var folderPath = Path.Combine(this.mImageFolderPathBase, this.mImageFolderPathForProductList);
@@ -225,7 +240,7 @@ namespace Nop.Services.SiteParsers
 
 			if(productsPageUrl.Contains("yugcontract.ua"))
 				parser = new UgContractParser();
-			else if (productsPageUrl.Contains("yugcontract.ua"))
+			else if (productsPageUrl.Contains("market.yandex"))
 				parser = new YandexMarketParser();
 			else
 				throw new Exception("Can't define parser type for url=" + productsPageUrl);
