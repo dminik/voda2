@@ -73,8 +73,7 @@
 			else
 			{
 				var categoryName = _yandexMarketCategoryService.GetById(model.ParserCategoryId).Name;
-				var parser = new YandexMarketParser();
-				parser.Init(categoryName, model.ParserCategoryId, model.ParseNotMoreThen, model.ProductsPageUrl, _logger);
+				var parser = BaseParser.Create(categoryName, model.ParserCategoryId, model.ParseNotMoreThen, model.ProductsPageUrl, _logger);				
 				productList = parser.Parse();
 			}
 

@@ -218,5 +218,21 @@ namespace Nop.Services.SiteParsers
 
 			return path;
 		}
+
+		public static BaseParser Create(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, ILogger logger)
+		{
+			BaseParser parser = null;
+
+			if(productsPageUrl.Contains("yugcontract.ua"))
+				parser = new UgContractParser();
+			else if (productsPageUrl.Contains("yugcontract.ua"))
+				parser = new YandexMarketParser();
+			else
+				throw new Exception("Can't define parser type for url=" + productsPageUrl);
+
+			parser.Init(catalogName, parserCategoryId, parseNotMoreThen, productsPageUrl, logger);
+
+			return parser;
+		}
 	}
 }
