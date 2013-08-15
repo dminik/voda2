@@ -53,6 +53,11 @@ namespace Nop.Services.SiteParsers
 		{
 			return productLink;
 		}
+
+		protected virtual YandexMarketProductRecord ProductPostProcessing(YandexMarketProductRecord product)
+		{
+			return product;
+		}
 		
 		public List<YandexMarketProductRecord> Parse()
 		{
@@ -186,7 +191,6 @@ namespace Nop.Services.SiteParsers
 						Thread.Sleep(1000);
 						currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecKeyInProductPage));
 					}
-
 				}
 				catch (NoSuchElementException)
 				{
@@ -196,19 +200,15 @@ namespace Nop.Services.SiteParsers
 
 				// Value				
 				var currentValueElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecValInProductPage));
-
-
+				var currentValueHtml = GetInnerHtml(currentValueElement);
 				
-				//WebDriverWait wait = new WebDriverWait(mDriver, 10);
-				//IWebElement element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(""), ));
-
-				product.Specifications.Add(new YandexMarketSpecRecord(currentKeyElement.Text, currentValueElement.Text));				
+				product.Specifications.Add(new YandexMarketSpecRecord(currentKeyElement.Text, currentValueHtml));				
 			}
 
 			this.mLogger.Debug("Finished getting specs.");
 
 			if (CssSelectorForProductArticulInProductPage != string.Empty)
-				product.Articul = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductArticulInProductPage)).Text.Replace("Код: ", "");
+				product.Articul = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductArticulInProductPage)).Text;
 
 			// Переходим на страницу описания товара			
 			this.mDriver.Navigate().GoToUrl(productLink);
@@ -217,18 +217,11 @@ namespace Nop.Services.SiteParsers
 			this.mLogger.Debug("Have main product page " + productLink);
 
 			if (CssSelectorForProductFullDescriptionInProductPage != string.Empty)
-			{
-				product.FullDescription =
-					this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)).Text;
-
-				product.FullDescription =
-					GetInnerHtml(this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)));
-
-				const string toErase1 = "Если вы заметили некорректные данные в описании товара, выделите ошибку и нажмите";
-				const string toErase2 = "Ctrl+Enter";
-				const string toErase3 = ", чтобы сообщить нам об этом.";
-				product.FullDescription = product.FullDescription.Replace(toErase1, "").Replace(toErase2, "").Replace(toErase3, "");
+			{				
+				product.FullDescription = GetInnerHtml(this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)));				
 			}
+
+			product = ProductPostProcessing(product);
 
 			return product;
 		}
