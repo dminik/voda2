@@ -61,7 +61,9 @@
 				x =>
 				{
 					var m = new YandexMarketProductModel(
+						x.Articul,
 						x.Name,
+						x.FullDescription,
 						x.ImageUrl_1,
 						x.YandexMarketCategoryRecordId,
 						x.Specifications.Select(s => new YandexMarketSpecModel(s.Key, s.Value)).ToList(),
@@ -143,13 +145,14 @@
 			}
 
 			//product										
-			product.UpdatedOnUtc = DateTime.UtcNow;
+			product.UpdatedOnUtc = DateTime.UtcNow;			
 			product.Name = yaProduct.Name;
+			product.FullDescription = yaProduct.FullDescription;
 			product.ShortDescription = CreateShortDescription(yaProduct.Specifications);
 
 			//variant						
 			variant.UpdatedOnUtc = DateTime.UtcNow;
-			variant.Sku = yaProduct.Name;
+			variant.Sku = yaProduct.Articul;
 			variant.Name = yaProduct.Name;
 
 

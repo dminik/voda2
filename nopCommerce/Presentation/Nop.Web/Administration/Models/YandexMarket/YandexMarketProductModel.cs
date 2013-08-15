@@ -5,57 +5,38 @@
 	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations;
 	using System.Text;
-	using System.Web.Mvc;
-
+	
 	using Nop.Web.Framework.Mvc;
-
-	public static class ListExtention
-	{
-		// Call like     var html = ToHtmlList(people, x => x.LastName, x => x.FirstName);
-		public static string ToHtmlList<T>(this List<T> list, params Func<T, object>[] fxns)
-		{
-			var sb = new StringBuilder();
-			sb.Append("<TABLE>\n");
-			foreach (var item in list)
-			{
-				sb.Append("<TR>\n");
-				foreach (var fxn in fxns)
-				{
-					sb.Append("<TD>");
-					sb.Append(fxn(item));
-					sb.Append("</TD>");
-				}
-				sb.Append("</TR>\n");
-			}
-			sb.Append("</TABLE>");
-
-			return sb.ToString();
-		}
-	}
-
+	
 	public class YandexMarketProductModel : BaseNopEntityModel
-	{
-		
-
+	{		
 		public YandexMarketProductModel()
 		{
 			this.Specifications = new List<YandexMarketSpecModel>();
 		}
 
-		public YandexMarketProductModel(string name, string imageUrl_1, int yandexMarketCategoryRecordId, List<YandexMarketSpecModel> specifications, int id = 0)
+		public YandexMarketProductModel(string articul, string name, string fullDescription, string imageUrl_1, int yandexMarketCategoryRecordId, List<YandexMarketSpecModel> specifications, int id = 0)
 			: this()
 		{
 			this.Id = id;
+			this.Articul =  articul;
 			this.Name = name;
+			this.FullDescription = fullDescription;
 			this.ImageUrl_1 = imageUrl_1;
 			this.Specifications = specifications;
 			this.YandexMarketCategoryRecordId = yandexMarketCategoryRecordId;
 		}
 
+		[DisplayName("Артикул")]
+		public string Articul { get; set; }
+
 		[DisplayName("Название")]
 		[StringLength(100)]
 		[Required(ErrorMessage = "Поле обязательно к заполнению")]		
 		public string Name { get; set; }
+
+		[DisplayName("Описание")]
+		public string FullDescription { get; set; }
 		
 		[DisplayName("Рисунок1")]
 		[StringLength(1000)]		
@@ -64,17 +45,17 @@
 		[DisplayName("Категория")]
 		public int YandexMarketCategoryRecordId { get; set; }
 
-		private List<YandexMarketSpecModel> specifications;
+		private List<YandexMarketSpecModel> mSpecifications;
 		[DisplayName("Спецификации")]		
 		public List<YandexMarketSpecModel> Specifications
 		{
 			get
 			{
-				return specifications;
+				return this.mSpecifications;
 			}
 			set
 			{
-				specifications = value;
+				this.mSpecifications = value;
 				SpecificationsHtml = Specifications.ToHtmlList(spec => spec.Key, spec => spec.Value);
 			}
 		}
@@ -96,7 +77,7 @@
 				result.Append(currentSecification.Key + " = " + currentSecification.Value + ";" + Environment.NewLine);
 			}
 
-			result.Append("ImageUrl_1 = " + this.ImageUrl_1 + ";" + Environment.NewLine);
+			result.Append("ImageUrl_1 = " + this.ImageUrl_1 + ";" + Environment.NewLine + " FullDescription = " + FullDescription + Environment.NewLine);
 			
 			return result.ToString();
 		}

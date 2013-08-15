@@ -13,6 +13,7 @@ namespace Nop.Services.SiteParsers
 
 	using OpenQA.Selenium;
 	using OpenQA.Selenium.IE;
+	using OpenQA.Selenium.Remote;
 	using OpenQA.Selenium.Support.UI;
 
 	public abstract class BaseParser
@@ -44,6 +45,9 @@ namespace Nop.Services.SiteParsers
 		protected virtual string CssSelectorForProductSpecsRowsInProductPage { get { throw new Exception("Not implemented"); } }
 		protected virtual string CssSelectorForProductSpecKeyInProductPage { get { throw new Exception("Not implemented"); } }
 		protected virtual string CssSelectorForProductSpecValInProductPage { get { throw new Exception("Not implemented"); } }
+		protected virtual string CssSelectorForProductArticulInProductPage { get { return ""; } }
+		protected virtual string CssSelectorForProductFullDescriptionInProductPage { get { return ""; } }
+		
 
 		protected virtual string GetLinkToSpecsTabOfProduct(string productLink)
 		{
@@ -141,13 +145,15 @@ namespace Nop.Services.SiteParsers
 		
 		private YandexMarketProductRecord CreateProduct(string productLink)
 		{
+			var product = new YandexMarketProductRecord();
+			
 			// Переходим на страницу спецификации товара
-			var pageUrl = GetLinkToSpecsTabOfProduct(productLink);
-			this.mDriver.Navigate().GoToUrl(pageUrl);
+			var pageSpecsUrl = GetLinkToSpecsTabOfProduct(productLink);
+			this.mDriver.Navigate().GoToUrl(pageSpecsUrl);
 			Thread.Sleep(3000);
 
-			this.mLogger.Debug("Have page " + pageUrl);
-			var product = new YandexMarketProductRecord();
+			this.mLogger.Debug("Have specs page " + pageSpecsUrl);
+			
 			product.YandexMarketCategoryRecordId = ParserCategoryId;
 
 			// Найти имя товара		
@@ -175,7 +181,7 @@ namespace Nop.Services.SiteParsers
 					while (currentKeyElement.Text == "")
 					{
 						var x = ((OpenQA.Selenium.Remote.RemoteWebElement)(currentKeyElement)).LocationOnScreenOnceScrolledIntoView.X;
-						if(x==0)
+						if(x==9999998)
 							continue;
 						Thread.Sleep(1000);
 						currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecKeyInProductPage));
@@ -201,7 +207,39 @@ namespace Nop.Services.SiteParsers
 
 			this.mLogger.Debug("Finished getting specs.");
 
+			if (CssSelectorForProductArticulInProductPage != string.Empty)
+				product.Articul = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductArticulInProductPage)).Text.Replace("Код: ", "");
+
+			// Переходим на страницу описания товара			
+			this.mDriver.Navigate().GoToUrl(productLink);
+			Thread.Sleep(3000);
+
+			this.mLogger.Debug("Have main product page " + productLink);
+
+			if (CssSelectorForProductFullDescriptionInProductPage != string.Empty)
+			{
+				product.FullDescription =
+					this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)).Text;
+
+				product.FullDescription =
+					GetInnerHtml(this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)));
+
+				const string toErase1 = "Если вы заметили некорректные данные в описании товара, выделите ошибку и нажмите";
+				const string toErase2 = "Ctrl+Enter";
+				const string toErase3 = ", чтобы сообщить нам об этом.";
+				product.FullDescription = product.FullDescription.Replace(toErase1, "").Replace(toErase2, "").Replace(toErase3, "");
+			}
+
 			return product;
+		}
+
+		private string GetInnerHtml(IWebElement element)
+		{
+			var remoteWebDriver = (RemoteWebElement)element;
+			var javaScriptExecutor = (IJavaScriptExecutor)remoteWebDriver.WrappedDriver;
+			var innerHtml = javaScriptExecutor.ExecuteScript("return arguments[0].innerHTML;", element).ToString();
+
+			return innerHtml;
 		}
 
 		private string SaveImage(string remoteFileUrl, string productName)

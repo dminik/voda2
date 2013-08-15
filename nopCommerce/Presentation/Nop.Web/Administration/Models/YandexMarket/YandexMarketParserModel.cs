@@ -17,6 +17,7 @@
 			this.IsTest = true;
 			this.ParserCategoryId = 1;
 			this.ShopCategoryId = 0;
+			this.ProductsPageUrl = "http://yugcontract.ua/shop/mobilnye-telefony";
 		}
 
 		[DisplayName("Имя категории магазина в которую импортнутся спарсенные товары")]

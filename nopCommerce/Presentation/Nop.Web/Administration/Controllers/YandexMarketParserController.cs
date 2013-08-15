@@ -97,7 +97,9 @@
 			return new List<YandexMarketProductRecord>()
 					{
 						new YandexMarketProductRecord(
-								"Product 1",
+							"11111",	
+							"Product 1",
+								"Описание 1", 
 								"url1",		
 								categoryId,
 									new List<YandexMarketSpecRecord>()
@@ -107,7 +109,9 @@
 										}
 							),
 							new YandexMarketProductRecord(
+								"22222",
 								"Product 2",
+								"Описание 2",
 								"url1",		
 								categoryId,
 									new List<YandexMarketSpecRecord>()
