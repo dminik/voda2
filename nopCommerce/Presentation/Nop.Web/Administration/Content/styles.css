@@ -144,14 +144,41 @@ body .t-button{font-weight:400;color:inherit!important;text-decoration:none;}
 .form-actions{overflow:hidden;padding-top:1em;}
 .form-actions .t-button,.form-actions .t-button button{float:right;margin-left:10px;padding:2px 15px;}
 
+
+.parser-full-description {
+	width: 400px; 
+	border: 3px solid steelblue; 
+	border-collapse: separate;
+	line-height: 1em!important;
+	font-size: 90%;
+}
+
+
 .parser-specs {
 	width: 700px; 
-	border: 3px solid steelblue; 
+	border: 1px solid steelblue; 
 	border-collapse: separate;
 }
 
 .parser-specs td {
-	border: 3px solid rgb(70, 180, 89)!important; 
+	border: 1px solid rgb(70, 180, 89)!important; 
 	border-collapse: separate!important;
-	border-width: 2px 0 0 1px!important;
+	border-width: 1px 0 0 1px!important;
+	line-height: 1em!important;
+	font-size: 90%;
+	padding: 0!important;
+}
+
+.parser-specs td p {	
+	line-height: 1em!important;
+	margin: 0;	
+}
+
+.t-alt {
+  background-color: rgb(164, 247, 247)!important;
+}
+
+.parser-images img {
+	height: 115px; 
+	border: 1px solid rgb(70, 180, 89)!important; 
 }

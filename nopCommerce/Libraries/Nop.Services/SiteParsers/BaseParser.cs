@@ -5,6 +5,7 @@ namespace Nop.Services.SiteParsers
 	using System.IO;
 	using System.Linq;
 	using System.Net;
+	using System.Text.RegularExpressions;
 	using System.Threading;
 	using System.Web;
 
@@ -42,6 +43,7 @@ namespace Nop.Services.SiteParsers
 		protected virtual string CssSelectorForNextLinkInProductList { get { throw new Exception("Not implemented"); } }
 		protected virtual string CssSelectorForProductNameInProductPage { get { throw new Exception("Not implemented"); } }
 		protected virtual string CssSelectorForProductPictureInProductPage { get { throw new Exception("Not implemented"); } }
+		protected virtual string CssSelectorForProductPicturesInProductPage { get { return ""; } }
 		protected virtual string CssSelectorForProductSpecsRowsInProductPage { get { throw new Exception("Not implemented"); } }
 		protected virtual string CssSelectorForProductSpecKeyInProductPage { get { throw new Exception("Not implemented"); } }
 		protected virtual string CssSelectorForProductSpecValInProductPage { get { throw new Exception("Not implemented"); } }
@@ -164,12 +166,8 @@ namespace Nop.Services.SiteParsers
 			// Найти имя товара		
 			product.Name = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductNameInProductPage)).Text;
 
-			// Скачиваем картинку
-			var imageUrl = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductPictureInProductPage)).GetAttribute("src");
-			Thread.Sleep(3000);
-			// do it twice because of some bag
-			imageUrl = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductPictureInProductPage)).GetAttribute("src");
-			product.ImageUrl_1 = this.SaveImage(imageUrl, product.Name);
+			// Скачиваем картинки
+			this.SaveImages(product);
 
 			// Найти спецификации товара	table.b-properties tr   
 			var specificationElements = this.mDriver.FindElements(By.CssSelector(CssSelectorForProductSpecsRowsInProductPage));
@@ -226,15 +224,32 @@ namespace Nop.Services.SiteParsers
 			return product;
 		}
 
-		private string GetInnerHtml(IWebElement element)
+		private void SaveImages(YandexMarketProductRecord product)
 		{
-			var remoteWebDriver = (RemoteWebElement)element;
-			var javaScriptExecutor = (IJavaScriptExecutor)remoteWebDriver.WrappedDriver;
-			var innerHtml = javaScriptExecutor.ExecuteScript("return arguments[0].innerHTML;", element).ToString();
+			// Get main image
+			var imageUrl = this.mDriver.FindElement(By.CssSelector(this.CssSelectorForProductPictureInProductPage)).GetAttribute("src");
+			Thread.Sleep(3000);
+			// do it twice because of some bag
+			imageUrl = this.mDriver.FindElement(By.CssSelector(this.CssSelectorForProductPictureInProductPage)).GetAttribute("src");
+			product.ImageUrl_1 = this.SaveImage(imageUrl, product.Name);
 
-			return innerHtml;
+
+			// Get other images
+			if (CssSelectorForProductPicturesInProductPage != string.Empty)
+			{
+				//driver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS) 
+				mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(1));
+				var imagesLinks = this.mDriver.FindElements(By.CssSelector(this.CssSelectorForProductPicturesInProductPage));
+				int imageCounter = 2;
+				foreach (var curImagesLink in imagesLinks)
+				{
+					var curImageUrl = curImagesLink.GetAttribute("href");
+					product.ImageUrl_1 += ";" + this.SaveImage(curImageUrl, product.Name + "_" + imageCounter);
+					imageCounter++;
+				}
+			}
 		}
-
+		
 		private string SaveImage(string remoteFileUrl, string productName)
 		{
 			string fileName = productName.Replace('/', '-').Replace('\\', '-').Replace('*', '-').Replace('?', '-').Replace('"', '-').Replace('\'', '-').Replace('<', '-').Replace('>', '-').Replace('|', '-').Replace(' ', '_');
@@ -252,6 +267,15 @@ namespace Nop.Services.SiteParsers
 			this.mLogger.Debug("Image saved");
 
 			return Path.Combine(this.mImageFolderPathForProductList, fileName);
+		}
+
+		private string GetInnerHtml(IWebElement element)
+		{
+			var remoteWebDriver = (RemoteWebElement)element;
+			var javaScriptExecutor = (IJavaScriptExecutor)remoteWebDriver.WrappedDriver;
+			var innerHtml = javaScriptExecutor.ExecuteScript("return arguments[0].innerHTML;", element).ToString();
+
+			return innerHtml;
 		}
 
 		private string MakeFolder(string path)
@@ -279,6 +303,18 @@ namespace Nop.Services.SiteParsers
 			parser.Init(catalogName, parserCategoryId, parseNotMoreThen, productsPageUrl, logger);
 
 			return parser;
+		}
+
+		protected string GetValByRegExp(string inputString, string pattern)
+		{
+			Match m = Regex.Match(inputString, pattern,
+								RegexOptions.IgnoreCase | RegexOptions.Compiled,
+								TimeSpan.FromSeconds(1));
+
+			if (m.Success)			
+				return m.Groups[1].ToString();							
+			else			
+				return "";			
 		}
 	}
 }

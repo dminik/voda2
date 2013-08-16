@@ -38,33 +38,45 @@
 		[DisplayName("Описание")]
 		public string FullDescription { get; set; }
 		
-		[DisplayName("Рисунок1")]
-		[StringLength(1000)]		
+		[DisplayName("Рисунки")]			
 		public string ImageUrl_1 { get; set; }
 
-		[DisplayName("Категория")]
-		public int YandexMarketCategoryRecordId { get; set; }
-
-		private List<YandexMarketSpecModel> mSpecifications;
-		[DisplayName("Спецификации")]		
-		public List<YandexMarketSpecModel> Specifications
+		
+		public string ImagesHtml
 		{
 			get
 			{
-				return this.mSpecifications;
-			}
-			set
-			{
-				this.mSpecifications = value;
-				SpecificationsHtml = Specifications.ToHtmlList(spec => spec.Key, spec => spec.Value);
+				if (ImageUrl_1 == null) return "";
+
+				var sb = new StringBuilder();
+				sb.Append("<ul>\n");
+				foreach (var curImagePath in ImageUrl_1.Split(';'))
+				{					
+					sb.Append("<li> <img src='http://localhost/ProductsCatalog/" + curImagePath + "' /> </li>");																					
+				}
+
+				sb.Append("</ul>");
+
+				return sb.ToString();
 			}
 		}
 
-		public string SpecificationsHtml { get; set; }
+
+		[DisplayName("Категория")]
+		public int YandexMarketCategoryRecordId { get; set; }
+		
 			
+		public List<YandexMarketSpecModel> Specifications{get; set; }
 
-		//.ToHtmlList(spec => spec.Key, spec => spec.Value)
-
+		[DisplayName("Спецификации")]	
+		public string SpecificationsHtml 
+		{
+			get
+			{
+				return Specifications.ToHtmlList(spec => spec.Key, spec => spec.Value); 
+			} 			
+		}
+		
 		public override string ToString()
 		{
 			var result = new StringBuilder();
