@@ -81,9 +81,7 @@ namespace Nop.Services.SiteParsers
 				// Ссылка на список товаров
 				this.mDriver.Navigate().GoToUrl(ProductsPageUrl);
 				Thread.Sleep(3000);
-
-				this.mLogger.Debug("Have page 1 with liks");
-
+				
 				const int delayInSeconds = 4;
 				bool isNextPage = false;
 				var productLinks = new List<string>();
@@ -97,16 +95,20 @@ namespace Nop.Services.SiteParsers
 							this.mDriver.FindElements(By.CssSelector(CssSelectorForProductLinkInProductList)).Select(s => s.GetAttribute("href")));
 					productLinks.AddRange(linksFromCurrentPage);
 
-					if (this.ParseNotMoreThen <= 10) break;
-
 					this.mLogger.Debug("Have page " + pageLinksCounter + " with links");
+
+					if (this.ParseNotMoreThen <= productLinks.Count) 
+						break;
 
 					try
 					{
 						// Жммем на следущую страницу, если она есть
-						var nextPage = this.mDriver.FindElement(By.CssSelector(CssSelectorForNextLinkInProductList));
+						var nextPageUrl = this.mDriver.FindElement(By.CssSelector(CssSelectorForNextLinkInProductList)).GetAttribute("href");
 
-						nextPage.Click();
+						nextPageUrl = nextPageUrl.Replace("pg", "/pg").Replace("//pg", "/pg");
+
+						this.mDriver.Navigate().GoToUrl(nextPageUrl);
+						Thread.Sleep(3000);
 						isNextPage = true;
 						pageLinksCounter++;
 					}
@@ -170,40 +172,7 @@ namespace Nop.Services.SiteParsers
 			this.SaveImages(product);
 
 			// Найти спецификации товара	table.b-properties tr   
-			var specificationElements = this.mDriver.FindElements(By.CssSelector(CssSelectorForProductSpecsRowsInProductPage));
-
-			this.mLogger.Debug("Have product " + product.Name + ". Start getting " + specificationElements.Count + " specs...");
-
-			foreach (var currentSpecificationElement in specificationElements)
-			{
-				// Key
-				IWebElement currentKeyElement;
-				try
-				{					
-					currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecKeyInProductPage));
-					while (currentKeyElement.Text == "")
-					{
-						var x = ((OpenQA.Selenium.Remote.RemoteWebElement)(currentKeyElement)).LocationOnScreenOnceScrolledIntoView.X;
-						if(x==9999998)
-							continue;
-						Thread.Sleep(1000);
-						currentKeyElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecKeyInProductPage));
-					}
-				}
-				catch (NoSuchElementException)
-				{
-					this.mLogger.Debug("not key");
-					continue;
-				}
-
-				// Value				
-				var currentValueElement = currentSpecificationElement.FindElement(By.CssSelector(CssSelectorForProductSpecValInProductPage));
-				var currentValueHtml = GetInnerHtml(currentValueElement);
-				
-				product.Specifications.Add(new YandexMarketSpecRecord(currentKeyElement.Text, currentValueHtml));				
-			}
-
-			this.mLogger.Debug("Finished getting specs.");
+			this.GetSpecs(product);
 
 			if (CssSelectorForProductArticulInProductPage != string.Empty)
 				product.Articul = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductArticulInProductPage)).Text;
@@ -222,6 +191,49 @@ namespace Nop.Services.SiteParsers
 			product = ProductPostProcessing(product);
 
 			return product;
+		}
+
+		private void GetSpecs(YandexMarketProductRecord product)
+		{
+			var specificationElements = this.mDriver.FindElements(By.CssSelector(this.CssSelectorForProductSpecsRowsInProductPage));
+
+			this.mLogger.Debug("Have product " + product.Name + ". Start getting " + specificationElements.Count + " specs...");
+
+			foreach (var currentSpecificationElement in specificationElements)
+			{
+				// Key
+				IWebElement currentKeyElement;
+				try
+				{
+					currentKeyElement = currentSpecificationElement.FindElement(
+						By.CssSelector(this.CssSelectorForProductSpecKeyInProductPage));
+					while (currentKeyElement.Text == "")
+					{
+						var x = ((OpenQA.Selenium.Remote.RemoteWebElement)(currentKeyElement)).LocationOnScreenOnceScrolledIntoView.X;
+						if (x == 9999998)
+						{
+							continue;
+						}
+						Thread.Sleep(1000);
+						currentKeyElement =
+							currentSpecificationElement.FindElement(By.CssSelector(this.CssSelectorForProductSpecKeyInProductPage));
+					}
+				}
+				catch (NoSuchElementException)
+				{
+					this.mLogger.Debug("not key");
+					continue;
+				}
+
+				// Value				
+				var currentValueElement =
+					currentSpecificationElement.FindElement(By.CssSelector(this.CssSelectorForProductSpecValInProductPage));
+				var currentValueHtml = this.GetInnerHtml(currentValueElement);
+
+				product.Specifications.Add(new YandexMarketSpecRecord(currentKeyElement.Text.Trim(), currentValueHtml.Trim()));
+			}
+
+			this.mLogger.Debug("Finished getting specs.");
 		}
 
 		private void SaveImages(YandexMarketProductRecord product)

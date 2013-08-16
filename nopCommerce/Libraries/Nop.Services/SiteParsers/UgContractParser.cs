@@ -1,5 +1,6 @@
 namespace Nop.Services.SiteParsers
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 
@@ -8,7 +9,7 @@ namespace Nop.Services.SiteParsers
 	public class UgContractParser : BaseParser
 	{
 		// List
-		protected override string CssSelectorForProductLinkInProductList { get { return "div.cat-item a"; } }
+		protected override string CssSelectorForProductLinkInProductList { get { return ".goods-list:not(.goods-list-small) div.cat-item a"; } }
 		protected override string CssSelectorForNextLinkInProductList { get { return "[title=следующая]"; } }
 		
 		// Product
@@ -34,6 +35,26 @@ namespace Nop.Services.SiteParsers
 			product.Articul = product.Articul.Replace("Код: ", "");
 
 			product.Name = product.Name.Replace("МОБИЛЬНЫЙ ТЕЛЕФОН ", "");
+
+			foreach (var curSpec in product.Specifications)
+			{				
+				var s2 = "<p>";
+
+				int i = 0;  // Числовая переменная, контролирующая итерации цикла
+				int x = -1; // Так как метод IndexOf() возвращает "-1" если первое вхождение подстроки не найдено, то приходится использовать вспомагательную, вместо і, что б начать цикл
+				int count = -1; // Записываем количество вхождений (итераций цикла)
+				while (i != -1)
+				{
+					i = curSpec.Value.IndexOf(s2, x + 1); // получаем индекс первого вхождения  х+1 говорит, что начинать нужно с 0-го индекса, тоесть с буквы "П"
+					x = i; // соответственно присваиваем номер индекса первого значения, что б потом (х+1) начать со следующего
+					count++;  // Увеличиваем на единицу наше количество
+				}
+
+				if (count == 1)
+				{
+					curSpec.Value = curSpec.Value.Replace("<p>", "").Replace("</p>", "").Trim();
+				}
+			}
 
 			var manufactureName = GetManufactureFromName(product.Name);
 			if (manufactureName != string.Empty)
@@ -63,6 +84,7 @@ namespace Nop.Services.SiteParsers
 			
 			return product;
 		}
+
 
 		private string GetManufactureFromName(string name)
 		{			  
