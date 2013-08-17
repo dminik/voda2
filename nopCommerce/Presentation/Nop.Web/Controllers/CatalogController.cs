@@ -1046,13 +1046,24 @@ namespace Nop.Web.Controllers
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
+
+			var productsAll = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
+				categoryIds: categoryIds,
+				storeId: _storeContext.CurrentStore.Id,
+				featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
+				priceMin: minPriceConverted, priceMax: maxPriceConverted,
+				filteredSpecs: alreadyFilteredSpecOptionIds,
+				orderBy: (ProductSortingEnum)command.OrderBy,
+				pageIndex: 0,
+				pageSize: 500);
+
             model.Products = PrepareProductOverviewModels(products).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = viewMode;
 
             //specs
-            model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+			model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(productsAll, alreadyFilteredSpecOptionIds,
                 filterableSpecificationAttributeOptionIds, 
                 _specificationAttributeService, _webHelper, _workContext);
             

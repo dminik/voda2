@@ -35,5 +35,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the specification attribute option display order
         /// </summary>
         public int SpecificationAttributeOptionDisplayOrder { get; set; }
+
+		public int SpecificationAttributeOptionExistTimesInFilteredProducts { get; set; }
     }
 }

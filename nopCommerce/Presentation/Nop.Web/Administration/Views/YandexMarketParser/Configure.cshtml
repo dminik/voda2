@@ -216,8 +216,9 @@
                     @Html.TextBoxFor(model => model.ProductsPageUrl, new { style = "width: 100%;" })
                     @Html.ValidationMessageFor(model => model.ProductsPageUrl)
                 </div>
-
-                <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты со страницы и сохранить в текущую категорию парсера" />  <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
+                
+                <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
+                <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты со страницы и сохранить в текущую категорию парсера" /> <br /> 
                 <input type="button" id="onlyNew" class="t-button" value="Шаг 2. Отобразить только новые спарсенные спецификации, которые еще не существуют в интернет-магазине" /><br/>              
                 <input type="button" id="btnApplyImport" class="t-button" value="Шаг 3. Импортнуть новые спецификации в интернет-магазин" /> <br /> 
                 <input type="submit" id="btnImportProductList" class="t-button" value="Шаг 4. Импортнуть новые товары в интернет-магазин  в категорию: " />
@@ -233,6 +234,8 @@
                     $(function () {
                         $('#onlyNew').click(function () {
                             $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
                                 cache: false,
                                 type: 'POST',
                                 url: '@Url.Action("GetNewSpecs", "YandexMarketSpecImport")',
@@ -272,11 +275,13 @@
 
                         $('#btnApplyImport').click(function () {
                             $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
                                 cache: false,
                                 type: 'POST',
                                 url: '@Url.Action("ApplyImport", "YandexMarketSpecImport")',
                                 data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },
-                                dataType: 'json',
+                                dataType: 'text',
                                 success: function (data) {
                                     alert(data);
                                 },

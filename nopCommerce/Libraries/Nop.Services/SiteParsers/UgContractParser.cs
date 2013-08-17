@@ -99,7 +99,7 @@ namespace Nop.Services.SiteParsers
 
 		private string GetMegapixelsFromSpecs(IList<YandexMarketSpecRecord> specs)
 		{
-			const string pattern = @"([0-9](?:\.[0-9])?) мегапик";
+			const string pattern = @"([0-9]+(?:\.[0-9]+)?) мегапик";
 
 			var spec = specs.SingleOrDefault(x => x.Key == "Цифровая камера");
 
@@ -114,7 +114,7 @@ namespace Nop.Services.SiteParsers
 
 		private string GetDisplaySize(IEnumerable<YandexMarketSpecRecord> specs)
 		{
-			const string pattern = "([0-9](?:\\.[0-9])?)\"";
+			const string pattern = "([0-9]+(?:\\.[0-9]+)?)\"";
 
 			var spec = specs.SingleOrDefault(x => x.Key == "Дисплей");
 

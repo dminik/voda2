@@ -993,6 +993,9 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 .tier-prices .prices-list .item-price{color:#B80709;}
 
 
+.specvalue p {
+	margin: 1px;
+}
 /* PRODUCT REVIEWS PAGE */
 .product-reviews-page{}
 .product-reviews-page .page-title{}

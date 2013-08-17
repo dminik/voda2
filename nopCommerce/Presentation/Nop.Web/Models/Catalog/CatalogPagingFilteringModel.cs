@@ -298,7 +298,7 @@ namespace Nop.Web.Models.Catalog
                 return result;
             }
 
-            public virtual void PrepareSpecsFilters(IList<int> alreadyFilteredSpecOptionIds,
+            public virtual void PrepareSpecsFilters(IPagedList<Product> products, IList<int> alreadyFilteredSpecOptionIds,
                 IList<int> filterableSpecificationAttributeOptionIds,
                 ISpecificationAttributeService specificationAttributeService, 
                 IWebHelper webHelper,
@@ -314,15 +314,21 @@ namespace Nop.Web.Models.Catalog
                             var sa = sao.SpecificationAttribute;
                             if (sa != null)
                             {
-                                allFilters.Add(new SpecificationAttributeOptionFilter
-                                {
-                                    SpecificationAttributeId = sa.Id,
-                                    SpecificationAttributeName = sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
-                                    SpecificationAttributeDisplayOrder = sa.DisplayOrder,
-                                    SpecificationAttributeOptionId = sao.Id,
-                                    SpecificationAttributeOptionName = sao.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
-                                    SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder
-                                });
+								int existTimes = GetSpecificationAttributeOptionExistTimesInFilteredProducts(products, sao.Id);
+	                           
+		                        allFilters.Add(
+			                        new SpecificationAttributeOptionFilter
+				                        {
+					                        SpecificationAttributeId = sa.Id,
+					                        SpecificationAttributeName =
+						                        sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+					                        SpecificationAttributeDisplayOrder = sa.DisplayOrder,
+					                        SpecificationAttributeOptionId = sao.Id,
+					                        SpecificationAttributeOptionName =
+						                        sao.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+					                        SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder,
+					                        SpecificationAttributeOptionExistTimesInFilteredProducts = existTimes
+				                        });	                            
                             }
                         }
                     }
@@ -348,7 +354,8 @@ namespace Nop.Web.Models.Catalog
                         continue;
 
                     //else add it
-                    notFilteredOptions.Add(saof);
+					if (products.Count() != saof.SpecificationAttributeOptionExistTimesInFilteredProducts)	                            
+						notFilteredOptions.Add(saof);
                 }
 
                 //prepare the model properties
@@ -370,6 +377,7 @@ namespace Nop.Web.Models.Catalog
                         var item = new SpecificationFilterItem();
                         item.SpecificationAttributeName = x.SpecificationAttributeName;
                         item.SpecificationAttributeOptionName = x.SpecificationAttributeOptionName;
+						item.SpecificationAttributeOptionExistTimesInFilteredProducts = x.SpecificationAttributeOptionExistTimesInFilteredProducts;
 
                         //filter URL
                         var alreadyFilteredOptionIds = GetAlreadyFilteredSpecOptionIds(webHelper);
@@ -395,7 +403,12 @@ namespace Nop.Web.Models.Catalog
                 }
             }
 
-            #endregion
+	        private int GetSpecificationAttributeOptionExistTimesInFilteredProducts(IEnumerable<Product> products, int specAttrOptId)
+	        {
+		        return products.Count(product => product.ProductSpecificationAttributes.Any(x => x.SpecificationAttributeOptionId == specAttrOptId));
+	        }
+
+	        #endregion
 
             #region Properties
             public bool Enabled { get; set; }
@@ -410,7 +423,8 @@ namespace Nop.Web.Models.Catalog
         {
             public string SpecificationAttributeName { get; set; }
             public string SpecificationAttributeOptionName { get; set; }
-            public string FilterUrl { get; set; }
+			public int SpecificationAttributeOptionExistTimesInFilteredProducts { get; set; }
+            public string FilterUrl { get; set; }			
         }
 
         #endregion

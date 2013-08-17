@@ -155,12 +155,6 @@
 			variant.Sku = yaProduct.Articul;
 			variant.Name = yaProduct.Name;
 
-
-			//search engine name
-			var seName = product.ValidateSeName(product.Name, product.Name, true);
-			_urlRecordService.SaveSlug(product, seName, 0);
-
-
 			// Insert or Updating
 			if (isUpdating)
 			{
@@ -175,7 +169,13 @@
 				
 				SaveCategory(shopCategoryId, product.Id);
 				SaveSpecList(product, yaProduct.Specifications);
-				SavePicture(product, yaProduct.ImageUrl_1);
+
+
+				SavePictures(product, yaProduct.ImageUrl_1);
+
+				//search engine name
+				var seName = product.ValidateSeName(product.Name, product.Name, true);
+				_urlRecordService.SaveSlug(product, seName, 0);
 			}
 		}
 
@@ -240,23 +240,30 @@
 			return resultAttrOptName.Id;
 		}
 
-		private void SavePicture(Product product, string pictureSourceUrl)
+		private void SavePictures(Product product, string picturesSourceUrls)
 		{
-			if (_pictureService.GetPicturesByProductId(product.Id).Any())
+			if (_pictureService.GetPicturesByProductId(product.Id).Any())// картинки не апдейтим
 				return;
 
-			pictureSourceUrl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog", pictureSourceUrl);
+			var picturesSourceUrlsList = picturesSourceUrls.Split(';');
 
-			var productPicture = new ProductPicture();
-			productPicture.DisplayOrder = 1;
+			int i = 1;
+			foreach (var curPicUrl in picturesSourceUrlsList)
+			{
+				var curPicUrlFull = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog", curPicUrl);
 
-			productPicture.Picture = _pictureService.InsertPicture(
-				System.IO.File.ReadAllBytes(pictureSourceUrl),
-				"image/jpeg",
-				_pictureService.GetPictureSeName(product.Name),
-				true);
+				var productPicture = new ProductPicture();
+				productPicture.DisplayOrder = i++;
 
-			product.ProductPictures.Add(productPicture);
+				productPicture.Picture = _pictureService.InsertPicture(
+					System.IO.File.ReadAllBytes(curPicUrlFull),
+					"image/jpeg",
+					_pictureService.GetPictureSeName(product.Name),
+					true);
+
+				product.ProductPictures.Add(productPicture);
+			}
+
 			_productService.UpdateProduct(product);
 		}
 
