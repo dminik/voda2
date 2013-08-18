@@ -369,6 +369,16 @@ namespace Nop.Web.Models.Catalog
                         item.SpecificationAttributeName = x.SpecificationAttributeName;
                         item.SpecificationAttributeOptionName = x.SpecificationAttributeOptionName;
 
+						//filter URL						
+						var alreadyFilteredOptionIds = GetAlreadyFilteredSpecOptionIds(webHelper);
+						if (alreadyFilteredOptionIds.Contains(x.SpecificationAttributeOptionId))
+							alreadyFilteredOptionIds.Remove(x.SpecificationAttributeOptionId);// add to old list me
+
+						string newQueryParam = GenerateFilteredSpecQueryParam(alreadyFilteredOptionIds);
+						string filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM + "=" + newQueryParam, null);
+						filterUrl = ExcludeQueryStringParams(filterUrl, webHelper);
+						item.FilterUrl = filterUrl;
+
                         return item;
                     }).ToList();
 
@@ -379,10 +389,11 @@ namespace Nop.Web.Models.Catalog
                         item.SpecificationAttributeOptionName = x.SpecificationAttributeOptionName;
 						item.SpecificationAttributeOptionExistTimesInFilteredProducts = x.SpecificationAttributeOptionExistTimesInFilteredProducts;
 
-                        //filter URL
+                        //filter URL						
                         var alreadyFilteredOptionIds = GetAlreadyFilteredSpecOptionIds(webHelper);
                         if (!alreadyFilteredOptionIds.Contains(x.SpecificationAttributeOptionId))
-                            alreadyFilteredOptionIds.Add(x.SpecificationAttributeOptionId);
+							alreadyFilteredOptionIds.Add(x.SpecificationAttributeOptionId);// add to old list me
+
                         string newQueryParam = GenerateFilteredSpecQueryParam(alreadyFilteredOptionIds);
                         string filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM + "=" + newQueryParam, null);
                         filterUrl = ExcludeQueryStringParams(filterUrl, webHelper);

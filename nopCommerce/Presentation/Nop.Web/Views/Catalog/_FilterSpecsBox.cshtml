@@ -17,10 +17,16 @@
                     <div class="filter-title">
                         @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
                     </div>
-                    @foreach (var item in Model.AlreadyFilteredItems)
+                    @foreach (var spec in Model.AlreadyFilteredItems)
                     {
-                        <div class="item">
-                            <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
+                        @*<div class="item">
+                            <strong>@(spec.SpecificationAttributeName):</strong> @spec.SpecificationAttributeOptionName
+                        </div>*@
+                        
+                        <div>
+                            <strong>@(spec.SpecificationAttributeName):</strong><br/>
+                            <input type="checkbox" checked="checked" onclick="window.location.href = '@spec.FilterUrl    '"/>
+                            <span>@spec.SpecificationAttributeOptionName</span>                            
                         </div>
                     }
 
