@@ -5,10 +5,12 @@
 }
 @if (Model.Enabled)
 {
+    <div class="filter-title title">
+        @*<strong>@T("Filtering.SpecificationFilter")</strong>*@
+        <strong>ФИЛЬТР ТОВАРОВ</strong>
+    </div>
     <div class="product-filters product-spec-filter">
-        <div class="filter-title">
-            <strong>@T("Filtering.SpecificationFilter")</strong>
-        </div>
+        
         <div class="filter-content">
 
             @if (Model.AlreadyFilteredItems.Count > 0)
@@ -44,22 +46,17 @@
                         var groupList = group.ToList();
                         
                         <ul class="group">
-                            <li class="title">
+                            <li class="spec-title">
                                 <strong>@groupList[0].SpecificationAttributeName</strong>
                             </li>
 
                             @foreach (var spec in groupList)
                             {
-@*<li class="item">*@
-@*dminikk*@
-@*<a href="@spec.FilterUrl">@spec.SpecificationAttributeOptionName</a> *@
-                                <div>
+                                <div class="spec-values">
                                     <input type="checkbox" onclick="window.location.href = '@spec.FilterUrl    '"/>
-                                    <span>@spec.SpecificationAttributeOptionName</span>
-                                    <span> (@spec.SpecificationAttributeOptionExistTimesInFilteredProducts)</span>
+                                    <span class="spec-value">@spec.SpecificationAttributeOptionName</span>
+                                    <span class="spec-value-exist-times"> (@spec.SpecificationAttributeOptionExistTimesInFilteredProducts шт.)</span>
                                 </div>
-
-@*</li>*@
                             }
                         </ul> 
                     }
