@@ -54,7 +54,7 @@
                     </div>
 
                     @Html.Widget("productdetails_after_pictures")
-                    <div class="overview">
+                    <div class="overview">                       
                         <div class="product-name">
                             <h1 itemprop="name">
                                 @Model.Name
@@ -78,12 +78,12 @@
                         <!--sample download-->
                         @Html.Partial("_DownloadSample", defaultProductVariant)
                         @{
-                        var dataDictPrice = new ViewDataDictionary();
-                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", defaultProductVariant.Id);
+                            var dataDictPrice = new ViewDataDictionary();
+                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", defaultProductVariant.Id);
                             @Html.Partial("_ProductVariantPrice", defaultProductVariant.ProductVariantPrice, dataDictPrice)
                             
-                        var dataDictAddToCart = new ViewDataDictionary();
-                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", defaultProductVariant.Id);
+                            var dataDictAddToCart = new ViewDataDictionary();
+                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", defaultProductVariant.Id);
                             @Html.Partial("_ProductVariantAddToCart", defaultProductVariant.AddToCart, dataDictAddToCart)                    
                         }
                         @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })

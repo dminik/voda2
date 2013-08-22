@@ -914,8 +914,15 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
     margin-top: 10px;
     width: 29%;}
 .product-details-page .gallery .picture-thumbs a{margin-right:3px;}
-.product-details-page .overview{float:right;width:56%;margin:5px 5px 10px;padding:10px;border:1px solid #dcdcdc;border-radius: 14px;}
+.product-details-page .overview{float:right;width:56%;margin:5px 5px 10px;padding: 4px 10px;border:1px solid #dcdcdc;border-radius: 14px;}
 .product-details-page .product-name{color:#5C5B5B;font-size:1.3em;margin-bottom:0.3em;padding-top:10px;border-bottom: 3px solid;}
+.product-details-page .product-sku{
+	background-color: rgb(206, 219, 225);
+	color: rgb(92, 91, 91);
+	float: right;
+	font-size: 0.9em;
+	margin-bottom: 0;
+	padding-top: 0;}
 .product-details-page .short-description,.product-details-page .manufacturers,.product-details-page .sku,.product-details-page .manufacturer-part-number,.product-details-page .stock,.product-details-page .gtin
 {color:#555;margin-bottom:.3em;font-size:1.1em;}
 .product-details-page .ShortDescription{margin-left:25px;}

@@ -162,6 +162,8 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Common\FulltextService.cs" />
+    <Compile Include="FileParsers\OstatkiFileParser.cs" />
+    <Compile Include="FileParsers\ProductLine.cs" />
     <Compile Include="SiteParsers\BaseParser.cs" />
     <Compile Include="SiteParsers\UgContractParser.cs" />
     <Compile Include="SiteParsers\YandexMarketHelpers.cs" />

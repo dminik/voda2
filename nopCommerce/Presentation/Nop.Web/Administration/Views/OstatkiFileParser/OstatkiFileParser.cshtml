@@ -1,0 +1,98 @@
+﻿
+<br/><br/>
+<div>Parsed lines:</div>
+<div class="placetags">
+    <ul></ul>
+</div>
+
+<br/><br/>
+
+<img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
+<input type="button" id="parseAndShow" class="t-button" value="Шаг 1. Спарсить и Отобразить" /><br/>
+<input type="button" id="btnApplyImport" class="t-button" value="Шаг 1. Спарсить и Применить" />
+
+<br/><br/>
+
+<div>ERRORS in lines:</div>
+<div class="placetags-errors">    
+    <ul></ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#parseAndShow').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicator').show(); },
+                complete: function () { $('#parsingIndicator').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("ParseAndShow", "OstatkiFileParser")',
+                @*data: { categoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                dataType: 'json',
+                success: function (data) {
+
+                    var place = $('.placetags');
+                    place.html('');
+
+                    var i = 0;
+                    $.each(data.ProductLineList, function () {
+                        
+                        var artikul = $('<li>').append('Артикул: ' + data.ProductLineList[i].Articul);
+                        place.append(artikul);
+                        
+                        var price = $('<li>').append('Цена: ' + data.ProductLineList[i].Price);
+                        place.append(price);
+                        
+                        var amount = $('<li>').append('Количество: ' + data.ProductLineList[i].Amount);
+                        place.append(amount);
+                                            
+                        place.append($('<br/>'));
+                        i++;
+                    });
+                    
+                    place.append($('<div>')).append('Всего: ' + data.ProductLineList.length);
+
+
+                    var place_errors = $('.placetags-errors');                    
+                    place_errors.html('');
+                    place_errors.append($('<div>')).append('Всего ошибок: ' + data.ErrorList.length);
+
+                    var k = 0;
+                    $.each(data.ErrorList, function () {
+
+                        var error = $('<li>').append(data.ErrorList[k]);
+                        place_errors.append(error);
+                       
+                        k++;
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                }
+            });
+            return false;
+        });
+        
+
+
+        $('#btnApplyImport').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicator').show(); },
+                complete: function () { $('#parsingIndicator').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("ApplyImport", "YandexMarketSpecImport")',
+                @*data: { categoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                dataType: 'json',
+                success: function (data) {
+                    alert(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                }
+            });
+              return false;
+          });
+    });
+</script>
