@@ -34,10 +34,10 @@ input[type="text"]:disabled{background:none repeat scroll 0 0 #FFF;}
 
 
 /* MASTER PAGE WRAPPERS */
- .master-wrapper-page{margin:0px auto 0;                width:960px; background:none repeat scroll 0 0 #FFF;box-shadow:0 0.5em 2em rgba(0,0,0,0.1);-moz-box-shadow:0 0.5em 2em rgba(0,0,0,0.1);-webkit-box-shadow:0 0.5em 2em rgba(0,0,0,0.1);}
+ .master-wrapper-page{margin:5px auto 0;                width:960px; background:none repeat scroll 0 0 #FFF;box-shadow:0 0.5em 2em rgba(0,0,0,0.1);-moz-box-shadow:0 0.5em 2em rgba(0,0,0,0.1);-webkit-box-shadow:0 0.5em 2em rgba(0,0,0,0.1);}
 .master-wrapper-content{background: none repeat scroll 0 0 rgb(255, 255, 255);
     float: left;
-    margin: 15px 15px 0;
+    margin: 9px 15px 0;
     padding: 0;
     text-align: left;
     width: 930px;
