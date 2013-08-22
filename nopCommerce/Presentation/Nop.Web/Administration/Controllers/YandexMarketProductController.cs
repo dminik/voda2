@@ -140,7 +140,10 @@
 						DisplayOrder = 1,
 						CreatedOnUtc = DateTime.UtcNow,
 						OrderMinimumQuantity = 1,
-						OrderMaximumQuantity = 10
+						OrderMaximumQuantity = 10,						
+						ManageInventoryMethodId = 1,
+						DisplayStockAvailability = true,
+						DisplayStockQuantity = true,
 					};
 			}
 

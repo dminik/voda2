@@ -26,12 +26,15 @@
 		private readonly IYandexMarketSpecService _yandexMarketSpecService;
 		private readonly ISpecificationAttributeService _specificationAttributeService;
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
+		private readonly IProductService _productService;
 
 		public OstatkiFileParserController(
 			IYandexMarketSpecService yandexMarketSpecService, 
 			IYandexMarketCategoryService yandexMarketCategoryService,
-			ISpecificationAttributeService specificationAttributeService)
+			ISpecificationAttributeService specificationAttributeService,
+			IProductService productService)
 		{
+			_productService = productService;
 			_yandexMarketSpecService = yandexMarketSpecService;
 			_yandexMarketCategoryService = yandexMarketCategoryService;
 			_specificationAttributeService = specificationAttributeService;
@@ -51,33 +54,39 @@
 			return Json(newSpecsOnly);
 		}
 
-		//[HttpPost]
-		//public ActionResult ApplyImport(int parserCategoryId)
-		//{
-		//	var newSpecsOnly = _GetNewSpecs(parserCategoryId);
+		[HttpPost]
+		public ActionResult ApplyImport()
+		{
+			var newSpecsOnly = _Parse();
+			string notFoundArticules = "";
+			string foundArticules = "";
+			int successCounter = 0;
 
-		//	foreach (var curSpecAttr in newSpecsOnly)
-		//	{
-		//		SpecificationAttribute curSpecAttrFromDb;
-		//		if (curSpecAttr.Id != 0)
-		//		{
-		//			curSpecAttrFromDb = _specificationAttributeService.GetSpecificationAttributeById(curSpecAttr.Id);
+			foreach (var curProductLine in newSpecsOnly.ProductLineList)
+			{
+				var currentProductVariant = _productService.GetProductVariantBySku(curProductLine.Articul);
+				if (currentProductVariant == null)
+				{
+					notFoundArticules += curProductLine.Articul + ", ";
+					continue;
+				}
 
-		//			foreach (var curSpecAttrOpt in curSpecAttr.SpecificationAttributeOptions)
-		//			{
-		//				curSpecAttrOpt.SpecificationAttributeId = curSpecAttrFromDb.Id;
-		//				_specificationAttributeService.InsertSpecificationAttributeOption(curSpecAttrOpt);
-		//				break;
-		//			}
-		//		}
-		//		else
-		//		{
-		//			_specificationAttributeService.InsertSpecificationAttribute(curSpecAttr);					
-		//		}
-		//	}
+				currentProductVariant.StockQuantity = curProductLine.Amount;
+				currentProductVariant.Price = curProductLine.Price;
+				_productService.UpdateProductVariant(currentProductVariant);
+				successCounter++;
+				foundArticules += curProductLine.Articul + ", ";
+			}
 
-		//	return Content("Success!");
-		//}
+			if (notFoundArticules == "")
+				return Content("Success for all!");
+			else 
+			{
+				return Content("Success for " + successCounter + " from " + newSpecsOnly.ProductLineList.Count() 
+					+ ". Not Found Articules in shop but they exist in file Ostatki:" + notFoundArticules
+					+ ". Success Articules" + foundArticules);
+			}
+		}
 
 
 

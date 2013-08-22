@@ -82,9 +82,9 @@
                 complete: function () { $('#parsingIndicator').hide(); },
                 cache: false,
                 type: 'POST',
-                url: '@Url.Action("ApplyImport", "YandexMarketSpecImport")',
+                url: '@Url.Action("ApplyImport", "OstatkiFileParser")',
                 @*data: { categoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
-                dataType: 'json',
+                dataType: 'text',
                 success: function (data) {
                     alert(data);
                 },
