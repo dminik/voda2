@@ -71,8 +71,18 @@
                     </div>
                     
                     <div class="under-review">
-                        <div class="shipping-free"><span>Доставка и установка<br/> БЕСПЛАТНО!</span></div>
-                        <div class="is-exist"><span>Товар в наличии</span></div>
+                        <div class="shipping-free"><span>Доставка по Боярке<br/> 15 грн.</span></div>
+                        
+                        <div class="stock">
+                            @if (@Model.ProductVariantModels[0].StockAvailability != "0")
+                            {
+                                <div class="is-exist"><span>Доставим в течении часа</span></div>
+                            }
+                            else
+                            {
+                                <div class="is-exist"><span>Доставим завтра/послезавтра</span></div>
+                            }
+                        </div>                       
                     </div>
                     @if (!String.IsNullOrEmpty(Model.FullDescription))
                     {
