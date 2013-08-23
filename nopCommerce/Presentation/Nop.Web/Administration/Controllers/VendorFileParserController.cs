@@ -7,7 +7,7 @@
 	using System.Web.Helpers;
 	using System.Web.Mvc;
 
-	using Nop.Admin.Models.FileParser;
+	using Nop.Admin.Models.FileParser;	
 	using Nop.Admin.Models.YandexMarket;
 	using Nop.Core.Domain.Catalog;
 	using Nop.Core.Domain.YandexMarket;
@@ -21,16 +21,16 @@
 	using Telerik.Web.Mvc;
 
 	[AdminAuthorize]
-	public class OstatkiFileParserController : Controller
+	public class VendorFileParserController : Controller
 	{
 		private readonly IProductService _productService;
 
-		public OstatkiFileParserController(IProductService productService)
+		public VendorFileParserController(IProductService productService)
 		{
 			_productService = productService;			
 		}
 
-		public ActionResult OstatkiFileParser()
+		public ActionResult VendorFileParser()
 		{			
 			return View();
 		}
@@ -50,6 +50,8 @@
 			string foundArticules = "";
 			int successCounter = 0;
 
+			_productService.ClearProductVariantsPrice();
+
 			foreach (var curProductLine in newSpecsOnly.ProductLineList)
 			{
 				var currentProductVariant = _productService.GetProductVariantBySku(curProductLine.Articul);
@@ -59,7 +61,7 @@
 					continue;
 				}
 
-				currentProductVariant.StockQuantity = curProductLine.Amount;
+				currentProductVariant.StockQuantity = 0;
 				currentProductVariant.Price = curProductLine.Price;
 				_productService.UpdateProductVariant(currentProductVariant);
 				successCounter++;
@@ -71,19 +73,19 @@
 			else 
 			{
 				return Content("Success for " + successCounter + " from " + newSpecsOnly.ProductLineList.Count() 
-					+ ". Not Found Articules in shop but they exist in file Ostatki:" + notFoundArticules
+					+ ". Not Found Articules in shop but they exist in file Vendor:" + notFoundArticules
 					+ ". Success Articules" + foundArticules);
 			}
 		}
 
 
 
-		private OstatkiFileParserModel _Parse()
+		private VendorFileParserModel _Parse()
 		{
-			string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog"), "Остатки.txt");
-			var resultModel = new OstatkiFileParserModel(); 
+			string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog"), "shop_f5.txt");
+			var resultModel = new VendorFileParserModel(); 
 			List<string> errors;
-			resultModel.ProductLineList = Nop.Services.FileParsers.FileParserOstatki.ParseOstatkiFile(filePath, out errors);
+			resultModel.ProductLineList = FileParserVendor.ParseFile(filePath, out errors);
 			resultModel.ErrorList = errors;
 
 			return resultModel;

@@ -1034,6 +1034,9 @@ namespace Nop.Web.Controllers
                 //include subcategories
                 categoryIds.AddRange(GetChildCategoryIds(category.Id));
             }
+
+	        if (minPriceConverted == 0) minPriceConverted = 1;
+
             //products
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
             IList<int> filterableSpecificationAttributeOptionIds = null;

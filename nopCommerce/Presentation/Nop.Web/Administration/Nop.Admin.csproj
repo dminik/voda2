@@ -129,6 +129,7 @@
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\VendorFileParserController.cs" />
     <Compile Include="Controllers\OstatkiFileParserController.cs" />
     <Compile Include="Controllers\YandexMarketSpecImportController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
@@ -200,7 +201,8 @@
     <Compile Include="Models\Common\SystemWarningModel.cs" />
     <Compile Include="Models\Common\SystemInfoModel.cs" />
     <Compile Include="Models\Home\DashboardModel.cs" />
-    <Compile Include="Models\OstatkiFileParser\OstatkiFileParserModel.cs" />
+    <Compile Include="Models\FileParser\OstatkiFileParserModel.cs" />
+    <Compile Include="Models\FileParser\VendorFileParserModel.cs" />
     <Compile Include="Models\Vendors\VendorModel.cs" />
     <Compile Include="Models\Customers\OnlineCustomerModel.cs" />
     <Compile Include="Models\Messages\MessageTemplateListModel.cs" />
@@ -1138,10 +1140,9 @@
     <Content Include="Views\YandexMarketParser\Configure.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\OstatkiFileParser\OstatkiFileParser.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Properties\PublishProfiles\myProfile2.pubxml" />
+    <Content Include="Views\VendorFileParser\VendorFileParser.cshtml" />
+    <Content Include="Views\OstatkiFileParser\OstatkiFileParser.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

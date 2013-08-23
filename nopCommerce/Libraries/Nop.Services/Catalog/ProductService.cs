@@ -1027,7 +1027,19 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(productVariant);
         }
-        
+
+		public virtual void ClearProductVariantsPrice()
+		{
+			foreach (var productVariant in _productVariantRepository.Table.ToList())
+			{
+				productVariant.Price = 0;
+				_productVariantRepository.Update(productVariant);
+
+				_cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+				_cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+			}
+		}
+
         /// <summary>
         /// Gets product variants by product identifier
         /// </summary>

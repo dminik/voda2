@@ -87,5 +87,15 @@
       <path>Presentation\Nop.Web\Administration\Controllers\YandexMarketProductController.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\YandexMarketProductController.cs</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>ProductLineVendor.cs</name>
+      <path>Libraries\Nop.Services\FileParsers\ProductLineVendor.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\FileParsers\ProductLineVendor.cs</absolutePath>
+    </Favorite>
+    <Favorite>
+      <name>VendorFileParserController.cs</name>
+      <path>Presentation\Nop.Web\Administration\Controllers\VendorFileParserController.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\VendorFileParserController.cs</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>

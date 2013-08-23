@@ -1,4 +1,4 @@
-﻿namespace Nop.Admin.Models.OstatkiFileParser
+﻿namespace Nop.Admin.Models.FileParser
 {
 	using System.Collections.Generic;
 

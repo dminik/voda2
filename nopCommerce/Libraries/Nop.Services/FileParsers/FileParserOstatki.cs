@@ -6,8 +6,8 @@ using System.Text;
 namespace Nop.Services.FileParsers
 {
 	using System.Globalization;
-	
-	public class OstatkiFileParser
+
+	public class FileParserOstatki
 	{
 		const char mColumnDivider = '\t';
 

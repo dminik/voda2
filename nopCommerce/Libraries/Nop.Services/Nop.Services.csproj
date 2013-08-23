@@ -162,7 +162,9 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Common\FulltextService.cs" />
-    <Compile Include="FileParsers\OstatkiFileParser.cs" />
+    <Compile Include="FileParsers\FileParserVendor.cs" />
+    <Compile Include="FileParsers\ProductLineVendor.cs" />
+    <Compile Include="FileParsers\FileParserOstatki.cs" />
     <Compile Include="FileParsers\ProductLine.cs" />
     <Compile Include="SiteParsers\BaseParser.cs" />
     <Compile Include="SiteParsers\UgContractParser.cs" />

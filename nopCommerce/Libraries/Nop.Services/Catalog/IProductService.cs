@@ -186,6 +186,8 @@ namespace Nop.Services.Catalog
         /// <param name="productVariant">The product variant</param>
         void UpdateProductVariant(ProductVariant productVariant);
 
+	    void ClearProductVariantsPrice();
+
         /// <summary>
         /// Gets product variants by product identifier
         /// </summary>
