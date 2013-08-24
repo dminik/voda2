@@ -4,11 +4,7 @@
     var notFilteredItemsGroups = Model.NotFilteredItems.GroupBy(x => x.SpecificationAttributeName);
 }
 @if (Model.Enabled)
-{
-    <div class="filter-title title">
-        @*<strong>@T("Filtering.SpecificationFilter")</strong>*@
-        <strong>ФИЛЬТР ТОВАРОВ</strong>
-    </div>
+{    
     <div class="product-filters product-spec-filter">
         
         <div class="filter-content">
@@ -33,7 +29,8 @@
                     }
 
                     <div class="remove-filter">
-                        <a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>
+                        @*<a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>*@
+                        <a href="@Model.RemoveFilterUrl">Сбросить все фильтры</a>
                     </div>
                 </div>
             }

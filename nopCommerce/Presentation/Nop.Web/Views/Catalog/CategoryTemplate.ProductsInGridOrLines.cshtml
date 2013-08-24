@@ -161,18 +161,23 @@
 
 
 @section product_filters {
-     <div class="product-filters-wrapper block">
-            @*filtering*@
-            @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
-            {
-                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
-            }
-            @*filtering*@
-            @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
-            {
-                @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
-            }
+    <div class="product-filters-wrapper block">
+        <div class="filter-title title">
+            @*<strong>@T("Filtering.SpecificationFilter")</strong>*@
+            <strong>ФИЛЬТР ТОВАРОВ</strong>
         </div>
+
+        @*filtering*@
+        @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+        {
+            @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+        }
+        @*filtering*@
+        @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
+        {
+            @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
+        }
+    </div>
 }
 
 @section featured_products {
