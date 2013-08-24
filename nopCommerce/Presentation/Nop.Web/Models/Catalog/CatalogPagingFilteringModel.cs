@@ -41,6 +41,9 @@ namespace Nop.Web.Models.Catalog
         /// </summary>
         public SpecificationFilterModel SpecificationFilter { get; set; }
 
+		public bool ShowWithPositiveQuantity { get; set; }
+		public string ShowWithPositiveQuantityUrl { get; set; }
+
         public bool AllowProductSorting { get; set; }
         public IList<SelectListItem> AvailableSortOptions { get; set; }
 
@@ -65,6 +68,40 @@ namespace Nop.Web.Models.Catalog
 
         #endregion
 
+		string ExcludeQueryStringParams(string url, IWebHelper webHelper)
+		{
+			const string excludedQueryStringParams = "pagenumber"; //remove page filtering
+			if (!String.IsNullOrEmpty(excludedQueryStringParams))
+			{
+				string[] excludedQueryStringParamsSplitted = excludedQueryStringParams.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+				foreach (string exclude in excludedQueryStringParamsSplitted)
+				{
+					url = webHelper.RemoveQueryString(url, exclude);
+				}
+			}
+
+			return url;
+		}
+
+		public virtual void PrepareQuantFilters(bool isQuant, IWebHelper webHelper, IWorkContext workContext)
+		{			
+			const string QUERYSTRINGPARAM = "QuantFilter";
+
+			string filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM + "=" + !isQuant, null);
+			filterUrl = ExcludeQueryStringParams(filterUrl, webHelper);
+			ShowWithPositiveQuantityUrl = filterUrl;
+			ShowWithPositiveQuantity = isQuant;
+		}
+
+		public virtual bool GetSelectedQuantFilter(IWebHelper webHelper)
+		{
+			const string QUERYSTRINGPARAM = "QuantFilter";
+			string range = webHelper.QueryString<string>(QUERYSTRINGPARAM);
+			if (String.IsNullOrEmpty(range))
+				return false;
+
+			return bool.Parse(range);			
+		}
         #region Nested classes
 
         public partial class PriceRangeFilterModel : BaseNopModel
@@ -413,8 +450,8 @@ namespace Nop.Web.Models.Catalog
                     this.Enabled = false;
                 }
             }
-
-	        private int GetSpecificationAttributeOptionExistTimesInFilteredProducts(IEnumerable<Product> products, int specAttrOptId)
+			
+			private int GetSpecificationAttributeOptionExistTimesInFilteredProducts(IEnumerable<Product> products, int specAttrOptId)
 	        {
 		        return products.Count(product => product.ProductSpecificationAttributes.Any(x => x.SpecificationAttributeOptionId == specAttrOptId));
 	        }

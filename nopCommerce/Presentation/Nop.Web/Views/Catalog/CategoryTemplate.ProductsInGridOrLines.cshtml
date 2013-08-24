@@ -166,13 +166,26 @@
             @*<strong>@T("Filtering.SpecificationFilter")</strong>*@
             <strong>ФИЛЬТР ТОВАРОВ</strong>
         </div>
+        
+         @*filtering existing in Boyarka*@
+    <div class="positive-quantity-filter">          
+        @if (Model.PagingFilteringContext.ShowWithPositiveQuantity)
+        {
+            <input type="checkbox" checked="checked" onclick=" displayAjaxLoading(true); window.location.href = '@Model.PagingFilteringContext.ShowWithPositiveQuantityUrl    ' "/>
+        }
+        else
+        {
+            <input type="checkbox" onclick=" displayAjaxLoading(true); window.location.href = '@Model.PagingFilteringContext.ShowWithPositiveQuantityUrl    ' "/>
+        }
+        <span>Доставка за час</span>                            
+        </div>
 
-        @*filtering*@
+        @*filtering Price*@
         @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
         {
             @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
         }
-        @*filtering*@
+        @*filtering Specs*@
         @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
         {
             @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())

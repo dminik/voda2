@@ -89,7 +89,8 @@ namespace Nop.Services.Catalog
             int languageId = 0,
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
-            bool showHidden = false);
+            bool showHidden = false,
+			bool showWithPositiveQuantity = false);
 
         /// <summary>
         /// Search products
@@ -133,7 +134,8 @@ namespace Nop.Services.Catalog
             int languageId = 0,
             IList<int> filteredSpecs = null, 
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
-            bool showHidden = false);
+            bool showHidden = false,
+			bool showWithPositiveQuantity = false);
 
         /// <summary>
         /// Update product review totals

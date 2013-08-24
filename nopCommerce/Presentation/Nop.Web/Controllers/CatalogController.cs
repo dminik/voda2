@@ -301,6 +301,7 @@ namespace Nop.Web.Controllers
 					ShortDescription = PrepareShortDescription(product),
                     FullDescription = product.GetLocalized(x => x.FullDescription),
                     SeName = product.GetSeName(),
+					StockAvailability = allVariants.SingleOrDefault(x => x.ProductId == product.Id).StockQuantity,
                 };
                 //price
                 if (preparePriceModel)
@@ -1038,6 +1039,12 @@ namespace Nop.Web.Controllers
                 categoryIds.AddRange(GetChildCategoryIds(category.Id));
             }
 
+
+			// exist quantity filter
+			bool showWithPositiveQuantity = model.PagingFilteringContext.GetSelectedQuantFilter(_webHelper);
+			model.PagingFilteringContext.PrepareQuantFilters(showWithPositiveQuantity, _webHelper, _workContext);
+
+
 	        if (minPriceConverted.IsNullOrDefault()) minPriceConverted = 1;
 
             //products
@@ -1051,7 +1058,8 @@ namespace Nop.Web.Controllers
                 filteredSpecs: alreadyFilteredSpecOptionIds,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
-                pageSize: command.PageSize);
+                pageSize: command.PageSize,
+				showWithPositiveQuantity: showWithPositiveQuantity);
 
 			var productsAll = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
 				categoryIds: categoryIds,
@@ -1061,18 +1069,18 @@ namespace Nop.Web.Controllers
 				filteredSpecs: alreadyFilteredSpecOptionIds,
 				orderBy: (ProductSortingEnum)command.OrderBy,
 				pageIndex: 0,
-				pageSize: 500);
+				pageSize: 500,
+				showWithPositiveQuantity: showWithPositiveQuantity);
 
             model.Products = PrepareProductOverviewModels(products).ToList();
 	        model.ProductsTotalAmount = productsAll.Count;
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = viewMode;
 
-            //specs
+            //specs filters
 			model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(productsAll, alreadyFilteredSpecOptionIds,
                 filterableSpecificationAttributeOptionIds, 
-                _specificationAttributeService, _webHelper, _workContext);
-            
+                _specificationAttributeService, _webHelper, _workContext);			
 
             //template
             var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, category.CategoryTemplateId);

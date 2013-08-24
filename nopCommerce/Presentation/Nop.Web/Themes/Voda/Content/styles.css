@@ -564,7 +564,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-list .product-item .prices .price{margin:0px;display:block;}
 .product-list .product-item .prices .actual-price{color:#B80709;font-size: 32px;}
 .product-list .product-item .prices .old-price{color:#5C5B5B;text-decoration:line-through;}
-.product-list .product-item .buttons{padding-top:20px;}
+.product-list .product-item .buttons{padding-top:20px;text-align: center;}
 .product-list .product-item .more-details{ text-decoration: underline;margin-left: 10px; padding-top: 10px;font-size: 1.2em;}
 
 
@@ -612,7 +612,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-spec-filter .available-items .spec-title{ background: none;padding-left: 0;}
 .product-spec-filter .available-items .spec-values{}
 .product-spec-filter .available-items .spec-values .spec-value{ font-weight: normal;}
-
+.positive-quantity-filter{padding:8px 18px;}
 
 
 
@@ -961,6 +961,12 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 .product-details-page .is-exist {
 	font-size: 2em;
 	color: goldenrod;
+}
+
+.is-exist-product-box {
+	color: rgb(218, 165, 32);
+	font-size: 1.4em;
+	margin: 7px 8px;
 }
 
 

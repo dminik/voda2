@@ -316,39 +316,41 @@ namespace Nop.Services.Catalog
             int languageId = 0,
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
-            bool showHidden = false)
+            bool showHidden = false,
+			bool showWithPositiveQuantity = false)
         {
             IList<int> filterableSpecificationAttributeOptionIds = null;
             return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
                 pageIndex, pageSize, categoryIds, manufacturerId, storeId, vendorId, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions,
-                searchProductTags, languageId, filteredSpecs, orderBy, showHidden);
+				searchProductTags, languageId, filteredSpecs, orderBy, showHidden, showWithPositiveQuantity);
         }
 
-        /// <summary>
-        /// Search products
-        /// </summary>
-        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
-        /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <param name="categoryIds">Category identifiers</param>
-        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
-        /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
-        /// <param name="priceMin">Minimum price; null to load all records</param>
-        /// <param name="priceMax">Maximum price; null to load all records</param>
-        /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
-        /// <param name="keywords">Keywords</param>
-        /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
-        /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
-        /// <param name="languageId">Language identifier (search for text searching)</param>
-        /// <param name="filteredSpecs">Filtered product specification identifiers</param>
-        /// <param name="orderBy">Order by</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Products</returns>
-        public virtual IPagedList<Product> SearchProducts(
+	    /// <summary>
+	    /// Search products
+	    /// </summary>
+	    /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
+	    /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
+	    /// <param name="pageIndex">Page index</param>
+	    /// <param name="pageSize">Page size</param>
+	    /// <param name="categoryIds">Category identifiers</param>
+	    /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+	    /// <param name="storeId">Store identifier; 0 to load all records</param>
+	    /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+	    /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
+	    /// <param name="priceMin">Minimum price; null to load all records</param>
+	    /// <param name="priceMax">Maximum price; null to load all records</param>
+	    /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
+	    /// <param name="keywords">Keywords</param>
+	    /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+	    /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
+	    /// <param name="languageId">Language identifier (search for text searching)</param>
+	    /// <param name="filteredSpecs">Filtered product specification identifiers</param>
+	    /// <param name="orderBy">Order by</param>
+	    /// <param name="showHidden">A value indicating whether to show hidden records</param>
+		/// <param name="showWithPositiveQuantity">show WithPositiveQuantity</param>
+	    /// <returns>Products</returns>
+	    public virtual IPagedList<Product> SearchProducts(
             out IList<int> filterableSpecificationAttributeOptionIds,
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
@@ -367,7 +369,8 @@ namespace Nop.Services.Catalog
             int languageId = 0,
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
-            bool showHidden = false)
+            bool showHidden = false,
+			bool showWithPositiveQuantity = false)
         {
             filterableSpecificationAttributeOptionIds = new List<int>();
 
@@ -548,7 +551,12 @@ namespace Nop.Services.Catalog
                 pShowHidden.ParameterName = "ShowHidden";
                 pShowHidden.Value = showHidden;
                 pShowHidden.DbType = DbType.Boolean;
-                
+
+				var pShowWithPositiveQuantity = _dataProvider.GetParameter();
+                pShowWithPositiveQuantity.ParameterName = "ShowWithPositiveQuantity";
+                pShowWithPositiveQuantity.Value = showWithPositiveQuantity;
+                pShowWithPositiveQuantity.DbType = DbType.Boolean;
+				
                 var pLoadFilterableSpecificationAttributeOptionIds = _dataProvider.GetParameter();
                 pLoadFilterableSpecificationAttributeOptionIds.ParameterName = "LoadFilterableSpecificationAttributeOptionIds";
                 pLoadFilterableSpecificationAttributeOptionIds.Value = loadFilterableSpecificationAttributeOptionIds;
@@ -588,6 +596,7 @@ namespace Nop.Services.Catalog
                     pPageIndex,
                     pPageSize,
                     pShowHidden,
+					pShowWithPositiveQuantity,
                     pLoadFilterableSpecificationAttributeOptionIds,
                     pFilterableSpecificationAttributeOptionIds,
                     pTotalRecords);

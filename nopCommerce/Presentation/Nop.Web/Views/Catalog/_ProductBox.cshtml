@@ -31,6 +31,14 @@
                 <a  href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" >Подробнее...</a>
             </div>
         </div>
+        
+        <div class="stock">
+            @if (@Model.StockAvailability > 0)
+            {
+                <div class="is-exist-product-box"><span>Доставим в течении часа</span></div>
+            }           
+        </div>     
+        
         <div class="add-info">
             <div class="prices">
                 @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
