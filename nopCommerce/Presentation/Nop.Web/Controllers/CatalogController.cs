@@ -1035,7 +1035,7 @@ namespace Nop.Web.Controllers
                 categoryIds.AddRange(GetChildCategoryIds(category.Id));
             }
 
-	        if (minPriceConverted == 0) minPriceConverted = 1;
+	        if (minPriceConverted.IsNullOrDefault()) minPriceConverted = 1;
 
             //products
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
@@ -1061,7 +1061,7 @@ namespace Nop.Web.Controllers
 				pageSize: 500);
 
             model.Products = PrepareProductOverviewModels(products).ToList();
-
+	        model.ProductsTotalAmount = productsAll.Count;
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = viewMode;
 

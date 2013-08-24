@@ -111,6 +111,10 @@
         </div>
         @Html.Widget("categorydetails_before_filters")
        
+        <div class="products-amount">           
+                <span>Найдено товаров: @Model.ProductsTotalAmount</span>         
+        </div>
+
         <div class="compare-list-count-block">
              <a href="@Url.RouteUrl("CompareProducts")">
                               @T("Products.Compare.List")
