@@ -23,7 +23,7 @@
                         
                         <div>
                             <strong>@(spec.SpecificationAttributeName):</strong><br/>
-                            <input type="checkbox" checked="checked" onclick="window.location.href = '@spec.FilterUrl    '"/>
+                            <input type="checkbox" checked="checked" onclick="displayAjaxLoading(true); window.location.href = '@spec.FilterUrl    '"/>
                             <span>@spec.SpecificationAttributeOptionName</span>                            
                         </div>
                     }
@@ -50,7 +50,7 @@
                             @foreach (var spec in groupList)
                             {
                                 <div class="spec-values">
-                                    <input type="checkbox" onclick="window.location.href = '@spec.FilterUrl    '"/>
+                                    <input type="checkbox" onclick="displayAjaxLoading(true); window.location.href = '@spec.FilterUrl    '"/>
                                     <span class="spec-value">@spec.SpecificationAttributeOptionName</span>
                                     <span class="spec-value-exist-times"> (@spec.SpecificationAttributeOptionExistTimesInFilteredProducts шт.)</span>
                                 </div>

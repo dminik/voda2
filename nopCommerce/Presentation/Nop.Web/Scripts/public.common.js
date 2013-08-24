@@ -79,6 +79,7 @@ function OpenWindow(query, w, h, scroll) {
 }
 
 function setLocation(url) {
+    displayAjaxLoading(true);
     window.location.href = url;
 }
 

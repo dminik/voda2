@@ -41,6 +41,7 @@ using System.Xml.Linq;
 namespace Nop.Web.Controllers
 {
 	using System.Collections;
+	using System.Text;
 
 	public partial class CatalogController : BaseNopController
     {
@@ -247,6 +248,35 @@ namespace Nop.Web.Controllers
 
             return result;
         }
+		
+		[NonAction]
+		private string PrepareShortDescription(Product product)
+		{
+			var result = "";
+
+			var allowedSpecsForShortDescription = _catalogSettings.SpecToDisplayInShortDescription.Split(';').ToList();
+
+
+			var specShortDescription = new StringBuilder();
+
+			foreach (var curAllowedSpec in allowedSpecsForShortDescription)
+			{
+				var curSpec =
+					product.ProductSpecificationAttributes.SingleOrDefault(
+						s => s.SpecificationAttributeOption.SpecificationAttribute.Name == curAllowedSpec);
+
+				if (curSpec != null)
+				{
+					specShortDescription.AppendFormat("<li>{0}: {1}</li>", curSpec.SpecificationAttributeOption.SpecificationAttribute.Name, curSpec.SpecificationAttributeOption.Name);
+				}
+			}
+
+			var shortDescription = product.GetLocalized(x => x.ShortDescription);
+			if (shortDescription != "")
+				result += "<br/>" + shortDescription;
+
+			return result + specShortDescription;
+		}
 
         [NonAction]
         protected IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products, 
@@ -268,7 +298,7 @@ namespace Nop.Web.Controllers
                 {
                     Id = product.Id,
                     Name = product.GetLocalized(x => x.Name),
-                    ShortDescription = product.GetLocalized(x => x.ShortDescription),
+					ShortDescription = PrepareShortDescription(product),
                     FullDescription = product.GetLocalized(x => x.FullDescription),
                     SeName = product.GetSeName(),
                 };
@@ -476,45 +506,18 @@ namespace Nop.Web.Controllers
             });
         }
 
-		[NonAction]
-		protected string CreateShortDescriptionSpecs(IList<ProductSpecificationModel> specList)
-		{
-			var attribsForShortDescription = _catalogSettings.SpecToDisplayInShortDescription.Split(';').ToList();
-				//{
-				//	"Тип фильтра",
-				//	"Число ступеней очистки",
-				//	"Отдельный кран"
-				//};
-
-			
-
-			var ulShortDescription = new XElement("ul");
-			var xmlShortDescription =
-				new XElement("div", new XAttribute("class", "ShortDescription"),
-					ulShortDescription);
-
-			foreach (var yandexMarketSpecRecord in specList.Where(yandexMarketSpecRecord => attribsForShortDescription.Contains(yandexMarketSpecRecord.SpecificationAttributeName)))
-			{
-				ulShortDescription.Add(new XElement("li", yandexMarketSpecRecord.SpecificationAttributeName + ": " + yandexMarketSpecRecord.SpecificationAttributeOption));
-			}
-
-			return xmlShortDescription.ToString();
-		}
-
+		
         [NonAction]
         protected ProductDetailsModel PrepareProductDetailsPageModel(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
-
-			var modelSpecs = PrepareProductSpecificationModel(product);
-	        var shortDescriptionSpecs = CreateShortDescriptionSpecs(modelSpecs);
 			
             var model = new ProductDetailsModel()
             {
                 Id = product.Id,
                 Name = product.GetLocalized(x => x.Name),
-				ShortDescription = product.GetLocalized(x => x.ShortDescription) + shortDescriptionSpecs,
+				ShortDescription = PrepareShortDescription(product),
                 FullDescription = product.GetLocalized(x => x.FullDescription),
                 MetaKeywords = product.GetLocalized(x => x.MetaKeywords),
                 MetaDescription = product.GetLocalized(x => x.MetaDescription),
