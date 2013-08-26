@@ -24,7 +24,8 @@ body{text-align:left;font-family:arial,verdana,helvetica,sans-serif;font-size:12
 a{color:#5C5B5B;text-decoration:none;font-weight:normal;}
 a:hover{color:#B80709;text-decoration:underline;}
 h1,h2,h3,h4,h5,h6{font-family:arial,helvetica,sans-serif;}
-h2,h3{font-size:16px;}
+h2,h3{font-size:16px;margin-top: 20px;}
+h2,h3:first-child{margin-top: 5px;}
 textarea{width:100%;font-family:Verdana,Arial,sans-serif;font-size:11px;border:1px solid #EEEEEE;}
 checkbox,input,radio,select,button{}
 fieldset{margin:0px 0px 15px;border:1px solid #c9c9c9;padding:15px;}
