@@ -1318,12 +1318,13 @@
     <Content Include="Scripts\slimbox2.js" />
     <Content Include="Themes\Voda\Content\images\all-filters.jpg" />
     <Content Include="Themes\Voda\Content\images\bg-cart.png" />
+    <Content Include="Themes\Voda\Content\images\bg_footer.jpg" />
+    <Content Include="Themes\Voda\Content\images\bg_topsection.jpg" />
     <Content Include="Themes\Voda\Content\images\ForSlider\Atoll A-550 STD.jpg" />
     <Content Include="Themes\Voda\Content\images\ForSlider\Atoll A-575 STD.jpg" />
+    <Content Include="Themes\Voda\Content\images\header-robot.jpg" />
     <Content Include="Themes\Voda\Content\images\kievstar.jpg" />
-    <Content Include="Themes\Voda\Content\images\logo.png" />
-    <Content Include="Themes\Voda\Content\images\main.jpg" />
-    <Content Include="Themes\Voda\Content\images\Shkola_Vodi.png" />
+    <Content Include="Themes\Voda\Content\images\logo.jpg" />
     <Content Include="Themes\Voda\Content\images\Vodoochistka_Diagramma_big.png" />
     <Content Include="Themes\Voda\Content\images\Vodoochistka_Diagramma_small.png" />
     <Content Include="Themes\Voda\Content\styles_reset.css" />
@@ -1337,7 +1338,6 @@
     <Content Include="Themes\Voda\Content\images\download-sample-bg.gif" />
     <Content Include="Themes\Voda\Content\images\forum-footer-bg.gif" />
     <Content Include="Themes\Voda\Content\images\forum-header-bg.gif" />
-    <Content Include="Themes\Voda\Content\images\ico-arrow-r.gif" />
     <Content Include="Themes\Voda\Content\images\ico-close-notification-bar.png" />
     <Content Include="Themes\Voda\Content\images\ico-delete.gif" />
     <Content Include="Themes\Voda\Content\images\ico-edit.gif" />
@@ -1350,7 +1350,6 @@
     <Content Include="Themes\Voda\Content\images\ico-pm.png" />
     <Content Include="Themes\Voda\Content\images\ico-rss.gif" />
     <Content Include="Themes\Voda\Content\images\loading.gif" />
-    <Content Include="Themes\Voda\Content\images\logo.gif" />
     <Content Include="Themes\Voda\Content\images\nextlabel.gif" />
     <Content Include="Themes\Voda\Content\images\prevlabel.gif" />
     <Content Include="Themes\Voda\Content\images\progress-step-active.gif" />

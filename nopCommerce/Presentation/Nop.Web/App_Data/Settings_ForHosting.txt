@@ -1,2 +1,2 @@
 DataProvider: sqlserver
-DataConnectionString: Data Source=SQL5002.Smarterasp.net;Initial Catalog=DB_9A9AD7_nopCommerce;User Id=DB_9A9AD7_nopCommerce_admin;Password=ciborg22;MultipleActiveResultSets=True
+DataConnectionString: Data Source=SQL5004.Smarterasp.net;Initial Catalog=DB_9AA8DD_nopCommerce;User Id=DB_9AA8DD_nopCommerce_admin;Password=ciborg22;MultipleActiveResultSets=True
