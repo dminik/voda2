@@ -378,7 +378,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\SettingService.cs" />
     <Compile Include="Catalog\SpecificationAttributeService.cs" />
+    <Compile Include="YandexMarket\FormatterBase.cs" />
     <Compile Include="YandexMarket\IYandexMarketSpecService.cs" />
+    <Compile Include="YandexMarket\FormatterUgContract.cs" />
     <Compile Include="YandexMarket\YandexMarketSpecService.cs" />
     <Compile Include="YandexMarket\IYandexMarketCategoryService.cs" />
     <Compile Include="YandexMarket\IYandexMarketProductService.cs" />

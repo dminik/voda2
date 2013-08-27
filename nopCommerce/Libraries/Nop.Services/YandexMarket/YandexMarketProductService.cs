@@ -82,6 +82,10 @@ namespace Nop.Services.YandexMarket
 							select tr;
 
 				var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);
+
+				var formatedList = records.Select(x => new FormatterUgContract().Format(x)).ToList();
+				records = new PagedList<YandexMarketProductRecord>(formatedList, pageIndex, pageSize);
+				
 				return records;
 			});
 
@@ -98,7 +102,7 @@ namespace Nop.Services.YandexMarket
 			if (productId == 0)
 				return null;
 
-			return this._productRepository.GetById(productId);
+			return new FormatterUgContract().Format(this._productRepository.GetById(productId));
 		}
 
 		/// <summary>
