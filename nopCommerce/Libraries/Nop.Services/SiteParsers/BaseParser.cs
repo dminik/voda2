@@ -88,7 +88,7 @@ namespace Nop.Services.SiteParsers
 				
 				// —сылка на список товаров
 				this.mDriver.Navigate().GoToUrl(ProductsPageUrl);
-				Thread.Sleep(3000);
+				//Thread.Sleep(3000);
 								
 				bool isNextPage = false;				
 				int pageLinksCounter = 1;
@@ -100,27 +100,32 @@ namespace Nop.Services.SiteParsers
 						Enumerable.ToList<string>(
 							this.mDriver.FindElements(By.CssSelector(CssSelectorForProductLinkInProductList)).Select(s => s.GetAttribute("href")));
 					
-					this.mLogger.Debug("Have page " + pageLinksCounter + " with links");
+					this.mLogger.Debug("Have page " + pageLinksCounter++ + " with links");
+
+					var nextPageUrl = "";
+					try
+					{
+						//»щем ссылку на следущую страницу, если она есть
+						nextPageUrl = this.mDriver.FindElement(By.CssSelector(CssSelectorForNextLinkInProductList)).GetAttribute("href");
+						nextPageUrl = nextPageUrl.Replace("pg", "/pg").Replace("//pg", "/pg");
+
+						isNextPage = true;						
+					}
+					catch (NoSuchElementException)
+					{
+						isNextPage = false;
+					}
 
 					// ѕарсим все товары с страницы
 					resultProductList.AddRange(GetProductsByLinks(linksFromCurrentPage));
 
 					if (this.ParseNotMoreThen <= resultProductList.Count) break;
 
-					try
-					{
-						// ∆ммем на следущую страницу, если она есть
-						var nextPageUrl = this.mDriver.FindElement(By.CssSelector(CssSelectorForNextLinkInProductList)).GetAttribute("href");
-						nextPageUrl = nextPageUrl.Replace("pg", "/pg").Replace("//pg", "/pg");
 
+					if (isNextPage) // ∆ммем на следущую страницу, если она есть
+					{ 																	
 						this.mDriver.Navigate().GoToUrl(nextPageUrl);
-						Thread.Sleep(3000);
-						isNextPage = true;
-						pageLinksCounter++;
-					}
-					catch (NoSuchElementException)
-					{
-						isNextPage = false;
+						//Thread.Sleep(3000);						
 					}
 				}
 				while (isNextPage);				
@@ -175,7 +180,7 @@ namespace Nop.Services.SiteParsers
 					break;
 				}
 
-				Thread.Sleep(2 * 1000);
+				//Thread.Sleep(2 * 1000);
 			} // end for products
 
 			return resultProductList;
@@ -189,7 +194,7 @@ namespace Nop.Services.SiteParsers
 			// ѕереходим на страницу спецификации товара
 			var pageSpecsUrl = GetLinkToSpecsTabOfProduct(productLink);
 			this.mDriver.Navigate().GoToUrl(pageSpecsUrl);
-			Thread.Sleep(3000);
+			//Thread.Sleep(3000);
 
 			this.mLogger.Debug("Have specs page " + pageSpecsUrl);
 
@@ -217,7 +222,7 @@ namespace Nop.Services.SiteParsers
 
 			// ѕереходим на страницу описани€ товара			
 			this.mDriver.Navigate().GoToUrl(productLink);
-			Thread.Sleep(3000);
+			//Thread.Sleep(3000);
 
 			this.mLogger.Debug("Have main product page " + productLink);
 
@@ -257,7 +262,7 @@ namespace Nop.Services.SiteParsers
 						{
 							continue;
 						}
-						Thread.Sleep(1000);
+						//Thread.Sleep(1000);
 						currentKeyElement =
 							currentSpecificationElement.FindElement(By.CssSelector(this.CssSelectorForProductSpecKeyInProductPage));
 					}
@@ -283,7 +288,7 @@ namespace Nop.Services.SiteParsers
 		{
 			// Get main image
 			var imageUrl = this.mDriver.FindElement(By.CssSelector(this.CssSelectorForProductPictureInProductPage)).GetAttribute("src");
-			Thread.Sleep(3000);
+			//Thread.Sleep(3000);
 			// do it twice because of some bag
 			imageUrl = this.mDriver.FindElement(By.CssSelector(this.CssSelectorForProductPictureInProductPage)).GetAttribute("src");
 			product.ImageUrl_1 = this.SaveImage(imageUrl, product.Name);
