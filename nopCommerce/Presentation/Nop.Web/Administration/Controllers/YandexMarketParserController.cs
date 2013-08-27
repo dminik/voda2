@@ -61,6 +61,7 @@
 		[HttpPost]
 		public ActionResult Parse(YandexMarketParserModel model)
 		{
+			_logger.Debug("--- ALL PARSE START...");
 			// Get all active parser categories
 			var activeParserCategories = _yandexMarketCategoryService.GetAll().Where(x => x.IsActive).ToList();
 
@@ -73,6 +74,11 @@
 
 				var productList = new List<YandexMarketProductRecord>();
 
+				if (model.IsClearCategoryProductsBeforeParsing)
+				{
+					_logger.Debug("Deleting old products...");
+					_yandexMarketProductService.DeleteByCategory(currentCategory.Id);
+				}
 
 				if (model.IsTest)
 				{
@@ -85,28 +91,15 @@
 					var productsArtikulsInPiceList = GetProductsArtikulsInPiceList();
 
 					var categoryName = currentCategory.Name;
-					var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, existedProductUrlList, productsArtikulsInPiceList, _logger);				
+					var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, existedProductUrlList, productsArtikulsInPiceList, _logger, _yandexMarketProductService);				
 					productList = parser.Parse();
 				}
 
-				using (var tsTransScope = new TransactionScope())
-				{
-					if (model.IsClearCategoryProductsBeforeParsing)
-					{
-						_logger.Debug("Deleting old products...");
-						_yandexMarketProductService.DeleteByCategory(currentCategory.Id);
-					}
-
-					_logger.Debug("Saving new " + productList.Count + " products...");
-					_yandexMarketProductService.InsertList(productList);
-
-					_logger.Debug("+++ PARSE DONE.");
-
-					tsTransScope.Complete();					
-				}
+				_logger.Debug("+++ PARSE CATEGORY DONE.");
 
 			}// end for
 
+			_logger.Debug("+++ ALL PARSING DONE.");
 			return Json(new { Result = true });
 		}
 

@@ -11,6 +11,7 @@ namespace Nop.Services.SiteParsers
 
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Logging;
+	using Nop.Services.YandexMarket;
 
 	using OpenQA.Selenium;
 	using OpenQA.Selenium.IE;
@@ -19,7 +20,7 @@ namespace Nop.Services.SiteParsers
 
 	public abstract class BaseParser
 	{
-		public void Init(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, List<string> existedProductUrlList, List<string>  productsArtikulsInPiceList, ILogger logger)
+		public void Init(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, List<string> existedProductUrlList, List<string> productsArtikulsInPiceList, ILogger logger, IYandexMarketProductService yandexMarketProductService)
 		{
 			this.mImageFolderPathForProductList = catalogName;			
 			this.ParseNotMoreThen = parseNotMoreThen;
@@ -28,10 +29,11 @@ namespace Nop.Services.SiteParsers
 			ProductsPageUrl = productsPageUrl;
 			ExistedProductUrlList = existedProductUrlList;
 			ProductsArtikulsInPiceList = productsArtikulsInPiceList;
+			_yandexMarketProductService = yandexMarketProductService;
 		}
 
 
-
+		private IYandexMarketProductService _yandexMarketProductService;
 		private int ParseNotMoreThen { get; set; }
 		private int ParserCategoryId { get; set; }
 		private string ProductsPageUrl { get; set; }
@@ -87,10 +89,8 @@ namespace Nop.Services.SiteParsers
 				// —сылка на список товаров
 				this.mDriver.Navigate().GoToUrl(ProductsPageUrl);
 				Thread.Sleep(3000);
-				
-				const int delayInSeconds = 4;
-				bool isNextPage = false;
-				var productLinks = new List<string>();
+								
+				bool isNextPage = false;				
 				int pageLinksCounter = 1;
 
 				do
@@ -99,18 +99,18 @@ namespace Nop.Services.SiteParsers
 					var linksFromCurrentPage =
 						Enumerable.ToList<string>(
 							this.mDriver.FindElements(By.CssSelector(CssSelectorForProductLinkInProductList)).Select(s => s.GetAttribute("href")));
-					productLinks.AddRange(linksFromCurrentPage);
-
+					
 					this.mLogger.Debug("Have page " + pageLinksCounter + " with links");
 
-					if (this.ParseNotMoreThen <= productLinks.Count) 
-						break;
+					// ѕарсим все товары с страницы
+					resultProductList.AddRange(GetProductsByLinks(linksFromCurrentPage));
+
+					if (this.ParseNotMoreThen <= resultProductList.Count) break;
 
 					try
 					{
 						// ∆ммем на следущую страницу, если она есть
 						var nextPageUrl = this.mDriver.FindElement(By.CssSelector(CssSelectorForNextLinkInProductList)).GetAttribute("href");
-
 						nextPageUrl = nextPageUrl.Replace("pg", "/pg").Replace("//pg", "/pg");
 
 						this.mDriver.Navigate().GoToUrl(nextPageUrl);
@@ -123,34 +123,7 @@ namespace Nop.Services.SiteParsers
 						isNextPage = false;
 					}
 				}
-				while (isNextPage);
-
-				this.mLogger.Debug("Have " + productLinks.Count + " links on the page");
-
-				int productCounter = 1;
-				int productSkippedCounter = 1;
-				foreach (var currentProductLink in productLinks)
-				{
-					if(ExistedProductUrlList.Contains(currentProductLink))
-						continue;
-
-					this.mLogger.Debug("Proceeding product " + productCounter);
-
-					var product = this.CreateProduct(currentProductLink);
-					if (product == null)
-					{
-						this.mLogger.Debug("Not Have this product article in price list. Skip it. productSkippedCounter=" + productSkippedCounter++ + ". " + currentProductLink);
-						continue;
-					}
-
-					resultProductList.Add(product);
-
-					productCounter++;
-
-					if (productCounter > this.ParseNotMoreThen) break;
-
-					Thread.Sleep(delayInSeconds * 1000);
-				}
+				while (isNextPage);				
 			}
 			catch (Exception ex)
 			{
@@ -166,7 +139,48 @@ namespace Nop.Services.SiteParsers
 
 			return resultProductList;
 		}
-		
+
+		private IEnumerable<YandexMarketProductRecord> GetProductsByLinks(IReadOnlyCollection<string> productLinks)
+		{
+			var resultProductList = new List<YandexMarketProductRecord>();
+
+			this.mLogger.Debug("Have " + productLinks.Count + " links on the page");
+
+			int productCounter = 1;
+			int productSkippedCounter = 1;
+			foreach (var currentProductLink in productLinks)
+			{
+				if (this.ExistedProductUrlList.Contains(currentProductLink))
+				{
+					continue;
+				}
+
+				this.mLogger.Debug("Proceeding product " + productCounter);
+
+				var product = this.CreateProduct(currentProductLink);
+				if (product == null)
+				{
+					this.mLogger.Debug(
+						"Not Have this product article in price list. Skip it. productSkippedCounter=" + productSkippedCounter++ + ". "
+						+ currentProductLink);
+					continue;
+				}
+
+				resultProductList.Add(product);
+
+				productCounter++;
+
+				if (productCounter > this.ParseNotMoreThen)
+				{
+					break;
+				}
+
+				Thread.Sleep(2 * 1000);
+			} // end for products
+
+			return resultProductList;
+		}
+
 		private YandexMarketProductRecord CreateProduct(string productLink)
 		{
 			var product = new YandexMarketProductRecord();
@@ -214,6 +228,11 @@ namespace Nop.Services.SiteParsers
 
 			product = ProductPostProcessing(product);
 
+
+
+			mLogger.Debug("Saving product...");
+			_yandexMarketProductService.Insert(product);
+			mLogger.Debug("Saving product Done.");
 			return product;
 		}
 
@@ -325,7 +344,7 @@ namespace Nop.Services.SiteParsers
 			return path;
 		}
 
-		public static BaseParser Create(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, List<string> existedProductUrlList, List<string> productsArtikulsInPiceList, ILogger logger)
+		public static BaseParser Create(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, List<string> existedProductUrlList, List<string> productsArtikulsInPiceList, ILogger logger, IYandexMarketProductService _yandexMarketProductService)
 		{
 			BaseParser parser = null;
 
@@ -336,7 +355,7 @@ namespace Nop.Services.SiteParsers
 			else
 				throw new Exception("Can't define parser type for url=" + productsPageUrl);
 
-			parser.Init(catalogName, parserCategoryId, parseNotMoreThen, productsPageUrl, existedProductUrlList, productsArtikulsInPiceList, logger);
+			parser.Init(catalogName, parserCategoryId, parseNotMoreThen, productsPageUrl, existedProductUrlList, productsArtikulsInPiceList, logger,  _yandexMarketProductService);
 
 			return parser;
 		}
