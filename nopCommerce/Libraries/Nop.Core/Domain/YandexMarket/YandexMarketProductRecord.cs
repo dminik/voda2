@@ -18,7 +18,7 @@
 			this.Specifications = new List<YandexMarketSpecRecord>();
 		}
 
-		public YandexMarketProductRecord(string articul, string name, string fullDescription, string imageUrl_1, int yandexMarketCategoryRecordId, List<YandexMarketSpecRecord> specifications)
+		public YandexMarketProductRecord(string articul, string name, string fullDescription, string imageUrl_1, string url, int yandexMarketCategoryRecordId, List<YandexMarketSpecRecord> specifications)
 			: this()
 		{
 			this.Articul = articul;
@@ -27,6 +27,7 @@
 			this.ImageUrl_1 = imageUrl_1;
 			this.Specifications = specifications;
 			this.YandexMarketCategoryRecordId = yandexMarketCategoryRecordId;
+			this.Url = url;
 		}
 		
 		public string Name { get; set; }
@@ -34,6 +35,7 @@
 		public string FullDescription { get; set; }
 				
 		public string ImageUrl_1 { get; set; }
+		public string Url { get; set; }
 		
 		public int YandexMarketCategoryRecordId { get; set; }
 
@@ -54,7 +56,9 @@
 				result.Append(currentSecification.Key + " = " + currentSecification.Value + ";" + Environment.NewLine);
 			}
 
-			result.Append("ImageUrl_1 = " + this.ImageUrl_1 + ";" + "FullDescription = " + FullDescription + Environment.NewLine);
+			result.Append("ImageUrl_1 = " + this.ImageUrl_1 + ";" 
+				+ "Url = " + this.Url + ";"
+				+ "FullDescription = " + FullDescription + Environment.NewLine);
 			
 			return result.ToString();
 		}

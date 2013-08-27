@@ -19,18 +19,24 @@ namespace Nop.Services.SiteParsers
 
 	public abstract class BaseParser
 	{
-		public void Init(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, ILogger logger)
+		public void Init(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, List<string> existedProductUrlList, List<string>  productsArtikulsInPiceList, ILogger logger)
 		{
 			this.mImageFolderPathForProductList = catalogName;			
 			this.ParseNotMoreThen = parseNotMoreThen;
 			this.mLogger = logger;
 			ParserCategoryId = parserCategoryId;
 			ProductsPageUrl = productsPageUrl;
+			ExistedProductUrlList = existedProductUrlList;
+			ProductsArtikulsInPiceList = productsArtikulsInPiceList;
 		}
+
+
 
 		private int ParseNotMoreThen { get; set; }
 		private int ParserCategoryId { get; set; }
 		private string ProductsPageUrl { get; set; }
+		private List<string> ExistedProductUrlList { get; set; }
+		private List<string> ProductsArtikulsInPiceList { get; set; }
 		
 		// Папка для картинок
 		private readonly string mImageFolderPathBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog");
@@ -122,11 +128,20 @@ namespace Nop.Services.SiteParsers
 				this.mLogger.Debug("Have " + productLinks.Count + " links on the page");
 
 				int productCounter = 1;
+				int productSkippedCounter = 1;
 				foreach (var currentProductLink in productLinks)
 				{
+					if(ExistedProductUrlList.Contains(currentProductLink))
+						continue;
+
 					this.mLogger.Debug("Proceeding product " + productCounter);
 
 					var product = this.CreateProduct(currentProductLink);
+					if (product == null)
+					{
+						this.mLogger.Debug("Not Have this product article in price list. Skip it. productSkippedCounter=" + productSkippedCounter++ + ". " + currentProductLink);
+						continue;
+					}
 
 					resultProductList.Add(product);
 
@@ -155,14 +170,24 @@ namespace Nop.Services.SiteParsers
 		private YandexMarketProductRecord CreateProduct(string productLink)
 		{
 			var product = new YandexMarketProductRecord();
-			
+			product.Url = productLink;
+
 			// Переходим на страницу спецификации товара
 			var pageSpecsUrl = GetLinkToSpecsTabOfProduct(productLink);
 			this.mDriver.Navigate().GoToUrl(pageSpecsUrl);
 			Thread.Sleep(3000);
 
 			this.mLogger.Debug("Have specs page " + pageSpecsUrl);
-			
+
+			// Artikul
+			if (CssSelectorForProductArticulInProductPage != string.Empty)
+				product.Articul = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductArticulInProductPage)).Text.Replace("Код: ", "");
+
+			if (!ProductsArtikulsInPiceList.Contains(product.Articul))
+			{				
+				return null;
+			}
+
 			product.YandexMarketCategoryRecordId = ParserCategoryId;
 
 			// Найти имя товара		
@@ -174,8 +199,7 @@ namespace Nop.Services.SiteParsers
 			// Найти спецификации товара	table.b-properties tr   
 			this.GetSpecs(product);
 
-			if (CssSelectorForProductArticulInProductPage != string.Empty)
-				product.Articul = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductArticulInProductPage)).Text;
+			
 
 			// Переходим на страницу описания товара			
 			this.mDriver.Navigate().GoToUrl(productLink);
@@ -301,7 +325,7 @@ namespace Nop.Services.SiteParsers
 			return path;
 		}
 
-		public static BaseParser Create(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, ILogger logger)
+		public static BaseParser Create(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, List<string> existedProductUrlList, List<string> productsArtikulsInPiceList, ILogger logger)
 		{
 			BaseParser parser = null;
 
@@ -312,7 +336,7 @@ namespace Nop.Services.SiteParsers
 			else
 				throw new Exception("Can't define parser type for url=" + productsPageUrl);
 
-			parser.Init(catalogName, parserCategoryId, parseNotMoreThen, productsPageUrl, logger);
+			parser.Init(catalogName, parserCategoryId, parseNotMoreThen, productsPageUrl, existedProductUrlList, productsArtikulsInPiceList, logger);
 
 			return parser;
 		}

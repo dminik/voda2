@@ -2,16 +2,19 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.IO;
 	using System.Linq;
 	using System.Net;
 	using System.Transactions;
 	using System.Web.Mvc;
 
+	using Nop.Admin.Models.FileParser;
 	using Nop.Admin.Models.YandexMarket;
 	using Nop.Core.Domain.Catalog;
 	using Nop.Core.Domain.Logging;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Catalog;
+	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers;
 	using Nop.Services.YandexMarket;
@@ -58,40 +61,63 @@
 		[HttpPost]
 		public ActionResult Parse(YandexMarketParserModel model)
 		{
-			_logger.Debug("---  PARSE START...");
+			// Get all active parser categories
+			var activeParserCategories = _yandexMarketCategoryService.GetAll().Where(x => x.IsActive).ToList();
 
-			if (!this.ModelState.IsValid)
-				throw new Exception("ModelState.IsNOTValid");
+			foreach (var currentCategory in activeParserCategories)
+			{				
+				_logger.Debug("---  PARSE START FOR CATEGORY " + currentCategory.Name + "...");
 
-			var productList = new List<YandexMarketProductRecord>();
+				if (!this.ModelState.IsValid)
+					throw new Exception("ModelState.IsNOTValid");
+
+				var productList = new List<YandexMarketProductRecord>();
 
 
-			if (model.IsTest)
-			{
-				productList = CreateTestProductList(model.ParserCategoryId);
-			}
-			else
-			{
-				var categoryName = _yandexMarketCategoryService.GetById(model.ParserCategoryId).Name;
-				var parser = BaseParser.Create(categoryName, model.ParserCategoryId, model.ParseNotMoreThen, model.ProductsPageUrl, _logger);				
-				productList = parser.Parse();
-			}
+				if (model.IsTest)
+				{
+					productList = CreateTestProductList(currentCategory.Id);
+				}
+				else
+				{
+					var existedProductUrlList = _yandexMarketProductService.GetByCategory(currentCategory.Id).Select(s => s.Url).ToList();				
 
-			using (var tsTransScope = new TransactionScope())
-			{
-				_logger.Debug("Deleting old products...");
-				_yandexMarketProductService.DeleteByCategory(model.ParserCategoryId);
+					var productsArtikulsInPiceList = GetProductsArtikulsInPiceList();
 
-				_logger.Debug("Saving new " + productList.Count + " products...");
-				_yandexMarketProductService.InsertList(productList);
+					var categoryName = currentCategory.Name;
+					var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, existedProductUrlList, productsArtikulsInPiceList, _logger);				
+					productList = parser.Parse();
+				}
 
-				_logger.Debug("+++ PARSE DONE.");
+				using (var tsTransScope = new TransactionScope())
+				{
+					if (model.IsClearCategoryProductsBeforeParsing)
+					{
+						_logger.Debug("Deleting old products...");
+						_yandexMarketProductService.DeleteByCategory(currentCategory.Id);
+					}
 
-				tsTransScope.Complete();
-				return Json(new { Result = true });
-			}
+					_logger.Debug("Saving new " + productList.Count + " products...");
+					_yandexMarketProductService.InsertList(productList);
+
+					_logger.Debug("+++ PARSE DONE.");
+
+					tsTransScope.Complete();					
+				}
+
+			}// end for
+
+			return Json(new { Result = true });
 		}
-		
+
+		private static List<string> GetProductsArtikulsInPiceList()
+		{
+			string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog"), "shop_f5.txt");
+			List<string> errors;
+			var productsArtikulsInPiceList = FileParserVendor.ParseFile(filePath, out errors).Select(x => x.Articul).ToList();
+			return productsArtikulsInPiceList;
+		}
+
 		private List<YandexMarketProductRecord> CreateTestProductList(int categoryId)
 		{
 			return new List<YandexMarketProductRecord>()
@@ -101,6 +127,7 @@
 							"Product 1",
 								"Описание 1", 
 								"url1",		
+								"url",
 								categoryId,
 									new List<YandexMarketSpecRecord>()
 										{
@@ -113,6 +140,7 @@
 								"Product 2",
 								"Описание 2",
 								"url1",		
+								"url",
 								categoryId,
 									new List<YandexMarketSpecRecord>()
 										{

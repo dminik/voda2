@@ -11,6 +11,9 @@ namespace Nop.Core.Domain.YandexMarket
 	/// </summary>
 	public partial class YandexMarketCategoryRecord : BaseEntity
 	{       
-		public string Name { get; set; }		
+		public string Name { get; set; }
+		public string Url { get; set; }
+		public int ShopCategoryId { get; set; }
+		public bool IsActive { get; set; }	
 	}
 }

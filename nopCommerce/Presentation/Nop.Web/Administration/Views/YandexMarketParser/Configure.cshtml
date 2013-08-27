@@ -39,6 +39,9 @@
                 @(Html.Telerik().Grid<YandexMarketCategoryModel>().Name("YandexMarketCategory-grid").DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id")).Columns(columns =>
             {
                 columns.Bound(x => x.Name).Width(200);
+                columns.Bound(x => x.Url).Width(200);
+                columns.Bound(x => x.ShopCategoryName).Width(200);
+                columns.Bound(x => x.IsActive).Width(20);
                 
                 columns.Command(commands =>
                 {
@@ -70,6 +73,28 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.AddParserCategoryName)
                 @Html.ValidationMessageFor(model => model.AddParserCategoryName)
+            </td>
+            
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddParserCategoryUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddParserCategoryUrl)
+                @Html.ValidationMessageFor(model => model.AddParserCategoryUrl)
+            </td>
+            
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddShopCategoryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddShopCategoryId, Model.AvailableShopCategories)<br /> 
+            </td>       
+                 
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddIsActive):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddIsActive)                
             </td>
         </tr>
 
@@ -150,6 +175,10 @@
 
                           columns.Bound(x => x.ImagesHtml)
                                 .ClientTemplate("<div class='parser-images'><#= ImagesHtml #></div>");
+
+                          columns.Bound(x => x.Url)
+                              .ClientTemplate("<div class='parser-product-url'><#= Url #></div>")
+                              .Width(400);
                           
                           columns.Command(commands =>
                           {
@@ -211,18 +240,17 @@
                     @Html.CheckBoxFor(model => model.IsTest)
                     @Html.LabelFor(model => model.IsTest)
                 </div>
-                <div>
-                    @Html.LabelFor(model => model.ProductsPageUrl)
-                    @Html.TextBoxFor(model => model.ProductsPageUrl, new { style = "width: 100%;" })
-                    @Html.ValidationMessageFor(model => model.ProductsPageUrl)
+                 <div>
+                    @Html.CheckBoxFor(model => model.IsClearCategoryProductsBeforeParsing)
+                    @Html.LabelFor(model => model.IsClearCategoryProductsBeforeParsing)
                 </div>
-                
+               
                 <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
-                <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты со страницы и сохранить в текущую категорию парсера" /> <br /> 
+                <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты со страниц и сохранить в категорию парсера (для активных категорий парсера)" /> <br /> 
                 <input type="button" id="onlyNew" class="t-button" value="Шаг 2. Отобразить только новые спарсенные спецификации, которые еще не существуют в интернет-магазине" /><br/>              
-                <input type="button" id="btnApplyImport" class="t-button" value="Шаг 3. Импортнуть новые спецификации в интернет-магазин" /> <br /> 
-                <input type="submit" id="btnImportProductList" class="t-button" value="Шаг 4. Импортнуть новые товары в интернет-магазин  в категорию: " />
-                @Html.DropDownListFor(model => model.ShopCategoryId, Model.AvailableShopCategories)<br /> 
+                <input type="button" id="btnApplyImport" class="t-button" value="Шаг 3. Импортнуть новые спецификации в интернет-магазин (для активных категорий парсера)" /> <br /> 
+                <input type="submit" id="btnImportProductList" class="t-button" value="Шаг 4. Импортнуть новые товары в интернет-магазин  (для активных категорий парсера)" />
+             
 
                 
 
@@ -305,10 +333,10 @@
                                 cache: false,
                                 type: 'POST',
                                 url: '@Url.Action("ImportProductList", "YandexMarketProduct")',
-                                data: {
+                                @*data: {
                                     parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val(),
                                     shopCategoryId: $('#@Html.FieldIdFor(model => model.ShopCategoryId)').val()
-                                },
+                                },*@
                                 dataType: 'text',
                                 success: function (data) {
                                     alert(data);

@@ -65,6 +65,7 @@
 						x.Name,
 						x.FullDescription,
 						x.ImageUrl_1,
+						x.Url,
 						x.YandexMarketCategoryRecordId,
 						x.Specifications.Select(s => new YandexMarketSpecModel(s.Key, s.Value)).ToList(),
 						x.Id);
@@ -104,6 +105,8 @@
 		[HttpPost]
 		public ActionResult ImportProductList(int parserCategoryId, int shopCategoryId)
 		{
+			// TODO цикл по активным категориям
+
 			var records = _yandexMarketProductService.GetByCategory(parserCategoryId);
 
 			foreach (var curYaProduct in records)
