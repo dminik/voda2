@@ -217,7 +217,7 @@ namespace Nop.Services.SiteParsers
 				product.Articul = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductArticulInProductPage)).Text.Replace("Код: ", "");
 			
 			// Если продукта в прайсе нет, то создаем полупустой продукт с url и артикулом, что бы не заходить в него следующий раз
-			product.IsNotInPriceList = ProductsArtikulsInPiceList.Contains(product.Articul);
+			product.IsNotInPriceList = !ProductsArtikulsInPiceList.Contains(product.Articul);
 						
 			if (!product.IsNotInPriceList)
 			{				

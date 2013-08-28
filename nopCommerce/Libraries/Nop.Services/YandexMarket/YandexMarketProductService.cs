@@ -16,6 +16,7 @@ namespace Nop.Services.YandexMarket
 	{
 		#region Constants
 		private const string YANDEXMARKETProduct_ALL_KEY = "Nop.YandexMarketProduct.all-{0}-{1}";
+		private const string YANDEXMARKETProduct_ALL_KEY_WITH_FANTOMS = "Nop.YandexMarketProduct.allfantoms-{0}-{1}";
 		private const string YANDEXMARKETProduct_PATTERN_KEY = "Nop.YandexMarketProduct.";
 		#endregion
 
@@ -60,7 +61,7 @@ namespace Nop.Services.YandexMarket
 
 		public void DeleteByCategory(int categoryId)
 		{
-			var itemsToDelete = GetByCategory(categoryId).ToList();
+			var itemsToDelete = GetByCategory(categoryId, withFantoms: true).ToList();
 			itemsToDelete.ForEach(Delete);			
 		}
 
@@ -72,7 +73,7 @@ namespace Nop.Services.YandexMarket
 		/// <returns>Tax rates</returns>
 		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false)
 		{
-			string key = string.Format(YANDEXMARKETProduct_ALL_KEY, pageIndex, pageSize);
+			string key = string.Format(withFantoms ? YANDEXMARKETProduct_ALL_KEY_WITH_FANTOMS : YANDEXMARKETProduct_ALL_KEY, pageIndex, pageSize);
 
 			var result = this._cacheManager.Get(key, () =>
 			{
