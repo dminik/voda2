@@ -20,7 +20,7 @@ namespace Nop.Services.YandexMarket
 
 			foreach (var curSpec in product.Specifications)
 			{				
-				var s2 = "<p>";
+				var s2 = "<";
 
 				int i = 0;  // Числовая переменная, контролирующая итерации цикла
 				int x = -1; // Так как метод IndexOf() возвращает "-1" если первое вхождение подстроки не найдено, то приходится использовать вспомагательную, вместо і, что б начать цикл
@@ -32,7 +32,7 @@ namespace Nop.Services.YandexMarket
 					count++;  // Увеличиваем на единицу наше количество
 				}
 
-				if (count == 1)
+				if (count <= 2)
 				{
 					curSpec.Value = curSpec.Value.Replace("<p>", "").Replace("</p>", "").Trim();
 				}
@@ -52,6 +52,12 @@ namespace Nop.Services.YandexMarket
 			
 			if (this.IsBluetooth(product.Specifications))
 				product.Specifications.Add(new YandexMarketSpecRecord("Bluetooth", "Есть"));
+
+			if (this.IsAndroid(product.Specifications))
+				product.Specifications.Add(new YandexMarketSpecRecord("Android", "Да"));
+
+			if (this.IsFlash(product.Specifications))
+				product.Specifications.Add(new YandexMarketSpecRecord("Вспышка", "Есть"));
 
 			if (this.IsRadio(product.Specifications))
 				product.Specifications.Add(new YandexMarketSpecRecord("FM-радио", "Есть"));
@@ -79,7 +85,7 @@ namespace Nop.Services.YandexMarket
 			return "";
 		}
 
-		private string GetMegapixelsFromSpecs(IList<YandexMarketSpecRecord> specs)
+		private string GetMegapixelsFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
 		{
 			const string pattern = @"([0-9]+(?:\.[0-9]+)?) [Мм]";
 
@@ -112,6 +118,16 @@ namespace Nop.Services.YandexMarket
 		private bool IsBluetooth(IEnumerable<YandexMarketSpecRecord> specs)
 		{			
 			return specs.SingleOrDefault(x => x.Value.ToLower().Contains("bluetooth")) != null;
+		}
+
+		private bool IsAndroid(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			return specs.SingleOrDefault(x => x.Value.ToLower().Contains("android")) != null;
+		}
+
+		private bool IsFlash(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			return specs.SingleOrDefault(x => x.Value.ToLower().Contains("вспышка")) != null;
 		}
 
 		private bool IsRadio(IEnumerable<YandexMarketSpecRecord> specs)

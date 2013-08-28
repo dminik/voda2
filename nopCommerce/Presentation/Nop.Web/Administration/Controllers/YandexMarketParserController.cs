@@ -71,9 +71,7 @@
 
 				if (!this.ModelState.IsValid)
 					throw new Exception("ModelState.IsNOTValid");
-
-				var productList = new List<YandexMarketProductRecord>();
-
+				
 				if (model.IsClearCategoryProductsBeforeParsing)
 				{
 					_logger.Debug("Deleting old products...");
@@ -82,17 +80,13 @@
 
 				if (model.IsTest)
 				{
-					productList = CreateTestProductList(currentCategory.Id);
+					CreateTestProductList(currentCategory.Id);
 				}
 				else
-				{
-					var existedProductUrlList = _yandexMarketProductService.GetByCategory(currentCategory.Id).Select(s => s.Url).ToList();				
-
-					var productsArtikulsInPiceList = GetProductsArtikulsInPiceList();
-
+				{					
 					var categoryName = currentCategory.Name;
-					var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, existedProductUrlList, productsArtikulsInPiceList, _logger, _yandexMarketProductService);				
-					productList = parser.Parse();
+					var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, _logger, _yandexMarketProductService);				
+					parser.Parse();
 				}
 
 				_logger.Debug("+++ PARSE CATEGORY DONE.");
@@ -102,15 +96,7 @@
 			_logger.Debug("+++ ALL PARSING DONE.");
 			return Json(new { Result = true });
 		}
-
-		private static List<string> GetProductsArtikulsInPiceList()
-		{
-			string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog"), "shop_f5.txt");
-			List<string> errors;
-			var productsArtikulsInPiceList = FileParserVendor.ParseFile(filePath, out errors).Select(x => x.Articul).ToList();
-			return productsArtikulsInPiceList;
-		}
-
+		
 		private List<YandexMarketProductRecord> CreateTestProductList(int categoryId)
 		{
 			return new List<YandexMarketProductRecord>()

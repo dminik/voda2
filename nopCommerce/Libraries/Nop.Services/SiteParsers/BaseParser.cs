@@ -10,6 +10,7 @@ namespace Nop.Services.SiteParsers
 	using System.Web;
 
 	using Nop.Core.Domain.YandexMarket;
+	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
 	using Nop.Services.YandexMarket;
 
@@ -20,18 +21,25 @@ namespace Nop.Services.SiteParsers
 
 	public abstract class BaseParser
 	{
-		public void Init(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, List<string> existedProductUrlList, List<string> productsArtikulsInPiceList, ILogger logger, IYandexMarketProductService yandexMarketProductService)
+		public void Init(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, ILogger logger, IYandexMarketProductService yandexMarketProductService)
 		{
 			this.mImageFolderPathForProductList = catalogName;			
 			this.ParseNotMoreThen = parseNotMoreThen;
 			this.mLogger = logger;
 			ParserCategoryId = parserCategoryId;
-			ProductsPageUrl = productsPageUrl;
-			ExistedProductUrlList = existedProductUrlList;
-			ProductsArtikulsInPiceList = productsArtikulsInPiceList;
+			ProductsPageUrl = productsPageUrl;			
 			_yandexMarketProductService = yandexMarketProductService;
+
+			
+			ProductsArtikulsInPiceList = GetProductsArtikulsInPiceList();
+
+			// ”дал€ем фантомные продукты из базы, если они по€вились в прайсе
+			DeleteFromDbAppearedInPriceListFantoms(ParserCategoryId, ProductsArtikulsInPiceList);
+
+			ExistedProductUrlList = _yandexMarketProductService.GetByCategory(parserCategoryId, withFantoms: true).Select(s => s.Url).ToList();
 		}
 
+		
 
 		private IYandexMarketProductService _yandexMarketProductService;
 		private int ParseNotMoreThen { get; set; }
@@ -152,22 +160,25 @@ namespace Nop.Services.SiteParsers
 			this.mLogger.Debug("Have " + productLinks.Count + " links on the page");
 
 			int productCounter = 1;
-			int productSkippedCounter = 1;
+			int existedProductCounter = 0;
+			
 			foreach (var currentProductLink in productLinks)
 			{
+				// существующий в базе продукт игнорируем
 				if (this.ExistedProductUrlList.Contains(currentProductLink))
 				{
+					existedProductCounter++;
 					continue;
 				}
 
+				this.mLogger.Debug("Was skipped existed products: " + existedProductCounter);
 				this.mLogger.Debug("Proceeding product " + productCounter);
 
 				var product = this.CreateProduct(currentProductLink);
+
+				// несуществующий в прайсе созданный фантом дальше игнорируем
 				if (product == null)
-				{
-					this.mLogger.Debug(
-						"Not Have this product article in price list. Skip it. productSkippedCounter=" + productSkippedCounter++ + ". "
-						+ currentProductLink);
+				{					
 					continue;
 				}
 
@@ -177,6 +188,7 @@ namespace Nop.Services.SiteParsers
 
 				if (productCounter > this.ParseNotMoreThen)
 				{
+					this.mLogger.Debug("Stop parsing because was parsed  " + this.ParseNotMoreThen);
 					break;
 				}
 
@@ -198,47 +210,52 @@ namespace Nop.Services.SiteParsers
 
 			this.mLogger.Debug("Have specs page " + pageSpecsUrl);
 
+			product.YandexMarketCategoryRecordId = ParserCategoryId;
+
 			// Artikul
 			if (CssSelectorForProductArticulInProductPage != string.Empty)
 				product.Articul = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductArticulInProductPage)).Text.Replace(" од: ", "");
-
-			if (!ProductsArtikulsInPiceList.Contains(product.Articul))
-			{				
-				return null;
-			}
-
-			product.YandexMarketCategoryRecordId = ParserCategoryId;
-
-			// Ќайти им€ товара		
-			product.Name = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductNameInProductPage)).Text;
-
-			// —качиваем картинки
-			this.SaveImages(product);
-
-			// Ќайти спецификации товара	table.b-properties tr   
-			this.GetSpecs(product);
-
 			
-
-			// ѕереходим на страницу описани€ товара			
-			this.mDriver.Navigate().GoToUrl(productLink);
-			//Thread.Sleep(3000);
-
-			this.mLogger.Debug("Have main product page " + productLink);
-
-			if (CssSelectorForProductFullDescriptionInProductPage != string.Empty)
+			// ≈сли продукта в прайсе нет, то создаем полупустой продукт с url и артикулом, что бы не заходить в него следующий раз
+			product.IsNotInPriceList = ProductsArtikulsInPiceList.Contains(product.Articul);
+						
+			if (!product.IsNotInPriceList)
 			{				
-				product.FullDescription = GetInnerHtml(this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)));				
+				// Ќайти им€ товара		
+				product.Name = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductNameInProductPage)).Text;
+
+				// —качиваем картинки
+				this.SaveImages(product);
+
+				// Ќайти спецификации товара	
+				this.GetSpecs(product);
+		
+				// ѕереходим на страницу описани€ товара			
+				this.mDriver.Navigate().GoToUrl(productLink);
+				//Thread.Sleep(3000);
+
+				this.mLogger.Debug("Have main product page " + productLink);
+
+				if (CssSelectorForProductFullDescriptionInProductPage != string.Empty)
+				{				
+					product.FullDescription = GetInnerHtml(this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)));				
+				}
+
+				product = ProductPostProcessing(product);				
 			}
-
-			product = ProductPostProcessing(product);
-
-
+			else
+			{					
+				this.mLogger.Debug("Create NotInPriceList fantom product");
+			}
 
 			mLogger.Debug("Saving product...");
 			_yandexMarketProductService.Insert(product);
 			mLogger.Debug("Saving product Done.");
-			return product;
+
+			if(!product.IsNotInPriceList)
+				return product;
+			else			
+				return null;			
 		}
 
 		private void GetSpecs(YandexMarketProductRecord product)
@@ -349,7 +366,7 @@ namespace Nop.Services.SiteParsers
 			return path;
 		}
 
-		public static BaseParser Create(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, List<string> existedProductUrlList, List<string> productsArtikulsInPiceList, ILogger logger, IYandexMarketProductService _yandexMarketProductService)
+		public static BaseParser Create(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, ILogger logger, IYandexMarketProductService _yandexMarketProductService)
 		{
 			BaseParser parser = null;
 
@@ -360,7 +377,7 @@ namespace Nop.Services.SiteParsers
 			else
 				throw new Exception("Can't define parser type for url=" + productsPageUrl);
 
-			parser.Init(catalogName, parserCategoryId, parseNotMoreThen, productsPageUrl, existedProductUrlList, productsArtikulsInPiceList, logger,  _yandexMarketProductService);
+			parser.Init(catalogName, parserCategoryId, parseNotMoreThen, productsPageUrl, logger,  _yandexMarketProductService);
 
 			return parser;
 		}
@@ -375,6 +392,23 @@ namespace Nop.Services.SiteParsers
 				return m.Groups[1].ToString();							
 			else			
 				return "";			
+		}
+
+		private static List<string> GetProductsArtikulsInPiceList()
+		{
+			string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog"), "shop_f5.txt");
+			List<string> errors;
+			var productsArtikulsInPiceList = FileParserVendor.ParseFile(filePath, out errors).Select(x => x.Articul).ToList();
+			return productsArtikulsInPiceList;
+		}
+
+		private void DeleteFromDbAppearedInPriceListFantoms(int parserCategoryId, List<string> productsArtikulsInPiceList)
+		{
+			var appearedInPriceListFantoms =
+				this._yandexMarketProductService.GetByCategory(parserCategoryId)
+										   .Where(x => x.IsNotInPriceList && productsArtikulsInPiceList.Contains(x.Articul));
+
+			appearedInPriceListFantoms.ToList().ForEach(this._yandexMarketProductService.Delete);
 		}
 	}
 }

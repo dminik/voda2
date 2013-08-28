@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using System.Text;
 
 	using Nop.Core;
@@ -16,6 +17,11 @@
 		public YandexMarketProductRecord()
 		{
 			this.Specifications = new List<YandexMarketSpecRecord>();
+			this.Articul = "";
+			this.Name = "";
+			this.FullDescription = "";
+			this.ImageUrl_1 = "";						
+			this.Url = "";
 		}
 
 		public YandexMarketProductRecord(string articul, string name, string fullDescription, string imageUrl_1, string url, int yandexMarketCategoryRecordId, List<YandexMarketSpecRecord> specifications)
@@ -33,6 +39,21 @@
 		public string Name { get; set; }
 		public string Articul { get; set; }
 		public string FullDescription { get; set; }
+
+		private const string mNotInPriceList = "NotInPriceList";
+
+		[NotMapped]
+		public bool IsNotInPriceList
+		{
+			get
+			{
+				return Name == mNotInPriceList;
+			}
+			set
+			{
+				Name = value ? mNotInPriceList : "";
+			}
+		}
 				
 		public string ImageUrl_1 { get; set; }
 		public string Url { get; set; }
@@ -41,7 +62,7 @@
 
 		public virtual IList<YandexMarketSpecRecord> Specifications { get; set; }
 	
-		public virtual YandexMarketCategoryRecord YandexMarketCategoryRecord { get; set; }
+		// public virtual YandexMarketCategoryRecord YandexMarketCategoryRecord { get; set; }
 
 		public override string ToString()
 		{

@@ -57,18 +57,21 @@
 		public ActionResult ListProduct(int parserCategoryId, GridCommand command)
 		{
 			var records = _yandexMarketProductService.GetByCategory(parserCategoryId, command.Page - 1, command.PageSize);
+				
 			var productsModel = records.Select(
 				x =>
 				{
+					var formated = new FormatterUgContract().Format(x);
+					
 					var m = new YandexMarketProductModel(
-						x.Articul,
-						x.Name,
-						x.FullDescription,
-						x.ImageUrl_1,
-						x.Url,
-						x.YandexMarketCategoryRecordId,
-						x.Specifications.Select(s => new YandexMarketSpecModel(s.Key, s.Value)).ToList(),
-						x.Id);
+						formated.Articul,
+						formated.Name,
+						formated.FullDescription,
+						formated.ImageUrl_1,
+						formated.Url,
+						formated.YandexMarketCategoryRecordId,
+						formated.Specifications.Select(s => new YandexMarketSpecModel(s.Key, s.Value)).ToList(),
+						formated.Id);
 
 					return m;
 				}).ToList();

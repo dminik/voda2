@@ -38,11 +38,6 @@
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\YandexMarketSpecImportController.cs</absolutePath>
     </Favorite>
     <Favorite>
-      <name>YandexMarketSpecImport.cshtml</name>
-      <path>Presentation\Nop.Web\Administration\Views\YandexMarketSpecImport\YandexMarketSpecImport.cshtml</path>
-      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Views\YandexMarketSpecImport\YandexMarketSpecImport.cshtml</absolutePath>
-    </Favorite>
-    <Favorite>
       <name>styles.css</name>
       <path>Presentation\Nop.Web\Themes\Voda\Content\styles.css</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Themes\Voda\Content\styles.css</absolutePath>
@@ -61,11 +56,6 @@
       <name>BaseParser.cs</name>
       <path>Libraries\Nop.Services\SiteParsers\BaseParser.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\BaseParser.cs</absolutePath>
-    </Favorite>
-    <Favorite>
-      <name>CatalogPagingFilteringModel.cs</name>
-      <path>Presentation\Nop.Web\Models\Catalog\CatalogPagingFilteringModel.cs</path>
-      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Models\Catalog\CatalogPagingFilteringModel.cs</absolutePath>
     </Favorite>
     <Favorite>
       <name>OstatkiFileParser.cs</name>
@@ -88,14 +78,14 @@
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\YandexMarketProductController.cs</absolutePath>
     </Favorite>
     <Favorite>
-      <name>ProductLineVendor.cs</name>
-      <path>Libraries\Nop.Services\FileParsers\ProductLineVendor.cs</path>
-      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\FileParsers\ProductLineVendor.cs</absolutePath>
-    </Favorite>
-    <Favorite>
       <name>VendorFileParserController.cs</name>
       <path>Presentation\Nop.Web\Administration\Controllers\VendorFileParserController.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\VendorFileParserController.cs</absolutePath>
+    </Favorite>
+    <Favorite>
+      <name>FormatterUgContract.cs</name>
+      <path>Libraries\Nop.Services\YandexMarket\FormatterUgContract.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\YandexMarket\FormatterUgContract.cs</absolutePath>
     </Favorite>
   </favorites>
 </Favorites>

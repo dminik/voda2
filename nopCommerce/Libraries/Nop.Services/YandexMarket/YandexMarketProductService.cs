@@ -70,21 +70,31 @@ namespace Nop.Services.YandexMarket
 		/// Gets all tax rates
 		/// </summary>
 		/// <returns>Tax rates</returns>
-		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue)
+		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false)
 		{
 			string key = string.Format(YANDEXMARKETProduct_ALL_KEY, pageIndex, pageSize);
 
 			var result = this._cacheManager.Get(key, () =>
 			{
-				var query = from tr in this._productRepository.Table
+				IQueryable<YandexMarketProductRecord> query;
+
+				if (withFantoms)
+				{					
+					query = from tr in this._productRepository.Table
+					        orderby tr.Name
+					        where tr.YandexMarketCategoryRecordId == categoryId 								
+					        select tr;
+				}
+				else
+				{
+					query = from tr in this._productRepository.Table
 							orderby tr.Name
-							where tr.YandexMarketCategoryRecordId == categoryId
+							where tr.YandexMarketCategoryRecordId == categoryId 
+								&& tr.Name != "NotInPriceList"
 							select tr;
+				}
 
-				var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);
-
-				var formatedList = records.Select(x => new FormatterUgContract().Format(x)).ToList();
-				records = new PagedList<YandexMarketProductRecord>(formatedList, pageIndex, pageSize);
+				var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);				
 				
 				return records;
 			});
@@ -102,7 +112,7 @@ namespace Nop.Services.YandexMarket
 			if (productId == 0)
 				return null;
 
-			return new FormatterUgContract().Format(this._productRepository.GetById(productId));
+			return this._productRepository.GetById(productId);
 		}
 
 		/// <summary>
