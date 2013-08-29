@@ -42,6 +42,7 @@ namespace Nop.Web.Controllers
 {
 	using System.Collections;
 	using System.Text;
+	using Nop.Core.Domain.Seo;
 
 	public partial class CatalogController : BaseNopController
     {
@@ -88,6 +89,8 @@ namespace Nop.Web.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly ICacheManager _cacheManager;
         private readonly CaptchaSettings _captchaSettings;
+		private readonly SeoSettings _seoSettings;
+		
         
         #endregion
 
@@ -118,7 +121,8 @@ namespace Nop.Web.Controllers
             ShoppingCartSettings shoppingCartSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings, 
             CaptchaSettings captchaSettings,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+			SeoSettings seoSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -163,6 +167,7 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
 
             this._cacheManager = cacheManager;
+			this._seoSettings = seoSettings;
         }
 
         #endregion
@@ -506,9 +511,16 @@ namespace Nop.Web.Controllers
                 return model;
             });
         }
-
 		
-        [NonAction]
+		private void SetSeoMetaTags(Product product, ProductDetailsModel model)
+		{			
+			model.MetaTitle = product.GetLocalized(x => x.MetaTitle);
+			model.MetaKeywords = _seoSettings.DefaultTitle + ", " + product.Name + ", Доставка по Боярке, Купить, Цена, Компьютерный магазин, Техномережа,";
+			model.MetaDescription = "Покупайте в Боярке! Купить в Боярке с быстрой доставкой " + product.Name + " по цене " + product.ProductVariants.FirstOrDefault().Price;
+			model.SeName = product.GetSeName();
+		}
+
+		[NonAction]
         protected ProductDetailsModel PrepareProductDetailsPageModel(Product product)
         {
             if (product == null)
@@ -519,12 +531,10 @@ namespace Nop.Web.Controllers
                 Id = product.Id,
                 Name = product.GetLocalized(x => x.Name),
 				ShortDescription = PrepareShortDescription(product),
-                FullDescription = product.GetLocalized(x => x.FullDescription),
-                MetaKeywords = product.GetLocalized(x => x.MetaKeywords),
-                MetaDescription = product.GetLocalized(x => x.MetaDescription),
-                MetaTitle = product.GetLocalized(x => x.MetaTitle),
-                SeName = product.GetSeName(),
+                FullDescription = product.GetLocalized(x => x.FullDescription),                
             };
+
+			 SetSeoMetaTags(product, model);
 
             //template
 
