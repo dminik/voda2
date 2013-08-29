@@ -308,7 +308,7 @@
                                 cache: false,
                                 type: 'POST',
                                 url: '@Url.Action("ApplyImport", "YandexMarketSpecImport")',
-                                data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },
+                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
                                 dataType: 'text',
                                 success: function (data) {
                                     alert(data);
@@ -342,7 +342,7 @@
                                     alert(data);
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
-                                    alert(thrownError);
+                                    alert(xhr.responseText);
                                 }
                             });
                             return false;

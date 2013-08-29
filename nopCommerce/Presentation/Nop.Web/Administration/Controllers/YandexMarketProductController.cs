@@ -10,9 +10,12 @@
 
 	using Nop.Admin.Models.Catalog;
 	using Nop.Admin.Models.YandexMarket;
+	using Nop.Core;
 	using Nop.Core.Domain.Catalog;
+	using Nop.Core.Domain.Seo;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Catalog;
+	using Nop.Services.Logging;
 	using Nop.Services.Media;
 	using Nop.Services.Security;
 	using Nop.Services.Seo;
@@ -28,26 +31,32 @@
 		private readonly IYandexMarketProductService _yandexMarketProductService;
 		private readonly IProductService _productService;
 		private readonly IUrlRecordService _urlRecordService;
-		private readonly ICategoryService _categoryService;
-		private readonly IManufacturerService _manufacturerService;
+		private readonly ICategoryService _categoryService;		
 		private readonly IPictureService _pictureService;
 		private readonly ISpecificationAttributeService _specificationAttributeService;
+		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
+		private readonly ILogger _logger;
+		private readonly SeoSettings _seoSettings;
 
 		public YandexMarketProductController(IYandexMarketProductService yandexMarketProductService,
 			IProductService productService,
 			IUrlRecordService urlRecordService,
-			ICategoryService categoryService,
-			IManufacturerService manufacturerService,
+			ICategoryService categoryService,			
 			IPictureService pictureService,
-			ISpecificationAttributeService specificationAttributeService)
+			ISpecificationAttributeService specificationAttributeService,
+			IYandexMarketCategoryService yandexMarketCategoryService,
+			ILogger logger,
+			SeoSettings seoSettings)
 		{
 			_yandexMarketProductService = yandexMarketProductService;
-			this._productService = productService;
-			this._urlRecordService = urlRecordService;
-			this._categoryService = categoryService;
-			this._manufacturerService = manufacturerService;
-			this._pictureService = pictureService;
+			_productService = productService;
+			_urlRecordService = urlRecordService;
+			_categoryService = categoryService;			
+			_pictureService = pictureService;
 			_specificationAttributeService = specificationAttributeService;
+			_yandexMarketCategoryService = yandexMarketCategoryService;
+			_logger = logger;
+			_seoSettings = seoSettings;
 		}
 
 		#region Grid actions
@@ -106,16 +115,31 @@
 		#endregion
 
 		[HttpPost]
-		public ActionResult ImportProductList(int parserCategoryId, int shopCategoryId)
+		public ActionResult ImportProductList()
 		{
-			// TODO цикл по активным категориям
+			_logger.Debug("--- ImportProductList START...");
 
-			var records = _yandexMarketProductService.GetByCategory(parserCategoryId);
-
-			foreach (var curYaProduct in records)
+			var parserCategories = _yandexMarketCategoryService.GetActive();
+			_logger.Debug("--- Will be import categories: " + parserCategories.Count);
+			var importedCounter = 0;
+			// цикл по активным категориям						
+			foreach (var currentParserCategory in parserCategories)
 			{
-				ImportYaProduct(curYaProduct, shopCategoryId);
+				var records = _yandexMarketProductService.GetByCategory(currentParserCategory.Id);
+
+				_logger.Debug("--- Category " + currentParserCategory.Name + ". Will be import products: " + records.Count);
+				foreach (var curYaProduct in records)
+				{
+					ImportYaProduct(curYaProduct, currentParserCategory.ShopCategoryId);
+					if (importedCounter % 20 == 0) // через каждые 5 записей выводить в лог сообщение
+						_logger.Debug("Imported products in general: " + importedCounter + "...");
+
+					importedCounter++;
+				}
+
 			}
+
+			_logger.Debug("--- ImportProductList End.");
 
 			return Content("Success");
 		}
@@ -123,13 +147,14 @@
 		private void ImportYaProduct(YandexMarketProductRecord yaProduct, int shopCategoryId)
 		{
 			Product product;
-			var variant = _productService.GetProductVariantBySku(yaProduct.Name);
+			var variant = _productService.GetProductVariantBySku(yaProduct.Articul);
 			bool isUpdating = variant != null;
 
 			// create or update item
 			if (isUpdating)
 			{
-				product = variant.Product;
+				// product = variant.Product;
+				return; // Не обновляем существующие товары
 			}
 			else
 			{
@@ -158,7 +183,7 @@
 			product.Name = yaProduct.Name;
 			product.FullDescription = yaProduct.FullDescription;
 			product.ShortDescription = CreateShortDescription(yaProduct.Specifications);
-
+			
 			//variant						
 			variant.UpdatedOnUtc = DateTime.UtcNow;
 			variant.Sku = yaProduct.Articul;
@@ -188,6 +213,7 @@
 			}
 		}
 
+		
 		private string CreateShortDescription(IEnumerable<YandexMarketSpecRecord> specList)
 		{
 			return "";
@@ -236,12 +262,29 @@
 
 		private int FindAttributeOptionId(string attrName, string attrOptName, IEnumerable<SpecificationAttribute> allSpecAttrList)
 		{
-			var resultAttrName = allSpecAttrList.SingleOrDefault(x => x.Name == attrName);
+			SpecificationAttribute resultAttrName;
+			try
+			{
+				resultAttrName = allSpecAttrList.SingleOrDefault(x => x.Name == attrName);
+			}
+			catch (Exception ex)
+			{				
+				throw;
+			}
+			
 
 			if (resultAttrName == null)
 				throw new Exception("Cant find Product attribute by name " + attrName);
 
-			var resultAttrOptName = resultAttrName.SpecificationAttributeOptions.SingleOrDefault(s => s.Name == attrOptName);
+			SpecificationAttributeOption resultAttrOptName;
+			try
+			{
+				resultAttrOptName = resultAttrName.SpecificationAttributeOptions.SingleOrDefault(s => s.Name == attrOptName);
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
 
 			if (resultAttrOptName == null)
 				throw new Exception("Cant find Product attributeOpt by name " + attrOptName);

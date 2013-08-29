@@ -10,6 +10,7 @@
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
+	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers;
 	using Nop.Services.YandexMarket;
 	using Nop.Web.Framework.Controllers;
@@ -22,15 +23,18 @@
 		private readonly IYandexMarketSpecService _yandexMarketSpecService;
 		private readonly ISpecificationAttributeService _specificationAttributeService;
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
+		private readonly ILogger _logger;
 
 		public YandexMarketSpecImportController(
 			IYandexMarketSpecService yandexMarketSpecService, 
 			IYandexMarketCategoryService yandexMarketCategoryService,
-			ISpecificationAttributeService specificationAttributeService)
+			ISpecificationAttributeService specificationAttributeService,
+			ILogger logger)
 		{
 			_yandexMarketSpecService = yandexMarketSpecService;
 			_yandexMarketCategoryService = yandexMarketCategoryService;
 			_specificationAttributeService = specificationAttributeService;
+			_logger = logger;
 		}
 
 
@@ -54,17 +58,20 @@
 		}
 
 		[HttpPost]
-		public ActionResult ApplyImport(int parserCategoryId)
+		public ActionResult ApplyImport()
 		{
+			_logger.Debug("--- ApplyImport START...");
 			var activeParserCategoriesIdList = _yandexMarketCategoryService.GetActive().Select(x => x.Id);
 			var newSpecsOnly = _GetNewSpecs(activeParserCategoriesIdList);
 
+			_logger.Debug("Will be imported specs: " + newSpecsOnly.Count);
+
+			var importedCounter = 0;
 			foreach (var curSpecAttr in newSpecsOnly)
 			{
-				SpecificationAttribute curSpecAttrFromDb;
 				if (curSpecAttr.Id != 0)
 				{
-					curSpecAttrFromDb = _specificationAttributeService.GetSpecificationAttributeById(curSpecAttr.Id);
+					SpecificationAttribute curSpecAttrFromDb = _specificationAttributeService.GetSpecificationAttributeById(curSpecAttr.Id);
 
 					foreach (var curSpecAttrOpt in curSpecAttr.SpecificationAttributeOptions)
 					{
@@ -77,7 +84,13 @@
 				{
 					_specificationAttributeService.InsertSpecificationAttribute(curSpecAttr);					
 				}
+				importedCounter++;
+
+				if(importedCounter%5 == 0) // через каждые 5 записей выводить в лог сообщение
+					_logger.Debug("Imported specs: " + importedCounter + "...");
 			}
+
+			_logger.Debug("--- ApplyImport End.");
 
 			return Content("Success!");
 		}
