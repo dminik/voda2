@@ -7,15 +7,8 @@ namespace Nop.Services.SiteParsers
 		public static List<string> GetAllowFilteringForProductSelector()
 		{
 			return new List<string>()
-				{
-					"Тип фильтра",					
-					"Отдельный кран",
-					"Минерализатор",					
-					"Помпа для повышения давления",
-					"Производитель",
-					"Рекомендуемая производительность",
-					"Способы очистки",
-					"Ступеней очистки",	
+				{					
+					"Производитель",					
 					"Bluetooth",
 					"Количество SIM-карт",
 					"Размер экрана, дюймы",
@@ -23,6 +16,7 @@ namespace Nop.Services.SiteParsers
 					"Тип корпуса",
 					"Сенсорный экран",
 					"FM-радио",
+					"Android"
 				};
 		}
 	}

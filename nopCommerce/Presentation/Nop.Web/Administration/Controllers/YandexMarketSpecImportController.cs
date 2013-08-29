@@ -76,8 +76,12 @@
 					foreach (var curSpecAttrOpt in curSpecAttr.SpecificationAttributeOptions)
 					{
 						curSpecAttrOpt.SpecificationAttributeId = curSpecAttrFromDb.Id;
-						_specificationAttributeService.InsertSpecificationAttributeOption(curSpecAttrOpt);
-						break;
+						if (!curSpecAttrFromDb.SpecificationAttributeOptions.Any(x => x.Name == curSpecAttrOpt.Name))
+							_specificationAttributeService.InsertSpecificationAttributeOption(curSpecAttrOpt);
+						else
+						{
+							int x = 0;
+						}
 					}
 				}
 				else

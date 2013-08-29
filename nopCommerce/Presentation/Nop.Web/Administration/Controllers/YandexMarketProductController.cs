@@ -265,7 +265,7 @@
 			SpecificationAttribute resultAttrName;
 			try
 			{
-				resultAttrName = allSpecAttrList.SingleOrDefault(x => x.Name == attrName);
+				resultAttrName = allSpecAttrList.FirstOrDefault(x => x.Name == attrName);
 			}
 			catch (Exception ex)
 			{				
@@ -279,7 +279,7 @@
 			SpecificationAttributeOption resultAttrOptName;
 			try
 			{
-				resultAttrOptName = resultAttrName.SpecificationAttributeOptions.SingleOrDefault(s => s.Name == attrOptName);
+				resultAttrOptName = resultAttrName.SpecificationAttributeOptions.FirstOrDefault(s => s.Name == attrOptName);
 			}
 			catch (Exception ex)
 			{

@@ -38,5 +38,16 @@ namespace Nop.Core.Domain.Catalog
             get { return _productSpecificationAttributes ?? (_productSpecificationAttributes = new List<ProductSpecificationAttribute>()); }
             protected set { _productSpecificationAttributes = value; }
         }
+
+		public SpecificationAttributeOption Clone()
+		{
+			return new SpecificationAttributeOption()
+				{
+					Id = this.Id,
+					Name = this.Name,
+					SpecificationAttributeId = this.SpecificationAttributeId,
+					DisplayOrder = this.DisplayOrder,
+				};
+		}
     }
 }

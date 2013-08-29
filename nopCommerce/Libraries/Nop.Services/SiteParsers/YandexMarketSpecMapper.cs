@@ -41,7 +41,14 @@ namespace Nop.Services.SiteParsers
 				yandexMarketSpecList.AddRange(_yandexMarketSpecService.GetByCategory(currentCategoryId));	
 						
 			// Все спецификации магазина
-			var shopSpecList = _shopSpecService.GetSpecificationAttributes();
+			var shopSpecList = new List<SpecificationAttribute>();
+			foreach (var specificationAttribute in _shopSpecService.GetSpecificationAttributes())
+			{
+				shopSpecList.Add(specificationAttribute.Clone());
+			}
+			
+
+			
 
 			try
 			{
@@ -60,6 +67,10 @@ namespace Nop.Services.SiteParsers
 					var existedShopSpecOpt = existedShopSpec.SpecificationAttributeOptions.SingleOrDefault(x => x.Name == curYaSpec.Value);
 					if (existedShopSpecOpt == null)
 					{
+						// string curYaSpecValue = curYaSpec.Value;
+						//if (curYaSpecValue.Length >= 440) 
+							//curYaSpecValue = curYaSpecValue.Substring(0, 430);
+
 						existedShopSpecOpt = new SpecificationAttributeOption() { Name = curYaSpec.Value };
 						existedShopSpec.SpecificationAttributeOptions.Add(existedShopSpecOpt);
 					}
@@ -72,6 +83,7 @@ namespace Nop.Services.SiteParsers
 				throw;
 			}
 
+			var antennas = shopSpecList.Where(x => x.Name == "Антенна").ToList();
 			return shopSpecList;
 		}
 

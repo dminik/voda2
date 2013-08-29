@@ -15,8 +15,8 @@ namespace Nop.Services.YandexMarket
 	public sealed partial class YandexMarketProductService : IYandexMarketProductService
 	{
 		#region Constants
-		private const string YANDEXMARKETProduct_ALL_KEY = "Nop.YandexMarketProduct.all-{0}-{1}";
-		private const string YANDEXMARKETProduct_ALL_KEY_WITH_FANTOMS = "Nop.YandexMarketProduct.allfantoms-{0}-{1}";
+		private const string YANDEXMARKETProduct_BY_CATEGORY_KEY = "Nop.YandexMarketProduct.byCategory-{0}-{1}-{2}";
+		private const string YANDEXMARKETProduct_BY_CATEGORY_KEY_WITH_FANTOMS = "Nop.YandexMarketProduct.allfantoms-{0}-{1}-{2}";
 		private const string YANDEXMARKETProduct_PATTERN_KEY = "Nop.YandexMarketProduct.";
 		#endregion
 
@@ -73,7 +73,7 @@ namespace Nop.Services.YandexMarket
 		/// <returns>Tax rates</returns>
 		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false)
 		{
-			string key = string.Format(withFantoms ? YANDEXMARKETProduct_ALL_KEY_WITH_FANTOMS : YANDEXMARKETProduct_ALL_KEY, pageIndex, pageSize);
+			string key = string.Format(withFantoms ? YANDEXMARKETProduct_BY_CATEGORY_KEY_WITH_FANTOMS : YANDEXMARKETProduct_BY_CATEGORY_KEY, pageIndex, pageSize, categoryId);
 
 			var result = this._cacheManager.Get(key, () =>
 			{

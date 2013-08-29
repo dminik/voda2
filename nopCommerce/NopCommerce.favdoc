@@ -23,11 +23,6 @@
       <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\YandexMarket\YandexMarketProductService.cs</absolutePath>
     </Favorite>
     <Favorite>
-      <name>YandexMarketCategoryMapper.cs</name>
-      <path>Libraries\Nop.Services\SiteParsers\YandexMarketCategoryMapper.cs</path>
-      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\YandexMarketCategoryMapper.cs</absolutePath>
-    </Favorite>
-    <Favorite>
       <name>TestYandexMarketSpecMapper.cs</name>
       <path>Tests\Nop.Parser.Tests\TestYandexMarketSpecMapper.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Tests\Nop.Parser.Tests\TestYandexMarketSpecMapper.cs</absolutePath>
@@ -91,6 +86,11 @@
       <name>FormatterUgContract.cs</name>
       <path>Libraries\Nop.Core\Domain\YandexMarket\FormatterUgContract.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Core\Domain\YandexMarket\FormatterUgContract.cs</absolutePath>
+    </Favorite>
+    <Favorite>
+      <name>YandexMarketSpecMapper.cs</name>
+      <path>Libraries\Nop.Services\SiteParsers\YandexMarketSpecMapper.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\YandexMarketSpecMapper.cs</absolutePath>
     </Favorite>
   </favorites>
 </Favorites>

@@ -293,7 +293,7 @@
 
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
-                                    alert(thrownError);
+                                    alert(xhr.responseText);
                                 }
                             });
                             return false;
@@ -314,7 +314,7 @@
                                     alert(data);
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
-                                    alert(thrownError);
+                                    alert(xhr.responseText);
                                 }
                             });
                             return false;
@@ -364,7 +364,7 @@
                                     grid.data('tGrid').ajaxRequest();
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to Parse. ' + xhr.responseText);
+                                    alert(xhr.responseText);
                                 }
                             });
                             return false;
