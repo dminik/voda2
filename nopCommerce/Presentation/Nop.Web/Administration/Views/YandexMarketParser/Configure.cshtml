@@ -247,7 +247,7 @@
                
                 <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
                 <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты со страниц и сохранить в категорию парсера (для активных категорий парсера)" /> <br /> 
-                <input type="button" id="onlyNew" class="t-button" value="Шаг 2. Отобразить только новые спарсенные спецификации, которые еще не существуют в интернет-магазине" /><br/>              
+                <input type="button" id="onlyNew" class="t-button" value="Шаг 2. Отобразить только новые спарсенные спецификации, которые еще не существуют в интернет-магазине (для активных категорий парсера)" /><br/>              
                 <input type="button" id="btnApplyImport" class="t-button" value="Шаг 3. Импортнуть новые спецификации в интернет-магазин (для активных категорий парсера)" /> <br /> 
                 <input type="submit" id="btnImportProductList" class="t-button" value="Шаг 4. Импортнуть новые товары в интернет-магазин  (для активных категорий парсера)" />
              
@@ -267,7 +267,7 @@
                                 cache: false,
                                 type: 'POST',
                                 url: '@Url.Action("GetNewSpecs", "YandexMarketSpecImport")',
-                                data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },
+                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
                                 dataType: 'json',
                                 success: function (data) {
 

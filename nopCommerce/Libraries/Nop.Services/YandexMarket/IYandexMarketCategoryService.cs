@@ -23,6 +23,11 @@ namespace Nop.Services.YandexMarket
 		/// <returns>Tax rates</returns>
 		IPagedList<YandexMarketCategoryRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue);
 
+		/// <summary>
+		/// Gets all tax rates
+		/// </summary>
+		/// <returns>Tax rates</returns>
+		IPagedList<YandexMarketCategoryRecord> GetActive(int pageIndex = 0, int pageSize = int.MaxValue);
 		
 		/// <summary>
 		/// Gets a tax rate

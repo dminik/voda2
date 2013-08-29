@@ -1,6 +1,7 @@
 namespace Nop.Services.YandexMarket
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 
 	using Nop.Core;
@@ -14,7 +15,7 @@ namespace Nop.Services.YandexMarket
 	public partial class YandexMarketSpecService : IYandexMarketSpecService
 	{
 		#region Constants
-		private const string YANDEXMARKETSpec_ALL_KEY = "Nop.YandexMarketSpec.all-{0}-{1}";
+		private const string YANDEXMARKETSpec_BY_CATEGORY_KEY = "Nop.YandexMarketSpec.category-{0}-{1}-{2}";
 		private const string YANDEXMARKETSpec_PATTERN_KEY = "Nop.YandexMarketSpec.";
 		#endregion
 
@@ -50,18 +51,23 @@ namespace Nop.Services.YandexMarket
 
 		public virtual IPagedList<YandexMarketSpecRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue)
 		{
-			string key = string.Format(YANDEXMARKETSpec_ALL_KEY, pageIndex, pageSize);
+			// Получить выборку из базы и приплюсовать форматирование продукта
+			var key = string.Format(YANDEXMARKETSpec_BY_CATEGORY_KEY, pageIndex, pageSize, categoryId);
 
 			var result = this._cacheManager.Get(key, () =>
-			{
-				var query = from tr in this._specRepository.Table
-							orderby tr.Key
-							where tr.ProductRecord.YandexMarketCategoryRecordId == categoryId
-							select tr;
+			{				
+				var products = this._specRepository.Table.Where(tr => tr.ProductRecord.YandexMarketCategoryRecordId == categoryId).Select(x => x.ProductRecord);
+				foreach (var currentProduct in products)	 // formatting			
+					currentProduct.FormatMe();
 
-				var records = new PagedList<YandexMarketSpecRecord>(query, pageIndex, pageSize);
-				return records;
+				var allSpecs = new List<YandexMarketSpecRecord>();
+				foreach (var currentProduct in products)	// collecting
+					allSpecs.AddRange(currentProduct.Specifications);
+
+				return new PagedList<YandexMarketSpecRecord>(allSpecs, pageIndex, pageSize);
 			});
+
+
 
 			return result;
 		}

@@ -1,12 +1,18 @@
-namespace Nop.Services.YandexMarket
+namespace Nop.Core.Domain.YandexMarket
 {
 	using System;
 	using System.Text.RegularExpressions;
 
-	using Nop.Core.Domain.YandexMarket;
-
-	public abstract class FormatterBase
+	public class FormatterBase
 	{
+		public static FormatterBase Create(string url)
+		{
+			if(url.Contains("yugcontract"))
+				return new FormatterUgContract();
+
+			return new FormatterBase();
+		}
+
 		public virtual YandexMarketProductRecord Format(YandexMarketProductRecord product)
 		{
 			return product;

@@ -94,6 +94,8 @@
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
     <Compile Include="Data\IRepositoryExtensions.cs" />
     <Compile Include="Domain\Vendors\Vendor.cs" />
+    <Compile Include="Domain\YandexMarket\FormatterBase.cs" />
+    <Compile Include="Domain\YandexMarket\FormatterUgContract.cs" />
     <Compile Include="Domain\YandexMarket\YandexMarketCategoryRecord.cs" />
     <Compile Include="Domain\YandexMarket\YandexMarketProductRecord.cs" />
     <Compile Include="Domain\YandexMarket\YandexMarketSpecRecord.cs" />

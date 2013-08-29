@@ -17,6 +17,7 @@ namespace Nop.Services.YandexMarket
 	{
 		#region Constants
 		private const string YANDEXMARKETCATEGORY_ALL_KEY = "Nop.YandexMarketCategory.all-{0}-{1}";
+		private const string YANDEXMARKETCATEGORY_ACTIVE_KEY = "Nop.YandexMarketCategory.active-{0}-{1}";
 		private const string YANDEXMARKETCATEGORY_PATTERN_KEY = "Nop.YandexMarketCategory.";
 		#endregion
 
@@ -79,6 +80,26 @@ namespace Nop.Services.YandexMarket
 			return result;
 		}
 
+		/// <summary>
+		/// Gets all tax rates
+		/// </summary>
+		/// <returns>Tax rates</returns>
+		public virtual IPagedList<YandexMarketCategoryRecord> GetActive(int pageIndex = 0, int pageSize = int.MaxValue)
+		{
+			string key = string.Format(YANDEXMARKETCATEGORY_ACTIVE_KEY, pageIndex, pageSize);
+
+			var result = this._cacheManager.Get(key, () =>
+			{
+				var query = from tr in this._categoryRepository.Table
+							orderby tr.Name
+							where tr.IsActive
+							select tr;
+				var records = new PagedList<YandexMarketCategoryRecord>(query, pageIndex, pageSize);
+				return records;
+			});
+
+			return result;
+		}
 
 		/// <summary>
 		/// Gets a tax rate

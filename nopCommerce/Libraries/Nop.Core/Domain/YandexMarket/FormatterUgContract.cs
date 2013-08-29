@@ -1,9 +1,7 @@
-namespace Nop.Services.YandexMarket
+namespace Nop.Core.Domain.YandexMarket
 {
 	using System.Collections.Generic;
 	using System.Linq;
-
-	using Nop.Core.Domain.YandexMarket;
 
 	public class FormatterUgContract : FormatterBase
 	{		
@@ -16,7 +14,7 @@ namespace Nop.Services.YandexMarket
 
 			product.Articul = product.Articul.Replace("Код: ", "");
 
-			product.Name = product.Name.Replace("МОБИЛЬНЫЙ ТЕЛЕФОН ", "");
+			//product.Name = product.Name.Replace("МОБИЛЬНЫЙ ТЕЛЕФОН ", "").Replace("СМАРТФОН ", "");
 
 			foreach (var curSpec in product.Specifications)
 			{				
@@ -39,34 +37,34 @@ namespace Nop.Services.YandexMarket
 			}
 
 			var manufactureName = this.GetManufactureFromName(product.Name);
-			if (manufactureName != string.Empty)
+			if (manufactureName != string.Empty && product.Specifications.All(x => x.Key != "Производитель"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Производитель", manufactureName));
 
 			var megapixels = this.GetMegapixelsFromSpecs(product.Specifications);
-			if (megapixels != string.Empty)
+			if (megapixels != string.Empty && product.Specifications.All(x => x.Key != "Количество мегапикселей камеры"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Количество мегапикселей камеры", megapixels));
 
 			var displaySize = this.GetDisplaySize(product.Specifications);
-			if (displaySize != string.Empty)
+			if (displaySize != string.Empty && product.Specifications.All(x => x.Key != "Размер экрана, дюймы"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Размер экрана, дюймы", displaySize));
-			
-			if (this.IsBluetooth(product.Specifications))
+
+			if (this.IsBluetooth(product.Specifications) && product.Specifications.All(x => x.Key != "Bluetooth"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Bluetooth", "Есть"));
 
-			if (this.IsAndroid(product.Specifications))
+			if (this.IsAndroid(product.Specifications) && product.Specifications.All(x => x.Key != "Android"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Android", "Да"));
 
-			if (this.IsFlash(product.Specifications))
+			if (this.IsFlash(product.Specifications) && product.Specifications.All(x => x.Key != "Вспышка"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Вспышка", "Есть"));
 
-			if (this.IsRadio(product.Specifications))
+			if (this.IsRadio(product.Specifications) && product.Specifications.All(x => x.Key != "FM-радио"))
 				product.Specifications.Add(new YandexMarketSpecRecord("FM-радио", "Есть"));
 
-			if (this.IsDisplaySensor(product.Specifications))
+			if (this.IsDisplaySensor(product.Specifications) && product.Specifications.All(x => x.Key != "Сенсорный экран"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Сенсорный экран", "Да"));
 
 			var simAmount = this.GetSimAmount(product);
-			if (simAmount > 1 && !product.Specifications.Any(x => x.Key == "Количество SIM-карт"))
+			if (simAmount > 1 && product.Specifications.All(x => x.Key != "Количество SIM-карт"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Количество SIM-карт", simAmount.ToString()));
 
 			
@@ -89,11 +87,13 @@ namespace Nop.Services.YandexMarket
 		{
 			const string pattern = @"([0-9]+(?:\.[0-9]+)?) [Мм]";
 
-			var spec = specs.SingleOrDefault(x => x.Key.ToLower().Contains("камера"));
+			var spec = specs.FirstOrDefault(x => x.Key.ToLower().Contains("камера"));
 
 			if (spec != null)
 			{
-				var megapixels = GetValByRegExp(spec.Value, pattern);
+				var megapixels = this.GetValByRegExp(spec.Value, pattern);
+				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
+
 				return megapixels;
 			}
 			
@@ -104,11 +104,11 @@ namespace Nop.Services.YandexMarket
 		{
 			const string pattern = "([0-9]+(?:\\.[0-9]+)?)\"";
 
-			var spec = specs.SingleOrDefault(x => x.Key == "Дисплей");
+			var spec = specs.FirstOrDefault(x => x.Key == "Дисплей");
 
 			if (spec != null)
 			{
-				var result = GetValByRegExp(spec.Value, pattern);
+				var result = this.GetValByRegExp(spec.Value, pattern);
 				return result;
 			}
 
@@ -117,27 +117,27 @@ namespace Nop.Services.YandexMarket
 
 		private bool IsBluetooth(IEnumerable<YandexMarketSpecRecord> specs)
 		{			
-			return specs.SingleOrDefault(x => x.Value.ToLower().Contains("bluetooth")) != null;
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("bluetooth")) != null;
 		}
 
 		private bool IsAndroid(IEnumerable<YandexMarketSpecRecord> specs)
 		{
-			return specs.SingleOrDefault(x => x.Value.ToLower().Contains("android")) != null;
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("android")) != null;
 		}
 
 		private bool IsFlash(IEnumerable<YandexMarketSpecRecord> specs)
 		{
-			return specs.SingleOrDefault(x => x.Value.ToLower().Contains("вспышка")) != null;
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("вспышка")) != null;
 		}
 
 		private bool IsRadio(IEnumerable<YandexMarketSpecRecord> specs)
 		{
-			return specs.SingleOrDefault(x => x.Value.ToLower().Contains("радио")) != null;
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("радио")) != null;
 		}
 
 		private bool IsDisplaySensor(IEnumerable<YandexMarketSpecRecord> specs)
 		{
-			return specs.SingleOrDefault(x => x.Key == "Дисплей" && x.Value.ToLower().Contains("сенсорный")) != null;
+			return specs.FirstOrDefault(x => x.Key == "Дисплей" && x.Value.ToLower().Contains("сенсорный")) != null;
 		}
 
 		private int GetSimAmount(YandexMarketProductRecord product)

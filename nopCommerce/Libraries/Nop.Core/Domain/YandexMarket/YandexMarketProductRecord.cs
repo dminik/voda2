@@ -41,6 +41,13 @@
 		public string FullDescription { get; set; }
 
 		private const string mNotInPriceList = "NotInPriceList";
+		
+		public string ImageUrl_1 { get; set; }
+		public string Url { get; set; }
+		
+		public int YandexMarketCategoryRecordId { get; set; }
+
+		public virtual IList<YandexMarketSpecRecord> Specifications { get; set; }
 
 		[NotMapped]
 		public bool IsNotInPriceList
@@ -54,15 +61,29 @@
 				Name = value ? mNotInPriceList : "";
 			}
 		}
-				
-		public string ImageUrl_1 { get; set; }
-		public string Url { get; set; }
-		
-		public int YandexMarketCategoryRecordId { get; set; }
-
-		public virtual IList<YandexMarketSpecRecord> Specifications { get; set; }
 	
-		// public virtual YandexMarketCategoryRecord YandexMarketCategoryRecord { get; set; }
+		[NotMapped]
+		public bool IsFormatted { get; set; }
+
+		private FormatterBase mFormatter;
+		[NotMapped]
+		private FormatterBase Formatter 
+		{ 
+			get
+			{
+				return this.mFormatter ?? (this.mFormatter = FormatterBase.Create(this.Url));
+			}
+		}
+		
+		public void FormatMe()
+		{
+			if (IsFormatted)			
+				return;
+			
+			this.Formatter.Format(this);
+			this.IsFormatted = true;
+		}
+
 
 		public override string ToString()
 		{

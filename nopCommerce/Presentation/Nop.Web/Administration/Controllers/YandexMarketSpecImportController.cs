@@ -45,16 +45,19 @@
 		}
 		
 		[HttpPost]
-		public ActionResult GetNewSpecs(int parserCategoryId)
+		public ActionResult GetNewSpecs()
 		{
-			var newSpecsOnly = _GetNewSpecs(parserCategoryId);
+			var activeParserCategoriesIdList = _yandexMarketCategoryService.GetActive().Select(x => x.Id);
+			var newSpecsOnly = _GetNewSpecs(activeParserCategoriesIdList);
+			
 			return Json(newSpecsOnly);
 		}
 
 		[HttpPost]
 		public ActionResult ApplyImport(int parserCategoryId)
 		{
-			var newSpecsOnly = _GetNewSpecs(parserCategoryId);
+			var activeParserCategoriesIdList = _yandexMarketCategoryService.GetActive().Select(x => x.Id);
+			var newSpecsOnly = _GetNewSpecs(activeParserCategoriesIdList);
 
 			foreach (var curSpecAttr in newSpecsOnly)
 			{
@@ -81,11 +84,11 @@
 
 
 
-		private List<SpecificationAttribute> _GetNewSpecs(int parserCategoryId)
+		private List<SpecificationAttribute> _GetNewSpecs(IEnumerable<int> parserCategoryIdList)
 		{
 			var mapper = new YandexMarketSpecMapper(_yandexMarketSpecService, EngineContext.Current.Resolve<ISpecificationAttributeService>());
 
-			var allSpecs = mapper.GetSumOfYandexSpecsAndShopSpecs(parserCategoryId);
+			var allSpecs = mapper.GetSumOfYandexSpecsAndShopSpecs(parserCategoryIdList);
 			var newSpecsOnly = mapper.GetNewYandexSpecsOnly(allSpecs);
 
 			return newSpecsOnly;

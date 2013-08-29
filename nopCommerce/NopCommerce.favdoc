@@ -83,9 +83,14 @@
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\VendorFileParserController.cs</absolutePath>
     </Favorite>
     <Favorite>
+      <name>YandexMarketProductRecord.cs</name>
+      <path>Libraries\Nop.Core\Domain\YandexMarket\YandexMarketProductRecord.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Core\Domain\YandexMarket\YandexMarketProductRecord.cs</absolutePath>
+    </Favorite>
+    <Favorite>
       <name>FormatterUgContract.cs</name>
-      <path>Libraries\Nop.Services\YandexMarket\FormatterUgContract.cs</path>
-      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\YandexMarket\FormatterUgContract.cs</absolutePath>
+      <path>Libraries\Nop.Core\Domain\YandexMarket\FormatterUgContract.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Core\Domain\YandexMarket\FormatterUgContract.cs</absolutePath>
     </Favorite>
   </favorites>
 </Favorites>

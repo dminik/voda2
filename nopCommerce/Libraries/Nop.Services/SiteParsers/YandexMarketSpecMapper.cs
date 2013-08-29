@@ -30,19 +30,22 @@ namespace Nop.Services.SiteParsers
 			_shopSpecService = shopSpecService;
 		}
 
-
-		public IList<SpecificationAttribute> GetSumOfYandexSpecsAndShopSpecs(int categoryId)
-		{
-			// Возвращает спецификаций магазина, дополненные из Яндекса
-
-
-
-			var yandexMarketSpecList = _yandexMarketSpecService.GetByCategory(categoryId);
+		/// <summary>
+		/// // Возвращает спецификаций магазина, дополненные из парсера
+		/// </summary>		
+		public IList<SpecificationAttribute> GetSumOfYandexSpecsAndShopSpecs(IEnumerable<int> categoryIdList)
+		{			
+			// Все спецификации парсера для выбранных категорий товаров
+			var yandexMarketSpecList = new List<YandexMarketSpecRecord>();
+			foreach (var currentCategoryId in categoryIdList)			
+				yandexMarketSpecList.AddRange(_yandexMarketSpecService.GetByCategory(currentCategoryId));	
+						
+			// Все спецификации магазина
 			var shopSpecList = _shopSpecService.GetSpecificationAttributes();
 
 			try
 			{
-
+				// Объединяем спецификации в единый список магазина
 				foreach (var curYaSpec in yandexMarketSpecList)
 				{
 					// Find Spec

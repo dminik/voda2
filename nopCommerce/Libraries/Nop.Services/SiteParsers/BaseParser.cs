@@ -47,6 +47,8 @@ namespace Nop.Services.SiteParsers
 		private string ProductsPageUrl { get; set; }
 		private List<string> ExistedProductUrlList { get; set; }
 		private List<string> ProductsArtikulsInPiceList { get; set; }
+
+		private int ParsedProductsAmount = 1;
 		
 		// Папка для картинок
 		private readonly string mImageFolderPathBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog");
@@ -124,7 +126,7 @@ namespace Nop.Services.SiteParsers
 						isNextPage = false;
 					}
 
-					// Парсим все товары с страницы
+					// ===== Парсим все товары с страницы
 					resultProductList.AddRange(GetProductsByLinks(linksFromCurrentPage));
 
 					if (this.ParseNotMoreThen <= resultProductList.Count) break;
@@ -155,11 +157,8 @@ namespace Nop.Services.SiteParsers
 
 		private IEnumerable<YandexMarketProductRecord> GetProductsByLinks(IReadOnlyCollection<string> productLinks)
 		{
-			var resultProductList = new List<YandexMarketProductRecord>();
-
-			this.mLogger.Debug("Have " + productLinks.Count + " links on the page");
-
-			int productCounter = 1;
+			var resultProductList = new List<YandexMarketProductRecord>();			
+			
 			int existedProductCounter = 0;
 			
 			foreach (var currentProductLink in productLinks)
@@ -171,22 +170,25 @@ namespace Nop.Services.SiteParsers
 					continue;
 				}
 
-				this.mLogger.Debug("Was skipped existed products: " + existedProductCounter);
-				this.mLogger.Debug("Proceeding product " + productCounter);
+				if (existedProductCounter != 0)
+				{
+					this.mLogger.Debug("Was skipped existed products: " + existedProductCounter);
+					existedProductCounter = 0;
+				}
+
+				this.mLogger.Debug("Proceeding product " + ParsedProductsAmount);
 
 				var product = this.CreateProduct(currentProductLink);
 
 				// несуществующий в прайсе созданный фантом дальше игнорируем
-				if (product == null)
-				{					
-					continue;
-				}
+				if (product == null)									
+					continue;				
 
 				resultProductList.Add(product);
 
-				productCounter++;
+				ParsedProductsAmount++;
 
-				if (productCounter > this.ParseNotMoreThen)
+				if (ParsedProductsAmount > this.ParseNotMoreThen)
 				{
 					this.mLogger.Debug("Stop parsing because was parsed  " + this.ParseNotMoreThen);
 					break;
@@ -329,7 +331,7 @@ namespace Nop.Services.SiteParsers
 		
 		private string SaveImage(string remoteFileUrl, string productName)
 		{
-			string fileName = productName.Replace('/', '-').Replace('\\', '-').Replace('*', '-').Replace('?', '-').Replace('"', '-').Replace('\'', '-').Replace('<', '-').Replace('>', '-').Replace('|', '-').Replace(' ', '_');
+			string fileName = productName.Replace('/', '-').Replace('\\', '-').Replace('*', '-').Replace('?', '-').Replace('"', '-').Replace('\'', '-').Replace('<', '-').Replace('>', '-').Replace('|', '-').Replace(' ', '_').Replace('+', '_');
 			fileName += Path.GetExtension(remoteFileUrl);
 
 			var folderPath = Path.Combine(this.mImageFolderPathBase, this.mImageFolderPathForProductList);
@@ -339,9 +341,9 @@ namespace Nop.Services.SiteParsers
 
 			var webClient = new WebClient();
 
-			this.mLogger.Debug("Image will be saved to " + fullFileName + "...");
+			//this.mLogger.Debug("Image will be saved to " + fullFileName + "...");
 			webClient.DownloadFile(remoteFileUrl, fullFileName);
-			this.mLogger.Debug("Image saved");
+			//this.mLogger.Debug("Image saved");
 
 			return Path.Combine(this.mImageFolderPathForProductList, fileName);
 		}

@@ -62,8 +62,8 @@
 		public ActionResult Parse(YandexMarketParserModel model)
 		{
 			_logger.Debug("--- ALL PARSE START...");
-			// Get all active parser categories
-			var activeParserCategories = _yandexMarketCategoryService.GetAll().Where(x => x.IsActive).ToList();
+			
+			var activeParserCategories = _yandexMarketCategoryService.GetActive();
 
 			foreach (var currentCategory in activeParserCategories)
 			{				

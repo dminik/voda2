@@ -46,14 +46,13 @@ namespace Nop.Parser.Tests
 
 		[Test]
 		public void GetSumOfYandexSpecsAndShopSpecs_Success()
-
 		{
 			// Arrange
-			const int categoryId = 1;
+			var categoryIdList = new List<int>(){ 1, };
 
 			// Act 
 			// Возвращает спецификаций магазина, дополненные из Яндекса
-			var resultAllShopSpecs = _mapperUnderTest.GetSumOfYandexSpecsAndShopSpecs(categoryId);
+			var resultAllShopSpecs = _mapperUnderTest.GetSumOfYandexSpecsAndShopSpecs(categoryIdList);
 
 			// Assert 
 			Assert.That(resultAllShopSpecs.Count, Is.EqualTo(3)); // Color, Size, Sexy
