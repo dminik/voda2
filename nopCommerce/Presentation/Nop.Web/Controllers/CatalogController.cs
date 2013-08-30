@@ -298,16 +298,18 @@ namespace Nop.Web.Controllers
             var models = new List<ProductOverviewModel>();
             foreach (var product in products)
             {
-                var model = new ProductOverviewModel()
-                {
-                    Id = product.Id,
-                    Name = product.GetLocalized(x => x.Name),
-					ShortDescription = PrepareShortDescription(product),
-                    FullDescription = product.GetLocalized(x => x.FullDescription),
-                    SeName = product.GetSeName(),
-					StockAvailability = allVariants.SingleOrDefault(x => x.ProductId == product.Id).StockQuantity,
-                };
-                //price
+                var model = new ProductOverviewModel();
+	            model.Id = product.Id;
+	            model.Name = product.GetLocalized(x => x.Name);
+	            model.ShortDescription = this.PrepareShortDescription(product);
+	            model.FullDescription = product.GetLocalized(x => x.FullDescription);
+	            model.SeName = product.GetSeName();
+	            var singleOrDefault = allVariants.SingleOrDefault(x => x.ProductId == product.Id);
+	            if (singleOrDefault != null)
+	            {
+		            model.StockAvailability = singleOrDefault.StockQuantity;
+	            }
+	            //price
                 if (preparePriceModel)
                 {
                     #region Prepare product price
