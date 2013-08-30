@@ -561,12 +561,20 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-list .product-item .details{}
 .product-list .product-item .picture{float:left;margin:10px;}
 .product-list .product-item .description{padding:0 0 0 17px;margin:0px 100px 0 140px;text-align:left;color:#555; list-style-type: disc;}
-.product-list .product-item .add-info{float:right;text-align:right;position:absolute;top:40px;right:10px;}
+.product-list .product-item .add-info{float:right;text-align:right;position:absolute;top:32px;right:10px;}
 .product-list .product-item .prices{}
 .product-list .product-item .prices .price{margin:0px;display:block;}
-.product-list .product-item .prices .actual-price{color:#B80709;font-size: 32px;}
+.product-list .product-item .prices .actual-price{color: rgb(184, 7, 9);
+font-size: 32px;
+text-align: center;
+width: 107px;
+line-height: 33px;
+margin-left: 12px;
+}
+.product-list .product-item .prices .actual-price .price-currency {color:#6c0607;font-size: 12px;}
+
 .product-list .product-item .prices .old-price{color:#5C5B5B;text-decoration:line-through;}
-.product-list .product-item .buttons{padding-top:20px;text-align: center;}
+.product-list .product-item .buttons{padding-top:3px;text-align: center;}
 .product-list .product-item .more-details{ text-decoration: underline;margin-left: 10px; padding-top: 10px;font-size: 1.2em;}
 
 
