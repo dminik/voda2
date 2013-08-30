@@ -77,7 +77,7 @@
 	width: 100%;
 }
 
-.header-phone-work-time{ width: auto ;color: black;position: relative;left: 553px;top: -106px; display: inline-block;}
+.header-phone-work-time{ width: auto ;color: black;position: relative;left: 553px;top: -96px; display: inline-block;}
 .header-phone{font-size: 25px; width: 310px;}
 .phone-logo-life{ color: red; background: url("images/life.jpg") no-repeat scroll 0px 4px / 35px auto transparent;  padding-left: 40px;}
 .header-work-time{font-size: 15px;}
@@ -145,7 +145,7 @@ ul.language-list li:hover{cursor:pointer;}
 .search-box{    
 	position: relative;
 	left: 224px;
-	top: -127px;
+	top: -106px;
 	opacity: 0.87; background:none repeat scroll 0 0 #FFFFFF;width:288px;display: block;padding:7px 7px 5px;-o-border-radius:3px;-icab-border-radius:3px;-khtml-border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
 .search-box ul{margin:0;padding:0;float:right;}
 .search-box ul li{list-style:none outside none;float:left;margin:0;padding:0;}

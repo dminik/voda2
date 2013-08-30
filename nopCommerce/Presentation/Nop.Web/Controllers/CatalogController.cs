@@ -514,8 +514,14 @@ namespace Nop.Web.Controllers
 		private void SetSeoMetaTags(Product product, ProductDetailsModel model)
 		{			
 			model.MetaTitle = product.GetLocalized(x => x.MetaTitle);
-			model.MetaKeywords = _seoSettings.DefaultTitle + ", " + product.Name + ", Доставка по Боярке, Купить, Цена, Компьютерный магазин, Техномережа,";
-			model.MetaDescription = "Покупайте в Боярке! Купить в Боярке с быстрой доставкой " + product.Name + " по цене " + product.ProductVariants.FirstOrDefault().Price;
+
+			model.MetaKeywords = _seoSettings.DefaultTitle + ", " + product.Name 
+				+ ", Доставка по Боярке, Купить, Цена, Компьютерный магазин, Техномережа,";
+
+			model.MetaDescription = "Купить в Боярке с быстрой доставкой " + product.Name 
+				+ " по цене " + (int)(product.ProductVariants.FirstOrDefault().Price) + " грн. "
+				+ "F5-Боярка - интернет-магазин компьютерной, мобильной и бытовой техники.";
+
 			model.SeName = product.GetSeName();
 		}
 
