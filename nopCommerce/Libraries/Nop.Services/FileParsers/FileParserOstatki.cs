@@ -19,7 +19,7 @@ namespace Nop.Services.FileParsers
 			var headerLineIndex = GetStringNumberWithTableHeader(lines);
 
 			var articulColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Код");
-			var priceColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Цена");
+			var priceColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Сумма");
 			var amountColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Кво");
 
 			var resultProductLines = new List<ProductLine>();

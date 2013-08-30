@@ -237,8 +237,9 @@ namespace Nop.Web.Controllers
                     if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                         categoryIds.AddRange(GetChildCategoryIds(category.Id));
 
-                    categoryModel.NumberOfProducts = this._productService.SearchProducts(categoryIds: categoryIds, storeId: this._storeContext.CurrentStore.Id, pageSize: 1)
-						.Count(x => x.ProductVariants.First().Price > 0 && x.ProductVariants.First().StockQuantity > 0);
+                    categoryModel.NumberOfProducts = this._productService.SearchProducts(categoryIds: categoryIds, priceMin: 1 , storeId: this._storeContext.CurrentStore.Id, pageSize: 1)
+						.TotalCount;
+						//.Count(x => x.ProductVariants.First().Price > 0 );
                 }
 
                 //subcategories
