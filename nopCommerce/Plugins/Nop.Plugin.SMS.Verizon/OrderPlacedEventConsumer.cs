@@ -41,11 +41,11 @@ namespace Nop.Plugin.SMS.Verizon
             var order = eventMessage.Order;
 
             //send SMS
-            if (plugin.SendSms(String.Format("New order(#{0}) has been placed.", order.Id)))
+			if (plugin.SendSms(String.Format("Dear store owner! New order(#{0}) has been placed.", order.Id)))
             {
                 order.OrderNotes.Add(new OrderNote()
                 {
-                    Note = "\"Order placed\" SMS alert (to store owner) has been sent",
+					Note = "\"Dear store owner! Order placed\" SMS alert (to store owner) has been sent",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
