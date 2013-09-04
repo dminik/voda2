@@ -34,7 +34,7 @@
 	left: 32px;
 	position: absolute;
 	text-decoration: none;
-	top: 74px;
+	top: 38px;
 	width: 10%;
 }
 
@@ -48,7 +48,7 @@
 	position: relative;	
 }
 .logo{
-	background: url("images/logo.jpg") no-repeat scroll 9px 0px / 142px auto transparent;
+	background: /*url("images/logo.jpg")*/ no-repeat scroll 9px 0px / 142px auto transparent;
 	display: inline-block;
 	height: 100%;
 	opacity: 0.9;
@@ -71,7 +71,7 @@
 }
 
 .header-bottom-line{
-	background: url("images/bg_topsection.jpg") no-repeat scroll 0 0 / 100% auto transparent;
+	background: /*url("images/bg_topsection.jpg")*/ no-repeat scroll 0 0 / 100% auto transparent;
 	display: block;
 	height: 26px;
 	width: 100%;
