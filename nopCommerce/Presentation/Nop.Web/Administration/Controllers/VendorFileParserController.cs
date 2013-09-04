@@ -62,7 +62,7 @@
 				}
 
 				currentProductVariant.StockQuantity = 0;
-				currentProductVariant.Price = curProductLine.Price;
+				currentProductVariant.Price = curProductLine.PriceRaschet;
 				_productService.UpdateProductVariant(currentProductVariant);
 				successCounter++;
 				foundArticules += curProductLine.Articul + ", ";
