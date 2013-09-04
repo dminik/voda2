@@ -109,6 +109,7 @@ namespace Nop.Web.Controllers
             model.DisplayPdfInvoice = _pdfSettings.Enabled;
 
             //shipping info
+			order.ShippingStatus = ShippingStatus.NotYetShipped;// dminikk
             model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {

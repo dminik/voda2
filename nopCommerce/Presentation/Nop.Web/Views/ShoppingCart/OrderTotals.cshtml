@@ -3,7 +3,7 @@
 <div class="total-info">
     <table class="cart-total">
         <tbody>
-@*            <tr>
+            @*            <tr>
                 <td class="cart-total-left">
                     <span class="nobr">@T("ShoppingCart.Totals.SubTotal"):</span>
                 </td>
@@ -29,6 +29,8 @@
                     </td>
                 </tr>
             }
+            *@
+
             <tr>
                 <td class="cart-total-left">
                     <span class="nobr">
@@ -46,12 +48,12 @@
                         {
                             if (!String.IsNullOrEmpty(Model.Shipping))
                             {
-                            <span class="product-price">@Model.Shipping
-                            </span>
+                                <span class="product-price">@Model.Shipping
+                                </span>
                             }
                             else
                             {
-                            <span>@T("ShoppingCart.Totals.CalculatedDuringCheckout")</span>
+                                <span>@T("ShoppingCart.Totals.CalculatedDuringCheckout")</span>
                             }
                         }
                         else
@@ -61,6 +63,8 @@
                     </span>
                 </td>
             </tr>
+
+            @*
             @if (!String.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
             {
                 <tr>
