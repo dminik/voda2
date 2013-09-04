@@ -175,6 +175,8 @@
 						ManageInventoryMethodId = 1,
 						DisplayStockAvailability = true,
 						DisplayStockQuantity = true,
+						IsFreeShipping = true,
+						IsShipEnabled = true,
 					};
 			}
 

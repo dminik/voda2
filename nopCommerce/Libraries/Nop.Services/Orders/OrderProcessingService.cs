@@ -682,6 +682,12 @@ namespace Nop.Services.Orders
                 {
                     shoppingCartRequiresShipping = initialOrder.ShippingStatus != ShippingStatus.ShippingNotRequired;
                 }
+
+
+				// dminikk 
+	            customer.ShippingAddress = customer.BillingAddress;
+
+
                 Address shippingAddress = null;
                 string shippingMethodName = "", shippingRateComputationMethodSystemName = "";
                 if (shoppingCartRequiresShipping)
@@ -704,7 +710,7 @@ namespace Nop.Services.Orders
                         {
                             shippingMethodName = shippingOption.Name;
                             shippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName;
-                        }
+                        }						
                     }
                     else
                     {
