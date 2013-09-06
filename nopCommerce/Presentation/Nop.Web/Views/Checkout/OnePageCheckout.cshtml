@@ -144,15 +144,21 @@
                     <h2>@T("Checkout.ConfirmOrder")</h2>
                 </div>
                 <div id="checkout-step-confirm-order" class="step a-item" style="display: none;">
-                    <div id="checkout-confirm-order-load">
-                       
-                    </div>
                     <script type="text/javascript">
                         ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@(storeLocation)checkout/completed/');
                     </script>
-                    <div class="buttons" id="confirm-order-buttons-container">
+                    
+                    <div class="buttons buttons-back-link">
                         <p class="back-link">
-                            <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
+                            <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a>
+                        </p>
+                     </div>
+                    <div id="checkout-confirm-order-load">
+                       
+                    </div>
+                   
+                    <div class="buttons" id="confirm-order-buttons-container">
+                        
                         <input type="button" class="button-1 confirm-order-next-step-button product-box-add-to-cart-button" onclick="ConfirmOrder.save()" value="@T("Common.Confirm")" />
                         <span class="please-wait" id="confirm-order-please-wait" style="display: none;">@T("Checkout.SubmittingOrder")</span>
                     </div>

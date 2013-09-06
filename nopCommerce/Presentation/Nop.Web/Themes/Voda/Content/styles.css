@@ -410,7 +410,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .checkout-data .confirm-order{text-align:left;border:1px solid #dcdcdc;height:auto; margin-bottom:0;}
 .checkout-data .confirm-order .buttons{margin:10px;text-align:left;}
 .checkout-data .confirm-order .message-error{margin:10px;text-align:left;}
-.checkout-data .order-review-data{padding:10px;overflow:hidden;margin-bottom:20px;}
+.checkout-data .order-review-data{padding:10px;overflow:hidden;margin-bottom:20px;font-size: 15px;}
 .checkout-data .order-review-data ul{float:left;margin-left:15px;margin-right:15px;width:350px;}
 .checkout-data .order-review-data li{list-style:none;text-align:left;}
 .checkout-data .order-review-data li:first-child{margin-top:0;}
@@ -429,10 +429,11 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 
 
 /* ONE PAGE CHECKOUT */
+.opc .buttons-back-link{margin-top:0;padding-top:0em!important;}
 .opc .buttons{margin-top:0;padding-top:2em;}
 .opc .buttons .back-link{margin-bottom:10px;}
 .opc .buttons .back-link small{display:none;}
-.opc .buttons .back-link a{background:url(images/arrow-up.png) no-repeat left;padding-left:20px;}
+.opc .buttons .back-link a{background:url(images/arrow-up.png) no-repeat left;padding-left:20px;text-decoration: underline;}
 .opc .buttons.disabled button{display:none;}
 .opc .buttons .please-wait{height:21px;line-height:21px;}
 .opc .ul{list-style:disc outside;padding-left:18px;}
@@ -453,6 +454,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .opc .step{border:1px solid #dcdcdc;border-top:0;background:#fbfaf6 0 0 repeat-x;padding:15px 30px;position:relative;}
 .opc .step-title:after{display:block;content:".";clear:both;font-size:0;line-height:0;height:0;overflow:hidden;}
 .opc .order-summary-content .cart-footer{background:none!important;}
+.opc .shipping-info { display: none;}
 
 
 /* ORDER DETAILS */
