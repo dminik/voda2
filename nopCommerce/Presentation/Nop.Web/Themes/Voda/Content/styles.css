@@ -625,7 +625,7 @@ margin-left: 12px;
 .product-spec-filter .available-items .spec-title{ background: none;padding-left: 0;}
 .product-spec-filter .available-items .spec-values{}
 .product-spec-filter .available-items .spec-values .spec-value{ font-weight: normal;}
-.positive-quantity-filter{padding:8px 18px;}
+.positive-quantity-filter{ padding: 8px 0 0 17px;}
 
 
 

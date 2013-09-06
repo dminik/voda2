@@ -1097,6 +1097,7 @@ namespace Nop.Web.Controllers
             model.PagingFilteringContext.ViewMode = viewMode;
 
             //specs filters
+			model.PagingFilteringContext.PreparePositiveQuantityCount(productsAll);
 			model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(productsAll, alreadyFilteredSpecOptionIds,
                 filterableSpecificationAttributeOptionIds, 
                 _specificationAttributeService, _webHelper, _workContext);			

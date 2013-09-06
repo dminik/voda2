@@ -176,9 +176,10 @@
         else
         {
             <input type="checkbox" onclick=" displayAjaxLoading(true); window.location.href = '@Model.PagingFilteringContext.ShowWithPositiveQuantityUrl    ' "/>
-        }
+        }         
         <span>Доставка за час</span>                            
-        </div>
+        <span class="spec-value-exist-times"> (@Model.PagingFilteringContext.ShowWithPositiveQuantityCount шт.)</span>
+    </div>
 
         @*filtering Price*@
         @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)

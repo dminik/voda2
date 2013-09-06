@@ -41,6 +41,7 @@ namespace Nop.Web.Models.Catalog
         /// </summary>
         public SpecificationFilterModel SpecificationFilter { get; set; }
 
+		public int ShowWithPositiveQuantityCount { get; set; }
 		public bool ShowWithPositiveQuantity { get; set; }
 		public string ShowWithPositiveQuantityUrl { get; set; }
 
@@ -102,7 +103,13 @@ namespace Nop.Web.Models.Catalog
 
 			return bool.Parse(range);			
 		}
-        #region Nested classes
+
+	    public virtual void PreparePositiveQuantityCount(IEnumerable<Product> products)
+	    {
+		    this.ShowWithPositiveQuantityCount = products.Count(x => x.ProductVariants.First().AvailableForPreOrder == false);
+	    }
+
+	    #region Nested classes
 
         public partial class PriceRangeFilterModel : BaseNopModel
         {
@@ -340,7 +347,7 @@ namespace Nop.Web.Models.Catalog
                 ISpecificationAttributeService specificationAttributeService, 
                 IWebHelper webHelper,
                 IWorkContext workContext)
-            {
+            {	            
                 var allFilters = new List<SpecificationAttributeOptionFilter>();
                 if (filterableSpecificationAttributeOptionIds != null)
                     foreach (var saoId in filterableSpecificationAttributeOptionIds)
