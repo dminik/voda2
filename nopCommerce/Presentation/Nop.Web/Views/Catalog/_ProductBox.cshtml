@@ -33,7 +33,7 @@
         </div>
         
         <div class="stock">
-            @if (@Model.StockAvailability > 0)
+            @if (!@Model.AvailableForPreOrder)
             {
                 <div class="is-exist-product-box"><span>Доставим в течении часа</span></div>
             }           

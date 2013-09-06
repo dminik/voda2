@@ -172,11 +172,14 @@
 						CreatedOnUtc = DateTime.UtcNow,
 						OrderMinimumQuantity = 1,
 						OrderMaximumQuantity = 10,						
-						ManageInventoryMethodId = 1,
+						ManageInventoryMethodId = 0,
 						DisplayStockAvailability = true,
 						DisplayStockQuantity = true,
 						IsFreeShipping = true,
 						IsShipEnabled = true,
+						IsTaxExempt = true,
+						Price = 0,
+						AvailableForPreOrder = true,
 					};
 			}
 

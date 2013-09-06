@@ -308,6 +308,7 @@ namespace Nop.Web.Controllers
 	            if (singleOrDefault != null)
 	            {
 		            model.StockAvailability = singleOrDefault.StockQuantity;
+					model.AvailableForPreOrder = singleOrDefault.AvailableForPreOrder;
 	            }
 	            //price
                 if (preparePriceModel)
@@ -662,6 +663,7 @@ namespace Nop.Web.Controllers
             model.ShowGtin = _catalogSettings.ShowGtin;
             model.Gtin = productVariant.Gtin;
 	        model.StockAvailability = productVariant.StockQuantity.ToString(); // productVariant.FormatStockMessage(_localizationService);
+	        model.AvailableForPreOrder = productVariant.AvailableForPreOrder;
             model.PictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, 0, false);
             model.PictureModel.ImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, _mediaSettings.ProductVariantPictureSize, false);
             model.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);

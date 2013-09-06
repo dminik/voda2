@@ -74,7 +74,7 @@
                         <div class="shipping-free"><span>Доставка по Боярке<br/> 20 грн.</span></div>
                         
                         <div class="stock">
-                            @if (@Model.ProductVariantModels[0].StockAvailability != "0")
+                            @if (!@Model.ProductVariantModels[0].AvailableForPreOrder)
                             {
                                 <div class="is-exist"><span>Доставим в течении часа</span></div>
                             }

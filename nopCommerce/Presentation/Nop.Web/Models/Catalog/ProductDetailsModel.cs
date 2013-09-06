@@ -85,6 +85,7 @@ namespace Nop.Web.Models.Catalog
             public bool IsCurrentCustomerRegistered { get; set; }
             public bool DisplayBackInStockSubscription { get; set; }
             public bool BackInStockAlreadySubscribed { get; set; }
+			public bool AvailableForPreOrder { get; set; }
 
             public ProductVariantPriceModel ProductVariantPrice { get; set; }
 
@@ -93,8 +94,8 @@ namespace Nop.Web.Models.Catalog
             public PictureModel PictureModel { get; set; }
 
             public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
-
-            #region Nested Classes
+	       
+	        #region Nested Classes
 
             public partial class AddToCartModel : BaseNopModel
             {

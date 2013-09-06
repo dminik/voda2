@@ -50,20 +50,41 @@
 			string foundArticules = "";
 			int successCounter = 0;
 
-			_productService.ClearProductVariantsPrice();
+			_productService.ClearProductVariantsPrice(); // reset  all
 
-			foreach (var curProductLine in newSpecsOnly.ProductLineList)
+			// set from from priceList
+			foreach (var curProductLine in newSpecsOnly.ProductLineList) 
 			{
 				var currentProductVariant = _productService.GetProductVariantBySku(curProductLine.Articul);
 				if (currentProductVariant == null)
 				{
-					notFoundArticules += curProductLine.Articul + ", ";
+					notFoundArticules += curProductLine.Articul + ", "; // it is very new products, not exist in our shop db
 					continue;
 				}
 
-				currentProductVariant.StockQuantity = 0;
-				currentProductVariant.Price = curProductLine.PriceRaschet;
-				_productService.UpdateProductVariant(currentProductVariant);
+				var isNeedUpdate = false;
+
+				if (currentProductVariant.StockQuantity != 0)
+				{
+					currentProductVariant.StockQuantity = 0; 
+					isNeedUpdate = true;
+				}
+
+				if (currentProductVariant.Price != curProductLine.PriceRaschet)
+				{
+					currentProductVariant.Price = curProductLine.PriceRaschet;
+					isNeedUpdate = true;
+				}
+
+				if (currentProductVariant.AvailableForPreOrder != true)
+				{
+					currentProductVariant.AvailableForPreOrder = true;
+					isNeedUpdate = true;
+				}
+				
+				if (isNeedUpdate)
+					_productService.UpdateProductVariant(currentProductVariant);
+
 				successCounter++;
 				foundArticules += curProductLine.Articul + ", ";
 			}

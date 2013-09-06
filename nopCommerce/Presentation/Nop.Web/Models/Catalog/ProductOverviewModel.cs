@@ -18,6 +18,7 @@ namespace Nop.Web.Models.Catalog
         public string FullDescription { get; set; }
         public string SeName { get; set; }
 		public int StockAvailability { get; set; }
+		public bool AvailableForPreOrder { get; set; }
 
         //price
         public ProductPriceModel ProductPrice { get; set; }
@@ -25,8 +26,8 @@ namespace Nop.Web.Models.Catalog
         public PictureModel DefaultPictureModel { get; set; }
         //specification attributes
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
-
-		#region Nested Classes
+	    
+	    #region Nested Classes
 
         public partial class ProductPriceModel : BaseNopModel
         {

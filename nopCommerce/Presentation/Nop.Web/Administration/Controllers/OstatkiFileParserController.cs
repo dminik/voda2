@@ -50,6 +50,27 @@
 			string foundArticules = "";
 			int successCounter = 0;
 
+			/*
+			                     Товара нет нигде               Товар есть у поставщика               Товар в Боярке
+			 цена           0 (не показываем его на сайте)       есть                                       есть
+			 предзаказ              да                           да                                          нет
+		     доставка сейчас                     -               нет                                          да
+			 * 
+			 * 
+			 * Подправить:
+				Количество не отслеживаем ок
+				Отображение в 2 местах ок
+				При импорте, парсинге в двух файлах ок
+				Слово Заказать ок
+				Фильтр наличия - подправить хранимку
+
+			*/
+
+
+
+
+
+
 			foreach (var curProductLine in newSpecsOnly.ProductLineList)
 			{
 				var currentProductVariant = _productService.GetProductVariantBySku(curProductLine.Articul);
@@ -59,9 +80,29 @@
 					continue;
 				}
 
-				currentProductVariant.StockQuantity = curProductLine.Amount;
-				currentProductVariant.Price = curProductLine.Price;
-				_productService.UpdateProductVariant(currentProductVariant);
+				var isNeedUpdate = false;
+
+				if (currentProductVariant.StockQuantity != curProductLine.Amount)
+				{
+					currentProductVariant.StockQuantity = curProductLine.Amount;
+					isNeedUpdate = true;
+				}
+
+				if (currentProductVariant.Price != curProductLine.Price)
+				{
+					currentProductVariant.Price = curProductLine.Price;
+					isNeedUpdate = true;
+				}
+
+				if (currentProductVariant.AvailableForPreOrder != false)
+				{
+					currentProductVariant.AvailableForPreOrder = false;
+					isNeedUpdate = true;
+				}
+								
+				if(isNeedUpdate)
+					_productService.UpdateProductVariant(currentProductVariant);
+
 				successCounter++;
 				foundArticules += curProductLine.Articul + ", ";
 			}
