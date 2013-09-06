@@ -49,7 +49,7 @@
     <div class="inputs">
         @Html.LabelFor(model => model.Email, new { }, ":")
             @Html.EditorFor(model => model.Email)
-        @Html.RequiredHint()
+        @*@Html.RequiredHint()*@
         @Html.ValidationMessageFor(model => model.Email)
     </div>
     @if (Model.CompanyEnabled)
