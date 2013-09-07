@@ -610,7 +610,7 @@ margin-left: 12px;
 .product-filters{width:auto;margin-bottom:0px; padding:0px 10px 10px 10px;}
 .product-filters .filter-title{font-weight:700;padding-left:10px;}
 .product-filters .filter-title strong{display:block;logoline-height:1.3em;overflow:hidden;}
-.product-filters .filter-content{padding:0px 10px;}
+.product-filters .filter-content{padding:0px 0px;}
 .price-range-filter{padding:9px 0 0 11px;}
 .price-range-filter .filter-title{background:url(images/ico-arrow-r.gif) no-repeat top left;padding-left:10px;}
 .price-range-filter ul{margin:0;padding:0;}
@@ -656,6 +656,10 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 .clear-list{ text-decoration: underline;text-align: right; font-size: 13px;underline;color: blue;}
 
 .compare-products, .compare-list-count-block a { color: #93890e!important;}
+
+.spec-check-control{ margin-left: 1px; vertical-align: top;}
+.spec-check-control-name{margin-left: 1px;}
+.spec-values{ margin-bottom: 0px;}
 
 /* LOGIN */
 .login-page{}

@@ -411,7 +411,7 @@ namespace Nop.Web.Models.Catalog
                     {
                         var item = new SpecificationFilterItem();
                         item.SpecificationAttributeName = x.SpecificationAttributeName;
-                        item.SpecificationAttributeOptionName = x.SpecificationAttributeOptionName;
+						item.SpecificationAttributeOptionName = RemoveHtmlTags(x.SpecificationAttributeOptionName);
 
 						//filter URL						
 						var alreadyFilteredOptionIds = GetAlreadyFilteredSpecOptionIds(webHelper);
@@ -430,7 +430,7 @@ namespace Nop.Web.Models.Catalog
                     {
                         var item = new SpecificationFilterItem();
                         item.SpecificationAttributeName = x.SpecificationAttributeName;
-                        item.SpecificationAttributeOptionName = x.SpecificationAttributeOptionName;
+						item.SpecificationAttributeOptionName = RemoveHtmlTags(x.SpecificationAttributeOptionName);
 						item.SpecificationAttributeOptionExistTimesInFilteredProducts = x.SpecificationAttributeOptionExistTimesInFilteredProducts;
 
                         //filter URL						
@@ -458,6 +458,35 @@ namespace Nop.Web.Models.Catalog
                 }
             }
 			
+			private string RemoveHtmlTags(string str)
+			{
+				/*
+						<p>С QWERTY-клавиатурой</p>
+						<p>Моноблок</p>
+				  
+					replace to 
+				  
+						С QWERTY-клавиатурой,
+						Моноблок
+				 */
+
+				var result = "";
+
+				var strArr = str.Split('/');
+				
+				foreach (string s in strArr)
+				{															
+					result += s.Replace("<p>", "").Replace("<", "").Replace("p>", "");
+					result += ",";
+				}
+
+				result = result.TrimEnd(',');
+
+				result = result.Replace(",", "<br/>");
+
+				return result;
+			}
+
 			private int GetSpecificationAttributeOptionExistTimesInFilteredProducts(IEnumerable<Product> products, int specAttrOptId)
 	        {
 		        return products.Count(product => product.ProductSpecificationAttributes.Any(x => x.SpecificationAttributeOptionId == specAttrOptId));

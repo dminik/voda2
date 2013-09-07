@@ -24,7 +24,7 @@
                         <div>
                             <strong>@(spec.SpecificationAttributeName):</strong><br/>
                             <input type="checkbox" checked="checked" onclick="displayAjaxLoading(true); window.location.href = '@spec.FilterUrl    '"/>
-                            <span>@spec.SpecificationAttributeOptionName</span>                            
+                            <span>@Html.Raw(@spec.SpecificationAttributeOptionName)</span>                            
                         </div>
                     }
 
@@ -49,11 +49,21 @@
 
                             @foreach (var spec in groupList)
                             {
-                                <div class="spec-values">
-                                    <input type="checkbox" onclick="displayAjaxLoading(true); window.location.href = '@spec.FilterUrl    '"/>
-                                    <span class="spec-value">@spec.SpecificationAttributeOptionName</span>
-                                    <span class="spec-value-exist-times"> (@spec.SpecificationAttributeOptionExistTimesInFilteredProducts шт.)</span>
-                                </div>
+                                <table class="spec-values">
+                                    
+                                    <tr>
+                                        <td class="spec-check-control">
+                                            <input type="checkbox" onclick="displayAjaxLoading(true); window.location.href = '@spec.FilterUrl    '"/>
+                                        </td>
+
+                                        <td class="spec-check-control-name">
+                                            <span class="spec-value">@Html.Raw(@spec.SpecificationAttributeOptionName)</span>
+                                            <span class="spec-value-exist-times"> (@spec.SpecificationAttributeOptionExistTimesInFilteredProducts шт.)</span>
+                                        </td>
+                                    
+                                    </tr>
+
+                                </table>
                             }
                         </ul> 
                     }
