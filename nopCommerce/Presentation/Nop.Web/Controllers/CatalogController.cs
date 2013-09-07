@@ -337,7 +337,8 @@ namespace Nop.Web.Controllers
                                 {
                                     //calculate for the maximum quantity (in case if we have tier prices)
                                     decimal? minimalPrice = null;
-                                    var productVariant = _priceCalculationService.GetProductVariantWithMinimalPrice(productVariants, _workContext.CurrentCustomer, true, int.MaxValue, out minimalPrice);
+	                                var isIncludeDiscont = false;
+									var productVariant = _priceCalculationService.GetProductVariantWithMinimalPrice(productVariants, _workContext.CurrentCustomer, isIncludeDiscont, int.MaxValue, out minimalPrice);
 
                                     if (!productVariant.CustomerEntersPrice)
                                     {
