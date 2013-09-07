@@ -646,10 +646,16 @@ div.product-filters div.filter-content div.available-items ul.group li.title{ ma
 .compare-products-page{}
 .compare-products-page .page-title{}
 .compare-products-page .page-body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
+.compare-products-table{font-size: 13px;}
 .compare-products-table{margin-top:10px;width:100%;border:0px;border-collapse:collapse;border-spacing:0;empty-cells:show;}
 .compare-products-table tr.product-name{background-color:#CCC;font-weight:700;}
 .compare-products-table td{border:1px solid #dcdcdc;padding:3px;vertical-align:top;}
+.compare-products-table .short-description td.a-left { padding-left: 20px!important;}
+.compare-products-table .specification td p{ margin: 3px;}
+.compare-products-table .product-name a{ text-decoration: underline;color: blue;}
+.clear-list{ text-decoration: underline;text-align: right; font-size: 13px;underline;color: blue;}
 
+.compare-products, .compare-list-count-block a { color: #93890e!important;}
 
 /* LOGIN */
 .login-page{}

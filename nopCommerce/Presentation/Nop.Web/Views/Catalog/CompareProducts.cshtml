@@ -109,7 +109,7 @@
                                 <td style="width: @columnWidth;" class="a-center" product-id="@product.Id">
                                     @if (!String.IsNullOrEmpty(specValue))
                                     {
-                                        @specValue
+                                        @Html.Raw(@specValue)
                                     }
                                     else
                                     {
