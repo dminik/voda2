@@ -178,6 +178,17 @@ namespace Nop.Services.Catalog
             return specificationAttributeOptions;
         }
 
+		
+
+		public virtual IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttributeList(IEnumerable<int> specificationAttributeOptionIdList)
+		{
+			var query = from sao in _specificationAttributeOptionRepository.Table						
+						where specificationAttributeOptionIdList.Contains(sao.Id)
+						select sao;
+			var specificationAttributeOptions = query.ToList();
+			return specificationAttributeOptions;
+		}
+
         /// <summary>
         /// Deletes a specification attribute option
         /// </summary>

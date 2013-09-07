@@ -347,37 +347,41 @@ namespace Nop.Web.Models.Catalog
                 ISpecificationAttributeService specificationAttributeService, 
                 IWebHelper webHelper,
                 IWorkContext workContext)
-            {	            
+            {	            				
                 var allFilters = new List<SpecificationAttributeOptionFilter>();
-                if (filterableSpecificationAttributeOptionIds != null)
-                    foreach (var saoId in filterableSpecificationAttributeOptionIds)
-                    {
-                        var sao = specificationAttributeService.GetSpecificationAttributeOptionById(saoId);
-                        if (sao != null)
-                        {
-                            var sa = sao.SpecificationAttribute;
-                            if (sa != null)
-                            {
-								int existTimes = GetSpecificationAttributeOptionExistTimesInFilteredProducts(products, sao.Id);
-	                           
-		                        allFilters.Add(
-			                        new SpecificationAttributeOptionFilter
-				                        {
-					                        SpecificationAttributeId = sa.Id,
-					                        SpecificationAttributeName =
-						                        sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
-					                        SpecificationAttributeDisplayOrder = sa.DisplayOrder,
-					                        SpecificationAttributeOptionId = sao.Id,
-					                        SpecificationAttributeOptionName =
-						                        sao.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
-					                        SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder,
-					                        SpecificationAttributeOptionExistTimesInFilteredProducts = existTimes
-				                        });	                            
-                            }
-                        }
-                    }
 
-                //sort loaded options
+	            if (filterableSpecificationAttributeOptionIds != null)
+	            {		            
+		            // Для оптимизации нужно вытащить сразу все спецификации и их значения 
+		            var allSpecsAttribs = specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeList(filterableSpecificationAttributeOptionIds);
+
+		            foreach (var sao in allSpecsAttribs) // цикл по айдишникам значений
+		            {
+			            // var sao = specificationAttributeService.GetSpecificationAttributeOptionById(saoId); // вытаскиваем из БД полное значение
+			            if (sao != null)
+			            {
+				            var sa = sao.SpecificationAttribute; // вытаскиваем из БД спецификацию
+				            if (sa != null)
+				            {
+					            int existTimes = GetSpecificationAttributeOptionExistTimesInFilteredProducts(products, sao.Id);
+
+					            allFilters.Add(
+						            new SpecificationAttributeOptionFilter
+							            {
+								            SpecificationAttributeId = sa.Id,
+								            SpecificationAttributeName = sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+								            SpecificationAttributeDisplayOrder = sa.DisplayOrder,
+								            SpecificationAttributeOptionId = sao.Id,
+								            SpecificationAttributeOptionName = sao.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+								            SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder,
+								            SpecificationAttributeOptionExistTimesInFilteredProducts = existTimes
+							            });
+				            }
+			            }
+		            } // end for
+	            }
+
+	            //sort loaded options
                 allFilters = allFilters.OrderBy(saof => saof.SpecificationAttributeDisplayOrder)
                     .ThenBy(saof => saof.SpecificationAttributeName)
                     .ThenBy(saof => saof.SpecificationAttributeOptionDisplayOrder)
