@@ -83,6 +83,15 @@
     <Report>
       <Path>Nop130908.vsp</Path>
     </Report>
+    <Report>
+      <Path>Nop130908(1).vsp</Path>
+    </Report>
+    <Report>
+      <Path>Nop130908(2).vsp</Path>
+    </Report>
+    <Report>
+      <Path>Nop130908(3).vsp</Path>
+    </Report>
   </Reports>
   <Launches>
     <ProjBinary>

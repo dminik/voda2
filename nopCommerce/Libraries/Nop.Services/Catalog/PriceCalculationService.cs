@@ -302,6 +302,7 @@ namespace Nop.Services.Catalog
             }
 
             //discount + additional charge
+	        includeDiscounts = false; // dminikk perfomance optimization
             if (includeDiscounts)
             {
                 Discount appliedDiscount = null;
