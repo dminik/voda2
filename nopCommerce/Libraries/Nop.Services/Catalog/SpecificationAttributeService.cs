@@ -8,11 +8,26 @@ using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
 {
-    /// <summary>
+	using System.Data;
+
+	using Nop.Core;
+	using Nop.Data;
+
+	/// <summary>
     /// Specification attribute service
     /// </summary>
-    public partial class SpecificationAttributeService : ISpecificationAttributeService
+    public partial class SpecificationAttributeService : BaseEntity, ISpecificationAttributeService
     {
+		#region Nested classes
+
+		public class SpecificationAttributeOptionWithCount : BaseEntity
+		{
+			public int SpecificationAttributeOptionId { get; set; }
+			public int ProductCount { get; set; }
+		}
+
+		#endregion
+
         #region Constants
 
         /// <summary>
@@ -37,30 +52,37 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
+		private readonly IDataProvider _dataProvider;
+		private readonly IDbContext2 _dbContext;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="specificationAttributeRepository">Specification attribute repository</param>
-        /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
-        /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
-        /// <param name="eventPublisher">Event published</param>
-        public SpecificationAttributeService(ICacheManager cacheManager,
+		/// <summary>
+		/// Ctor
+		/// </summary>
+		/// <param name="cacheManager">Cache manager</param>
+		/// <param name="specificationAttributeRepository">Specification attribute repository</param>
+		/// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
+		/// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
+		/// <param name="eventPublisher">Event published</param>
+		/// <param name="dataProvider">data Provider</param>
+		public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+			IDataProvider dataProvider,
+			IDbContext2 dbContext)
         {
             _cacheManager = cacheManager;
             _specificationAttributeRepository = specificationAttributeRepository;
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             _productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             _eventPublisher = eventPublisher;
+			_dataProvider = dataProvider;
+			_dbContext = dbContext;
         }
 
         #endregion
@@ -178,8 +200,6 @@ namespace Nop.Services.Catalog
             return specificationAttributeOptions;
         }
 
-		
-
 		public virtual IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttributeList(IEnumerable<int> specificationAttributeOptionIdList)
 		{
 			var query = from sao in _specificationAttributeOptionRepository.Table						
@@ -239,6 +259,96 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(specificationAttributeOption);
         }
+
+		/// <summary>
+		/// Search products count
+		/// </summary>		
+		public virtual IEnumerable<SpecificationAttributeOptionWithCount> SearchProductsCount(
+			out int positiveQuantityCount,
+			IList<int> categoryIds = null,			
+			bool? featuredProducts = null,
+			decimal? priceMin = null,
+			decimal? priceMax = null,			
+			IList<int> filteredSpecs = null,			
+			bool showWithPositiveQuantity = false)
+		{						
+			//validate "categoryIds" parameter
+			if (categoryIds != null && categoryIds.Contains(0))
+				categoryIds.Remove(0);
+
+			//pass category identifiers as comma-delimited string
+			string commaSeparatedCategoryIds = "";
+			if (categoryIds != null)
+			{
+				for (int i = 0; i < categoryIds.Count; i++)
+				{
+					commaSeparatedCategoryIds += categoryIds[i].ToString();
+					if (i != categoryIds.Count - 1)
+					{
+						commaSeparatedCategoryIds += ",";
+					}
+				}
+			}
+				
+			string commaSeparatedSpecIds = "";
+			if (filteredSpecs != null)
+			{
+				((List<int>)filteredSpecs).Sort();
+				for (int i = 0; i < filteredSpecs.Count; i++)
+				{
+					commaSeparatedSpecIds += filteredSpecs[i].ToString();
+					if (i != filteredSpecs.Count - 1)
+					{
+						commaSeparatedSpecIds += ",";
+					}
+				}
+			}
+				
+			//prepare parameters
+			var pCategoryIds = _dataProvider.GetParameter();
+			pCategoryIds.ParameterName = "CategoryIds";
+			pCategoryIds.Value = (object)commaSeparatedCategoryIds;
+			pCategoryIds.DbType = DbType.String;
+						
+			var pPriceMin = _dataProvider.GetParameter();
+			pPriceMin.ParameterName = "PriceMin";
+			pPriceMin.Value = priceMin.HasValue ? (object)priceMin.Value : DBNull.Value;
+			pPriceMin.DbType = DbType.Decimal;
+
+			var pPriceMax = _dataProvider.GetParameter();
+			pPriceMax.ParameterName = "PriceMax";
+			pPriceMax.Value = priceMax.HasValue ? (object)priceMax.Value : DBNull.Value;
+			pPriceMax.DbType = DbType.Decimal;			
+
+			var pFilteredSpecs = _dataProvider.GetParameter();
+			pFilteredSpecs.ParameterName = "FilteredSpecs";
+			pFilteredSpecs.Value = (object)commaSeparatedSpecIds;
+			pFilteredSpecs.DbType = DbType.String;
+
+			var pShowWithPositiveQuantity = _dataProvider.GetParameter();
+			pShowWithPositiveQuantity.ParameterName = "ShowWithPositiveQuantity";
+			pShowWithPositiveQuantity.Value = showWithPositiveQuantity;
+			pShowWithPositiveQuantity.DbType = DbType.Boolean;
+
+			var pPositiveQuantityCount = _dataProvider.GetParameter();
+            pPositiveQuantityCount.ParameterName = "PositiveQuantityCount";
+            pPositiveQuantityCount.Direction = ParameterDirection.Output;
+            pPositiveQuantityCount.DbType = DbType.Int32;
+
+                //invoke stored procedure
+			var products = _dbContext.ExecuteStoredProcedureList2<SpecificationAttributeOptionWithCount>(
+				"ProductLoadAllPaged2",
+				pCategoryIds,				
+				pPriceMin,
+				pPriceMax,
+				pFilteredSpecs,
+				pShowWithPositiveQuantity,
+				pPositiveQuantityCount);
+
+			positiveQuantityCount = (pPositiveQuantityCount.Value != DBNull.Value) ? Convert.ToInt32(pPositiveQuantityCount.Value) : 0;
+			
+			return products;							
+		}
 
         #endregion
 

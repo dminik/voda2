@@ -79,6 +79,15 @@ namespace Nop.Services.Catalog
 		/// <param name="specificationAttributeOption">The specification attribute option</param>
 		void UpdateSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption);
 
+		IEnumerable<SpecificationAttributeService.SpecificationAttributeOptionWithCount> SearchProductsCount(
+			out int positiveQuantityCount,
+			IList<int> categoryIds = null,
+			bool? featuredProducts = null,
+			decimal? priceMin = null,
+			decimal? priceMax = null,
+			IList<int> filteredSpecs = null,
+			bool showWithPositiveQuantity = false);
+
 		#endregion
 
 		#region Product specification attribute

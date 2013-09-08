@@ -15,7 +15,7 @@ namespace Nop.Data
     /// <summary>
     /// Object context
     /// </summary>
-    public class NopObjectContext : DbContext, IDbContext
+	public class NopObjectContext : DbContext, IDbContext, IDbContext2
     {
         public NopObjectContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
@@ -171,6 +171,72 @@ namespace Nop.Data
 
             }
         }
+
+		public IList<TEntity> ExecuteStoredProcedureList2<TEntity>(string commandText, params object[] parameters) where TEntity : new()
+		{
+			//HACK: Entity Framework Code First doesn't support doesn't support output parameters
+			//That's why we have to manually create command and execute it.
+			//just wait until EF Code First starts support them
+			//
+			//More info: http://weblogs.asp.net/dwahlin/archive/2011/09/23/using-entity-framework-code-first-with-stored-procedures-that-have-output-parameters.aspx
+
+			bool hasOutputParameters = false;
+			if (parameters != null)
+			{
+				foreach (var p in parameters)
+				{
+					var outputP = p as DbParameter;
+					if (outputP == null)
+						continue;
+
+					if (outputP.Direction == ParameterDirection.InputOutput ||
+						outputP.Direction == ParameterDirection.Output)
+						hasOutputParameters = true;
+				}
+			}
+
+
+
+			var context = ((IObjectContextAdapter)(this)).ObjectContext;
+			if (!hasOutputParameters)
+			{				
+				var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();				
+				return result;
+			}
+			else
+			{
+				//var connection = context.Connection;
+				var connection = this.Database.Connection;
+				//Don't close the connection after command execution
+
+
+				//open the connection for use
+				if (connection.State == ConnectionState.Closed)
+					connection.Open();
+				//create a command object
+				using (var cmd = connection.CreateCommand())
+				{
+					//command to execute
+					cmd.CommandText = commandText;
+					cmd.CommandType = CommandType.StoredProcedure;
+
+					// move parameters to command object
+					if (parameters != null)
+						foreach (var p in parameters)
+							cmd.Parameters.Add(p);
+
+					//database call
+					var reader = cmd.ExecuteReader();
+					//return reader.DataReaderToObjectList<TEntity>();
+					var result = context.Translate<TEntity>(reader).ToList();
+					
+					//close up the reader, we're done saving results
+					reader.Close();
+					return result;
+				}
+
+			}
+		}
 
         /// <summary>
         /// Creates a raw SQL query that will return elements of the given generic type.  The type can be any type that has properties that match the names of the columns returned from the query, or can be a simple primitive type. The type does not have to be an entity type. The results of this query are never tracked by the context even if the type of object returned is an entity type.

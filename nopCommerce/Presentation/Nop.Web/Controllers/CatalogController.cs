@@ -1080,26 +1080,30 @@ namespace Nop.Web.Controllers
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize,
 				showWithPositiveQuantity: showWithPositiveQuantity);
-
-			var productsAll = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
-				categoryIds: categoryIds,
-				storeId: _storeContext.CurrentStore.Id,
-				featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
-				priceMin: minPriceConverted, priceMax: maxPriceConverted,
-				filteredSpecs: alreadyFilteredSpecOptionIds,
-				orderBy: (ProductSortingEnum)command.OrderBy,
-				pageIndex: 0,
-				pageSize: 500,
-				showWithPositiveQuantity: showWithPositiveQuantity);
-
+			
             model.Products = PrepareProductOverviewModels(products).ToList();
-	        model.ProductsTotalAmount = productsAll.Count;
+	        model.ProductsTotalAmount = products.TotalCount;
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = viewMode;
 
             //specs filters
-			model.PagingFilteringContext.PreparePositiveQuantityCount(productsAll);
-			model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(productsAll, alreadyFilteredSpecOptionIds,
+
+	        int positiveQuantityCount; // dminikk
+			var allOptionsCountTbl = _specificationAttributeService.SearchProductsCount(
+				out positiveQuantityCount,
+				categoryIds,
+				_catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
+				minPriceConverted,
+				maxPriceConverted,
+				alreadyFilteredSpecOptionIds,
+				showWithPositiveQuantity);
+
+			model.PagingFilteringContext.ShowWithPositiveQuantityCount = positiveQuantityCount;
+
+			model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(
+				products.TotalCount,
+				allOptionsCountTbl,
+				alreadyFilteredSpecOptionIds,
                 filterableSpecificationAttributeOptionIds, 
                 _specificationAttributeService, _webHelper, _workContext);			
 

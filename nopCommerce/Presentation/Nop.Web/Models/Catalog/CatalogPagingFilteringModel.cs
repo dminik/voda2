@@ -103,12 +103,7 @@ namespace Nop.Web.Models.Catalog
 
 			return bool.Parse(range);			
 		}
-
-	    public virtual void PreparePositiveQuantityCount(IEnumerable<Product> products)
-	    {
-		    this.ShowWithPositiveQuantityCount = products.Count(x => x.ProductVariants.First().AvailableForPreOrder == false);
-	    }
-
+	   
 	    #region Nested classes
 
         public partial class PriceRangeFilterModel : BaseNopModel
@@ -342,7 +337,10 @@ namespace Nop.Web.Models.Catalog
                 return result;
             }
 
-            public virtual void PrepareSpecsFilters(IPagedList<Product> products, IList<int> alreadyFilteredSpecOptionIds,
+			public virtual void PrepareSpecsFilters(
+				int productsTotalAmount,
+				IEnumerable<SpecificationAttributeService.SpecificationAttributeOptionWithCount> allOptionsCountTbl,
+				IList<int> alreadyFilteredSpecOptionIds,
                 IList<int> filterableSpecificationAttributeOptionIds,
                 ISpecificationAttributeService specificationAttributeService, 
                 IWebHelper webHelper,
@@ -356,14 +354,13 @@ namespace Nop.Web.Models.Catalog
 		            var allSpecsAttribs = specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeList(filterableSpecificationAttributeOptionIds);
 
 		            foreach (var sao in allSpecsAttribs) // цикл по айдишникам значений
-		            {
-			            // var sao = specificationAttributeService.GetSpecificationAttributeOptionById(saoId); // вытаскиваем из БД полное значение
+		            {			            
 			            if (sao != null)
 			            {
 				            var sa = sao.SpecificationAttribute; // вытаскиваем из БД спецификацию
 				            if (sa != null)
 				            {
-					            int existTimes = GetSpecificationAttributeOptionExistTimesInFilteredProducts(products, sao.Id);
+								int existTimes = GetSpecificationAttributeOptionExistTimesInFilteredProducts(allOptionsCountTbl, sao.Id);
 
 					            allFilters.Add(
 						            new SpecificationAttributeOptionFilter
@@ -402,7 +399,7 @@ namespace Nop.Web.Models.Catalog
                         continue;
 
                     //else add it
-					if (products.Count() != saof.SpecificationAttributeOptionExistTimesInFilteredProducts)	                            
+					if (productsTotalAmount != saof.SpecificationAttributeOptionExistTimesInFilteredProducts)	                            
 						notFilteredOptions.Add(saof);
                 }
 
@@ -491,10 +488,15 @@ namespace Nop.Web.Models.Catalog
 				return result;
 			}
 
-			private int GetSpecificationAttributeOptionExistTimesInFilteredProducts(IEnumerable<Product> products, int specAttrOptId)
-	        {
-		        return products.Count(product => product.ProductSpecificationAttributes.Any(x => x.SpecificationAttributeOptionId == specAttrOptId));
-	        }
+			/// <summary>
+			/// Вместо products - нужно получить все AttrOptionId 
+			/// </summary>						
+			private int GetSpecificationAttributeOptionExistTimesInFilteredProducts(
+				IEnumerable<SpecificationAttributeService.SpecificationAttributeOptionWithCount> tbl, 
+				int specAttrOptId)
+			{
+				return tbl.Where(x => x.SpecificationAttributeOptionId == specAttrOptId).Select(s => s.ProductCount).FirstOrDefault();
+			}
 
 	        #endregion
 

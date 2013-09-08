@@ -107,10 +107,12 @@ namespace Nop.Web.Framework
                 dataProvider.InitConnectionFactory();
 
                 builder.Register<IDbContext>(c => new NopObjectContext(dataProviderSettings.DataConnectionString)).InstancePerHttpRequest();
+				builder.Register<IDbContext2>(c => new NopObjectContext(dataProviderSettings.DataConnectionString)).InstancePerHttpRequest();
             }
             else
             {
                 builder.Register<IDbContext>(c => new NopObjectContext(dataSettingsManager.LoadSettings().DataConnectionString)).InstancePerHttpRequest();
+				builder.Register<IDbContext2>(c => new NopObjectContext(dataSettingsManager.LoadSettings().DataConnectionString)).InstancePerHttpRequest();
             }
 
 
