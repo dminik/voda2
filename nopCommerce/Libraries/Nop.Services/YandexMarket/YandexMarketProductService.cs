@@ -80,7 +80,10 @@ namespace Nop.Services.YandexMarket
 		/// </summary>
 		/// <returns>Tax rates</returns>
 		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, bool isNotImportedOnly = false, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false)
-		{
+		{			
+			if(categoryId == -1)
+				return new PagedList<YandexMarketProductRecord>(new List<YandexMarketProductRecord>(), 0, 1);
+			
 			string key = string.Format(withFantoms ? YANDEXMARKETProduct_BY_CATEGORY_KEY_WITH_FANTOMS : YANDEXMARKETProduct_BY_CATEGORY_KEY, pageIndex, pageSize, categoryId, isNotImportedOnly);
 
 			var result = this._cacheManager.Get(key, () =>
@@ -107,7 +110,10 @@ namespace Nop.Services.YandexMarket
 					query = query.Where(x => allShopProductsArtikuls.Contains(x.Articul) == false);
 				}
 
-				var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);				
+				var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);
+
+				foreach (var curRecord in records)				
+					curRecord.FormatMe();
 				
 				return records;
 			});
@@ -125,7 +131,7 @@ namespace Nop.Services.YandexMarket
 			if (productId == 0)
 				return null;
 
-			return this._productRepository.GetById(productId);
+			return this._productRepository.GetById(productId).FormatMe();
 		}
 
 		/// <summary>

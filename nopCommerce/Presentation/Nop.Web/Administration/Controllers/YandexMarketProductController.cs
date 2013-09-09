@@ -64,7 +64,7 @@
 		[HttpPost]
 		[GridAction(EnableCustomBinding = true)]
 		public ActionResult ListProduct(bool isNotImportedOnly, int parserCategoryId, GridCommand command)
-		{
+		{			
 			var records = _yandexMarketProductService.GetByCategory(parserCategoryId, isNotImportedOnly, command.Page - 1, command.PageSize);
 			
 			var productsModel = records.Select(
@@ -202,19 +202,28 @@
 			}
 			else
 			{
-				_productService.InsertProduct(product);
-				variant.ProductId = product.Id;
-				_productService.InsertProductVariant(variant);
+				try
+				{				
+					_productService.InsertProduct(product);
+					variant.ProductId = product.Id;
+					_productService.InsertProductVariant(variant);
 				
-				SaveCategory(shopCategoryId, product.Id);
-				SaveSpecList(product, yaProduct.Specifications);
+					SaveCategory(shopCategoryId, product.Id);
+					SaveSpecList(product, yaProduct.Specifications);
 
 
-				SavePictures(product, yaProduct.ImageUrl_1);
+					SavePictures(product, yaProduct.ImageUrl_1);
 
-				//search engine name
-				var seName = product.ValidateSeName(product.Name, product.Name, true);
-				_urlRecordService.SaveSlug(product, seName, 0);
+					//search engine name
+					var seName = product.ValidateSeName(product.Name, product.Name, true);
+					_urlRecordService.SaveSlug(product, seName, 0);
+				}
+				catch 
+				{
+					if (product.Id > 0)
+						_productService.DeleteProduct(product);
+					throw;
+				}
 			}
 		}
 

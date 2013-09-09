@@ -74,14 +74,16 @@
 				return this.mFormatter ?? (this.mFormatter = FormatterBase.Create(this.Url));
 			}
 		}
-		
-		public void FormatMe()
+
+		public YandexMarketProductRecord FormatMe()
 		{
-			if (IsFormatted)			
-				return;
+			if (IsFormatted)
+				return this;
 			
 			this.Formatter.Format(this);
 			this.IsFormatted = true;
+
+			return this;
 		}
 
 
