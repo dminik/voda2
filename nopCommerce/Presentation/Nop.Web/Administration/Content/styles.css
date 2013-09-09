@@ -181,4 +181,5 @@ body .t-button{font-weight:400;color:inherit!important;text-decoration:none;}
 .parser-images img {
 	height: 115px; 
 	border: 1px solid rgb(70, 180, 89)!important; 
+	max-width: 199px;
 }

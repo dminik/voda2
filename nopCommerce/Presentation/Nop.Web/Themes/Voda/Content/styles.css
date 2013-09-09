@@ -1359,3 +1359,5 @@ pre{white-space:pre-wrap;white-space:normal;word-wrap:break-word;}
 }
 
 .yandex-metrika { position: relative;bottom: 2px; }
+
+.parser-images{ max-width: 80px;}

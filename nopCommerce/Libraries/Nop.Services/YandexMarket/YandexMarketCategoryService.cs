@@ -145,7 +145,7 @@ namespace Nop.Services.YandexMarket
 		public List<SelectListItem> GetCategoriesForDDL()
 		{
 			var result = new List<SelectListItem>();
-			result.Add(new SelectListItem() { Text = "---", Value = "0" });
+			result.Add(new SelectListItem() { Text = "Все", Value = "0" });
 
 			var categories = GetAll();
 			var ddlList = categories.Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString() }).ToList();

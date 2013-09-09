@@ -87,17 +87,21 @@ namespace Nop.Services.YandexMarket
 			{
 				IQueryable<YandexMarketProductRecord> query = 
 								   from tr in this._productRepository.Table
-				                   orderby tr.Name
-				                   where tr.YandexMarketCategoryRecordId == categoryId 								
+				                   orderby tr.Name				                   						
 				                   select tr;
 				
 				if (!withFantoms)				
 					query = query.Where(tr => tr.Name != "NotInPriceList");
+
+				if (categoryId != 0)
+					query = query.Where(tr => tr.YandexMarketCategoryRecordId == categoryId);
 				
+
 
 				if (isNotImportedOnly)
 				{					
-					var shopCategoryId = _yandexMarketCategoryService.GetById(categoryId).ShopCategoryId;
+					var shopCategory = _yandexMarketCategoryService.GetById(categoryId);
+					var shopCategoryId = shopCategory != null ? shopCategory.ShopCategoryId : 0;
 					var allShopProductsArtikuls = _productService.SearchProductVariants(shopCategoryId, 0, 0, "", false, 0, 2147483647).Select(x => x.Sku);
 
 					query = query.Where(x => allShopProductsArtikuls.Contains(x.Articul) == false);

@@ -140,12 +140,14 @@
                 @Html.NopLabelFor(model => model.ParserCategoryId):
                 @Html.DropDownListFor(model => model.ParserCategoryId, Model.AvailableParserCategories)
                 @Html.ValidationMessageFor(model => model.ParserCategoryId)
-            </td>
-            <td class="adminData">
+
                 <div>
                     @Html.CheckBoxFor(model => model.IsNotImportedOnly)
                     @Html.LabelFor(model => model.IsNotImportedOnly)
-                </div>   
+                </div> 
+            </td>
+            <td class="adminData">
+                  
             </td>
             
 

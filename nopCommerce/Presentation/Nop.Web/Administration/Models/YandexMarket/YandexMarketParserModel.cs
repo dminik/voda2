@@ -14,7 +14,7 @@
 			this.AvailableShopCategories = new List<SelectListItem>();	
 			this.AvailableParserCategories = new List<SelectListItem>();			
 			this.ParseNotMoreThen = 2;
-			this.IsTest = true;			
+			this.IsTest = false;			
 			this.ShopCategoryId = 0;
 			ParserCategoryId = 1;
 			IsClearCategoryProductsBeforeParsing = false;
