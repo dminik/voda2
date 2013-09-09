@@ -70,9 +70,9 @@
 					isNeedUpdate = true;
 				}
 
-				if (currentProductVariant.Price != curProductLine.PriceRaschet)
+				if (currentProductVariant.Price != curProductLine.Price)
 				{
-					currentProductVariant.Price = curProductLine.PriceRaschet;
+					currentProductVariant.Price = curProductLine.Price;
 					isNeedUpdate = true;
 				}
 

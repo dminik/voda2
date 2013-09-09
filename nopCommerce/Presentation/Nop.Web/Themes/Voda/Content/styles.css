@@ -454,7 +454,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .opc .step{border:1px solid #dcdcdc;border-top:0;background:#fbfaf6 0 0 repeat-x;padding:15px 30px;position:relative;}
 .opc .step-title:after{display:block;content:".";clear:both;font-size:0;line-height:0;height:0;overflow:hidden;}
 .opc .order-summary-content .cart-footer{background:none!important;}
-.opc .shipping-info { display: none;}
+.opc .shipping-info, .order-details-area .shipping-info { display: none;}
 
 
 /* ORDER DETAILS */

@@ -63,10 +63,10 @@
 
 		[HttpPost]
 		[GridAction(EnableCustomBinding = true)]
-		public ActionResult ListProduct(int parserCategoryId, GridCommand command)
+		public ActionResult ListProduct(bool isNotImportedOnly, int parserCategoryId, GridCommand command)
 		{
-			var records = _yandexMarketProductService.GetByCategory(parserCategoryId, command.Page - 1, command.PageSize);
-				
+			var records = _yandexMarketProductService.GetByCategory(parserCategoryId, isNotImportedOnly, command.Page - 1, command.PageSize);
+			
 			var productsModel = records.Select(
 				x =>
 				{
@@ -98,7 +98,7 @@
 
 			this._yandexMarketProductService.Update(product);
 
-			return ListProduct(product.YandexMarketCategoryRecordId, command);
+			return ListProduct(false, product.YandexMarketCategoryRecordId, command);
 		}
 
 		[GridAction(EnableCustomBinding = true)]
@@ -109,7 +109,7 @@
 
 			if (product != null) this._yandexMarketProductService.Delete(product);
 
-			return ListProduct(parserCategoryId, command);
+			return ListProduct(false, parserCategoryId, command);
 		}
 
 		#endregion

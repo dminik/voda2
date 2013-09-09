@@ -62,7 +62,8 @@
 		public ActionResult Parse(YandexMarketParserModel model)
 		{
 			_logger.Debug("--- ALL PARSE START...");
-			
+
+			int foundNewProductsTotal = 0;
 			var activeParserCategories = _yandexMarketCategoryService.GetActive();
 
 			foreach (var currentCategory in activeParserCategories)
@@ -78,21 +79,18 @@
 					_yandexMarketProductService.DeleteByCategory(currentCategory.Id);
 				}
 
-				if (model.IsTest)
-				{
-					CreateTestProductList(currentCategory.Id);
-				}
-				else
-				{					
-					var categoryName = currentCategory.Name;
-					var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, _logger, _yandexMarketProductService);				
-					parser.Parse();
-				}
+							
+				var categoryName = currentCategory.Name;
+				var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, _logger, _yandexMarketProductService);				
+				var newProductList = parser.Parse();
 
+				foundNewProductsTotal += newProductList.Count;
+				_logger.Debug("Found new products: " + newProductList.Count);
 				_logger.Debug("+++ PARSE CATEGORY DONE.");
 
 			}// end for
 
+			_logger.Debug("Found new products total: " + foundNewProductsTotal);
 			_logger.Debug("+++ ALL PARSING DONE.");
 			return Json(new { Result = true });
 		}

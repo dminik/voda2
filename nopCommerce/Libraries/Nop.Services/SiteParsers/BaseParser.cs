@@ -155,7 +155,7 @@ namespace Nop.Services.SiteParsers
 			return resultProductList;
 		}
 
-		private IEnumerable<YandexMarketProductRecord> GetProductsByLinks(IReadOnlyCollection<string> productLinks)
+		private IEnumerable<YandexMarketProductRecord> GetProductsByLinks(IEnumerable<string> productLinks)
 		{
 			var resultProductList = new List<YandexMarketProductRecord>();			
 			

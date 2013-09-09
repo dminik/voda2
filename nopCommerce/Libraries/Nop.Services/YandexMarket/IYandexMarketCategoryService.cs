@@ -29,12 +29,8 @@ namespace Nop.Services.YandexMarket
 		/// <returns>Tax rates</returns>
 		IPagedList<YandexMarketCategoryRecord> GetActive(int pageIndex = 0, int pageSize = int.MaxValue);
 		
-		/// <summary>
-		/// Gets a tax rate
-		/// </summary>
-		/// <param name="taxRateId">Tax rate identifier</param>
-		/// <returns>Tax rate</returns>
-		YandexMarketCategoryRecord GetById(int taxRateId);
+	
+		YandexMarketCategoryRecord GetById(int id);
 
 		/// <summary>
 		/// Inserts a tax rate

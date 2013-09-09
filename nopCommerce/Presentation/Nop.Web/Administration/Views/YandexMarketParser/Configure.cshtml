@@ -142,8 +142,13 @@
                 @Html.ValidationMessageFor(model => model.ParserCategoryId)
             </td>
             <td class="adminData">
-               
+                <div>
+                    @Html.CheckBoxFor(model => model.IsNotImportedOnly)
+                    @Html.LabelFor(model => model.IsNotImportedOnly)
+                </div>   
             </td>
+            
+
         </tr>
 
         @*Parsed products table*@
@@ -205,16 +210,23 @@
 
                     function onDataBinding(e) {
                         var searchModel = {
-                            parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val()
+                            parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val(),
+                            isNotImportedOnly: $('#@Html.FieldIdFor(model => model.IsNotImportedOnly)').prop("checked")
                         };
                         e.data = searchModel;
                     }
 
                     $(function () {
+                        
                         $("#@Html.FieldIdFor(model => model.ParserCategoryId)").change(function () {
                             var grid = $("#@ProductGridName");
                             grid.data('tGrid').ajaxRequest();
                         });
+                        
+                        $("#@Html.FieldIdFor(model => model.IsNotImportedOnly)").on('click', function () {
+                            var grid = $("#@ProductGridName");
+                             grid.data('tGrid').ajaxRequest();
+                         });
                     });
                 </script>
 

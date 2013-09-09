@@ -8,6 +8,7 @@ namespace Nop.Services.YandexMarket
 	using Nop.Core.Caching;
 	using Nop.Core.Data;
 	using Nop.Core.Domain.YandexMarket;
+	using Nop.Services.Catalog;
 
 	/// <summary>
 	/// Tax rate service
@@ -15,8 +16,8 @@ namespace Nop.Services.YandexMarket
 	public sealed partial class YandexMarketProductService : IYandexMarketProductService
 	{
 		#region Constants
-		private const string YANDEXMARKETProduct_BY_CATEGORY_KEY = "Nop.YandexMarketProduct.byCategory-{0}-{1}-{2}";
-		private const string YANDEXMARKETProduct_BY_CATEGORY_KEY_WITH_FANTOMS = "Nop.YandexMarketProduct.allfantoms-{0}-{1}-{2}";
+		private const string YANDEXMARKETProduct_BY_CATEGORY_KEY = "Nop.YandexMarketProduct.byCategory-{0}-{1}-{2}-{3}";
+		private const string YANDEXMARKETProduct_BY_CATEGORY_KEY_WITH_FANTOMS = "Nop.YandexMarketProduct.allfantoms-{0}-{1}-{2}-{3}";
 		private const string YANDEXMARKETProduct_PATTERN_KEY = "Nop.YandexMarketProduct.";
 		#endregion
 
@@ -24,6 +25,8 @@ namespace Nop.Services.YandexMarket
 
 		private readonly IRepository<YandexMarketProductRecord> _productRepository;
 		private readonly ICacheManager _cacheManager;
+		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
+		private readonly IProductService _productService;
 
 		#endregion
 
@@ -34,11 +37,16 @@ namespace Nop.Services.YandexMarket
 		/// </summary>
 		/// <param name="cacheManager">Cache manager</param>
 		/// <param name="productRepository">Tax rate repository</param>
-		public YandexMarketProductService(ICacheManager cacheManager,
-			IRepository<YandexMarketProductRecord> productRepository)
+		public YandexMarketProductService(
+			ICacheManager cacheManager,
+			IRepository<YandexMarketProductRecord> productRepository,
+			IYandexMarketCategoryService yandexMarketCategoryService,
+			IProductService productService)
 		{
 			this._cacheManager = cacheManager;
 			this._productRepository = productRepository;
+			this._yandexMarketCategoryService = yandexMarketCategoryService;
+			this._productService = productService;
 		}
 
 		#endregion
@@ -71,28 +79,28 @@ namespace Nop.Services.YandexMarket
 		/// Gets all tax rates
 		/// </summary>
 		/// <returns>Tax rates</returns>
-		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false)
+		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, bool isNotImportedOnly = false, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false)
 		{
-			string key = string.Format(withFantoms ? YANDEXMARKETProduct_BY_CATEGORY_KEY_WITH_FANTOMS : YANDEXMARKETProduct_BY_CATEGORY_KEY, pageIndex, pageSize, categoryId);
+			string key = string.Format(withFantoms ? YANDEXMARKETProduct_BY_CATEGORY_KEY_WITH_FANTOMS : YANDEXMARKETProduct_BY_CATEGORY_KEY, pageIndex, pageSize, categoryId, isNotImportedOnly);
 
 			var result = this._cacheManager.Get(key, () =>
 			{
-				IQueryable<YandexMarketProductRecord> query;
+				IQueryable<YandexMarketProductRecord> query = 
+								   from tr in this._productRepository.Table
+				                   orderby tr.Name
+				                   where tr.YandexMarketCategoryRecordId == categoryId 								
+				                   select tr;
+				
+				if (!withFantoms)				
+					query = query.Where(tr => tr.Name != "NotInPriceList");
+				
 
-				if (withFantoms)
+				if (isNotImportedOnly)
 				{					
-					query = from tr in this._productRepository.Table
-					        orderby tr.Name
-					        where tr.YandexMarketCategoryRecordId == categoryId 								
-					        select tr;
-				}
-				else
-				{
-					query = from tr in this._productRepository.Table
-							orderby tr.Name
-							where tr.YandexMarketCategoryRecordId == categoryId 
-								&& tr.Name != "NotInPriceList"
-							select tr;
+					var shopCategoryId = _yandexMarketCategoryService.GetById(categoryId).ShopCategoryId;
+					var allShopProductsArtikuls = _productService.SearchProductVariants(shopCategoryId, 0, 0, "", false, 0, 2147483647).Select(x => x.Sku);
+
+					query = query.Where(x => allShopProductsArtikuls.Contains(x.Articul) == false);
 				}
 
 				var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);				
