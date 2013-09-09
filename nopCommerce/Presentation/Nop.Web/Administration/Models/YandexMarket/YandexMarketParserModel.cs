@@ -16,7 +16,7 @@
 			this.ParseNotMoreThen = 2;
 			this.IsTest = false;			
 			this.ShopCategoryId = 0;
-			ParserCategoryId = 1;
+			ParserCategoryId = -1;
 			IsClearCategoryProductsBeforeParsing = false;
 			IsNotImportedOnly = false;
 		}
