@@ -58,6 +58,9 @@ namespace Nop.Core.Domain.YandexMarket
 			if (this.IsBluetooth(product.Specifications) && product.Specifications.All(x => x.Key != "Bluetooth"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Bluetooth", "Есть"));
 
+			if (this.IsUsbAcustika(product.Specifications, product.FullDescription) && product.Specifications.All(x => x.Key != "USB-подключение"))
+				product.Specifications.Add(new YandexMarketSpecRecord("USB-подключение", "Да"));
+
 			if (this.IsAndroid(product.Specifications) && product.Specifications.All(x => x.Key != "Android"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Android", "Да"));
 
@@ -179,6 +182,12 @@ namespace Nop.Core.Domain.YandexMarket
 		private bool IsBluetooth(IEnumerable<YandexMarketSpecRecord> specs)
 		{			
 			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("bluetooth")) != null;
+		}
+
+		private bool IsUsbAcustika(IEnumerable<YandexMarketSpecRecord> specs, string fullDescr)
+		{			
+			return (specs.FirstOrDefault(x => x.Value.ToLower().Contains("usb")) != null || fullDescr.ToLower().Contains("usb"))
+				&& specs.FirstOrDefault(x => x.Key.ToLower().Contains("формат акустики")) != null;
 		}
 
 		private bool IsAndroid(IEnumerable<YandexMarketSpecRecord> specs)

@@ -316,6 +316,9 @@
 			int i = 1;
 			foreach (var curPicUrl in picturesSourceUrlsList)
 			{
+				if(curPicUrl == "")
+					continue;
+
 				var curPicUrlFull = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog", curPicUrl);
 
 				var productPicture = new ProductPicture();

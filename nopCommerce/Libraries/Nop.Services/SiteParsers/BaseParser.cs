@@ -305,27 +305,42 @@ namespace Nop.Services.SiteParsers
 
 		private void SaveImages(YandexMarketProductRecord product)
 		{
-			// Get main image
-			var imageUrl = this.mDriver.FindElement(By.CssSelector(this.CssSelectorForProductPictureInProductPage)).GetAttribute("src");
-			//Thread.Sleep(3000);
-			// do it twice because of some bag
-			imageUrl = this.mDriver.FindElement(By.CssSelector(this.CssSelectorForProductPictureInProductPage)).GetAttribute("src");
-			product.ImageUrl_1 = this.SaveImage(imageUrl, product.Name);
+			try
+			{			
+				// Get main image
+				var imageUrl = this.mDriver.FindElement(By.CssSelector(this.CssSelectorForProductPictureInProductPage)).GetAttribute("src");
+				//Thread.Sleep(3000);
+				// do it twice because of some bag
+				imageUrl = this.mDriver.FindElement(By.CssSelector(this.CssSelectorForProductPictureInProductPage)).GetAttribute("src");
 
-
-			// Get other images
-			if (CssSelectorForProductPicturesInProductPage != string.Empty)
-			{
-				//driver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS) 
-				mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(1));
-				var imagesLinks = this.mDriver.FindElements(By.CssSelector(this.CssSelectorForProductPicturesInProductPage));
-				int imageCounter = 2;
-				foreach (var curImagesLink in imagesLinks)
+				if (imageUrl.Contains(".jpg") || imageUrl.Contains(".gif"))
+					product.ImageUrl_1 = this.SaveImage(imageUrl, product.Name);
+				
+				// Get other images
+				if (CssSelectorForProductPicturesInProductPage != string.Empty)
 				{
-					var curImageUrl = curImagesLink.GetAttribute("href");
-					product.ImageUrl_1 += ";" + this.SaveImage(curImageUrl, product.Name + "_" + imageCounter);
-					imageCounter++;
+					//driver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS) 
+					mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(1));
+					var imagesLinks = this.mDriver.FindElements(By.CssSelector(this.CssSelectorForProductPicturesInProductPage));
+					int imageCounter = 2;
+					foreach (var curImagesLink in imagesLinks)
+					{
+						var curImageUrl = curImagesLink.GetAttribute("href");
+						if (curImageUrl.Contains(".jpg") || curImageUrl.Contains(".gif"))
+						{
+							if (product.ImageUrl_1 != "") 
+								product.ImageUrl_1 += ";";
+
+							product.ImageUrl_1 += this.SaveImage(curImageUrl, product.Name + "_" + imageCounter);
+							imageCounter++;
+						}
+					}
 				}
+			}
+			catch
+			{
+				this.mLogger.Debug("Error while images saving.");
+				throw;
 			}
 		}
 		
