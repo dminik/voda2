@@ -19,6 +19,12 @@ namespace Nop.Services.SiteParsers
 	using OpenQA.Selenium.Remote;
 	using OpenQA.Selenium.Support.UI;
 
+	class ExistedProduct
+	{
+		public string Url { get; set; }
+		public bool IsFantom { get; set; }
+	}
+
 	public abstract class BaseParser
 	{
 		public void Init(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, ILogger logger, IYandexMarketProductService yandexMarketProductService)
@@ -36,7 +42,9 @@ namespace Nop.Services.SiteParsers
 			// Удаляем фантомные продукты из базы, если они появились в прайсе
 			DeleteFromDbAppearedInPriceListFantoms(ParserCategoryId, ProductsArtikulsInPiceList);
 
-			ExistedProductUrlList = _yandexMarketProductService.GetByCategory(parserCategoryId, withFantoms: true).Select(s => s.Url).ToList();
+			ExistedProductUrlList = _yandexMarketProductService.GetByCategory(parserCategoryId, withFantoms: true)
+				.Select(s => new ExistedProduct { Url = s.Url, IsFantom = s.IsNotInPriceList })
+				.ToList();
 		}
 
 		
@@ -45,7 +53,7 @@ namespace Nop.Services.SiteParsers
 		private int ParseNotMoreThen { get; set; }
 		private int ParserCategoryId { get; set; }
 		private string ProductsPageUrl { get; set; }
-		private List<string> ExistedProductUrlList { get; set; }
+		private List<ExistedProduct> ExistedProductUrlList { get; set; }
 		private List<string> ProductsArtikulsInPiceList { get; set; }
 
 		private int ParsedProductsAmount = 1;
@@ -160,11 +168,13 @@ namespace Nop.Services.SiteParsers
 			var resultProductList = new List<YandexMarketProductRecord>();			
 			
 			int existedProductCounter = 0;
-			
+						
 			foreach (var currentProductLink in productLinks)
-			{
+			{				
+				this.mLogger.Debug("Proceeding product " + ParsedProductsAmount);
+
 				// существующий в базе продукт игнорируем
-				if (this.ExistedProductUrlList.Contains(currentProductLink))
+				if (this.ExistedProductUrlList.Any(x => x.Url == currentProductLink && !x.IsFantom))
 				{
 					existedProductCounter++;
 					continue;
@@ -176,7 +186,6 @@ namespace Nop.Services.SiteParsers
 					existedProductCounter = 0;
 				}
 
-				this.mLogger.Debug("Proceeding product " + ParsedProductsAmount);
 
 				var product = this.CreateProduct(currentProductLink);
 
@@ -201,7 +210,7 @@ namespace Nop.Services.SiteParsers
 		}
 
 		private YandexMarketProductRecord CreateProduct(string productLink)
-		{
+		{			
 			var product = new YandexMarketProductRecord();
 			product.Url = productLink;
 

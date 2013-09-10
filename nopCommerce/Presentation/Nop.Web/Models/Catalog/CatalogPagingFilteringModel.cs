@@ -473,7 +473,7 @@ namespace Nop.Web.Models.Catalog
 
 				var result = "";
 
-				var strArr = str.Split('/');
+				var strArr = str.Split(new string[] {"/p>"}, StringSplitOptions.None);
 				
 				foreach (string s in strArr)
 				{															

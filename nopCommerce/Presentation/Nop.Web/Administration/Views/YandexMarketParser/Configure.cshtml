@@ -376,6 +376,7 @@
                                 success: function (data) {
                                     var grid = $("#@ProductGridName");
                                     grid.data('tGrid').ajaxRequest();
+                                    alert('Success');
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
                                     alert(xhr.responseText);
