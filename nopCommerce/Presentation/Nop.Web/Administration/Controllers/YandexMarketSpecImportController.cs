@@ -77,11 +77,7 @@
 					{
 						curSpecAttrOpt.SpecificationAttributeId = curSpecAttrFromDb.Id;
 						if (!curSpecAttrFromDb.SpecificationAttributeOptions.Any(x => x.Name == curSpecAttrOpt.Name))
-							_specificationAttributeService.InsertSpecificationAttributeOption(curSpecAttrOpt);
-						else
-						{
-							int x = 0;
-						}
+							_specificationAttributeService.InsertSpecificationAttributeOption(curSpecAttrOpt);						
 					}
 				}
 				else

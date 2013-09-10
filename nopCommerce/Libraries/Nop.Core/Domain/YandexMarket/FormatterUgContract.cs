@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.YandexMarket
 	public class FormatterUgContract : FormatterBase
 	{		
 		public override YandexMarketProductRecord Format(YandexMarketProductRecord product)
-		{
+		{			
 			const string toErase1 = "Если вы заметили некорректные данные в описании товара, выделите ошибку и нажмите";
 			const string toErase2 = "Ctrl+Enter";
 			const string toErase3 = ", чтобы сообщить нам об этом.";
@@ -44,6 +44,13 @@ namespace Nop.Core.Domain.YandexMarket
 			if (megapixels != string.Empty && product.Specifications.All(x => x.Key != "Количество мегапикселей камеры"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Количество мегапикселей камеры", megapixels));
 
+			if (product.Specifications.Any(x => x.Key == "Разрешение матрицы"))
+			{
+				megapixels = this.GetCameraMegapixelsFromSpecs(product.Specifications);
+				if (megapixels != string.Empty)
+					product.Specifications.Single(x => x.Key == "Разрешение матрицы").Value = megapixels;				
+			}
+
 			var displaySize = this.GetDisplaySize(product.Specifications);
 			if (displaySize != string.Empty && product.Specifications.All(x => x.Key != "Размер экрана, дюймы"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Размер экрана, дюймы", displaySize));
@@ -67,14 +74,33 @@ namespace Nop.Core.Domain.YandexMarket
 			if (simAmount > 1 && product.Specifications.All(x => x.Key != "Количество SIM-карт"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Количество SIM-карт", simAmount.ToString()));
 
+			var buttons = this.GetMouseButtonsFromSpecs(product.Specifications);
+			if (buttons != string.Empty && product.Specifications.All(x => x.Key != "Количество клавиш"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Количество клавиш", buttons));
 			
 			return product;
 		}
 
 
 		private string GetManufactureFromName(string name)
-		{			  
-			var manufactures = new List<string>() { "Sony", "Fly", "Alcatel", "LG", "Philips", "Nokia", "Samsung", "HTC", "ZTE", "Huawei"};
+		{
+			var manufactures = new List<string>() { 
+				"Asus", 
+				"Alcatel", 
+				"HTC", 
+				"Huawei",
+				"Genius",
+				"Fly", 				
+				"LG", 
+				"Logitech",				
+				"Nokia",
+				"Philips", 
+				"Samsung", 
+				"Sony",
+				"Trust",
+				"ZTE", 
+				};
+
 			name = name.ToUpper();
 
 			foreach (var manufacture in manufactures.Where(manufacture => name.Contains(manufacture.ToUpper()))) 
@@ -84,19 +110,54 @@ namespace Nop.Core.Domain.YandexMarket
 		}
 
 		private string GetMegapixelsFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
-		{
-			const string pattern = @"([0-9]+(?:\.[0-9]+)?) [Мм]";
-
+		{			
 			var spec = specs.FirstOrDefault(x => x.Key.ToLower().Contains("камера"));
 
 			if (spec != null)
 			{
+				string pattern = @"([0-9]+(?:\.[0-9]+)?) [Мм]";
+							
 				var megapixels = this.GetValByRegExp(spec.Value, pattern);
 				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
-
+				
 				return megapixels;
 			}
 			
+			return "";
+		}
+
+		private string GetCameraMegapixelsFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			var spec = specs.FirstOrDefault(x => x.Key.ToLower().Contains("разрешение матрицы"));
+
+			if (spec != null)
+			{
+				string pattern = @"([0-9]+(?:\.[0-9]+)?)";
+				
+				var megapixels = this.GetValByRegExp(spec.Value, pattern);
+				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
+
+				if (double.Parse(megapixels) > 30)
+					megapixels = "1.3";
+
+				return megapixels;
+			}
+
+			return "";
+		}
+
+		private string GetMouseButtonsFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			const string pattern = @"([0-9]+) клавиш";
+
+			var spec = specs.FirstOrDefault(x => x.Key.ToLower().Contains("дополнительные характеристики"));
+
+			if (spec != null)
+			{
+				var foundValue = this.GetValByRegExp(spec.Value, pattern);
+				return foundValue;
+			}
+
 			return "";
 		}
 
@@ -132,7 +193,7 @@ namespace Nop.Core.Domain.YandexMarket
 
 		private bool IsRadio(IEnumerable<YandexMarketSpecRecord> specs)
 		{
-			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("радио")) != null;
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("радио") && !x.Value.ToLower().Contains("радиосвязь")) != null; 
 		}
 
 		private bool IsDisplaySensor(IEnumerable<YandexMarketSpecRecord> specs)
