@@ -68,7 +68,7 @@
 
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError);
+                    alert(xhr.responseText);
                 }
             });
             return false;
@@ -89,7 +89,7 @@
                     alert(data);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError);
+                    alert(xhr.responseText);
                 }
             });
               return false;

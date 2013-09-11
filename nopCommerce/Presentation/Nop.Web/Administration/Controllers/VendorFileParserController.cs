@@ -64,11 +64,11 @@
 
 				var isNeedUpdate = false;
 
-				if (currentProductVariant.StockQuantity != 0)
-				{
-					currentProductVariant.StockQuantity = 0; 
-					isNeedUpdate = true;
-				}
+				//if (currentProductVariant.StockQuantity != 0)
+				//{
+				//	currentProductVariant.StockQuantity = 0; 
+				//	isNeedUpdate = true;
+				//}
 
 				if (currentProductVariant.Price != curProductLine.Price)
 				{

@@ -82,17 +82,17 @@
 
 				var isNeedUpdate = false;
 
-				if (currentProductVariant.StockQuantity != curProductLine.Amount)
-				{
-					currentProductVariant.StockQuantity = curProductLine.Amount;
-					isNeedUpdate = true;
-				}
+				//if (currentProductVariant.StockQuantity != curProductLine.Amount)
+				//{
+				//	currentProductVariant.StockQuantity = curProductLine.Amount;
+				//	isNeedUpdate = true;
+				//}
 
-				if (currentProductVariant.Price != curProductLine.Price)
-				{
-					currentProductVariant.Price = curProductLine.Price;
-					isNeedUpdate = true;
-				}
+				//if (currentProductVariant.Price != curProductLine.Price)
+				//{
+				//	currentProductVariant.Price = curProductLine.Price;
+				//	isNeedUpdate = true;
+				//}
 
 				if (currentProductVariant.AvailableForPreOrder != false)
 				{

@@ -18,9 +18,9 @@ namespace Nop.Services.FileParsers
 
 			var headerLineIndex = GetStringNumberWithTableHeader(lines);
 
-			var articulColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Код");
-			var priceColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Сумма");
-			var amountColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Кво");
+			var articulColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Код товара");
+			//var priceColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Сумма");
+			//var amountColumnIndex = GetColumnIndexByName(lines[headerLineIndex], "Кво");
 
 			var resultProductLines = new List<ProductLine>();
 			
@@ -36,8 +36,8 @@ namespace Nop.Services.FileParsers
 				try
 				{
 					newProductLine.Articul = currentLineColumns[articulColumnIndex];
-					newProductLine.Amount = int.Parse(currentLineColumns[amountColumnIndex].Replace(",000", "").Replace(",00", "").Replace(",0", ""));
-					newProductLine.Price = int.Parse(currentLineColumns[priceColumnIndex].Replace(",000", "").Replace(",00", "").Replace(",0", ""));
+					//newProductLine.Amount = int.Parse(currentLineColumns[amountColumnIndex].Replace(",000", "").Replace(",00", "").Replace(",0", ""));
+					//newProductLine.Price = int.Parse(currentLineColumns[priceColumnIndex].Replace(",000", "").Replace(",00", "").Replace(",0", ""));
 				}
 				catch (Exception ex)
 				{
@@ -67,7 +67,7 @@ namespace Nop.Services.FileParsers
 		{
 			for (int i=0; i < lines.Count(); i++)
 			{
-				if (lines[i].Contains("Цена")) 
+				if (lines[i].Contains("Код товара")) 
 					return i;
 			}
 
