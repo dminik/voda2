@@ -17,7 +17,7 @@
 	background:#eee;
 	position:relative;
 	width:auto;
-	padding-left: 14px;
+	padding-left: 18px;
 }
 /* IE leaves a blank space where span is added so this is to avoid that */
 * html #sitemap li{
@@ -26,16 +26,17 @@
 }
 
 #sitemap li a{}
-#sitemap li span{float:left;position:absolute;top:5px;left:5px;width:13px;height:13px;cursor:auto;font-size:0;}
-#sitemap li span, #sitemap li span.collapsed{background:url(collapsed.gif) no-repeat 0 0;} 
-#sitemap li span.expanded{background:url(expanded.gif) no-repeat 0 0;}
+#sitemap li span{float:left;position:absolute;top:5px;left:1px;width:13px;height:13px;cursor:auto;font-size:0;}
+#sitemap li span, #sitemap li span.collapsed{ background: url("collapsed.gif")no-repeat scroll -6px -6px/25px auto transparent;} 
+#sitemap li span.expanded{ background: url("expanded.gif") no-repeat scroll -6px -6px/25px auto transparent;}
 
 /* second level */
 
 #sitemap li li{
 	background:#fff;
+	padding-left: 4px!important;
 }
-#sitemap li li a{padding-left:38px;}
+#sitemap li li a{padding-left:0px;}
 #sitemap li li span{left:28px;}
 
 /* third level */
