@@ -11,6 +11,7 @@ namespace Nop.Services.SiteParsers
 		// List
 		protected override string CssSelectorForProductLinkInProductList { get { return ".goods-list:not(.goods-list-small) div.cat-item a"; } }
 		protected override string CssSelectorForNextLinkInProductList { get { return "[title=следующая]"; } }
+		protected override string NextLinkInProductListName { get { return "следующая"; } }
 		
 		// Product
 		protected override string CssSelectorForProductArticulInProductPage { get { return ".good-info-number"; } } 

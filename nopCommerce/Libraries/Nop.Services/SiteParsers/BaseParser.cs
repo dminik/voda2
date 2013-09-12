@@ -67,6 +67,8 @@ namespace Nop.Services.SiteParsers
 
 		protected virtual string CssSelectorForProductLinkInProductList { get{throw new Exception("Not implemented");}}
 		protected virtual string CssSelectorForNextLinkInProductList { get { throw new Exception("Not implemented"); } }
+		protected virtual string NextLinkInProductListName { get { throw new Exception("Not implemented"); } }
+
 		protected virtual string CssSelectorForProductNameInProductPage { get { throw new Exception("Not implemented"); } }
 		protected virtual string CssSelectorForProductPictureInProductPage { get { throw new Exception("Not implemented"); } }
 		protected virtual string CssSelectorForProductPicturesInProductPage { get { return ""; } }
@@ -124,12 +126,15 @@ namespace Nop.Services.SiteParsers
 					try
 					{
 						//»щем ссылку на следущую страницу, если она есть
+						if (!this.mDriver.PageSource.Contains(NextLinkInProductListName)) 
+							throw new Exception();
+
 						nextPageUrl = this.mDriver.FindElement(By.CssSelector(CssSelectorForNextLinkInProductList)).GetAttribute("href");
 						nextPageUrl = nextPageUrl.Replace("pg", "/pg").Replace("//pg", "/pg");
 
 						isNextPage = true;						
 					}
-					catch (NoSuchElementException)
+					catch (Exception)
 					{
 						isNextPage = false;
 					}
@@ -171,14 +176,22 @@ namespace Nop.Services.SiteParsers
 						
 			foreach (var currentProductLink in productLinks)
 			{				
-				this.mLogger.Debug("Proceeding product " + ParsedProductsAmount);
+				
 
 				// существующий в базе продукт игнорируем
-				if (this.ExistedProductUrlList.Any(x => x.Url == currentProductLink && !x.IsFantom))
+				var existedLink = this.ExistedProductUrlList.FirstOrDefault(x => x.Url == currentProductLink);
+				if (existedLink != null)
 				{
+					if(existedLink.IsFantom)
+						this.mLogger.Debug("Skip fantom");
+					else
+						this.mLogger.Debug("Skip existed product");
+
 					existedProductCounter++;
 					continue;
 				}
+
+				this.mLogger.Debug("Proceeding product " + ParsedProductsAmount);
 
 				if (existedProductCounter != 0)
 				{

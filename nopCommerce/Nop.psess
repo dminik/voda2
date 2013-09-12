@@ -48,11 +48,12 @@
       <LaunchProject>true</LaunchProject>
       <OverrideProjectSettings>false</OverrideProjectSettings>
       <LaunchMethod>Browser</LaunchMethod>
-      <LaunchUrl>http://localhost:0/</LaunchUrl>
-      <SiteUrl>http://localhost:0/</SiteUrl>
+      <LaunchUrl>http://localhost/</LaunchUrl>
+      <SiteUrl>http://localhost/</SiteUrl>
       <LocalPath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\</LocalPath>
-      <VRoot>/</VRoot>
-      <NetAppHost>VWD</NetAppHost>
+      <VRoot>
+      </VRoot>
+      <NetAppHost>IIS</NetAppHost>
       <NetBrowser>InternetExplorer</NetBrowser>
       <ExcludeSmallFuncs>true</ExcludeSmallFuncs>
       <JScriptProfilingEnabled>false</JScriptProfilingEnabled>
