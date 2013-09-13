@@ -49,7 +49,7 @@ namespace Nop.Services.Catalog
         
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
-        private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
+        private readonly IRepository2<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 		private readonly IDataProvider _dataProvider;
@@ -71,7 +71,7 @@ namespace Nop.Services.Catalog
 		public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
-            IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
+            IRepository2<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IEventPublisher eventPublisher,
 			IDataProvider dataProvider,
 			IDbContext2 dbContext)
@@ -249,7 +249,9 @@ namespace Nop.Services.Catalog
 		/// <param name="productSpecificationAttributeList">Product specification attribute mapping</param>
 		public virtual void InsertProductSpecificationAttributeList(IEnumerable<ProductSpecificationAttribute> productSpecificationAttributeList)
 		{
-			
+			_productSpecificationAttributeRepository.InsertList(productSpecificationAttributeList);
+
+			_cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);			
 		}
 
         /// <summary>

@@ -1,5 +1,6 @@
 namespace Nop.Core.Domain.YandexMarket
 {
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
 
@@ -17,7 +18,7 @@ namespace Nop.Core.Domain.YandexMarket
 			//product.Name = product.Name.Replace("МОБИЛЬНЫЙ ТЕЛЕФОН ", "").Replace("СМАРТФОН ", "");
 
 			foreach (var curSpec in product.Specifications)
-			{				
+			{								
 				var s2 = "<";
 
 				int i = 0;  // Числовая переменная, контролирующая итерации цикла
@@ -35,6 +36,13 @@ namespace Nop.Core.Domain.YandexMarket
 					curSpec.Value = curSpec.Value.Replace("<p>", "").Replace("</p>", "").Trim();
 				}
 			}
+
+
+			ReplaceByValue(product.Specifications, new List<string> { "MB", "МВ", "MВ", "Mb" }, "MB", "Видеопамять");
+			ReplaceByValue(product.Specifications, new List<string> { "бит", "-bit", "bit", "Mb", " ", "Bit" }, "", "Разрядность шины памяти");
+			ReplaceByValue(product.Specifications, new List<string> { "12 V"}, "12V", "Блок питания");
+			ReplaceByValue(product.Specifications, new List<string> { "v." }, "", "Блок питания");
+			ReplaceByValue(product.Specifications, new List<string> { "2.2 12V" }, "12V v.2.2", "Блок питания");
 
 			var manufactureName = this.GetManufactureFromName(product.Name);
 			if (manufactureName != string.Empty && product.Specifications.All(x => x.Key != "Производитель"))
@@ -90,18 +98,81 @@ namespace Nop.Core.Domain.YandexMarket
 			var manufactures = new List<string>() { 
 				"Asus", 
 				"Alcatel", 
+				"AMD",
+				"Biostar",
+				"ASRock",
+
+				"ELITEGROUP",
+				"Gigabyte",
+
 				"HTC", 
 				"Huawei",
+
 				"Genius",
-				"Fly", 				
+
+				"Fly", 		
+		
 				"LG", 
-				"Logitech",				
+				"Logitech",	
+			
 				"Nokia",
+
 				"Philips", 
+
 				"Samsung", 
 				"Sony",
+
 				"Trust",
+
 				"ZTE", 
+				
+				
+				
+				
+				"Intel",
+				"Kingston",
+				"Silicon Power",
+				
+				"HIS",
+				"Palit",
+				"SAPPHIRE",
+				"SPARKLE",
+				"Sandisk",
+				"Hitachi",
+				"Seagate",
+				"TOSHIBA",
+				"Western Digital",
+				"Lite-On",
+				"NEC",
+				"Pioneer",
+				"Chieftec",
+				"Codegen",
+				"DeLux",
+				"DTS",
+				"Gembird",
+				"Logicpower",
+				"Maxxtro",
+				"OKtet", 
+				"Sparkman", 
+				"Spire", 
+				"THULE", 
+				"AXES",
+				"Chieftec",
+				"Codegen",
+				"Coolermaster",
+				"FSP",
+				"LinkWorld",
+				"Logicpower",
+				"Tuncmatik", 
+				"ZTE", 
+				"ZTE", 
+				"ZTE", 
+				"ZTE", 
+				"ZTE", 
+				"ZTE", 
+
+
+
 				};
 
 			name = name.ToUpper();
@@ -221,6 +292,32 @@ namespace Nop.Core.Domain.YandexMarket
 				return 3;
 
 			return 1;
+		}
+
+		private void ReplaceByValue(IEnumerable<YandexMarketSpecRecord> specs, IEnumerable<string> toReplaceValues, string replaceValue, string key = "" )
+		{
+			if (key != "")
+			{
+				if (specs.Any(x => x.Key == key))
+				{
+					var spec = specs.Single(x => x.Key == key);
+
+					foreach (var curToRepl in toReplaceValues)
+					{
+						spec.Value = spec.Value.Replace(curToRepl, replaceValue);
+					}
+				}
+			}
+			else
+			{
+				foreach (var spec in specs)									
+				{					
+					foreach (var curToRepl in toReplaceValues)
+					{
+						spec.Value = spec.Value.Replace(curToRepl, replaceValue);
+					}
+				}
+			}
 		}
 	}
 }
