@@ -88,6 +88,10 @@ namespace Nop.Core.Domain.YandexMarket
 			var buttons = this.GetMouseButtonsFromSpecs(product.Specifications);
 			if (buttons != string.Empty && product.Specifications.All(x => x.Key != "Количество клавиш"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Количество клавиш", buttons));
+
+			var chip = this.GetChipFromSpecs(product.Specifications);
+			if (chip != string.Empty && product.Specifications.All(x => x.Key != "Тип чипа"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Тип чипа", chip));
 			
 			return product;
 		}
@@ -231,6 +235,17 @@ namespace Nop.Core.Domain.YandexMarket
 				var foundValue = this.GetValByRegExp(spec.Value, pattern);
 				return foundValue;
 			}
+
+			return "";
+		}
+
+		private string GetChipFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
+		{			
+			if (specs.FirstOrDefault(x => x.Value.ToLower().Contains("geforce")) != null) 
+				return "GeForce";
+
+			if (specs.FirstOrDefault(x => x.Value.ToLower().Contains("radeon")) != null)
+				return "Radeon";
 
 			return "";
 		}
