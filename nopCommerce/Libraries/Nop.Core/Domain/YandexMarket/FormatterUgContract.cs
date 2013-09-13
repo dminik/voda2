@@ -39,10 +39,33 @@ namespace Nop.Core.Domain.YandexMarket
 
 
 			ReplaceByValue(product.Specifications, new List<string> { "MB", "МВ", "MВ", "Mb" }, "MB", "Видеопамять");
+
+
 			ReplaceByValue(product.Specifications, new List<string> { "бит", "-bit", "bit", "Mb", " ", "Bit" }, "", "Разрядность шины памяти");
 			ReplaceByValue(product.Specifications, new List<string> { "12 V"}, "12V", "Блок питания");
 			ReplaceByValue(product.Specifications, new List<string> { "v." }, "", "Блок питания");
 			ReplaceByValue(product.Specifications, new List<string> { "2.2 12V" }, "12V v.2.2", "Блок питания");
+
+			ReplaceByValue(product.Specifications, new List<string> { "оборотов/мин.", "об/мин", "оборотов/мин."}, "rpm", "Скорость вращения шпинделя");
+			ReplaceByValue(product.Specifications, new List<string> { " дюйма", "\"" }, "", "Формат");
+			ReplaceByValue(product.Specifications, new List<string> { " дюйма", "\"" }, "", "Формат");
+
+			ReplaceByValue(product.Specifications, new List<string> { "MB", "МВ", "MВ", "Mb", "МБ", "Мб", "МB", "MB", "MB", "МB",  }, "MB", "Буфер");
+
+			   
+			ReplaceByValue(product.Specifications, new List<string> { "TB", "ТВ", "TВ" }, "ТВ", "Емкость");
+			ReplaceByValue(product.Specifications, new List<string> { "Гб", "ГБ" }, "GB", "Емкость");
+			ReplaceByValue(product.Specifications, new List<string> { ".0" }, "", "Емкость");
+			ReplaceByValue(product.Specifications, new List<string> { "-", " " }, "", "Интерфейс");
+			ReplaceByValue(product.Specifications, new List<string> { "3" }, "III", "Интерфейс");
+
+			ReplaceByValue(product.Specifications, new List<string> { "m-ATX", "mATX", "MicroATX", "Micro-ATX", "microATX", "micro ATX",  }, "micro-ATX", "Формат");
+			ReplaceByValue(product.Specifications, new List<string> { "Mini-ITX", "miniITX", "MicroATX", "Micro-ATX",   }, "mini-ITX", "Формат");
+
+			ReplaceByValue(product.Specifications, new List<string> { "Minitower" }, "MiniTower", "Тип оборудования");
+			ReplaceByValue(product.Specifications, new List<string> { "Miditower", "Mediumtower", "Midi Tower" }, "MidiTower", "Тип оборудования");
+			ReplaceByValue(product.Specifications, new List<string> { "Горизонтально", "Горизонтальоне", "Горизонтальнео", "Горизонтальноее" }, "Горизонтальное", "Размещение блока питания");
+
 
 			var manufactureName = this.GetManufactureFromName(product.Name);
 			if (manufactureName != string.Empty && product.Specifications.All(x => x.Key != "Производитель"))
@@ -68,6 +91,9 @@ namespace Nop.Core.Domain.YandexMarket
 
 			if (this.IsUsbAcustika(product.Specifications, product.FullDescription) && product.Specifications.All(x => x.Key != "USB-подключение"))
 				product.Specifications.Add(new YandexMarketSpecRecord("USB-подключение", "Да"));
+
+			if (this.IsExternal(product.Name) && product.Specifications.All(x => x.Key != "Внешний"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Внешний", "Да"));
 
 			if (this.IsAndroid(product.Specifications) && product.Specifications.All(x => x.Key != "Android"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Android", "Да"));
@@ -279,6 +305,11 @@ namespace Nop.Core.Domain.YandexMarket
 		private bool IsAndroid(IEnumerable<YandexMarketSpecRecord> specs)
 		{
 			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("android")) != null;
+		}
+
+		private bool IsExternal(string name)
+		{
+			return name.ToLower().Contains("external");
 		}
 
 		private bool IsFlash(IEnumerable<YandexMarketSpecRecord> specs)
