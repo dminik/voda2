@@ -1086,6 +1086,18 @@ namespace Nop.Services.Catalog
             });
         }
 
+		/// <summary>
+		/// Gets product variants by product identifier
+		/// </summary>		
+		/// <returns>Product variant collection</returns>
+		public virtual IList<ProductVariant> GetProductVariants()
+		{			
+			var query = _productVariantRepository.Table;
+			query = query.Where(pv => pv.Published && !pv.Deleted);
+			var productVariants = query.ToList();
+			return productVariants;			
+		}
+
         /// <summary>
         /// Delete a product variant
         /// </summary>

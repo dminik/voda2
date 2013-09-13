@@ -45,58 +45,44 @@
 		[HttpPost]
 		public ActionResult ApplyImport()
 		{
-			var newSpecsOnly = _Parse();
-			string notFoundArticules = "";
+			var newSpecsOnly = _Parse();			
 			string foundArticules = "";
 			int successCounter = 0;
 
-			_productService.ClearProductVariantsPrice(); // reset  all
-
-			// set from from priceList
-			foreach (var curProductLine in newSpecsOnly.ProductLineList) 
+			// Получить все варианты
+			// Если вариант есть в прайсе, то выставляем цену и преордер
+			// Иначе сбрасываем
+			// Апдейдим сразу все
+			
+			var productVariantList = _productService.GetProductVariants().ToList();
+			foreach (var currentProductVariant in productVariantList)
 			{
-				var currentProductVariant = _productService.GetProductVariantBySku(curProductLine.Articul);
-				if (currentProductVariant == null)
+				var curProductLine = newSpecsOnly.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
+
+				if (curProductLine == null)
 				{
-					notFoundArticules += curProductLine.Articul + ", "; // it is very new products, not exist in our shop db
+					if (currentProductVariant.Price != 0)
+						currentProductVariant.Price = 0;	
+
 					continue;
 				}
 
-				var isNeedUpdate = false;
-
-				//if (currentProductVariant.StockQuantity != 0)
-				//{
-				//	currentProductVariant.StockQuantity = 0; 
-				//	isNeedUpdate = true;
-				//}
-
-				if (currentProductVariant.Price != curProductLine.Price)
-				{
-					currentProductVariant.Price = curProductLine.Price;
-					isNeedUpdate = true;
-				}
+				if (currentProductVariant.Price != curProductLine.Price)					
+					currentProductVariant.Price = curProductLine.Price;											
 
 				if (currentProductVariant.AvailableForPreOrder != true)
-				{
 					currentProductVariant.AvailableForPreOrder = true;
-					isNeedUpdate = true;
-				}
-				
-				if (isNeedUpdate)
-					_productService.UpdateProductVariant(currentProductVariant);
-
+						
 				successCounter++;
-				foundArticules += curProductLine.Articul + ", ";
+				foundArticules += curProductLine.Articul + ", ";													
 			}
 
-			if (notFoundArticules == "")
-				return Content("Success for all!");
-			else 
-			{
-				return Content("Success for " + successCounter + " from " + newSpecsOnly.ProductLineList.Count() 
-					+ ". Not Found Articules in shop but they exist in file Vendor:" + notFoundArticules
-					+ ". Success Articules" + foundArticules);
-			}
+			if (productVariantList.Count > 0) // Вызываем сохранение всего контекста (всех вариантов)
+				_productService.UpdateProductVariant(productVariantList[0]);
+
+
+			return Content("Success for " + successCounter + " from " + newSpecsOnly.ProductLineList.Count() 					
+				+ ". Success Articules" + foundArticules);			
 		}
 
 
