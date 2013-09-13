@@ -117,6 +117,7 @@ namespace Nop.Web.Framework
 
 
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerHttpRequest();
+			builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository2<>)).InstancePerHttpRequest();
             
             //plugins
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerHttpRequest();
@@ -149,6 +150,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerHttpRequest();
             builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerHttpRequest();
             builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerHttpRequest();
+			builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService2>().InstancePerHttpRequest();
             builder.RegisterType<ProductTemplateService>().As<IProductTemplateService>().InstancePerHttpRequest();
             builder.RegisterType<CategoryTemplateService>().As<ICategoryTemplateService>().InstancePerHttpRequest();
             builder.RegisterType<ManufacturerTemplateService>().As<IManufacturerTemplateService>().InstancePerHttpRequest();

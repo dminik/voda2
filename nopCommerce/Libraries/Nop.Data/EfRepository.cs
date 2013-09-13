@@ -7,10 +7,12 @@ using Nop.Core.Data;
 
 namespace Nop.Data
 {
-    /// <summary>
+	using System.Collections.Generic;
+
+	/// <summary>
     /// Entity Framework repository
     /// </summary>
-    public partial class EfRepository<T> : IRepository<T> where T : BaseEntity
+	public partial class EfRepository<T> : IRepository<T>, IRepository2<T> where T : BaseEntity
     {
         private readonly IDbContext _context;
         private IDbSet<T> _entities;
@@ -29,7 +31,22 @@ namespace Nop.Data
             return this.Entities.Find(id);
         }
 
-        public void Insert(T entity)
+		public void InsertList(IEnumerable<T> entityList)
+		{
+			foreach (var entity in entityList)
+			{
+				_Insert(entity, false);
+			}
+
+			this._context.SaveChanges();
+		}
+
+		public void Insert(T entity)
+		{
+			_Insert(entity, true);
+		}
+
+        void _Insert(T entity, bool saveImediately)
         {
             try
             {
@@ -38,7 +55,8 @@ namespace Nop.Data
 
                 this.Entities.Add(entity);
 
-                this._context.SaveChanges();
+				if (saveImediately)
+					this._context.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)
             {

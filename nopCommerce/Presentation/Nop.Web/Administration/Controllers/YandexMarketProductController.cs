@@ -33,7 +33,7 @@
 		private readonly IUrlRecordService _urlRecordService;
 		private readonly ICategoryService _categoryService;		
 		private readonly IPictureService _pictureService;
-		private readonly ISpecificationAttributeService _specificationAttributeService;
+		private readonly ISpecificationAttributeService2 _specificationAttributeService;
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
 		private readonly ILogger _logger;
 		private readonly SeoSettings _seoSettings;
@@ -43,7 +43,7 @@
 			IUrlRecordService urlRecordService,
 			ICategoryService categoryService,			
 			IPictureService pictureService,
-			ISpecificationAttributeService specificationAttributeService,
+			ISpecificationAttributeService2 specificationAttributeService,
 			IYandexMarketCategoryService yandexMarketCategoryService,
 			ILogger logger,
 			SeoSettings seoSettings)
@@ -257,6 +257,7 @@
 			
 
 			var allSpecAttrList = _specificationAttributeService.GetSpecificationAttributes();
+			var psaList = new List<ProductSpecificationAttribute>();
 
 			foreach (var yandexMarketSpecRecord in specList)
 			{
@@ -270,8 +271,10 @@
 					ShowOnProductPage = true,
 				};
 
-				_specificationAttributeService.InsertProductSpecificationAttribute(psa);
+				psaList.Add(psa);
 			}
+
+			_specificationAttributeService.InsertProductSpecificationAttributeList(psaList);
 		}
 
 		private int FindAttributeOptionId(string attrName, string attrOptName, IEnumerable<SpecificationAttribute> allSpecAttrList)

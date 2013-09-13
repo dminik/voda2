@@ -16,7 +16,7 @@ namespace Nop.Services.Catalog
 	/// <summary>
     /// Specification attribute service
     /// </summary>
-    public partial class SpecificationAttributeService : BaseEntity, ISpecificationAttributeService
+	public partial class SpecificationAttributeService : BaseEntity, ISpecificationAttributeService, ISpecificationAttributeService2
     {
 		#region Nested classes
 
@@ -242,6 +242,15 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityInserted(specificationAttributeOption);
         }
+
+		/// <summary>
+		/// Inserts a product specification attribute mapping
+		/// </summary>
+		/// <param name="productSpecificationAttributeList">Product specification attribute mapping</param>
+		public virtual void InsertProductSpecificationAttributeList(IEnumerable<ProductSpecificationAttribute> productSpecificationAttributeList)
+		{
+			
+		}
 
         /// <summary>
         /// Updates the specification attribute

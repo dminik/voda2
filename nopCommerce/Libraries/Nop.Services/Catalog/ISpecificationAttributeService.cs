@@ -3,6 +3,15 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
 {
+	public partial interface ISpecificationAttributeService2 : ISpecificationAttributeService
+	{
+		/// <summary>
+		/// Inserts a product specification attribute mapping
+		/// </summary>
+		/// <param name="productSpecificationAttributeList">Product specification attribute mapping</param>
+		void InsertProductSpecificationAttributeList(IEnumerable<ProductSpecificationAttribute> productSpecificationAttributeList);
+	}
+
 	/// <summary>
 	/// Specification attribute service interface
 	/// </summary>
