@@ -67,6 +67,10 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "Горизонтально", "Горизонтальоне", "Горизонтальнео", "Горизонтальноее" }, "Горизонтальное", "Размещение блока питания");
 
 
+			var size = this.GetSize(product.Name);
+			if (size != string.Empty && product.Specifications.All(x => x.Key != "Емкость"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Емкость", size));
+
 			var manufactureName = this.GetManufactureFromName(product.Name);
 			if (manufactureName != string.Empty && product.Specifications.All(x => x.Key != "Производитель"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Производитель", manufactureName));
@@ -211,6 +215,17 @@ namespace Nop.Core.Domain.YandexMarket
 				return manufacture;
 
 			return "";
+		}
+
+		private string GetSize(string name)
+		{
+			
+				string pattern = @"([0-9]+) GB";
+
+				var size = this.GetValByRegExp(name, pattern);
+
+
+				return size;
 		}
 
 		private string GetMegapixelsFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
