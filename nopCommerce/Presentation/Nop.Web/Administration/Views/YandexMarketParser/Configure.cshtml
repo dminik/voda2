@@ -57,7 +57,7 @@
                            .Update("UpdateCategory", controllerNameForGrid)
                            .Delete("DeleteCategory", controllerNameForGrid);
             })
-                      .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both)).EnableCustomBinding(true))
+                      .Pageable(settings => settings.PageSize(150).Position(GridPagerPosition.Both)).EnableCustomBinding(true))
                 @* ReSharper restore ConvertToLambdaExpression *@
 
             </td>

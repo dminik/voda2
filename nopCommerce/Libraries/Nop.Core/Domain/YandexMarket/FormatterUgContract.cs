@@ -65,6 +65,14 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "Minitower" }, "MiniTower", "Тип оборудования");
 			ReplaceByValue(product.Specifications, new List<string> { "Miditower", "Mediumtower", "Midi Tower" }, "MidiTower", "Тип оборудования");
 			ReplaceByValue(product.Specifications, new List<string> { "Горизонтально", "Горизонтальоне", "Горизонтальнео", "Горизонтальноее" }, "Горизонтальное", "Размещение блока питания");
+			ReplaceByValue(product.Specifications, new List<string> { "3D LED" }, "3D LED-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "LED телевизор", "LED" }, "LED-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "LED" }, "LED-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "-телевизор-телевизор-телевизор" }, "-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "-телевизор-телевизор" }, "-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "\"" }, "", "Диагональ");
+			ReplaceByValue(product.Specifications, new List<string> { "пикселей", "Full HD", "(1080p)", "HD Ready", "(720p)", " ", "," }, "", "Разрешение");
+			ReplaceByValue(product.Specifications, new List<string> { "x" }, "х", "Разрешение");
 
 
 			var size = this.GetSize(product.Name);
@@ -198,9 +206,9 @@ namespace Nop.Core.Domain.YandexMarket
 				"LinkWorld",
 				"Logicpower",
 				"Tuncmatik", 
-				"ZTE", 
-				"ZTE", 
-				"ZTE", 
+				"Bandridge", 
+				"Valueline", 
+				"Sony", 
 				"ZTE", 
 				"ZTE", 
 				"ZTE", 

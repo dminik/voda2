@@ -238,7 +238,7 @@ namespace Nop.Services.SiteParsers
 
 			// Artikul
 			if (CssSelectorForProductArticulInProductPage != string.Empty)
-				product.Articul = this.mDriver.FindElement(By.CssSelector(CssSelectorForProductArticulInProductPage)).Text.Replace(" од: ", "");
+				product.Articul = FindElement(CssSelectorForProductArticulInProductPage).Text.Replace(" од: ", "");
 			
 			// ≈сли продукта в прайсе нет, то создаем полупустой продукт с url и артикулом, что бы не заходить в него следующий раз
 			product.IsNotInPriceList = !ProductsArtikulsInPiceList.Contains(product.Articul);
@@ -280,6 +280,30 @@ namespace Nop.Services.SiteParsers
 				return product;
 			else			
 				return null;			
+		}
+
+		IWebElement FindElement(string cssSelector, int tryTimes = 3)
+		{
+			var time = 0;
+			do
+			{
+				time++;
+				try
+				{
+					return this.mDriver.FindElement(By.CssSelector(cssSelector));
+				}
+				catch (Exception ex)
+				{
+					if(!ex.Message.Contains("element timed out") || time == tryTimes)
+						throw;
+
+					Thread.Sleep(3000);
+				}
+			
+			}
+			while (time < tryTimes);
+			
+			throw new Exception("Error in my FindElement");
 		}
 
 		private void GetSpecs(YandexMarketProductRecord product)
