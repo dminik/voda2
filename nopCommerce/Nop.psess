@@ -48,12 +48,11 @@
       <LaunchProject>true</LaunchProject>
       <OverrideProjectSettings>false</OverrideProjectSettings>
       <LaunchMethod>Browser</LaunchMethod>
-      <LaunchUrl>http://localhost:38900/Admin/YandexMarketParser/Configure</LaunchUrl>
-      <SiteUrl>http://localhost/</SiteUrl>
+      <LaunchUrl>http://localhost:0/</LaunchUrl>
+      <SiteUrl>http://localhost:0/</SiteUrl>
       <LocalPath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\</LocalPath>
-      <VRoot>
-      </VRoot>
-      <NetAppHost>IIS</NetAppHost>
+      <VRoot>/</VRoot>
+      <NetAppHost>VWD</NetAppHost>
       <NetBrowser>InternetExplorer</NetBrowser>
       <ExcludeSmallFuncs>true</ExcludeSmallFuncs>
       <JScriptProfilingEnabled>false</JScriptProfilingEnabled>
@@ -101,18 +100,6 @@
     </Report>
     <Report>
       <Path>Nop130913(2).vsp</Path>
-    </Report>
-    <Report>
-      <Path>Nop130913(3).vsp</Path>
-    </Report>
-    <Report>
-      <Path>Nop130913(4).vsp</Path>
-    </Report>
-    <Report>
-      <Path>Nop130917(1).vsp</Path>
-    </Report>
-    <Report>
-      <Path>Nop130917(2).vsp</Path>
     </Report>
   </Reports>
   <Launches>
