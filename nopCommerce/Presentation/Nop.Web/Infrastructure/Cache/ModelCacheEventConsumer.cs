@@ -120,6 +120,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {3} : current category id
         /// </remarks>
         public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.pres.category.navigation-{0}-{1}-{2}-{3}";
+		public const string CATEGORY_NAVIGATION_CATEGORIES_KEY = "Nop.pres.category.navigation-categories";
         public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Nop.pres.category.navigation";
 
         /// <summary>
