@@ -215,8 +215,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected IList<CategoryNavigationModel.CategoryModel> PrepareCategoryNavigationModel(int rootCategoryId,
-            IList<int> breadCrumbIds)
+        protected IList<CategoryNavigationModel.CategoryModel> PrepareCategoryNavigationModel(int rootCategoryId)
         {
             var result = new List<CategoryNavigationModel.CategoryModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -245,7 +244,7 @@ namespace Nop.Web.Controllers
                 //subcategories
                 //for (int i = 0; i <= breadCrumbIds.Count - 1; i++)
                     //if (breadCrumbIds[i] == category.Id)
-                        categoryModel.SubCategories.AddRange(PrepareCategoryNavigationModel(category.Id, breadCrumbIds));
+                        categoryModel.SubCategories.AddRange(PrepareCategoryNavigationModel(category.Id));
 
                 result.Add(categoryModel);
             }
@@ -1187,7 +1186,7 @@ namespace Nop.Web.Controllers
                         : new List<int>();
                     return new CategoryNavigationModel()
                     {
-                        Categories = PrepareCategoryNavigationModel(0, breadCrumb).ToList()
+                        Categories = PrepareCategoryNavigationModel(0).ToList()
                     };                                      
                 }
             );
