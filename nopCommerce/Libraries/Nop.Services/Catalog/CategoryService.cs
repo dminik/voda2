@@ -17,6 +17,9 @@ namespace Nop.Services.Catalog
     public partial class CategoryService : ICategoryService
     {
         #region Constants
+
+		private const string CATEGORIES_ALL_KEY = "Nop.category.all";
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -140,7 +143,23 @@ namespace Nop.Services.Catalog
                 UpdateCategory(subcategory);
             }
         }
-        
+
+		/// <summary>
+		/// Gets all ProductCategory
+		/// </summary>
+		/// <returns>Product attribute collection</returns>
+		private IEnumerable<Category> _GetAllCategories()
+		{
+			string key = CATEGORIES_ALL_KEY;
+			return _cacheManager.Get(key, () =>
+			{
+				var query = from pa in _categoryRepository.Table
+							select pa;
+				var result = query.ToList();
+				return result;
+			});
+		}
+
         /// <summary>
         /// Gets all categories
         /// </summary>
@@ -152,7 +171,8 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<Category> GetAllCategories(string categoryName = "", 
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            var query = _categoryRepository.Table;
+			var query = _GetAllCategories();
+
             if (!showHidden)
                 query = query.Where(c => c.Published);
             if (!String.IsNullOrWhiteSpace(categoryName))
@@ -209,7 +229,8 @@ namespace Nop.Services.Catalog
             string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
-                var query = _categoryRepository.Table;
+				var query = _GetAllCategories();
+
                 if (!showHidden)
                     query = query.Where(c => c.Published);
                 query = query.Where(c => c.ParentCategoryId == parentCategoryId);
@@ -256,7 +277,7 @@ namespace Nop.Services.Catalog
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage()
         {
-            var query = from c in _categoryRepository.Table
+            var query = from c in _GetAllCategories()
                         orderby c.DisplayOrder
                         where c.Published &&
                         !c.Deleted && 
@@ -363,6 +384,7 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityDeleted(productCategory);
         }
 
+	
         /// <summary>
         /// Gets product category mapping collection
         /// </summary>
