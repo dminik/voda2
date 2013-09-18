@@ -23,8 +23,11 @@ namespace Nop.Services.Common
 		public void Execute()
 		{
 			// dminikk
-			// string url = _storeContext.CurrentStore.Url + "keepalive/index";
+#if !DEBUG
+			 string url = _storeContext.CurrentStore.Url + "keepalive/index";
+#else
 			string url = "http://localhost/keepalive/index";
+#endif
 			
 			using (var wc = new WebClient())
 			{
