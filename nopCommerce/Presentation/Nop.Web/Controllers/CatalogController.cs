@@ -251,7 +251,26 @@ namespace Nop.Web.Controllers
 
             return result;
         }
-		
+
+		[NonAction]
+		private bool IsSpecAllowedForShortDescription(int specificationAttributeOptionId)
+		{
+			var specOptsIdsAllowed = _cacheManager.Get("SpecOptsIdsAllowedForShortDescription", () =>
+                    {
+						var allowedSpecsForShortDescription = _catalogSettings.SpecToDisplayInShortDescription.Split(';').ToList();
+
+						var s = _specificationAttributeService.GetSpecificationAttributes()
+							.Where(x => allowedSpecsForShortDescription.Contains(x.Name))
+							.SelectMany(h => h.SpecificationAttributeOptions)
+							.Select(w => w.Id);
+						return s;
+					});
+
+			var isAllowed = specOptsIdsAllowed.Contains(specificationAttributeOptionId);
+
+			return isAllowed;
+		}
+
 		[NonAction]
 		private string PrepareShortDescription(Product product)
 		{
@@ -262,15 +281,11 @@ namespace Nop.Web.Controllers
 
 			var specShortDescription = new StringBuilder();
 
-			foreach (var curAllowedSpec in allowedSpecsForShortDescription)
-			{
-				var curSpec =
-					product.ProductSpecificationAttributes.SingleOrDefault(
-						s => s.SpecificationAttributeOption.SpecificationAttribute.Name == curAllowedSpec);
-
-				if (curSpec != null)
+			foreach (var curProdSpec in product.ProductSpecificationAttributes)
+			{				
+				if (IsSpecAllowedForShortDescription(curProdSpec.SpecificationAttributeOptionId))
 				{
-					specShortDescription.AppendFormat("<li>{0}: {1}</li>", curSpec.SpecificationAttributeOption.SpecificationAttribute.Name, curSpec.SpecificationAttributeOption.Name);
+					specShortDescription.AppendFormat("<li>{0}: {1}</li>", curProdSpec.SpecificationAttributeOption.SpecificationAttribute.Name, curProdSpec.SpecificationAttributeOption.Name);
 				}
 			}
 
