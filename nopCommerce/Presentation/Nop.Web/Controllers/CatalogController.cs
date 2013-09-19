@@ -1008,8 +1008,23 @@ namespace Nop.Web.Controllers
             if (command.PageSize <= 0) command.PageSize = category.PageSize;
 
 
+			 var categoryIds = new List<int>();
+            categoryIds.Add(category.Id);
+            if (_catalogSettings.ShowProductsFromSubcategories)
+            {
+                //include subcategories
+                categoryIds.AddRange(GetChildCategoryIds(category.Id));
+            }
+
+			// exist quantity filter
+			bool showWithPositiveQuantity = model.PagingFilteringContext.GetSelectedQuantFilter(_webHelper);
+			model.PagingFilteringContext.PrepareQuantFilters(showWithPositiveQuantity, _webHelper, _workContext);
+
+			IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
+
             //price ranges
-            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(category.PriceRanges, _webHelper, _priceFormatter);
+	        var allPrices = _priceCalculationService.GetPriceAmountForFilter(categoryIds, alreadyFilteredSpecOptionIds, showWithPositiveQuantity);
+            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(allPrices, category.PriceRanges, _webHelper, _priceFormatter);
             var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, category.PriceRanges);
             decimal? minPriceConverted = null;
             decimal? maxPriceConverted = null;
@@ -1065,24 +1080,16 @@ namespace Nop.Web.Controllers
             }
 
 
-            var categoryIds = new List<int>();
-            categoryIds.Add(category.Id);
-            if (_catalogSettings.ShowProductsFromSubcategories)
-            {
-                //include subcategories
-                categoryIds.AddRange(GetChildCategoryIds(category.Id));
-            }
+           
 
 
-			// exist quantity filter
-			bool showWithPositiveQuantity = model.PagingFilteringContext.GetSelectedQuantFilter(_webHelper);
-			model.PagingFilteringContext.PrepareQuantFilters(showWithPositiveQuantity, _webHelper, _workContext);
+			
 
 
 	        if (minPriceConverted.IsNullOrDefault()) minPriceConverted = 1;
 
             //products
-            IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
+            
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 categoryIds: categoryIds,
@@ -1412,7 +1419,7 @@ namespace Nop.Web.Controllers
 
 
             //price ranges
-            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(manufacturer.PriceRanges, _webHelper, _priceFormatter);
+            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(new List<int>(), manufacturer.PriceRanges, _webHelper, _priceFormatter);
             var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, manufacturer.PriceRanges);
             decimal? minPriceConverted = null;
             decimal? maxPriceConverted = null;

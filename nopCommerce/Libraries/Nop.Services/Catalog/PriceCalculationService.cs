@@ -10,7 +10,12 @@ using Nop.Services.Discounts;
 
 namespace Nop.Services.Catalog
 {
-    /// <summary>
+	using System.Data;
+
+	using Nop.Core.Data;
+	using Nop.Data;
+
+	/// <summary>
     /// Price calculation service
     /// </summary>
     public partial class PriceCalculationService : IPriceCalculationService
@@ -23,6 +28,8 @@ namespace Nop.Services.Catalog
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
+		private readonly IDataProvider _dataProvider;
+		private readonly IDbContext2 _dbContext;
 
         #endregion
 
@@ -31,7 +38,9 @@ namespace Nop.Services.Catalog
         public PriceCalculationService(IWorkContext workContext,
             IDiscountService discountService, ICategoryService categoryService,
             IProductAttributeParser productAttributeParser, ShoppingCartSettings shoppingCartSettings, 
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+			IDataProvider dataProvider,
+			IDbContext2 dbContext)
         {
             this._workContext = workContext;
             this._discountService = discountService;
@@ -39,6 +48,8 @@ namespace Nop.Services.Catalog
             this._productAttributeParser = productAttributeParser;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
+			_dataProvider = dataProvider;
+			_dbContext = dbContext;
         }
         
         #endregion
@@ -505,7 +516,76 @@ namespace Nop.Services.Catalog
                 discountAmount = Math.Round(discountAmount, 2);
             return discountAmount;
         }
-        
-        #endregion
+
+		/// <summary>
+		/// Search products count
+		/// </summary>		
+		public virtual IEnumerable<int> GetPriceAmountForFilter(			
+			IList<int> categoryIds = null,			
+			IList<int> filteredSpecs = null,
+			bool showWithPositiveQuantity = false)
+		{
+			//validate "categoryIds" parameter
+			if (categoryIds != null && categoryIds.Contains(0))
+				categoryIds.Remove(0);
+
+			//pass category identifiers as comma-delimited string
+			string commaSeparatedCategoryIds = "";
+			if (categoryIds != null)
+			{
+				for (int i = 0; i < categoryIds.Count; i++)
+				{
+					commaSeparatedCategoryIds += categoryIds[i].ToString();
+					if (i != categoryIds.Count - 1)
+					{
+						commaSeparatedCategoryIds += ",";
+					}
+				}
+			}
+
+			string commaSeparatedSpecIds = "";
+			if (filteredSpecs != null)
+			{
+				((List<int>)filteredSpecs).Sort();
+				for (int i = 0; i < filteredSpecs.Count; i++)
+				{
+					commaSeparatedSpecIds += filteredSpecs[i].ToString();
+					if (i != filteredSpecs.Count - 1)
+					{
+						commaSeparatedSpecIds += ",";
+					}
+				}
+			}
+
+			//prepare parameters
+			var pCategoryIds = _dataProvider.GetParameter();
+			pCategoryIds.ParameterName = "CategoryIds";
+			pCategoryIds.Value = (object)commaSeparatedCategoryIds;
+			pCategoryIds.DbType = DbType.String;
+			
+			var pFilteredSpecs = _dataProvider.GetParameter();
+			pFilteredSpecs.ParameterName = "FilteredSpecs";
+			pFilteredSpecs.Value = (object)commaSeparatedSpecIds;
+			pFilteredSpecs.DbType = DbType.String;
+
+			var pShowWithPositiveQuantity = _dataProvider.GetParameter();
+			pShowWithPositiveQuantity.ParameterName = "ShowWithPositiveQuantity";
+			pShowWithPositiveQuantity.Value = showWithPositiveQuantity;
+			pShowWithPositiveQuantity.DbType = DbType.Boolean;
+
+
+			//invoke stored procedure
+			var prices = _dbContext.ExecuteStoredProcedureList2<int>(
+				"GetPriceAmountForFilter",
+				pCategoryIds,				
+				pFilteredSpecs,
+				pShowWithPositiveQuantity);
+
+
+			return prices;
+		}
+
+		
+		#endregion
     }
 }

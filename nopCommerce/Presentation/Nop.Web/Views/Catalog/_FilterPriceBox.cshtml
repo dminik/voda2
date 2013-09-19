@@ -32,7 +32,7 @@
                 <ul class="price-range-selector">
                     @foreach (var item in Model.Items)
                     {
-                        <li><a href="@item.FilterUrl">@FormatPriceRangeText(item)</a> </li>
+                        <li><a href="@item.FilterUrl">@FormatPriceRangeText(item) (@item.Amount шт.)</a> </li>
                     }
                 </ul>
             }

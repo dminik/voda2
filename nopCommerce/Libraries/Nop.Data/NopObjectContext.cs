@@ -198,42 +198,36 @@ namespace Nop.Data
 
 
 			var context = ((IObjectContextAdapter)(this)).ObjectContext;
-			if (!hasOutputParameters)
-			{				
-				var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();				
-				return result;
-			}
-			else
+			
+			//var connection = context.Connection;
+			var connection = this.Database.Connection;
+			//Don't close the connection after command execution
+
+
+			//open the connection for use
+			if (connection.State == ConnectionState.Closed)
+				connection.Open();
+			//create a command object
+			using (var cmd = connection.CreateCommand())
 			{
-				//var connection = context.Connection;
-				var connection = this.Database.Connection;
-				//Don't close the connection after command execution
+				//command to execute
+				cmd.CommandText = commandText;
+				cmd.CommandType = CommandType.StoredProcedure;
 
+				// move parameters to command object
+				if (parameters != null)
+					foreach (var p in parameters)
+						cmd.Parameters.Add(p);
 
-				//open the connection for use
-				if (connection.State == ConnectionState.Closed)
-					connection.Open();
-				//create a command object
-				using (var cmd = connection.CreateCommand())
-				{
-					//command to execute
-					cmd.CommandText = commandText;
-					cmd.CommandType = CommandType.StoredProcedure;
-
-					// move parameters to command object
-					if (parameters != null)
-						foreach (var p in parameters)
-							cmd.Parameters.Add(p);
-
-					//database call
-					var reader = cmd.ExecuteReader();
-					//return reader.DataReaderToObjectList<TEntity>();
-					var result = context.Translate<TEntity>(reader).ToList();
+				//database call
+				var reader = cmd.ExecuteReader();
+				//return reader.DataReaderToObjectList<TEntity>();
+				var result = context.Translate<TEntity>(reader).ToList();
 					
-					//close up the reader, we're done saving results
-					reader.Close();
-					return result;
-				}
+				//close up the reader, we're done saving results
+				reader.Close();
+				return result;
+				
 
 			}
 		}

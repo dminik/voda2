@@ -13,5 +13,7 @@
         /// To
         /// </summary>
         public decimal? To { get; set; }
+
+		public int Amount { get; set; }
     }
 }
