@@ -67,6 +67,8 @@ namespace Nop.Services.Catalog
         /// Key pattern to clear cache
         /// </summary>
         private const string PRODUCTCATEGORIES_PATTERN_KEY = "Nop.productcategory.";
+		private const string PRODUCTCATEGORIES_BY_ID_KEY = "Nop.productcategory.id-{0}";
+		private const string PRODUCTCATEGORIES_BY_ID_FEATURED_KEY = "Nop.productcategory.id-featured-{0}";
 
         #endregion
 
@@ -151,7 +153,7 @@ namespace Nop.Services.Catalog
 		private IEnumerable<Category> _GetAllCategories()
 		{
 			string key = CATEGORIES_ALL_KEY;
-			return _cacheManager.Get(key, () =>
+			return _cacheManager.Get(key, -1, () =>
 			{
 				var query = from pa in _categoryRepository.Table
 							select pa;
@@ -226,8 +228,8 @@ namespace Nop.Services.Catalog
         public IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden = false)
         {
-            string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, 0, _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(key, -1, () =>
             {
 				var query = _GetAllCategories();
 
@@ -299,7 +301,7 @@ namespace Nop.Services.Catalog
                 return null;
             
             string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
-            return _cacheManager.Get(key, () => { return _categoryRepository.GetById(categoryId); });
+            return _cacheManager.Get(key, -1, () => { return _categoryRepository.GetById(categoryId); });
         }
 
         /// <summary>
@@ -511,12 +513,16 @@ namespace Nop.Services.Catalog
             if (categoryId == 0)
                 return 0;
 
-            var query = from pc in _productCategoryRepository.Table
-                        where pc.CategoryId == categoryId &&
-                              pc.IsFeaturedProduct
-                        select pc;
-            var result = query.Count();
-            return result;
+			string key = string.Format(PRODUCTCATEGORIES_BY_ID_FEATURED_KEY, categoryId);
+			return _cacheManager.Get(key, -1, () => {
+
+				var query = from pc in _productCategoryRepository.Table
+							where pc.CategoryId == categoryId &&
+								  pc.IsFeaturedProduct
+							select pc;
+				var result = query.Count();
+				return result;
+			});
         }
 
         /// <summary>
@@ -529,7 +535,14 @@ namespace Nop.Services.Catalog
             if (productCategoryId == 0)
                 return null;
 
-            return _productCategoryRepository.GetById(productCategoryId);
+			string key = string.Format(PRODUCTCATEGORIES_BY_ID_KEY, productCategoryId);
+
+			return _cacheManager.Get(key, -1, () =>
+			{
+				return _productCategoryRepository.GetById(productCategoryId);
+			});
+
+            
         }
 
         /// <summary>

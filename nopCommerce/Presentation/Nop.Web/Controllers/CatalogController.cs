@@ -37,12 +37,15 @@ using Nop.Web.Framework.Events;
 using Nop.Services.Events;
 using Nop.Services.Stores;
 using System.Xml.Linq;
+using Nop.Core.Domain.Catalog;
 
 namespace Nop.Web.Controllers
 {
 	using System.Collections;
 	using System.Text;
 	using Nop.Core.Domain.Seo;
+
+	using Filter = Nop.Core.Domain.Catalog.Filter;
 
 	public partial class CatalogController : BaseNopController
     {
@@ -862,7 +865,9 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Categories
+
         
+
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
@@ -1007,24 +1012,23 @@ namespace Nop.Web.Controllers
 
             if (command.PageSize <= 0) command.PageSize = category.PageSize;
 
-
-			 var categoryIds = new List<int>();
-            categoryIds.Add(category.Id);
+			var filter = new Nop.Core.Domain.Catalog.Filter();
+			filter.CategoryIds.Add(category.Id);
             if (_catalogSettings.ShowProductsFromSubcategories)
             {
                 //include subcategories
-                categoryIds.AddRange(GetChildCategoryIds(category.Id));
+				filter.CategoryIds.AddRange(GetChildCategoryIds(category.Id));
             }
 
 			// exist quantity filter
-			bool showWithPositiveQuantity = model.PagingFilteringContext.GetSelectedQuantFilter(_webHelper);
-			model.PagingFilteringContext.PrepareQuantFilters(showWithPositiveQuantity, _webHelper, _workContext);
+	        
+			filter.ShowWithPositiveQuantity = model.PagingFilteringContext.GetSelectedQuantFilter(_webHelper);
+			model.PagingFilteringContext.PrepareQuantFilters(filter.ShowWithPositiveQuantity, _webHelper, _workContext);
 
-			IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
+			filter.AlreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
 
-            //price ranges
-	        var allPrices = _priceCalculationService.GetPriceAmountForFilter(categoryIds, alreadyFilteredSpecOptionIds, showWithPositiveQuantity);
-            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(allPrices, category.PriceRanges, _webHelper, _priceFormatter);
+            //price ranges			        
+			model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(_priceCalculationService, filter, category.PriceRanges, _webHelper, _priceFormatter);
             var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, category.PriceRanges);
             decimal? minPriceConverted = null;
             decimal? maxPriceConverted = null;
@@ -1080,27 +1084,21 @@ namespace Nop.Web.Controllers
             }
 
 
-           
-
-
-			
-
-
 	        if (minPriceConverted.IsNullOrDefault()) minPriceConverted = 1;
 
             //products
             
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
-                categoryIds: categoryIds,
+                categoryIds: filter.CategoryIds,
                 storeId: _storeContext.CurrentStore.Id,
                 featuredProducts:_catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin:minPriceConverted, priceMax:maxPriceConverted,
-                filteredSpecs: alreadyFilteredSpecOptionIds,
+				filteredSpecs: filter.AlreadyFilteredSpecOptionIds,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize,
-				showWithPositiveQuantity: showWithPositiveQuantity);
+				showWithPositiveQuantity: filter.ShowWithPositiveQuantity);
 			
             model.Products = PrepareProductOverviewModels(products).ToList();
 	        model.ProductsTotalAmount = products.TotalCount;
@@ -1112,19 +1110,19 @@ namespace Nop.Web.Controllers
 	        int positiveQuantityCount; // dminikk
 			var allOptionsCountTbl = _specificationAttributeService.SearchProductsCount(
 				out positiveQuantityCount,
-				categoryIds,
+				filter.CategoryIds,
 				_catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
 				minPriceConverted,
 				maxPriceConverted,
-				alreadyFilteredSpecOptionIds,
-				showWithPositiveQuantity);
+				filter.AlreadyFilteredSpecOptionIds,
+				filter.ShowWithPositiveQuantity);
 
 			model.PagingFilteringContext.ShowWithPositiveQuantityCount = positiveQuantityCount;
 
 			model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(
 				products.TotalCount,
 				allOptionsCountTbl,
-				alreadyFilteredSpecOptionIds,
+				filter.AlreadyFilteredSpecOptionIds,
                 filterableSpecificationAttributeOptionIds, 
                 _specificationAttributeService, _webHelper, _workContext);			
 
@@ -1419,7 +1417,7 @@ namespace Nop.Web.Controllers
 
 
             //price ranges
-            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(new List<int>(), manufacturer.PriceRanges, _webHelper, _priceFormatter);
+            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(_priceCalculationService, new Filter(), manufacturer.PriceRanges, _webHelper, _priceFormatter);
             var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, manufacturer.PriceRanges);
             decimal? minPriceConverted = null;
             decimal? maxPriceConverted = null;

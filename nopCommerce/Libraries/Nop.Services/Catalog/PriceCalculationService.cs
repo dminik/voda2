@@ -520,23 +520,20 @@ namespace Nop.Services.Catalog
 		/// <summary>
 		/// Search products count
 		/// </summary>		
-		public virtual IEnumerable<int> GetPriceAmountForFilter(			
-			IList<int> categoryIds = null,			
-			IList<int> filteredSpecs = null,
-			bool showWithPositiveQuantity = false)
+		public virtual IEnumerable<int> GetPriceAmountForFilter(Filter filter)
 		{
 			//validate "categoryIds" parameter
-			if (categoryIds != null && categoryIds.Contains(0))
-				categoryIds.Remove(0);
+			if (filter.CategoryIds != null && filter.CategoryIds.Contains(0))
+				filter.CategoryIds.Remove(0);
 
 			//pass category identifiers as comma-delimited string
 			string commaSeparatedCategoryIds = "";
-			if (categoryIds != null)
+			if (filter.CategoryIds != null)
 			{
-				for (int i = 0; i < categoryIds.Count; i++)
+				for (int i = 0; i < filter.CategoryIds.Count; i++)
 				{
-					commaSeparatedCategoryIds += categoryIds[i].ToString();
-					if (i != categoryIds.Count - 1)
+					commaSeparatedCategoryIds += filter.CategoryIds[i].ToString();
+					if (i != filter.CategoryIds.Count - 1)
 					{
 						commaSeparatedCategoryIds += ",";
 					}
@@ -544,13 +541,13 @@ namespace Nop.Services.Catalog
 			}
 
 			string commaSeparatedSpecIds = "";
-			if (filteredSpecs != null)
+			if (filter.AlreadyFilteredSpecOptionIds != null)
 			{
-				((List<int>)filteredSpecs).Sort();
-				for (int i = 0; i < filteredSpecs.Count; i++)
+				((List<int>)filter.AlreadyFilteredSpecOptionIds).Sort();
+				for (int i = 0; i < filter.AlreadyFilteredSpecOptionIds.Count; i++)
 				{
-					commaSeparatedSpecIds += filteredSpecs[i].ToString();
-					if (i != filteredSpecs.Count - 1)
+					commaSeparatedSpecIds += filter.AlreadyFilteredSpecOptionIds[i].ToString();
+					if (i != filter.AlreadyFilteredSpecOptionIds.Count - 1)
 					{
 						commaSeparatedSpecIds += ",";
 					}
@@ -570,7 +567,7 @@ namespace Nop.Services.Catalog
 
 			var pShowWithPositiveQuantity = _dataProvider.GetParameter();
 			pShowWithPositiveQuantity.ParameterName = "ShowWithPositiveQuantity";
-			pShowWithPositiveQuantity.Value = showWithPositiveQuantity;
+			pShowWithPositiveQuantity.Value = filter.ShowWithPositiveQuantity;
 			pShowWithPositiveQuantity.DbType = DbType.Boolean;
 
 

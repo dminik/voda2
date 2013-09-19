@@ -39,9 +39,14 @@ namespace Nop.Core.Caching
         {
             if (data == null)
                 return;
-
+			
             var policy = new CacheItemPolicy();
-            policy.AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(cacheTime);
+
+			if (cacheTime == -1)
+				policy.AbsoluteExpiration = ObjectCache.InfiniteAbsoluteExpiration;
+			else
+				policy.AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(cacheTime);
+
             Cache.Add(new CacheItem(key, data), policy);
         }
 

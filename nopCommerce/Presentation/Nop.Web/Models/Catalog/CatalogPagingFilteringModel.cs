@@ -13,7 +13,9 @@ using Nop.Web.Framework.UI.Paging;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class CatalogPagingFilteringModel : BasePageableModel
+	using Filter = Nop.Core.Domain.Catalog.Filter;
+
+	public partial class CatalogPagingFilteringModel : BasePageableModel
     {
         #region Constructors
 
@@ -25,6 +27,7 @@ namespace Nop.Web.Models.Catalog
 
             this.PriceRangeFilter = new PriceRangeFilterModel();
             this.SpecificationFilter = new SpecificationFilterModel();
+	        OrderBy = (int)ProductSortingEnum.PriceAsc;
         }
 
         #endregion
@@ -128,8 +131,11 @@ namespace Nop.Web.Models.Catalog
             /// <summary>
             /// Gets parsed price ranges
             /// </summary>
-            protected virtual IList<PriceRange> GetPriceRangeList(string priceRangesStr, IEnumerable<int> allPrices)
-            {				
+            protected virtual IList<PriceRange> GetPriceRangeList(string priceRangesStr, Filter filter, IPriceCalculationService priceCalculationService)
+            {
+				IEnumerable<int> allPrices = new List<int>();
+				if(priceCalculationService != null)
+					allPrices = priceCalculationService.GetPriceAmountForFilter(filter);
 
                 var priceRanges = new List<PriceRange>();
                 if (string.IsNullOrWhiteSpace(priceRangesStr))
@@ -148,6 +154,7 @@ namespace Nop.Web.Models.Catalog
                         to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
 
 					var amount = allPrices.Count(x => x >= (from ?? 1) && x <= (to ?? decimal.MaxValue));
+
 					priceRanges.Add(new PriceRange() { From = from, To = to, Amount = amount });
                 }
                 return priceRanges;
@@ -185,7 +192,7 @@ namespace Nop.Web.Models.Catalog
                     if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
                         to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
 
-					var priceRangeList = GetPriceRangeList(priceRangesStr, new List<int>());
+					var priceRangeList = GetPriceRangeList(priceRangesStr, new Filter(), null);
                     foreach (var pr in priceRangeList)
                     {
                         if (pr.From == from && pr.To == to)
@@ -195,9 +202,9 @@ namespace Nop.Web.Models.Catalog
                 return null;
             }
 
-            public virtual void LoadPriceRangeFilters(IEnumerable<int> allPrices, string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter)
+            public virtual void LoadPriceRangeFilters(IPriceCalculationService priceCalculationService, Filter filter, string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter)
             {
-                var priceRangeList = GetPriceRangeList(priceRangeStr, allPrices);
+				var priceRangeList = GetPriceRangeList(priceRangeStr, filter, priceCalculationService);
                 if (priceRangeList.Count > 0)
                 {
                     this.Enabled = true;

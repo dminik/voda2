@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
     <Compile Include="Data\IRepositoryExtensions.cs" />
+    <Compile Include="Domain\Catalog\Filter.cs" />
     <Compile Include="Domain\Vendors\Vendor.cs" />
     <Compile Include="Domain\YandexMarket\FormatterBase.cs" />
     <Compile Include="Domain\YandexMarket\FormatterUgContract.cs" />

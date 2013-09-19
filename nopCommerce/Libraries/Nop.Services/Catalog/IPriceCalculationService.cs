@@ -4,6 +4,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 
+
 namespace Nop.Services.Catalog
 {
 	/// <summary>
@@ -169,6 +170,6 @@ namespace Nop.Services.Catalog
 		/// <returns>Discount amount</returns>
 		decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem, out Discount appliedDiscount);
 
-		IEnumerable<int> GetPriceAmountForFilter(IList<int> categoryIds = null, IList<int> filteredSpecs = null, bool showWithPositiveQuantity = false);
+		IEnumerable<int> GetPriceAmountForFilter(Filter filter);
 	}
 }
