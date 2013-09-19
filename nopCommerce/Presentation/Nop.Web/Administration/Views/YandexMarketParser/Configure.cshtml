@@ -132,7 +132,158 @@
 
 @helper TabParser()
 {    
+                                           
+    const string ProductGridName = "YandexMarketProduct-grid";                                        
+    
+    
     <table style="width: 100%;">
+        
+              @*Buttons*@
+        <tr>
+            <td colspan="2">
+                <div>
+                    @Html.LabelFor(model => model.ParseNotMoreThen) :
+                    @Html.EditorFor(model => model.ParseNotMoreThen)
+                </div>
+                <div>
+                    @Html.CheckBoxFor(model => model.IsTest)
+                    @Html.LabelFor(model => model.IsTest)
+                </div>
+                <div>
+                    @Html.CheckBoxFor(model => model.IsClearCategoryProductsBeforeParsing)
+                    @Html.LabelFor(model => model.IsClearCategoryProductsBeforeParsing)
+                </div>
+               
+                <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
+                <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты со страниц и сохранить в категорию парсера (для активных категорий парсера)" /> <br /> 
+                <input type="button" id="onlyNew" class="t-button" value="Шаг 2. Отобразить только новые спарсенные спецификации, которые еще не существуют в интернет-магазине (для активных категорий парсера)" /><br/>              
+                <input type="button" id="btnApplyImport" class="t-button" value="Шаг 3. Импортнуть новые спецификации в интернет-магазин (для активных категорий парсера)" /> <br /> 
+                <input type="submit" id="btnImportProductList" class="t-button" value="Шаг 4. Импортнуть новые товары в интернет-магазин  (для активных категорий парсера)" />
+             
+
+                
+
+
+
+
+
+                <script type="text/javascript">
+                    $(function () {
+                        $('#onlyNew').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("GetNewSpecs", "YandexMarketSpecImport")',
+                                                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                                dataType: 'json',
+                                success: function (data) {
+
+                                    var place = $('.new-specs');
+                                    place.html('');
+
+                                    var i = 0;
+                                    $.each(data, function () {
+
+                                        var specLi = $('<li>').append(data[i].Name);
+                                        var specOptUl = $('<ul>');
+                                        specLi.append(specOptUl);
+                                        place.append(specLi);
+
+                                        var k = 0;
+                                        $.each(data[i].SpecificationAttributeOptions, function () {
+                                            specOptUl.append("<li>" + data[i].SpecificationAttributeOptions[k].Name + "</li>");
+                                            k++;
+                                        });
+
+                                        i++;
+                                    });
+
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.responseText);
+                                }
+                            });
+                            return false;
+                        });
+
+
+
+                        $('#btnApplyImport').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("ApplyImport", "YandexMarketSpecImport")',
+                                                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                                dataType: 'text',
+                                success: function (data) {
+                                    alert(data);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.responseText);
+                                }
+                            });
+                            return false;
+                        });
+                    });
+                </script>
+
+
+                <script type="text/javascript">
+                    $(function () {
+
+                        $('#btnImportProductList').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("ImportProductList", "YandexMarketProduct")',
+                                                                @*data: {
+                                    parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val(),
+                                    shopCategoryId: $('#@Html.FieldIdFor(model => model.ShopCategoryId)').val()
+                                },*@
+                                dataType: 'text',
+                                success: function (data) {
+                                    alert(data);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.responseText);
+                                }
+                            });
+                            return false;
+                        });
+
+
+
+                        $('#Parse').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("Parse", "YandexMarketParser")',
+                                data: $(this.form).serialize(),
+                                dataType: 'json',
+                                success: function (data) {
+                                    var grid = $("#@ProductGridName");
+                                    grid.data('tGrid').ajaxRequest();
+                                    alert('Success');
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.responseText);
+                                }
+                            });
+                            return false;
+                        });
+                    });
+                </script>
+
+            </td>
+        </tr>
 
         @*Filters*@
         <tr>
@@ -156,12 +307,7 @@
         @*Parsed products table*@
         <tr>
             <td>
-                @* ReSharper disable ConvertToLambdaExpression *@
-                @{                   
-                    
-                    const string ProductGridName = "YandexMarketProduct-grid";                                        
-                }
-
+               
                 @(Html.Telerik().Grid<YandexMarketProductModel>()
                       .Name(ProductGridName)
                       .ClientEvents(events => events.OnDataBinding("onDataBinding"))
@@ -169,13 +315,13 @@
                       .Columns(columns =>
                       {
                           columns.Bound(x => x.Articul).Width(70);
-                          
+
                           columns.Bound(x => x.Name).Width(200);
 
                           columns.Bound(x => x.FullDescription)
                               .ClientTemplate("<div class='parser-full-description'><#= FullDescription #></div>")
                               .Width(400);
-                          
+
                           columns.Bound(x => x.SpecificationsHtml)
                               .ClientTemplate("<div class='parser-specs'><#= SpecificationsHtml #></div>")
                                 .Width(500);
@@ -186,7 +332,7 @@
                           columns.Bound(x => x.Url)
                               .ClientTemplate("<div class='parser-product-url'><#= Url #></div>")
                               .Width(400);
-                          
+
                           columns.Command(commands =>
                           {
                               commands.Edit().Text("Редактировать");
@@ -243,152 +389,7 @@
             </td>
         </tr>
 
-        @*Buttons*@
-        <tr>
-            <td colspan="2">
-                <div>
-                    @Html.LabelFor(model => model.ParseNotMoreThen) :
-                    @Html.EditorFor(model => model.ParseNotMoreThen)
-                </div>
-                <div>
-                    @Html.CheckBoxFor(model => model.IsTest)
-                    @Html.LabelFor(model => model.IsTest)
-                </div>
-                 <div>
-                    @Html.CheckBoxFor(model => model.IsClearCategoryProductsBeforeParsing)
-                    @Html.LabelFor(model => model.IsClearCategoryProductsBeforeParsing)
-                </div>
-               
-                <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
-                <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты со страниц и сохранить в категорию парсера (для активных категорий парсера)" /> <br /> 
-                <input type="button" id="onlyNew" class="t-button" value="Шаг 2. Отобразить только новые спарсенные спецификации, которые еще не существуют в интернет-магазине (для активных категорий парсера)" /><br/>              
-                <input type="button" id="btnApplyImport" class="t-button" value="Шаг 3. Импортнуть новые спецификации в интернет-магазин (для активных категорий парсера)" /> <br /> 
-                <input type="submit" id="btnImportProductList" class="t-button" value="Шаг 4. Импортнуть новые товары в интернет-магазин  (для активных категорий парсера)" />
-             
-
-                
-
-
-
-
-
-                <script type="text/javascript">
-                    $(function () {
-                        $('#onlyNew').click(function () {
-                            $.ajax({
-                                beforeSend: function () { $('#parsingIndicator').show(); },
-                                complete: function () { $('#parsingIndicator').hide(); },
-                                cache: false,
-                                type: 'POST',
-                                url: '@Url.Action("GetNewSpecs", "YandexMarketSpecImport")',
-                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
-                                dataType: 'json',
-                                success: function (data) {
-
-                                    var place = $('.new-specs');
-                                    place.html('');
-
-                                    var i = 0;
-                                    $.each(data, function () {
-
-                                        var specLi = $('<li>').append(data[i].Name);
-                                        var specOptUl = $('<ul>');
-                                        specLi.append(specOptUl);
-                                        place.append(specLi);
-
-                                        var k = 0;
-                                        $.each(data[i].SpecificationAttributeOptions, function () {
-                                            specOptUl.append("<li>" + data[i].SpecificationAttributeOptions[k].Name + "</li>");
-                                            k++;
-                                        });
-
-                                        i++;
-                                    });
-
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                    alert(xhr.responseText);
-                                }
-                            });
-                            return false;
-                        });
-
-
-
-                        $('#btnApplyImport').click(function () {
-                            $.ajax({
-                                beforeSend: function () { $('#parsingIndicator').show(); },
-                                complete: function () { $('#parsingIndicator').hide(); },
-                                cache: false,
-                                type: 'POST',
-                                url: '@Url.Action("ApplyImport", "YandexMarketSpecImport")',
-                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
-                                dataType: 'text',
-                                success: function (data) {
-                                    alert(data);
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                    alert(xhr.responseText);
-                                }
-                            });
-                            return false;
-                        });
-                                    });
-                </script>
-
-
-                <script type="text/javascript">
-                    $(function () {
-
-                        $('#btnImportProductList').click(function () {
-                            $.ajax({
-                                beforeSend: function () { $('#parsingIndicator').show(); },
-                                complete: function () { $('#parsingIndicator').hide(); },
-                                cache: false,
-                                type: 'POST',
-                                url: '@Url.Action("ImportProductList", "YandexMarketProduct")',
-                                @*data: {
-                                    parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val(),
-                                    shopCategoryId: $('#@Html.FieldIdFor(model => model.ShopCategoryId)').val()
-                                },*@
-                                dataType: 'text',
-                                success: function (data) {
-                                    alert(data);
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                    alert(xhr.responseText);
-                                }
-                            });
-                            return false;
-                        });
-
-
-
-                        $('#Parse').click(function () {
-                            $.ajax({
-                                beforeSend: function () { $('#parsingIndicator').show(); },
-                                complete: function () { $('#parsingIndicator').hide(); },
-                                cache: false,
-                                type: 'POST',
-                                url: '@Url.Action("Parse", "YandexMarketParser")',
-                                data: $(this.form).serialize(),
-                                dataType: 'json',
-                                success: function (data) {
-                                    var grid = $("#@ProductGridName");
-                                    grid.data('tGrid').ajaxRequest();
-                                    alert('Success');
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                    alert(xhr.responseText);
-                                }
-                            });
-                            return false;
-                        });
-                    });
-                </script>
-
-            </td>
-        </tr>
+  
     </table>
 }@*end TabParser*@
 

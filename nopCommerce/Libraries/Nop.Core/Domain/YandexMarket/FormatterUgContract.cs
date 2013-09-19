@@ -74,6 +74,16 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "пикселей", "Full HD", "(1080p)", "HD Ready", "(720p)", " ", "," }, "", "Разрешение");
 			ReplaceByValue(product.Specifications, new List<string> { "x" }, "х", "Разрешение");
 
+			ReplaceByValue(product.Specifications, new List<string> { "Беспроводные" }, "Беспроводное", "Тип подключения");
+			ReplaceByValue(product.Specifications, new List<string> { "С проводом", "с проводом", "Проводные", "C проводом", "С проодом", "Проводной" }, "Проводное", "Тип подключения");
+
+			ReplaceByValue(product.Specifications, new List<string> { "Вкладиши", "Наушники-вкладыши" }, "Вкладыши", "Тип наушников");
+			ReplaceByValue(product.Specifications, new List<string> { "Мониторный" }, "Мониторные", "Тип наушников");
+			ReplaceByValue(product.Specifications, new List<string> { "На шнуре", "Есть (на проводе)", "Есть (интегрированный в правую чашку наушников)" }, "Есть", "Регулятор громкости");
+			
+
+			    
+
 
 			var size = this.GetSize(product.Name);
 			if (size != string.Empty && product.Specifications.All(x => x.Key != "Емкость"))
@@ -209,11 +219,27 @@ namespace Nop.Core.Domain.YandexMarket
 				"Bandridge", 
 				"Valueline", 
 				"Sony", 
-				"ZTE", 
-				"ZTE", 
-				"ZTE", 
-
-
+				"Acme Made", 
+				"Case Logic", 
+				"Lowepro", 
+				"Olympus", 
+				"X-Digital", 
+				"Casio", 
+				"Nikon", 
+				"THULE", 
+				"Continent", 
+				"SUMDEX", 
+				"BOROFONE", 
+				"DiGi", 
+				"HOCO", 
+				"Vogels", 
+				"KOSS", 
+				"PLEOMAX", 
+				"SENNHEISER", 
+				"Sony Ericsson", 
+				"JVC", 
+				"Ergo", 
+				"Panasonic", 
 
 				};
 

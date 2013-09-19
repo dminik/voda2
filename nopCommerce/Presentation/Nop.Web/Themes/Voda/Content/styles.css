@@ -612,7 +612,7 @@ margin-left: 12px;
 .product-filters .filter-title strong{display:block;logoline-height:1.3em;overflow:hidden;}
 .product-filters .filter-content{padding:0px 0px;}
 .price-range-filter{padding:9px 0 0 11px;}
-.price-range-filter .filter-title{background:url(images/ico-arrow-r.gif) no-repeat top left;padding-left:10px;}
+.price-range-filter .filter-title{background:none no-repeat top left;padding-left:0px;}
 .price-range-filter ul{margin:0;padding:0;}
 .price-range-filter li{list-style:none;padding-bottom:0px;}
 .price-range-filter .price-range-selector{}
@@ -625,7 +625,7 @@ margin-left: 12px;
 .product-spec-filter .available-items .spec-title{ background: none;padding-left: 0;}
 .product-spec-filter .available-items .spec-values{}
 .product-spec-filter .available-items .spec-values .spec-value{ font-weight: normal;}
-.positive-quantity-filter{ padding: 8px 0 0 17px;}
+.positive-quantity-filter{ padding: 8px 0 0 8px;}
 
 
 
