@@ -19,16 +19,31 @@
                     </div>
                     
                     <div class="sub-categories">
-                         @foreach (var subCategory in item.SubCategories)
-                         {
-                             <h1 class="sub-category-title">
-                                <a href="@Url.RouteUrl("Category", new { SeName = subCategory.SeName })" title="@subCategory.PictureModel.Title">
-                                    @subCategory.Name
-                                </a>
-                            </h1>
-                             
-                             
-                         }
+                        @{ int counter = 0;}
+                        @foreach (var subCategory in item.SubCategories)
+                        {
+                            counter++;
+
+                            if (counter <= 3)
+                            {
+                                <h3 class="sub-category-title">
+                                    <a href="@Url.RouteUrl("Category", new { SeName = subCategory.SeName })" title="@subCategory.PictureModel.Title">
+                                        @subCategory.Name
+                                    </a>
+                                </h3>
+                            }
+                            else
+                            {
+                                <h3 class="sub-category-title">
+                                    <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="Еще...">
+                                        Еще...
+                                    </a>
+                                </h3>
+
+                                break;
+                            }
+
+                        }
                     </div>
                 </div>
             </div>
