@@ -33,15 +33,18 @@
 /* second level */
 
 #sitemap li li{
-	background:#fff;
+	background:#d1e2ff;
 	padding-left: 4px!important;
 }
-#sitemap li li a{padding-left:0px;}
-#sitemap li li span{left:28px;}
+#sitemap li li a{padding-left:12px;}
+#sitemap li li span{left:0px;}
 
 /* third level */
-
-#sitemap li li li a{padding-left:84px;}
+#sitemap li li li{
+	background:#c5baeb;
+	padding-left: 8px!important;
+}
+#sitemap li li li a{padding-left:4px;}
 #sitemap li li li span{left:56px;}
 
 a.my_nav_current {
