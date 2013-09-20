@@ -377,7 +377,10 @@ namespace Nop.Core.Domain.YandexMarket
 		}
 
 		private int GetSimAmount(YandexMarketProductRecord product)
-		{			
+		{
+			if (product.YandexMarketCategoryRecordId != 7 || product.YandexMarketCategoryRecordId != 8) // smarts and mobils only
+				return 0;
+
 			if (product.Name.ToLower().Contains("dual")
 				|| product.Name.ToLower().Contains("duos")
 				|| product.FullDescription.ToLower().Contains("2 sim")
