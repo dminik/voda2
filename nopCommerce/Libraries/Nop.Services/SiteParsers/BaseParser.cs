@@ -261,8 +261,19 @@ namespace Nop.Services.SiteParsers
 				this.mLogger.Debug("Have main product page " + productLink);
 
 				if (CssSelectorForProductFullDescriptionInProductPage != string.Empty)
-				{				
-					product.FullDescription = GetInnerHtml(this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)));				
+				{
+					try
+					{
+						product.FullDescription =
+							GetInnerHtml(this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)));
+					}
+					catch (Exception ex)
+					{
+						product.FullDescription = "Нет описания";
+
+						if (!ex.Message.Contains("Unable to find element")) 
+							throw;
+					}
 				}
 
 				product = ProductPostProcessing(product);				

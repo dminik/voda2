@@ -267,7 +267,7 @@
 				{
 					SpecificationAttributeOptionId = attributeOptionId,
 					ProductId = product.Id,
-					AllowFiltering = YandexMarketHelpers.GetAllowFilteringForProductSelector().Contains(yandexMarketSpecRecord.Key),
+					AllowFiltering = YandexMarketHelpers.GetAllowFilteringForProductSelector().Contains(yandexMarketSpecRecord.Key) && (product.ProductCategories.ToList()[0].CategoryId != 49 && yandexMarketSpecRecord.Key != "Сенсорный экран"), // для планшетов не показываем фильтр
 					ShowOnProductPage = true,
 				};
 

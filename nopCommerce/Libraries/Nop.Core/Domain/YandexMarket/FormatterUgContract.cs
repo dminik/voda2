@@ -80,8 +80,10 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "Вкладиши", "Наушники-вкладыши" }, "Вкладыши", "Тип наушников");
 			ReplaceByValue(product.Specifications, new List<string> { "Мониторный" }, "Мониторные", "Тип наушников");
 			ReplaceByValue(product.Specifications, new List<string> { "На шнуре", "Есть (на проводе)", "Есть (интегрированный в правую чашку наушников)" }, "Есть", "Регулятор громкости");
-			
 
+			ReplaceByValue(product.Specifications, new List<string> { " DDR3", " RAM", " SDRAM оперативной памяти" }, "", "Оперативная память");
+			ReplaceByValue(product.Specifications, new List<string> { "1024 MB" }, "1 GB", "Оперативная память");
+			ReplaceByValue(product.Specifications, new List<string> { "2048 MB" }, "2 GB", "Оперативная память");
 			    
 
 
@@ -93,7 +95,7 @@ namespace Nop.Core.Domain.YandexMarket
 			if (manufactureName != string.Empty && product.Specifications.All(x => x.Key != "Производитель"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Производитель", manufactureName));
 
-			var megapixels = this.GetMegapixelsFromSpecs(product.Specifications);
+			var megapixels = this.GetMegapixelsFromSpecs(product);
 			if (megapixels != string.Empty && product.Specifications.All(x => x.Key != "Количество мегапикселей камеры"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Количество мегапикселей камеры", megapixels));
 
@@ -126,7 +128,7 @@ namespace Nop.Core.Domain.YandexMarket
 			if (this.IsRadio(product.Specifications) && product.Specifications.All(x => x.Key != "FM-радио"))
 				product.Specifications.Add(new YandexMarketSpecRecord("FM-радио", "Есть"));
 
-			if (this.IsDisplaySensor(product.Specifications) && product.Specifications.All(x => x.Key != "Сенсорный экран"))
+			if (this.IsDisplaySensor(product) && product.Specifications.All(x => x.Key != "Сенсорный экран"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Сенсорный экран", "Да"));
 
 			var simAmount = this.GetSimAmount(product);
@@ -240,6 +242,12 @@ namespace Nop.Core.Domain.YandexMarket
 				"JVC", 
 				"Ergo", 
 				"Panasonic", 
+				"ViewSonic",
+				"Yarvik",
+
+
+
+				 
 
 				};
 
@@ -262,13 +270,23 @@ namespace Nop.Core.Domain.YandexMarket
 				return size;
 		}
 
-		private string GetMegapixelsFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
-		{			
-			var spec = specs.FirstOrDefault(x => x.Key.ToLower().Contains("камера"));
+		private string GetMegapixelsFromSpecs(YandexMarketProductRecord product)
+		{
+			if (product.FullDescription.Contains("-мегапиксельная камера"))
+			{
+				string pattern = @"([0-9]+(?:\.[0-9]+)?)-мегапиксельная камер";
+
+				var megapixels = this.GetValByRegExp(product.FullDescription, pattern);
+				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
+
+				return megapixels;
+			}
+
+			var spec = product.Specifications.FirstOrDefault(x => x.Key.ToLower().Contains("камера") || x.Key.ToLower().Contains("дополнительные функции и возможности"));
 
 			if (spec != null)
 			{
-				string pattern = @"([0-9]+(?:\.[0-9]+)?) [Мм]";
+				string pattern = @"([0-9]+(?:\.[0-9]+)?) [МмMm]";
 							
 				var megapixels = this.GetValByRegExp(spec.Value, pattern);
 				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
@@ -276,6 +294,8 @@ namespace Nop.Core.Domain.YandexMarket
 				return megapixels;
 			}
 			
+
+
 			return "";
 		}
 
@@ -327,13 +347,13 @@ namespace Nop.Core.Domain.YandexMarket
 
 		private string GetDisplaySize(IEnumerable<YandexMarketSpecRecord> specs)
 		{
-			const string pattern = "([0-9]+(?:\\.[0-9]+)?)\"";
+			const string pattern = "([0-9]+(?:\\.[0-9]+)?)";
 
 			var spec = specs.FirstOrDefault(x => x.Key == "Дисплей");
 
 			if (spec != null)
 			{
-				var result = this.GetValByRegExp(spec.Value, pattern);
+				var result = this.GetValByRegExp(spec.Value, pattern).Replace(".0", "").Replace(".00", ""); 
 				return result;
 			}
 
@@ -371,9 +391,14 @@ namespace Nop.Core.Domain.YandexMarket
 			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("радио") && !x.Value.ToLower().Contains("радиосвязь")) != null; 
 		}
 
-		private bool IsDisplaySensor(IEnumerable<YandexMarketSpecRecord> specs)
-		{
-			return specs.FirstOrDefault(x => x.Key == "Дисплей" && x.Value.ToLower().Contains("сенсорный")) != null;
+		private bool IsDisplaySensor(YandexMarketProductRecord product)
+		{			
+			var result = product.Specifications.FirstOrDefault(x => x.Key == "Дисплей" && x.Value.ToLower().Contains("сенсорный")) != null;
+
+			if (!result) 
+				result = product.FullDescription.Contains("енсорный");
+
+			return result;
 		}
 
 		private int GetSimAmount(YandexMarketProductRecord product)
