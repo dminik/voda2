@@ -20,7 +20,7 @@ input,select{vertical-align:middle;}
 
 
 /* OTHER RESET STYLESHEET (HTML GENERAL) */
-body{text-align:left;font-family:arial,verdana,helvetica,sans-serif;font-size:12px;background:none repeat scroll 0 0 #F6F6F4;color:#5C5B5B;line-height:normal;}
+body{text-align:left;font-family:arial,verdana,helvetica,sans-serif;font-size:12px;background: url("../Content/images/wall.jpg") no-repeat fixed center center/cover transparent;;color:#5C5B5B;line-height:normal;}
 a{color:#5C5B5B;text-decoration:none;font-weight:normal;}
 a:hover{color:#B80709;text-decoration:underline;}
 h1,h2,h3,h4,h5,h6{font-family:arial,helvetica,sans-serif;}
@@ -35,7 +35,7 @@ input[type="text"]:disabled{background:none repeat scroll 0 0 #FFF;}
 
 
 /* MASTER PAGE WRAPPERS */
- .master-wrapper-page{margin:5px auto 0;                width:960px; background:none repeat scroll 0 0 #FFF;box-shadow:0 0.5em 2em rgba(0,0,0,0.1);-moz-box-shadow:0 0.5em 2em rgba(0,0,0,0.1);-webkit-box-shadow:0 0.5em 2em rgba(0,0,0,0.1);}
+ .master-wrapper-page{margin:5px auto 0; width:960px; background:none repeat scroll 0 0 #FFF;box-shadow:0 0.5em 2em rgba(0,0,0,0.1);-moz-box-shadow:0 0.5em 2em rgba(0,0,0,0.1);-webkit-box-shadow:0 0.5em 2em rgba(0,0,0,0.1);}
 .master-wrapper-content{background: none repeat scroll 0 0 rgb(255, 255, 255);
     float: left;
     margin: 9px 15px 0;

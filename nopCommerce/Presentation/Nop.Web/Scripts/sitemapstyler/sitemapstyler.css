@@ -17,7 +17,7 @@
 	background:#eee;
 	position:relative;
 	width:auto;
-	padding-left: 18px;
+	padding-left: 15px;
 }
 /* IE leaves a blank space where span is added so this is to avoid that */
 * html #sitemap li{
@@ -34,7 +34,7 @@
 
 #sitemap li li{
 	background:#d1e2ff;
-	padding-left: 4px!important;
+	padding-left: 2px!important;
 }
 #sitemap li li a{padding-left:12px;}
 #sitemap li li span{left:0px;}

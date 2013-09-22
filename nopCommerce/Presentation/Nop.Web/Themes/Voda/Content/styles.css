@@ -240,7 +240,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .block{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .block .title{font-size:12px;letter-spacing:1px;text-align:left;padding:9px 7px;text-transform:uppercase;color:#333;border-radius:5px 5px 0px 0px;margin:0;background:none repeat scroll 0 0 #F6F6F4;}
 .block .title strong{font-weight:700;}
-.block .listbox{font-size:11px;padding:5px 3px 10px;line-height:18px;margin:0;border-radius:0px 0px 5px 5px;}
+.block .listbox{font-size:11px;padding:5px 0px 10px;line-height:18px;margin:0;border-radius:0px 0px 5px 5px;}
 .block .listbox ul{margin:0;padding:0 0 0 2px;color:#5C5B5B;background-color:inherit;}
 .block a{color:#5C5B5B;font-size:1.1em;font-weight:400;text-decoration:none;}
 .block a:hover{color:#B80709;text-decoration:underline;font-weight:normal;}
@@ -1358,6 +1358,7 @@ pre{white-space:pre-wrap;white-space:normal;word-wrap:break-word;}
   text-align: center;
   text-decoration: none;
   width: 89px;
+  background-color: rgb(65, 105, 225);
 }
 
 .yandex-metrika { position: relative;bottom: 2px; }
