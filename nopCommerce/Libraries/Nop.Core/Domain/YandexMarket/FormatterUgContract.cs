@@ -82,10 +82,24 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "На шнуре", "Есть (на проводе)", "Есть (интегрированный в правую чашку наушников)" }, "Есть", "Регулятор громкости");
 
 			ReplaceByValue(product.Specifications, new List<string> { " DDR3", " RAM", " SDRAM оперативной памяти" }, "", "Оперативная память");
-			ReplaceByValue(product.Specifications, new List<string> { "1024 MB" }, "1 GB", "Оперативная память");
-			ReplaceByValue(product.Specifications, new List<string> { "2048 MB" }, "2 GB", "Оперативная память");
-			    
+			ReplaceByValue(product.Specifications, new List<string> { "1024 MB" }, "1 GB");
+			ReplaceByValue(product.Specifications, new List<string> { "2048 MB" }, "2 GB");
+			ReplaceByValue(product.Specifications, new List<string> { "3072 MB" }, "3 GB");
+			ReplaceByValue(product.Specifications, new List<string> { "2048 GB" }, "1 TB");
+			ReplaceByValue(product.Specifications, new List<string> { "HDD " }, "", "Жесткий диск");
 
+
+			ReplaceByValue(product.Specifications, new List<string> { "\"", " дюймов", ".0", " " }, "", "Видимая область");
+
+			ReplaceByValue(product.Specifications, new List<string> { "nVidia" }, "NVIDIA ", "Видеосистема");
+
+			ReplaceByValue(product.Specifications, new List<string> { "Boot-up Linux", "MeeGo (Linux)", "Linux (MeeGo)", "Linux", "Linux" }, "Linux", "Операционная система");
+			ReplaceByValue(product.Specifications, new List<string> { " 64-bit", " 64 bit", " (64-bit)", " (64 bit)", " (64bit)", " 64bit", " 32-bit" }, "", "Операционная система");
+			ReplaceByValue(product.Specifications, new List<string> { "Dos" }, "DOS", "Операционная система");
+			ReplaceByValue(product.Specifications, new List<string> { "Free DOS" }, "FreeDOS", "Операционная система");
+			
+    
+			
 
 			var size = this.GetSize(product.Name);
 			if (size != string.Empty && product.Specifications.All(x => x.Key != "Емкость"))
@@ -112,6 +126,9 @@ namespace Nop.Core.Domain.YandexMarket
 
 			if (this.IsBluetooth(product.Specifications) && product.Specifications.All(x => x.Key != "Bluetooth"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Bluetooth", "Есть"));
+
+			if (this.IsWiFi(product.Specifications) && product.Specifications.All(x => x.Key != "Wi-Fi"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Wi-Fi", "Есть"));
 
 			if (this.IsUsbAcustika(product.Specifications, product.FullDescription) && product.Specifications.All(x => x.Key != "USB-подключение"))
 				product.Specifications.Add(new YandexMarketSpecRecord("USB-подключение", "Да"));
@@ -150,6 +167,7 @@ namespace Nop.Core.Domain.YandexMarket
 		private string GetManufactureFromName(string name)
 		{
 			var manufactures = new List<string>() { 
+				"Acer",
 				"Asus", 
 				"Alcatel", 
 				"AMD",
@@ -244,10 +262,11 @@ namespace Nop.Core.Domain.YandexMarket
 				"Panasonic", 
 				"ViewSonic",
 				"Yarvik",
-
-
-
-				 
+				"AOC",
+				"Lenovo", 
+				"Iriver",
+				"Transcend",
+ 
 
 				};
 
@@ -262,7 +281,7 @@ namespace Nop.Core.Domain.YandexMarket
 		private string GetSize(string name)
 		{
 			
-				string pattern = @"([0-9]+) GB";
+				string pattern = @"([0-9]+) G";
 
 				var size = this.GetValByRegExp(name, pattern);
 
@@ -363,6 +382,11 @@ namespace Nop.Core.Domain.YandexMarket
 		private bool IsBluetooth(IEnumerable<YandexMarketSpecRecord> specs)
 		{			
 			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("bluetooth")) != null;
+		}
+
+		private bool IsWiFi(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("wi-fi")) != null;
 		}
 
 		private bool IsUsbAcustika(IEnumerable<YandexMarketSpecRecord> specs, string fullDescr)

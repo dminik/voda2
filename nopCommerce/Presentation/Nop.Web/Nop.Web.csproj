@@ -1329,6 +1329,7 @@
     <Content Include="Themes\Voda\Content\images\logo.jpg" />
     <Content Include="Themes\Voda\Content\images\Vodoochistka_Diagramma_big.png" />
     <Content Include="Themes\Voda\Content\images\Vodoochistka_Diagramma_small.png" />
+    <Content Include="Themes\Voda\Content\images\wall.jpg" />
     <Content Include="Themes\Voda\Content\styles_reset.css" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_small.gif" />

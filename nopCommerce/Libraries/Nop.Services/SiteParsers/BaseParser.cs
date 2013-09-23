@@ -403,7 +403,7 @@ namespace Nop.Services.SiteParsers
 		
 		private string SaveImage(string remoteFileUrl, string productName)
 		{
-			string fileName = productName.Replace('/', '-').Replace('\\', '-').Replace('*', '-').Replace('?', '-').Replace('"', '-').Replace('\'', '-').Replace('<', '-').Replace('>', '-').Replace('|', '-').Replace(' ', '_').Replace('+', '_');
+			string fileName = productName.Replace('/', '-').Replace('\\', '-').Replace('*', '-').Replace('?', '-').Replace('"', '-').Replace('\'', '-').Replace('<', '-').Replace('>', '-').Replace('|', '-').Replace(' ', '_').Replace('+', '_').Replace(':', '_');
 			fileName += Path.GetExtension(remoteFileUrl);
 
 			var folderPath = Path.Combine(this.mImageFolderPathBase, this.mImageFolderPathForProductList);
