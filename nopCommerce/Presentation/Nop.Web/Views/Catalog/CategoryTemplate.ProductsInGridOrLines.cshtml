@@ -111,16 +111,19 @@
         </div>
         @Html.Widget("categorydetails_before_filters")
        
-        <div class="products-amount">           
-                <span>Найдено товаров: @Model.ProductsTotalAmount</span>         
-        </div>
+         @if (Model.SubCategories.Count == 0)
+         {
+             <div class="products-amount">           
+                 <span>Найдено товаров: @Model.ProductsTotalAmount</span>         
+             </div>
 
-        <div class="compare-list-count-block">
-             <a href="@Url.RouteUrl("CompareProducts")">
-                              @T("Products.Compare.List")
-                        (<span class="compare-list-count">@Model.CompareListCount</span>)
-             </a>
-         </div>
+             <div class="compare-list-count-block">
+                 <a href="@Url.RouteUrl("CompareProducts")">
+                     @T("Products.Compare.List")
+                     (<span class="compare-list-count">@Model.CompareListCount</span>)
+                 </a>
+             </div>
+         }
 
         @Html.Widget("categorydetails_before_product_list")
         @*product list*@
@@ -160,38 +163,44 @@
 
 
 
-@section product_filters {
-    <div class="product-filters-wrapper block">
-        <div class="filter-title title">
-            @*<strong>@T("Filtering.SpecificationFilter")</strong>*@
-            <strong>ФИЛЬТР ТОВАРОВ</strong>
-        </div>
+@section product_filters 
+{ 
+     @if (Model.SubCategories.Count == 0)
+     {
+         <div class="product-filters-wrapper block">
+             <div class="filter-title title">
+                 @*<strong>@T("Filtering.SpecificationFilter")</strong>*@
+                 <strong>ФИЛЬТР ТОВАРОВ</strong>
+             </div>
         
-         @*filtering existing in Boyarka*@
-    <div class="positive-quantity-filter">          
-        @if (Model.PagingFilteringContext.ShowWithPositiveQuantity)
-        {
-            <input type="checkbox" checked="checked" onclick=" displayAjaxLoading(true); window.location.href = '@Model.PagingFilteringContext.ShowWithPositiveQuantityUrl    ' "/>
-        }
-        else
-        {
-            <input type="checkbox" onclick=" displayAjaxLoading(true); window.location.href = '@Model.PagingFilteringContext.ShowWithPositiveQuantityUrl    ' "/>
-        }         
-        <span>Доставка за час</span>                            
-        <span class="spec-value-exist-times"> (@Model.PagingFilteringContext.ShowWithPositiveQuantityCount шт.)</span>
-    </div>
+             @*filtering existing in Boyarka*@
 
-        @*filtering Price*@
-        @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
-        {
-            @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
-        }
-        @*filtering Specs*@
-        @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
-        {
-            @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
-        }
-    </div>
+             <div class="positive-quantity-filter">
+                    
+                 @if (Model.PagingFilteringContext.ShowWithPositiveQuantity)
+                 {
+                     <input type="checkbox" checked="checked" onclick=" displayAjaxLoading(true); window.location.href = '@Model.PagingFilteringContext.ShowWithPositiveQuantityUrl    ' "/>
+                 }
+                 else
+                 {
+                     <input type="checkbox" onclick=" displayAjaxLoading(true); window.location.href = '@Model.PagingFilteringContext.ShowWithPositiveQuantityUrl    ' "/>
+                 }         
+                 <span>Доставка за час</span>                            
+                 <span class="spec-value-exist-times"> (@Model.PagingFilteringContext.ShowWithPositiveQuantityCount шт.)</span>
+             </div>
+
+             @*filtering Price*@
+             @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+             {
+                 @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+             }
+             @*filtering Specs*@
+             @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
+             {
+                 @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
+             }
+         </div>
+     }
 }
 
 @section featured_products {
