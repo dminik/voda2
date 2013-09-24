@@ -32,20 +32,17 @@
                 <ul class="price-range-selector">
                     @foreach (var item in Model.Items)
                     {
-                        <li><a href="@item.FilterUrl">@FormatPriceRangeText(item) (@item.Amount шт.)</a> </li>
+                        <li>
+                            <input type="checkbox" onclick="displayAjaxLoading(true); window.location.href = '@item.FilterUrl'"/>
+                            <span>@FormatPriceRangeText(item) (@item.Amount шт.)</span> 
+                        </li>
                     }
                 </ul>
             }
             else
-            {
-                <div class="selected-price-range">
-                    @FormatPriceRangeText(selectedItem)
-
-                </div>
-                <div class="remove-filter">
-                    @*<a href="@Model.RemoveFilterUrl" class="remove-price-range-filter">@T("Filtering.PriceRangeFilter.Remove")</a>*@
-                    <a href="@Model.RemoveFilterUrl" class="remove-price-range-filter">Сбросить цены</a>
-                </div>
+            {                
+                 <input type="checkbox" checked="checked" onclick="displayAjaxLoading(true); window.location.href = '@Model.RemoveFilterUrl'"/>
+                 <span>@FormatPriceRangeText(selectedItem)</span>                 
             }
         </div>
 
