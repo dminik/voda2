@@ -46,6 +46,15 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "v." }, "", "Блок питания");
 			ReplaceByValue(product.Specifications, new List<string> { "2.2 12V" }, "12V v.2.2", "Блок питания");
 
+			ReplaceByValue(product.Specifications, new List<string> { "От порта USB", "От сети USB", "От USB 2.0", "От USB" }, "От USB порта", "Питание");
+			ReplaceByValue(product.Specifications, new List<string> { " порта порта" }, " порта", "Питание");
+			ReplaceByValue(product.Specifications, new List<string> { "100-240 В" }, "От электросети", "Питание");
+
+
+			   
+    
+    
+
 			ReplaceByValue(product.Specifications, new List<string> { "оборотов/мин.", "об/мин", "оборотов/мин."}, "rpm", "Скорость вращения шпинделя");
 			ReplaceByValue(product.Specifications, new List<string> { " дюйма", "\"" }, "", "Формат");
 			ReplaceByValue(product.Specifications, new List<string> { " дюйма", "\"" }, "", "Формат");
@@ -58,6 +67,7 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { ".0" }, "", "Емкость");
 			ReplaceByValue(product.Specifications, new List<string> { "-", " " }, "", "Интерфейс");
 			ReplaceByValue(product.Specifications, new List<string> { "3" }, "III", "Интерфейс");
+			ReplaceByValue(product.Specifications, new List<string> { "USBIII.0/2.0", "USB2.0/III.0" }, "USB2.0/3.0", "Интерфейс");
 
 			ReplaceByValue(product.Specifications, new List<string> { "m-ATX", "mATX", "MicroATX", "Micro-ATX", "microATX", "micro ATX",  }, "micro-ATX", "Формат");
 			ReplaceByValue(product.Specifications, new List<string> { "Mini-ITX", "miniITX", "MicroATX", "Micro-ATX",   }, "mini-ITX", "Формат");
@@ -266,7 +276,15 @@ namespace Nop.Core.Domain.YandexMarket
 				"Lenovo", 
 				"Iriver",
 				"Transcend",
- 
+				"Kodak",
+				"teXet",
+				"GOODRAM",
+				"Hewlett Packard",
+				"PQI",
+				"Sandisk",
+				"TP-Link",
+				"TRENDnet",
+
 
 				};
 
