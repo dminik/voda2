@@ -20,7 +20,13 @@
 .header .ico-wishlist{padding-left:10px;padding-bottom:5px;}
 .ico-cart:hover *,.header .ico-wishlist:hover *{text-decoration:underline;cursor:pointer;}
 .ico-cart span,.header .ico-wishlist span{text-decoration: underline;}
-.cart-label { display: none;}
+.cart-label {
+  display: inline;
+  left: -52px;
+  position: relative;
+  top: 44px;
+  width: 20px;
+}
 .cart-qty { position: relative;top: 0px;left: 0px;color: red;}
 
 
