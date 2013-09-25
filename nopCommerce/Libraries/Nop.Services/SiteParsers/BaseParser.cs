@@ -370,7 +370,7 @@ namespace Nop.Services.SiteParsers
 				// do it twice because of some bag
 				imageUrl = this.mDriver.FindElement(By.CssSelector(this.CssSelectorForProductPictureInProductPage)).GetAttribute("src");
 
-				if (imageUrl.Contains(".jpg") || imageUrl.Contains(".gif"))
+				if (imageUrl.ToLower().Contains(".jpg") || imageUrl.ToLower().Contains(".gif"))
 					product.ImageUrl_1 = this.SaveImage(imageUrl, product.Name);
 				
 				// Get other images
@@ -383,7 +383,7 @@ namespace Nop.Services.SiteParsers
 					foreach (var curImagesLink in imagesLinks)
 					{
 						var curImageUrl = curImagesLink.GetAttribute("href");
-						if (curImageUrl.Contains(".jpg") || curImageUrl.Contains(".gif"))
+						if (curImageUrl.ToLower().Contains(".jpg") || curImageUrl.ToLower().Contains(".gif"))
 						{
 							if (product.ImageUrl_1 != "") 
 								product.ImageUrl_1 += ";";
@@ -479,7 +479,7 @@ namespace Nop.Services.SiteParsers
 		private void DeleteFromDbAppearedInPriceListFantoms(int parserCategoryId, List<string> productsArtikulsInPiceList)
 		{
 			var appearedInPriceListFantoms =
-				this._yandexMarketProductService.GetByCategory(parserCategoryId)
+				this._yandexMarketProductService.GetByCategory(parserCategoryId, withFantoms: true)
 										   .Where(x => x.IsNotInPriceList && productsArtikulsInPiceList.Contains(x.Articul));
 
 			appearedInPriceListFantoms.ToList().ForEach(this._yandexMarketProductService.Delete);

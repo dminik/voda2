@@ -62,9 +62,7 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "MB", "МВ", "MВ", "Mb", "МБ", "Мб", "МB", "MB", "MB", "МB",  }, "MB", "Буфер");
 
 			   
-			ReplaceByValue(product.Specifications, new List<string> { "TB", "ТВ", "TВ" }, "ТВ", "Емкость");
-			ReplaceByValue(product.Specifications, new List<string> { "Гб", "ГБ" }, "GB", "Емкость");
-			ReplaceByValue(product.Specifications, new List<string> { ".0" }, "", "Емкость");
+
 			ReplaceByValue(product.Specifications, new List<string> { "-", " " }, "", "Интерфейс");
 			ReplaceByValue(product.Specifications, new List<string> { "3" }, "III", "Интерфейс");
 			ReplaceByValue(product.Specifications, new List<string> { "USBIII.0/2.0", "USB2.0/III.0" }, "USB2.0/3.0", "Интерфейс");
@@ -107,13 +105,19 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { " 64-bit", " 64 bit", " (64-bit)", " (64 bit)", " (64bit)", " 64bit", " 32-bit" }, "", "Операционная система");
 			ReplaceByValue(product.Specifications, new List<string> { "Dos" }, "DOS", "Операционная система");
 			ReplaceByValue(product.Specifications, new List<string> { "Free DOS" }, "FreeDOS", "Операционная система");
-			
+
     
 			
 
 			var size = this.GetSize(product.Name);
 			if (size != string.Empty && product.Specifications.All(x => x.Key != "Емкость"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Емкость", size));
+
+			ReplaceByValue(product.Specifications, new List<string> { "TB", "ТВ", "TВ" }, "ТВ", "Емкость");
+			ReplaceByValue(product.Specifications, new List<string> { "Гб", "ГБ" }, "GB", "Емкость");
+			ReplaceByValue(product.Specifications, new List<string> { ".0" }, "", "Емкость");
+			ReplaceByValue(product.Specifications, new List<string> { "00" }, "", "Емкость");
+			
 
 			var manufactureName = this.GetManufactureFromName(product.Name);
 			if (manufactureName != string.Empty && product.Specifications.All(x => x.Key != "Производитель"))
@@ -129,6 +133,46 @@ namespace Nop.Core.Domain.YandexMarket
 				if (megapixels != string.Empty)
 					product.Specifications.Single(x => x.Key == "Разрешение матрицы").Value = megapixels;				
 			}
+
+			//var conObj = product.Specifications.FirstOrDefault(x => x.Key != "Коннектор на входе");
+			//if (conObj != null) product.Specifications.Remove(conObj);
+			//conObj = product.Specifications.FirstOrDefault(x => x.Key != "Коннектор на входе");
+			//if (conObj != null) product.Specifications.Remove(conObj);
+
+			if (product.Specifications.All(x => x.Key != "Коннектор на входе"))
+			{
+				var connector = this.GetConnectorPapa(product.FullDescription);
+				if (connector != string.Empty) product.Specifications.Add(new YandexMarketSpecRecord("Коннектор на входе", connector));
+			}
+
+			ReplaceByValue(product.Specifications, new List<string> { "HDMI-A «папа»", "HDMI A \"папа\"" }, "HDMI-A \"папа\"", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "3.0" }, "", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "3x" }, "3 x", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "2x" }, "2 x", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "«", "»" }, "\"", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "»" }, "\"", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "3.5 мм \"папа\"" }, "3.5 мм \"папа\"", "Коннектор на входе");
+
+			//var conObj2 = product.Specifications.FirstOrDefault(x => x.Key != "Коннектор на выходе");
+			//if (conObj2 != null) product.Specifications.Remove(conObj2);
+			//conObj2 = product.Specifications.FirstOrDefault(x => x.Key != "Коннектор на выходе");
+			//if (conObj2 != null) product.Specifications.Remove(conObj2);
+
+			if (product.Specifications.All(x => x.Key != "Коннектор на выходе"))
+			{
+				var connector = this.GetConnectorMama(product.FullDescription);
+				if (connector != string.Empty) product.Specifications.Add(new YandexMarketSpecRecord("Коннектор на выходе", connector));				
+			}
+
+			ReplaceByValue(product.Specifications, new List<string> { "HDMI-A «папа»", "HDMI A \"папа\"", "HDMI A \"папа\"" }, "HDMI-A \"папа\"", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "3.0" }, "", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "3x" }, "3 x", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "2x" }, "2 x", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "3.5 мм \"мама\"" }, "3.5 мм \"мама\"", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "USB -B" }, "USB-B", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "«", "»" }, "\"", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "»" }, "\"", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "папа" }, "папа", "Коннектор на выходе");
 
 			var displaySize = this.GetDisplaySize(product.Specifications);
 			if (displaySize != string.Empty && product.Specifications.All(x => x.Key != "Размер экрана, дюймы"))
@@ -169,7 +213,11 @@ namespace Nop.Core.Domain.YandexMarket
 			var chip = this.GetChipFromSpecs(product.Specifications);
 			if (chip != string.Empty && product.Specifications.All(x => x.Key != "Тип чипа"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Тип чипа", chip));
-			
+
+			//var toremove = product.Specifications.Where(x => x.Value.Trim() == "").Select(x => x.Id).ToList();
+			//foreach (var id in toremove)
+			//	product.Specifications.Remove(product.Specifications.Single(x => x.Id == id));
+
 			return product;
 		}
 
@@ -285,6 +333,7 @@ namespace Nop.Core.Domain.YandexMarket
 				"TP-Link",
 				"TRENDnet",
 
+				
 
 				};
 
@@ -304,7 +353,7 @@ namespace Nop.Core.Domain.YandexMarket
 				var size = this.GetValByRegExp(name, pattern);
 
 
-				return size;
+				return size.Replace("00" , "");
 		}
 
 		private string GetMegapixelsFromSpecs(YandexMarketProductRecord product)
@@ -484,5 +533,24 @@ namespace Nop.Core.Domain.YandexMarket
 				}
 			}
 		}
+
+		private string GetConnectorPapa(string description)
+		{
+			string pattern = "((?<=Коннектор на входе -)(?:.*)(?=</li>\\r\\n    <li>Коннектор на выходе))";
+
+				var connector = this.GetValByRegExp(description, pattern);
+
+				return connector.Replace("&nbsp;", "").Trim();	
+		}
+
+		private string GetConnectorMama(string description)
+		{
+			string pattern = "((?<=Коннектор на выходе -)(?:.*)(?=</li>\\r\\n\\s?))";
+
+			var connector = this.GetValByRegExp(description, pattern);
+
+			return connector.Replace("&nbsp;", "").Trim();
+		}
+
 	}
 }

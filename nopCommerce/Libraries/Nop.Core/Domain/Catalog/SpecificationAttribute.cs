@@ -4,6 +4,7 @@ using Nop.Core.Domain.Localization;
 namespace Nop.Core.Domain.Catalog
 {
 	using System.Collections.ObjectModel;
+	using System.Linq;
 
 	/// <summary>
 	/// Represents a specification attribute
@@ -29,6 +30,11 @@ namespace Nop.Core.Domain.Catalog
 		{
 			get { return _specificationAttributeOptions ?? (_specificationAttributeOptions = new List<SpecificationAttributeOption>()); }
 			protected set { _specificationAttributeOptions = value; }
+		}
+
+		public void Order()
+		{
+			SpecificationAttributeOptions = SpecificationAttributeOptions.OrderBy(x => x.Name).ToList();			
 		}
 
 		public SpecificationAttribute Clone()

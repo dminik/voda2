@@ -53,6 +53,12 @@
 		{
 			var activeParserCategoriesIdList = _yandexMarketCategoryService.GetActive().Select(x => x.Id);
 			var newSpecsOnly = _GetNewSpecs(activeParserCategoriesIdList);
+
+			foreach (var specificationAttribute in newSpecsOnly)
+			{
+				specificationAttribute.Order();
+			}
+			
 			
 			return Json(newSpecsOnly);
 		}
