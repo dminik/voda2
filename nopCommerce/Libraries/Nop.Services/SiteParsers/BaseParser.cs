@@ -255,10 +255,10 @@ namespace Nop.Services.SiteParsers
 				this.GetSpecs(product);
 		
 				// Переходим на страницу описания товара			
-				this.mDriver.Navigate().GoToUrl(productLink);
+				// this.mDriver.Navigate().GoToUrl(productLink);
 				//Thread.Sleep(3000);
 
-				this.mLogger.Debug("Have main product page " + productLink);
+				// this.mLogger.Debug("Have main product page " + productLink);
 
 				if (CssSelectorForProductFullDescriptionInProductPage != string.Empty)
 				{
