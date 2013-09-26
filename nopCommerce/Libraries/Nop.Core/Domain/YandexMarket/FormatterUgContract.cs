@@ -174,6 +174,12 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "»" }, "\"", "Коннектор на выходе");
 			ReplaceByValue(product.Specifications, new List<string> { "папа" }, "папа", "Коннектор на выходе");
 
+			
+			var tiporazmer = this.GetTiporazmer(product.FullDescription);
+			if (tiporazmer != string.Empty && product.Specifications.All(x => x.Key != "Типоразмер"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Типоразмер", tiporazmer));
+
+
 			var displaySize = this.GetDisplaySize(product.Specifications);
 			if (displaySize != string.Empty && product.Specifications.All(x => x.Key != "Размер экрана, дюймы"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Размер экрана, дюймы", displaySize));
@@ -554,6 +560,42 @@ namespace Nop.Core.Domain.YandexMarket
 			var connector = this.GetValByRegExp(description, pattern);
 
 			return connector.Replace("&nbsp;", "").Trim();
+		}
+
+		private string GetTiporazmer(string description)
+		{
+			string pattern = "((?<=Типоразмер)(?:.*)(?=<))";
+
+			var result = this.GetValByRegExp(description, pattern);
+
+			if (result.Any())
+			{
+				result = result.ToUpper();
+
+				result =
+					result
+						  .Replace("<span lang=\"EN-US\" style=\"mso-ansi-language EN-US;\">".ToUpper(), "")
+						  .Replace("<span lang=\"EN-US\" style=\"mso-ansi-language: EN-US;\">".ToUpper(), "")
+						  .Replace("<spanlang=\"en-us\"style=\"mso-ansi-languageen-us;\">".ToUpper(), "")
+						  .Replace("</spanlang=\"en-us\"style=\"mso-ansi-languageen-us;\">".ToUpper(), "")
+						  .Replace("</span>".ToUpper(), "")
+						  .Replace("</font>".ToUpper(), "");
+
+				result =
+					result					  
+						  .Replace(":", "")
+						  .Replace("&nbsp;".ToUpper(), "")
+						  .Replace(" ", "")
+						  .Replace("А", "A")
+						  .Replace("С", "C")
+						  .Replace("ЧACОВAЯ", "ЧACОВЫЕ")
+						  .Replace("ОВR03,R6,R14,R20,6F22ЭКОЛОГИЧЕCКИБЕЗОПACНЫНЕCОДЕРЖAТРТУТИИКAДМИЯ.ПРЕДЭКCПЛУAТAЦИОННЫЙCРОКХРAНЕНИЯ-ДО2ЛЕТ.", "");
+
+				
+			}
+
+			return result;
+
 		}
 
 	}

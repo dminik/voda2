@@ -1373,4 +1373,4 @@ pre{white-space:pre-wrap;white-space:normal;word-wrap:break-word;}
 
 .short-description li p, .description li p { margin: 0px;}
 
-
+div.news-list-homepage div.news-items div.item div.news-details a { text-decoration: underline;color: blue;}
