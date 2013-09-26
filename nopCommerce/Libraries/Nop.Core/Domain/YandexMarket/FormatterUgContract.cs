@@ -332,8 +332,12 @@ namespace Nop.Core.Domain.YandexMarket
 				"Sandisk",
 				"TP-Link",
 				"TRENDnet",
-
+				"Duracell",
+				"UFO",
+				"Новые Технологии",
 				
+				
+
 
 				};
 
