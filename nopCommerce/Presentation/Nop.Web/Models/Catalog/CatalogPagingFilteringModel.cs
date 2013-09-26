@@ -15,6 +15,43 @@ namespace Nop.Web.Models.Catalog
 {
 	using Filter = Nop.Core.Domain.Catalog.Filter;
 
+	public class SpecOptionComp : IComparer<string>
+	{		
+		public int Compare(string x, string y)
+		{
+			x = this.GetFirstToken(x);
+			y = this.GetFirstToken(y);
+
+			double dX;
+			var isXNum = double.TryParse(x, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out dX);
+
+			double dY;
+			var isYNum = double.TryParse(y, NumberStyles.Number, CultureInfo.CreateSpecificCulture("en-US"), out dY);
+
+			if (isXNum && isYNum)
+				return CompareDouble(dX, dY);
+
+			if (isXNum) return 1;
+			if (isYNum) return -1;
+			
+			return String.Compare(x, y, StringComparison.OrdinalIgnoreCase);
+		}
+
+		private int CompareDouble(double dX, double dY)
+		{
+			if (dX > dY)return 1;
+			if (dX < dY) return -1;
+			return 0;
+		}
+
+		private string GetFirstToken(string str)
+		{
+			str = str.Split(' ')[0];
+
+			return str;
+		}
+	}
+
 	public partial class CatalogPagingFilteringModel : BasePageableModel
     {
         #region Constructors
@@ -394,7 +431,7 @@ namespace Nop.Web.Models.Catalog
                 allFilters = allFilters.OrderBy(saof => saof.SpecificationAttributeDisplayOrder)
                     .ThenBy(saof => saof.SpecificationAttributeName)
                     .ThenBy(saof => saof.SpecificationAttributeOptionDisplayOrder)
-                    .ThenBy(saof => saof.SpecificationAttributeOptionName).ToList();
+					.ThenBy(saof => saof.SpecificationAttributeOptionName, new SpecOptionComp()).ToList();
                 
                 //get already filtered specification options
                 var alreadyFilteredOptions = allFilters
