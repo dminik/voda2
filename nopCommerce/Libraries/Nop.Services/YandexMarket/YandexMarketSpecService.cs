@@ -14,8 +14,7 @@ namespace Nop.Services.YandexMarket
 	/// </summary>
 	public partial class YandexMarketSpecService : IYandexMarketSpecService
 	{
-		#region Constants
-		private const string YANDEXMARKETSpec_BY_CATEGORY_KEY = "Nop.YandexMarketSpec.category-{0}-{1}-{2}";
+		#region Constants		
 		private const string YANDEXMARKETSpec_PATTERN_KEY = "Nop.YandexMarketSpec.";
 		#endregion
 
@@ -23,16 +22,19 @@ namespace Nop.Services.YandexMarket
 
 		private readonly IRepository<YandexMarketSpecRecord> _specRepository;
 		private readonly ICacheManager _cacheManager;
+		private IYandexMarketProductService _yandexMarketProductService;
 
 		#endregion
 
 		#region Ctor
 		
 		public YandexMarketSpecService(ICacheManager cacheManager,
-			IRepository<YandexMarketSpecRecord> specRepository)
+			IRepository<YandexMarketSpecRecord> specRepository,
+			IYandexMarketProductService yandexMarketProductService)
 		{
 			this._cacheManager = cacheManager;
 			this._specRepository = specRepository;
+			_yandexMarketProductService = yandexMarketProductService;
 		}
 
 		#endregion
@@ -50,26 +52,18 @@ namespace Nop.Services.YandexMarket
 		}
 
 		public virtual IPagedList<YandexMarketSpecRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue)
-		{
-			// Получить выборку из базы и приплюсовать форматирование продукта
-			var key = string.Format(YANDEXMARKETSpec_BY_CATEGORY_KEY, pageIndex, pageSize, categoryId);
+		{							
+			//var products = this._specRepository.Table.Where(tr => tr.ProductRecord.YandexMarketCategoryRecordId == categoryId).Select(x => x.ProductRecord);
+			//foreach (var currentProduct in products)	 // formatting			
+			//	currentProduct.FormatMe();
 
-			var result = this._cacheManager.Get(key, () =>
-			{				
-				var products = this._specRepository.Table.Where(tr => tr.ProductRecord.YandexMarketCategoryRecordId == categoryId).Select(x => x.ProductRecord);
-				foreach (var currentProduct in products)	 // formatting			
-					currentProduct.FormatMe();
+			var products = _yandexMarketProductService.GetByCategory(categoryId);
 
-				var allSpecs = new List<YandexMarketSpecRecord>();
-				foreach (var currentProduct in products)	// collecting
-					allSpecs.AddRange(currentProduct.Specifications);
+			var allSpecs = new List<YandexMarketSpecRecord>();
+			foreach (var currentProduct in products)	// collecting
+				allSpecs.AddRange(currentProduct.Specifications);
 
-				return new PagedList<YandexMarketSpecRecord>(allSpecs, pageIndex, pageSize);
-			});
-
-
-
-			return result;
+			return new PagedList<YandexMarketSpecRecord>(allSpecs, pageIndex, pageSize);			
 		}
 		
 		public virtual YandexMarketSpecRecord GetById(int specId)

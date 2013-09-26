@@ -14,20 +14,25 @@ namespace Nop.Data
     /// </summary>
 	public partial class EfRepository<T> : IRepository<T>, IRepository2<T> where T : BaseEntity
     {
-        private readonly IDbContext _context;
+        private readonly IDbContext2 _context;
         private IDbSet<T> _entities;
+
+		public void Detach(object obj)
+		{
+			this._context.Detach(obj);
+		}
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="context">Object context</param>
-        public EfRepository(IDbContext context)
+        public EfRepository(IDbContext2 context)
         {
             this._context = context;
         }
 
         public T GetById(object id)
-        {
+        {			
             return this.Entities.Find(id);
         }
 

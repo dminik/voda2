@@ -23,7 +23,7 @@ namespace Nop.Services.YandexMarket
 
 		#region Fields
 
-		private readonly IRepository<YandexMarketProductRecord> _productRepository;
+		private readonly IRepository2<YandexMarketProductRecord> _productRepository;
 		private readonly ICacheManager _cacheManager;
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
 		private readonly IProductService _productService;
@@ -39,7 +39,7 @@ namespace Nop.Services.YandexMarket
 		/// <param name="productRepository">Tax rate repository</param>
 		public YandexMarketProductService(
 			ICacheManager cacheManager,
-			IRepository<YandexMarketProductRecord> productRepository,
+			IRepository2<YandexMarketProductRecord> productRepository,
 			IYandexMarketCategoryService yandexMarketCategoryService,
 			IProductService productService)
 		{
@@ -84,41 +84,39 @@ namespace Nop.Services.YandexMarket
 			if(categoryId == -1)
 				return new PagedList<YandexMarketProductRecord>(new List<YandexMarketProductRecord>(), 0, 1);
 			
-			string key = string.Format(withFantoms ? YANDEXMARKETProduct_BY_CATEGORY_KEY_WITH_FANTOMS : YANDEXMARKETProduct_BY_CATEGORY_KEY, pageIndex, pageSize, categoryId, isNotImportedOnly);
+			
+			IQueryable<YandexMarketProductRecord> query = 
+								from tr in this._productRepository.Table
+				                orderby tr.Name				                   						
+				                select tr;
+				
+			if (!withFantoms)				
+				query = query.Where(tr => tr.Name != "NotInPriceList");
 
-			var result = this._cacheManager.Get(key, () =>
+			if (categoryId != 0)
+				query = query.Where(tr => tr.YandexMarketCategoryRecordId == categoryId);
+				
+
+
+			if (isNotImportedOnly)
+			{					
+				var shopCategory = _yandexMarketCategoryService.GetById(categoryId);
+				var shopCategoryId = shopCategory != null ? shopCategory.ShopCategoryId : 0;
+				var allShopProductsArtikuls = _productService.SearchProductVariants(shopCategoryId, 0, 0, "", false, 0, 2147483647).Select(x => x.Sku);
+
+				query = query.Where(x => allShopProductsArtikuls.Contains(x.Articul) == false);
+			}
+
+			var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);
+
+			foreach (var curRecord in records)
 			{
-				IQueryable<YandexMarketProductRecord> query = 
-								   from tr in this._productRepository.Table
-				                   orderby tr.Name				                   						
-				                   select tr;
-				
-				if (!withFantoms)				
-					query = query.Where(tr => tr.Name != "NotInPriceList");
+				_productRepository.Detach(curRecord);
+				curRecord.FormatMe();
+			}
 
-				if (categoryId != 0)
-					query = query.Where(tr => tr.YandexMarketCategoryRecordId == categoryId);
-				
-
-
-				if (isNotImportedOnly)
-				{					
-					var shopCategory = _yandexMarketCategoryService.GetById(categoryId);
-					var shopCategoryId = shopCategory != null ? shopCategory.ShopCategoryId : 0;
-					var allShopProductsArtikuls = _productService.SearchProductVariants(shopCategoryId, 0, 0, "", false, 0, 2147483647).Select(x => x.Sku);
-
-					query = query.Where(x => allShopProductsArtikuls.Contains(x.Articul) == false);
-				}
-
-				var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);
-
-				foreach (var curRecord in records)				
-					curRecord.FormatMe();
-				
-				return records;
-			});
-
-			return result;
+			return records;
+			
 		}		
 
 		/// <summary>
@@ -131,7 +129,9 @@ namespace Nop.Services.YandexMarket
 			if (productId == 0)
 				return null;
 
-			return this._productRepository.GetById(productId).FormatMe();
+			var obj = this._productRepository.GetById(productId);
+			_productRepository.Detach(obj);
+			return obj.FormatMe();
 		}
 
 		/// <summary>

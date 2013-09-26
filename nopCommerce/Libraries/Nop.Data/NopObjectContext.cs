@@ -69,6 +69,12 @@ namespace Nop.Data
             }
         }
 
+		public void Detach(object entity)
+		{
+			((IObjectContextAdapter)this).ObjectContext.Detach(entity);
+		}
+
+		
         /// <summary>
         /// Create database script
         /// </summary>

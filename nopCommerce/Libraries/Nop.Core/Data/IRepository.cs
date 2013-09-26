@@ -11,6 +11,8 @@ namespace Nop.Core.Data
 		where T : BaseEntity
 	{
 		void InsertList(IEnumerable<T> entityList);
+
+		void Detach(object obj);
 	}
 
 	/// <summary>

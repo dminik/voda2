@@ -9,6 +9,8 @@ namespace Nop.Data
 	{
 		IList<TEntity> ExecuteStoredProcedureList2<TEntity>(string commandText, params object[] parameters)
 			where TEntity : new();
+
+		void Detach(object entity);
 	}
 
 	public interface IDbContext
@@ -53,5 +55,7 @@ namespace Nop.Data
         /// <param name="parameters">The parameters to apply to the command string.</param>
         /// <returns>The result returned by the database after executing the command.</returns>
         int ExecuteSqlCommand(string sql, int? timeout = null, params object[] parameters);
+
+		
     }
 }
