@@ -531,19 +531,36 @@ namespace Nop.Web.Controllers
                 return model;
             });
         }
-		
-		private void SetSeoMetaTags(Product product, ProductDetailsModel model)
-		{			
-			model.MetaTitle = product.GetLocalized(x => x.MetaTitle);
+				
+		private string GetSeoMetaTitleEnd()
+		{
+			return ". Доставка по Боярке.";
+		}
 
-			model.MetaKeywords = _seoSettings.DefaultTitle + ", " + product.Name 
-				+ ", Доставка по Боярке, Купить, Цена, Компьютерный магазин, Техномережа,";
+		private void SetSeoMetaTags(Product item, ProductDetailsModel model)
+		{
+			model.MetaTitle = item.Name + " " + item.GetLocalized(x => x.MetaTitle) + GetSeoMetaTitleEnd();
 
-			model.MetaDescription = "Купить в Боярке с быстрой доставкой " + product.Name 
-				+ " по цене " + (int)(product.ProductVariants.FirstOrDefault().Price) + " грн. "
-				+ "F5-Боярка - интернет-магазин компьютерной, мобильной и бытовой техники.";
+			model.MetaKeywords = _seoSettings.DefaultTitle + ", " + item.Name
+				+ ", " + _seoSettings.DefaultMetaKeywords;
 
-			model.SeName = product.GetSeName();
+			model.MetaDescription = _seoSettings.DefaultTitle + ". Купить " + item.Name + " с быстрой доставкой"				
+				+ " по цене " + (int)(item.ProductVariants.FirstOrDefault().Price) + " грн. "
+				+ _seoSettings.DefaultMetaDescription;
+
+			model.SeName = item.GetSeName();
+		}
+
+		private void SetSeoMetaTags(Category item, CategoryModel model)
+		{
+			model.MetaTitle = item.Name + " " + item.GetLocalized(x => x.MetaTitle) + GetSeoMetaTitleEnd();
+
+			model.MetaKeywords = _seoSettings.DefaultTitle + ", " + item.Name
+				+ ", " + _seoSettings.DefaultMetaKeywords;
+
+			model.MetaDescription = _seoSettings.DefaultTitle 
+				+ ". Купить " + item.Name + " с быстрой доставкой. "
+			    + _seoSettings.DefaultMetaDescription;
 		}
 
 		[NonAction]
@@ -897,8 +914,8 @@ namespace Nop.Web.Controllers
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
             var model = category.ToModel();
-            
 
+			SetSeoMetaTags(category, model);
 
 
             //sorting

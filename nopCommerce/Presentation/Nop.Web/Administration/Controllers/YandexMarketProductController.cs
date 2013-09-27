@@ -215,8 +215,8 @@
 
 					SavePictures(product, yaProduct.ImageUrl_1);
 
-					//search engine name
-					var seName = product.ValidateSeName(product.Name, product.Name, true);
+					//search engine name					
+					var seName = product.ValidateSeName("", product.Name, true);
 					_urlRecordService.SaveSlug(product, seName, 0);
 				}
 				catch 
