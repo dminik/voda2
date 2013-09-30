@@ -140,10 +140,12 @@ namespace Nop.Web.Controllers
             //new address
             model.NewAddress.CountryId = selectedCountryId;
 
+	        var customerCity = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.City);
 			var newAddress = new Address()
 				{
 					FirstName = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName),
 					Email = _workContext.CurrentCustomer.Email,
+					City = !String.IsNullOrEmpty(customerCity) ? customerCity : "Боярка",
 				};
 
 			model.NewAddress.PrepareModel(newAddress,
