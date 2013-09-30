@@ -10,7 +10,12 @@ using Nop.Data;
 
 namespace Nop.Services.Logging
 {
-    /// <summary>
+	using System.Net.Mail;
+
+	using Nop.Core.Domain.Messages;
+	using Nop.Services.Messages;
+
+	/// <summary>
     /// Default logger
     /// </summary>
     public partial class DefaultLogger : ILogger
@@ -22,6 +27,9 @@ namespace Nop.Services.Logging
         private readonly IDbContext _dbContext;
         private readonly IDataProvider _dataProvider;
         private readonly CommonSettings _commonSettings;
+		private readonly IEmailAccountService _emailAccountService;
+		private readonly EmailAccountSettings _emailAccountSettings;
+		private readonly IEmailSender _emailSender;
         
         #endregion
         
@@ -36,13 +44,20 @@ namespace Nop.Services.Logging
         /// <param name="dataProvider">WeData provider</param>
         /// <param name="commonSettings">Common settings</param>
         public DefaultLogger(IRepository<Log> logRepository, IWebHelper webHelper,
-            IDbContext dbContext, IDataProvider dataProvider, CommonSettings commonSettings)
+            IDbContext dbContext, IDataProvider dataProvider, CommonSettings commonSettings,
+			IEmailAccountService emailAccountService,
+            EmailAccountSettings emailAccountSettings,
+			IEmailSender emailSender
+			)
         {
             this._logRepository = logRepository;
             this._webHelper = webHelper;
             this._dbContext = dbContext;
             this._dataProvider = dataProvider;
             this._commonSettings = commonSettings;
+			this._emailAccountService = emailAccountService;
+			this._emailAccountSettings = emailAccountSettings;
+			this._emailSender = emailSender;
         }
 
         #endregion
@@ -193,8 +208,36 @@ namespace Nop.Services.Logging
 
             _logRepository.Insert(log);
 
+			SendAlertToEmail(log);
+
             return log;
         }
+
+		private void SendAlertToEmail(Log log)
+		{
+			try
+			{			
+				if(log.LogLevel == LogLevel.Debug)
+					return;
+
+				var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+				if (emailAccount == null)
+					throw new NopException("Email account could not be loaded");
+
+
+				var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+				var to = new MailAddress(emailAccount.Email);
+				string subject = "Shop has exception";
+				string body = log.ShortMessage;
+
+				_emailSender.SendEmail(emailAccount, subject, body, from, to);
+			}
+			catch (Exception)
+			{
+
+				
+			}
+		}
 
         #endregion
     }
