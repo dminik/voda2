@@ -73,12 +73,12 @@
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.FirstName)
                     </div>
-                    <div class="inputs">
+                   @* <div class="inputs">
                         @Html.LabelFor(model => model.LastName, new { }, ":")
                         @Html.EditorFor(model => model.LastName)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.LastName)
-                    </div>
+                    </div>*@
                     @if (Model.DateOfBirthEnabled)
                     {
                         <div class="inputs">
@@ -101,6 +101,12 @@
                         @Html.EditorFor(model => model.Email)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.Password, new { }, ":")
+                        @Html.EditorFor(model => model.Password)
+                        @Html.RequiredHint()
+                        @Html.ValidationMessageFor(model => model.Password)
                     </div>
                     @if (Model.UsernamesEnabled)
                     {
@@ -289,7 +295,7 @@
                     </div>
                 </div>
             }
-            <div class="fieldset">
+          @*  <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPassword")</strong>
                 </div>
@@ -313,7 +319,7 @@
                         </div>
                     }
                 </div>
-            </div>
+            </div>*@
             @if (Model.AcceptPrivacyPolicyEnabled)
             {
                 <script type="text/javascript">

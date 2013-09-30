@@ -39,13 +39,13 @@
         @Html.RequiredHint()
         @Html.ValidationMessageFor(model => model.FirstName)
     </div>
-    <div class="inputs">
+   @* <div class="inputs">
         @Html.LabelFor(model => model.LastName, new { }, ":")
             @Html.EditorFor(model => model.LastName)
         @Html.RequiredHint()
         @Html.ValidationMessageFor(model => model.LastName)
 
-    </div>
+    </div>*@
     <div class="inputs">
         @Html.LabelFor(model => model.Email, new { }, ":")
             @Html.EditorFor(model => model.Email)

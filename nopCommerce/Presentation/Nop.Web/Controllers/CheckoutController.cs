@@ -139,7 +139,14 @@ namespace Nop.Web.Controllers
 
             //new address
             model.NewAddress.CountryId = selectedCountryId;
-            model.NewAddress.PrepareModel(null,
+
+			var newAddress = new Address()
+				{
+					FirstName = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName),
+					Email = _workContext.CurrentCustomer.Email,
+				};
+
+			model.NewAddress.PrepareModel(newAddress,
                 false,
                 _addressSettings,
                 _localizationService,
