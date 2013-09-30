@@ -481,10 +481,10 @@ namespace Nop.Web.Controllers
                 }
 
                 //product name
-                if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x=>x.Name)))
-                    cartItemModel.ProductName = string.Format("{0} ({1})",sci.ProductVariant.Product.GetLocalized(x=>x.Name), sci.ProductVariant.GetLocalized(x=>x.Name));
-                else
-                    cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x=>x.Name);
+                // if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x=>x.Name)))
+                   // cartItemModel.ProductName = string.Format("{0} ({1})",sci.ProductVariant.Product.GetLocalized(x=>x.Name), sci.ProductVariant.GetLocalized(x=>x.Name));
+               // else
+                    cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x=>x.Name); // dminikk
                 
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
