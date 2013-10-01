@@ -67,8 +67,11 @@
 					continue;
 				}
 
-				if (currentProductVariant.Price != curProductLine.Price)					
-					currentProductVariant.Price = curProductLine.Price;											
+				var price = curProductLine.Price > 5 ? curProductLine.Price : 3; // товара дешевле 3 гривен быть не должно
+				if (currentProductVariant.Price != price)
+				{					
+					currentProductVariant.Price = price;
+				}
 
 				if (currentProductVariant.AvailableForPreOrder != true)
 					currentProductVariant.AvailableForPreOrder = true;
