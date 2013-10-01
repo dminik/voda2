@@ -72,7 +72,7 @@ _ReSharper.XLN
 ~$*.docx
 
 artifacts/
-build/
+
 buildtasks/
 
 
