@@ -125,26 +125,29 @@
 			// цикл по активным категориям						
 			foreach (var currentParserCategory in parserCategories)
 			{
-				var records = _yandexMarketProductService.GetByCategory(currentParserCategory.Id);
+				var records = _yandexMarketProductService.GetByCategory(currentParserCategory.Id, isNotImportedOnly: true);
 
-				_logger.Debug("--- Category " + currentParserCategory.Name + ". Will be import products: " + records.Count);
+				_logger.Debug("--- Category " + currentParserCategory.Name + ". Total not imported products: " + records.Count);
 				foreach (var curYaProduct in records)
 				{
-					ImportYaProduct(curYaProduct, currentParserCategory.ShopCategoryId);
+					var isImported = ImportYaProduct(curYaProduct, currentParserCategory.ShopCategoryId);
 					if (importedCounter % 20 == 0) // через каждые 5 записей выводить в лог сообщение
 						_logger.Debug("Imported products in general: " + importedCounter + "...");
 
-					importedCounter++;
+					if (isImported)
+						importedCounter++;
 				}
 
+				_logger.Debug("--- Category imported " + currentParserCategory.Name + ".Total imported products: " + importedCounter);
+				
 			}
 
-			_logger.Debug("--- ImportProductList End.");
+			_logger.Debug("--- ImportProductList for End.");
 
 			return Content("Success");
 		}
 
-		private void ImportYaProduct(YandexMarketProductRecord yaProduct, int shopCategoryId)
+		private bool ImportYaProduct(YandexMarketProductRecord yaProduct, int shopCategoryId)
 		{
 			Product product;
 			var variant = _productService.GetProductVariantBySku(yaProduct.Articul);
@@ -154,7 +157,7 @@
 			if (isUpdating)
 			{
 				// product = variant.Product;
-				return; // Не обновляем существующие товары
+				return false; // Не обновляем существующие товары
 			}
 			else
 			{
@@ -226,6 +229,8 @@
 					throw;
 				}
 			}
+
+			return true;
 		}
 
 		

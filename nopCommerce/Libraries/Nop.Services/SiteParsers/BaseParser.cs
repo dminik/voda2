@@ -175,17 +175,15 @@ namespace Nop.Services.SiteParsers
 			int existedProductCounter = 0;
 						
 			foreach (var currentProductLink in productLinks)
-			{				
-				
-
+			{						
 				// существующий в базе продукт игнорируем
 				var existedLink = this.ExistedProductUrlList.FirstOrDefault(x => x.Url == currentProductLink);
 				if (existedLink != null)
 				{
 					if(existedLink.IsFantom)
 						this.mLogger.Debug("Skip fantom");
-					else
-						this.mLogger.Debug("Skip existed product");
+					//else
+						//this.mLogger.Debug("Skip existed product");
 
 					existedProductCounter++;
 					continue;
@@ -218,6 +216,11 @@ namespace Nop.Services.SiteParsers
 
 				//Thread.Sleep(2 * 1000);
 			} // end for products
+
+			if (existedProductCounter != 0)
+			{
+				this.mLogger.Debug("Was skipped existed products: " + existedProductCounter);				
+			}
 
 			return resultProductList;
 		}
