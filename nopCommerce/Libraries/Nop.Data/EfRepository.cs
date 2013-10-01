@@ -107,7 +107,11 @@ namespace Nop.Data
                 if (entity == null)
                     throw new ArgumentNullException("entity");
 
-                this.Entities.Remove(entity);
+	            var dbEntity = this.GetById(entity.Id);
+				if(dbEntity == null)
+					return;
+
+				this.Entities.Remove(dbEntity);
 
                 this._context.SaveChanges();
             }
