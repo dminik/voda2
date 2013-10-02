@@ -216,8 +216,8 @@ namespace Nop.Services.Logging
 		private void SendAlertToEmail(Log log)
 		{
 			try
-			{			
-				if(log.LogLevel == LogLevel.Debug)
+			{
+				if (log.LogLevel == LogLevel.Debug || log.PageUrl.Contains("localhost"))
 					return;
 
 				var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);

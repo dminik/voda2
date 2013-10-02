@@ -1,6 +1,7 @@
 ﻿namespace Nop.Admin.Controllers
 {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
@@ -14,6 +15,7 @@
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
 	using Nop.Services.FileParsers;
+	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers;
 	using Nop.Services.YandexMarket;
 	using Nop.Web.Framework.Controllers;
@@ -25,9 +27,12 @@
 	{
 		private readonly IProductService _productService;
 
-		public VendorFileParserController(IProductService productService)
+		private readonly ILogger _logger;
+
+		public VendorFileParserController(IProductService productService, ILogger logger)
 		{
-			_productService = productService;			
+			_productService = productService;
+			_logger = logger;
 		}
 
 		public ActionResult VendorFileParser()
@@ -38,14 +43,29 @@
 		[HttpPost]
 		public ActionResult ParseAndShow()
 		{
-			var newSpecsOnly = _Parse();
+			var parser = new F5Parser();
+			parser.Parse(_logger);
+
+			List<string> errors;
+			var list = parser.ReadXlsx(out errors);
+
+
+			var newSpecsOnly = new VendorFileParserModel { ProductLineList = list, ErrorList = errors };
+			
 			return Json(newSpecsOnly);
 		}
 
 		[HttpPost]
 		public ActionResult ApplyImport()
 		{
-			var newSpecsOnly = _Parse();			
+			var parser = new F5Parser();
+			parser.Parse(_logger);
+
+			List<string> errors;
+			var list = parser.ReadXlsx(out errors);
+
+
+			var newSpecsOnly = new VendorFileParserModel { ProductLineList = list, ErrorList = errors };	
 			string foundArticules = "";
 			int successCounter = 0;
 

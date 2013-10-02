@@ -47,6 +47,9 @@
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\Tests\Nop.Data.Tests\bin\Debug\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -167,6 +170,7 @@
     <Compile Include="FileParsers\FileParserOstatki.cs" />
     <Compile Include="FileParsers\ProductLine.cs" />
     <Compile Include="SiteParsers\BaseParser.cs" />
+    <Compile Include="SiteParsers\F5Parser.cs" />
     <Compile Include="SiteParsers\UgContractParser.cs" />
     <Compile Include="SiteParsers\YandexMarketHelpers.cs" />
     <Compile Include="SiteParsers\YandexMarketConstants.cs" />
