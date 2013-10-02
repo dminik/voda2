@@ -44,11 +44,9 @@
 		public ActionResult ParseAndShow()
 		{
 			var parser = new F5Parser();
-			parser.Parse(_logger);
-
 			List<string> errors;
-			var list = parser.ReadXlsx(out errors);
 
+			var list = parser.GetPriceListFromCache(_logger, out errors, true);
 
 			var newSpecsOnly = new VendorFileParserModel { ProductLineList = list, ErrorList = errors };
 			
@@ -58,11 +56,10 @@
 		[HttpPost]
 		public ActionResult ApplyImport()
 		{
-			var parser = new F5Parser();
-			parser.Parse(_logger);
-
+			var parser = new F5Parser();			
 			List<string> errors;
-			var list = parser.ReadXlsx(out errors);
+
+			var list = parser.GetPriceListFromCache(_logger, out errors, true);
 
 
 			var newSpecsOnly = new VendorFileParserModel { ProductLineList = list, ErrorList = errors };	
@@ -106,20 +103,6 @@
 
 			return Content("Success for " + successCounter + " from " + newSpecsOnly.ProductLineList.Count() 					
 				+ ". Success Articules" + foundArticules);			
-		}
-
-
-
-		private VendorFileParserModel _Parse()
-		{
-			string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog"), "shop_f5.txt");
-			var resultModel = new VendorFileParserModel(); 
-			List<string> errors;
-			resultModel.ProductLineList = FileParserVendor.ParseFile(filePath, out errors);
-			resultModel.ErrorList = errors;
-
-			return resultModel;
-;
 		}
 	}
 }

@@ -100,6 +100,7 @@
     <Compile Include="Domain\YandexMarket\YandexMarketCategoryRecord.cs" />
     <Compile Include="Domain\YandexMarket\YandexMarketProductRecord.cs" />
     <Compile Include="Domain\YandexMarket\YandexMarketSpecRecord.cs" />
+    <Compile Include="IO\XlsProvider.cs" />
     <Compile Include="IStoreContext.cs" />
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
     <Compile Include="Domain\Cms\WidgetSettings.cs" />
