@@ -14,6 +14,7 @@
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
 	using Nop.Services.FileParsers;
+	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers;
 	using Nop.Services.YandexMarket;
 	using Nop.Web.Framework.Controllers;
@@ -24,10 +25,12 @@
 	public class OstatkiFileParserController : Controller
 	{
 		private readonly IProductService _productService;
+		private readonly ILogger _logger;
 
-		public OstatkiFileParserController(IProductService productService)
+		public OstatkiFileParserController(IProductService productService, ILogger logger)
 		{
-			_productService = productService;			
+			_productService = productService;
+			_logger = logger;
 		}
 
 		public ActionResult OstatkiFileParser()
@@ -44,8 +47,9 @@
 
 		[HttpPost]
 		public ActionResult ApplyImport()
-		{
-			var newSpecsOnly = _Parse();
+		{			
+			var list = _Parse();
+			
 			string notFoundArticules = "";
 			string foundArticules = "";
 			int successCounter = 0;
@@ -66,12 +70,7 @@
 
 			*/
 
-
-
-
-
-
-			foreach (var curProductLine in newSpecsOnly.ProductLineList)
+			foreach (var curProductLine in list.ProductLineList)
 			{
 				var currentProductVariant = _productService.GetProductVariantBySku(curProductLine.Articul);
 				if (currentProductVariant == null)
@@ -111,21 +110,20 @@
 				return Content("Success for all!");
 			else 
 			{
-				return Content("Success for " + successCounter + " from " + newSpecsOnly.ProductLineList.Count() 
+				return Content("Success for " + successCounter + " from " + list.ProductLineList.Count() 
 					+ ". Not Found Articules in shop but they exist in file Ostatki:" + notFoundArticules
 					+ ". Success Articules" + foundArticules);
 			}
 		}
 
-
-
 		private OstatkiFileParserModel _Parse()
 		{
-			string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog"), "Остатки.txt");
-			var resultModel = new OstatkiFileParserModel(); 
+			var parser = new UgContractPriceParser();
 			List<string> errors;
-			resultModel.ProductLineList = Nop.Services.FileParsers.FileParserOstatki.ParseOstatkiFile(filePath, out errors);
-			resultModel.ErrorList = errors;
+
+			var list = parser.GetPriceListFromCache(_logger, out errors, true);
+
+			var resultModel = new OstatkiFileParserModel { ProductLineList = list, ErrorList = errors };	
 
 			return resultModel;
 ;

@@ -26,8 +26,7 @@ namespace Nop.Services.SiteParsers
 	using OpenQA.Selenium.Remote;
 	using OpenQA.Selenium.Support.UI;
 
-
-	public class BasePriceParser<T> where T : class 
+	public class BasePriceParser<T> where T : ProductLine 
 	{
 		protected ILogger mLogger; 
 		private readonly CookieContainer _cookieCont = new CookieContainer();
@@ -71,7 +70,8 @@ namespace Nop.Services.SiteParsers
 
 			this.mLogger.Debug("End  GetPriceListFromCache.");
 
-			return this.ResultList;
+			var distinctedResult = this.ResultList.GroupBy(x => x.Articul).Select(grp => grp.First());
+			return distinctedResult;
 		}
 
 		

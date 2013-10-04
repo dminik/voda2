@@ -1,26 +1,15 @@
 ﻿namespace Nop.Admin.Controllers
 {
-	using System;
-	using System.Collections;
 	using System.Collections.Generic;
-	using System.IO;
 	using System.Linq;
-	using System.Web.Helpers;
 	using System.Web.Mvc;
 
-	using Nop.Admin.Models.FileParser;	
-	using Nop.Admin.Models.YandexMarket;
-	using Nop.Core.Domain.Catalog;
-	using Nop.Core.Domain.YandexMarket;
-	using Nop.Core.Infrastructure;
+	using Nop.Admin.Models.FileParser;
 	using Nop.Services.Catalog;
-	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers;
-	using Nop.Services.YandexMarket;
 	using Nop.Web.Framework.Controllers;
 
-	using Telerik.Web.Mvc;
 
 	[AdminAuthorize]
 	public class VendorFileParserController : Controller

@@ -171,6 +171,7 @@
     <Compile Include="FileParsers\ProductLine.cs" />
     <Compile Include="SiteParsers\BaseParser.cs" />
     <Compile Include="SiteParsers\BasePriceParser.cs" />
+    <Compile Include="SiteParsers\UgContractPriceParser.cs" />
     <Compile Include="SiteParsers\F5PriceParser.cs" />
     <Compile Include="SiteParsers\UgContractParser.cs" />
     <Compile Include="SiteParsers\YandexMarketHelpers.cs" />

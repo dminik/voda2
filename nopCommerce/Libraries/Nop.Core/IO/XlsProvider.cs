@@ -72,14 +72,14 @@ namespace Nop.Core.IO
 					using (var reader = cmd.ExecuteReader(CommandBehavior.CloseConnection))
 					{
 						if (reader != null)
-							result = GetDailyActivityFileLineDetailsListFromReader<T>(reader, getObjectFromReaderFunc);
+							result = GetObjectListFromReader<T>(reader, getObjectFromReaderFunc);
 					}
 				}
 			}
 			return result;
 		}
 
-		private static IEnumerable<T> GetDailyActivityFileLineDetailsListFromReader<T>(IDataReader reader, GetObjectFromReader<T> getObjectFromReaderFunc)
+		private static IEnumerable<T> GetObjectListFromReader<T>(IDataReader reader, GetObjectFromReader<T> getObjectFromReaderFunc)
 		{
 			var result = new List<T>();
 			while (reader.Read())
@@ -172,7 +172,7 @@ namespace Nop.Core.IO
 		public static T GetFieldValueFromReader<T>(IDataReader reader, string fieldName)
 			where T : class 
 		{
-			return GetFieldValueFromReader<T>(reader, fieldName, false, null);
+			return GetFieldValueFromReader<T>(reader, fieldName, true, null);
 		}
 
 		#endregion GetFieldValueFromReader
