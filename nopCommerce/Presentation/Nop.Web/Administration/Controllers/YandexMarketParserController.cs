@@ -8,7 +8,6 @@
 	using System.Transactions;
 	using System.Web.Mvc;
 
-	using Nop.Admin.Models.FileParser;
 	using Nop.Admin.Models.YandexMarket;
 	using Nop.Core.Domain.Catalog;
 	using Nop.Core.Domain.Logging;

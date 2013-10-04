@@ -15,6 +15,7 @@ namespace Nop.Services.SiteParsers
 	using Nop.Core;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Core.IO;
+	using Nop.Services.Catalog;
 	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
 	using Nop.Services.YandexMarket;
@@ -27,8 +28,14 @@ namespace Nop.Services.SiteParsers
 	using OpenQA.Selenium.Support.UI;
 
 
-	public class F5PriceParser : BasePriceParser<ProductLineVendor>
-	{		
+	public class F5PriceParserService : BasePriceParser<ProductLineVendor>, IF5PriceParserService
+	{	
+		public F5PriceParserService(IProductService productService, ILogger logger)
+			: base(productService, logger)
+		{
+			
+		}
+
 		protected override string XlsFileName { get { return "f5_price.xls"; } }
 
 		protected override string UrlBase { get { return "http://shop.f5.ua"; } }
@@ -41,7 +48,6 @@ namespace Nop.Services.SiteParsers
 			if (ResultList.Count() < 9000)
 				throw new Exception("Hm... Price list less then 9000 lines. Count=" + ResultList.Count());
 		}
-
 
 		protected override ProductLineVendor GetObjectFromReader(IDataReader reader)
 		{
@@ -69,6 +75,67 @@ namespace Nop.Services.SiteParsers
 				return null;
 			}
 			return newProductLineVendor;
+		}
+
+		public VendorFileParserModel ParseAndShow(bool isUpdateCacheFromInternet)
+		{			
+			List<string> errors;
+
+			var list = GetPriceListFromCache(out errors, isUpdateCacheFromInternet);
+
+			var newSpecsOnly = new VendorFileParserModel { ProductLineList = list, ErrorList = errors };
+
+			return newSpecsOnly;
+		}
+
+		public string ApplyImport(bool isUpdateCacheFromInternet)
+		{			
+			List<string> errors;
+
+			var list = GetPriceListFromCache(out errors, isUpdateCacheFromInternet);
+
+
+			var newSpecsOnly = new VendorFileParserModel { ProductLineList = list, ErrorList = errors };
+			string foundArticules = "";
+			int successCounter = 0;
+
+			// Получить все варианты
+			// Если вариант есть в прайсе, то выставляем цену и преордер
+			// Иначе сбрасываем
+			// Апдейдим сразу все
+
+			var productVariantList = _productService.GetProductVariants().ToList();
+			foreach (var currentProductVariant in productVariantList)
+			{
+				var curProductLine = newSpecsOnly.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
+
+				if (curProductLine == null)
+				{
+					if (currentProductVariant.Price != 0)
+						currentProductVariant.Price = 0;
+
+					continue;
+				}
+
+				var price = curProductLine.Price > 5 ? curProductLine.Price : 3; // товара дешевле 3 гривен быть не должно
+				if (currentProductVariant.Price != price)
+				{
+					currentProductVariant.Price = price;
+				}
+
+				if (currentProductVariant.AvailableForPreOrder != true)
+					currentProductVariant.AvailableForPreOrder = true;
+
+				successCounter++;
+				foundArticules += curProductLine.Articul + ", ";
+			}
+
+			if (productVariantList.Count > 0) // Вызываем сохранение всего контекста (всех вариантов)
+				_productService.UpdateProductVariant(productVariantList[0]);
+
+
+			return "Success for " + successCounter + " from " + newSpecsOnly.ProductLineList.Count()
+				+ ". Success Articules" + foundArticules;
 		}
 	}
 }

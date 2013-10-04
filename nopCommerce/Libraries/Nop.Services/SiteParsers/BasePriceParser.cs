@@ -15,6 +15,7 @@ namespace Nop.Services.SiteParsers
 	using Nop.Core;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Core.IO;
+	using Nop.Services.Catalog;
 	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
 	using Nop.Services.YandexMarket;
@@ -28,9 +29,16 @@ namespace Nop.Services.SiteParsers
 
 	public class BasePriceParser<T> where T : ProductLine 
 	{
+		protected IProductService _productService;
 		protected ILogger mLogger; 
 		private readonly CookieContainer _cookieCont = new CookieContainer();
 		string _strHtmlLast = "";
+
+		public BasePriceParser(IProductService productService, ILogger logger)
+		{
+			mLogger = logger;
+			_productService = productService;
+		}
 
 		protected IEnumerable<T> ResultList { get; set; }
 
@@ -46,12 +54,12 @@ namespace Nop.Services.SiteParsers
 			get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog", XlsFileName); }
 		}
 
-		public IEnumerable<T> GetPriceListFromCache(ILogger logger, out List<string> errors, bool isUpdateCacheFromInternet)
+		protected IEnumerable<T> GetPriceListFromCache(out List<string> errors, bool isUpdateCacheFromInternet)
 		{
 			errors = new List<string>();
 			
 			if (isUpdateCacheFromInternet)
-				DownloadNewPriceListToCache(logger);
+				DownloadNewPriceListToCache();
 
 			this.mLogger.Debug("Start  GetPriceListFromCache...");
 
@@ -85,10 +93,8 @@ namespace Nop.Services.SiteParsers
 		{
 		}
 
-		private void DownloadNewPriceListToCache(ILogger logger)
-		{
-			mLogger = logger;
-
+		private void DownloadNewPriceListToCache()
+		{			
 			this.mLogger.Debug("Start  DownloadNewPriceListToCache...");
 
 			try
