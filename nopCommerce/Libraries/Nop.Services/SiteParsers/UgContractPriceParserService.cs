@@ -35,7 +35,7 @@ namespace Nop.Services.SiteParsers
 		protected override void PostProcessing()
 		{
 			if (ResultList.Count() < 700)
-				throw new Exception("Hm... Price list less then 700 lines. Count=" + ResultList.Count());
+				throw new Exception("Hm... " + this.GetType().Name + ".Price list less then 700 lines. Count=" + ResultList.Count());
 		}
 
 		protected override ProductLineVendor GetObjectFromReader(IDataReader reader)

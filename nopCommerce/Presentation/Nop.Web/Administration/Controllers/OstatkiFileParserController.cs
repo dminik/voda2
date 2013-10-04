@@ -16,7 +16,8 @@
 		private readonly IUgContractPriceParserService _ugContractPriceParserService;
 		private readonly IF5PriceParserService _f5PriceParserService;
 
-		public OstatkiFileParserController(IProductService productService, ILogger logger, IUgContractPriceParserService ugContractPriceParserService, IF5PriceParserService f5PriceParserService)
+		public OstatkiFileParserController(IProductService productService, ILogger logger, 
+			IUgContractPriceParserService ugContractPriceParserService, IF5PriceParserService f5PriceParserService)
 		{
 			_productService = productService;
 			_logger = logger;
@@ -38,9 +39,9 @@
 
 		[HttpPost]
 		public ActionResult ApplyImportAll()
-		{
-			_ugContractPriceParserService.ApplyImport(true);
+		{			
 			_f5PriceParserService.ApplyImport(true);
+			_ugContractPriceParserService.ApplyImport(true);
 
 			return Content("Success!");
 		}

@@ -61,7 +61,7 @@ namespace Nop.Services.SiteParsers
 			if (isUpdateCacheFromInternet)
 				DownloadNewPriceListToCache();
 
-			this.mLogger.Debug("Start  GetPriceListFromCache...");
+			this.mLogger.Debug("Start " + this.GetType().Name + ".GetPriceListFromCache...");
 
 			try
 			{
@@ -76,7 +76,7 @@ namespace Nop.Services.SiteParsers
 				throw;
 			}
 
-			this.mLogger.Debug("End  GetPriceListFromCache.");
+			this.mLogger.Debug("End  " + this.GetType().Name + ".GetPriceListFromCache.");
 
 			var distinctedResult = this.ResultList.GroupBy(x => x.Articul).Select(grp => grp.First());
 			return distinctedResult;
@@ -249,9 +249,18 @@ namespace Nop.Services.SiteParsers
 		{
 			if (str == "") return 0;
 
-			var partStr = str.Split('.')[0];
-			var result = int.Parse(partStr);
-			return result;
+			try
+			{
+				var partStr = str.Split('.', ',')[0];
+				var result = int.Parse(partStr);
+				return result;
+			}
+			catch
+			{
+				var partStr = str.Split(',')[0];
+				var result = int.Parse(partStr);
+				return result;
+			}
 		}
 				
 		
