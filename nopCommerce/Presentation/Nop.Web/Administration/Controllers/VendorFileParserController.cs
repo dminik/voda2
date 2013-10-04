@@ -43,7 +43,7 @@
 		[HttpPost]
 		public ActionResult ParseAndShow()
 		{
-			var parser = new F5Parser();
+			var parser = new F5PriceParser();
 			List<string> errors;
 
 			var list = parser.GetPriceListFromCache(_logger, out errors, true);
@@ -56,7 +56,7 @@
 		[HttpPost]
 		public ActionResult ApplyImport()
 		{
-			var parser = new F5Parser();			
+			var parser = new F5PriceParser();			
 			List<string> errors;
 
 			var list = parser.GetPriceListFromCache(_logger, out errors, true);

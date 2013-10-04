@@ -26,33 +26,41 @@ namespace Nop.Services.SiteParsers
 	using OpenQA.Selenium.Remote;
 	using OpenQA.Selenium.Support.UI;
 
-	
-	public class F5Parser
+
+	public class BasePriceParser<T> where T : class 
 	{
 		protected ILogger mLogger; 
 		private readonly CookieContainer _cookieCont = new CookieContainer();
 		string _strHtmlLast = "";
-				
-		private readonly string _f5PriceFullFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog", "f5_pricesss.xls");
-		
+
+		protected IEnumerable<T> ResultList { get; set; }
+
+		protected virtual string UrlBase { get { throw new Exception("Not implemented"); } }
+		protected virtual string UrlAuthorization { get { throw new Exception("Not implemented"); } }
+		protected virtual string UrlAuthorizationPostParams { get { throw new Exception("Not implemented"); } }
+		protected virtual string UrlDownload { get { throw new Exception("Not implemented"); } }
 
 
-		public IEnumerable<ProductLineVendor> GetPriceListFromCache(ILogger logger, out List<string> errors, bool isUpdateCacheFromInternet)
+		protected virtual string XlsFileName { get { throw new Exception("Not implemented"); } }
+		protected virtual string PriceFullFileName
+		{
+			get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog", XlsFileName); }
+		}
+
+		public IEnumerable<T> GetPriceListFromCache(ILogger logger, out List<string> errors, bool isUpdateCacheFromInternet)
 		{
 			errors = new List<string>();
-			IEnumerable<ProductLineVendor> resultProductLineVendors;
-
-			if(isUpdateCacheFromInternet)
+			
+			if (isUpdateCacheFromInternet)
 				DownloadNewPriceListToCache(logger);
 
 			this.mLogger.Debug("Start  GetPriceListFromCache...");
 
 			try
 			{
-				resultProductLineVendors = XlsProvider.LoadFromFile<ProductLineVendor>(this._f5PriceFullFileName, GetProductLineVendorFromReader);
+				this.ResultList = XlsProvider.LoadFromFile<T>(this.PriceFullFileName, GetObjectFromReader);
 
-				if (resultProductLineVendors.Count() < 9000)
-					throw new Exception("Hm... Price list less then 9000 lines. Count=" + resultProductLineVendors.Count());
+				this.PostProcessing();
 			}
 			catch (Exception ex)
 			{
@@ -63,7 +71,18 @@ namespace Nop.Services.SiteParsers
 
 			this.mLogger.Debug("End  GetPriceListFromCache.");
 
-			return resultProductLineVendors;
+			return this.ResultList;
+		}
+
+		
+
+		protected virtual T GetObjectFromReader(IDataReader reader)
+		{
+			throw new Exception("Not implemented");
+		}
+
+		protected virtual void PostProcessing()
+		{
 		}
 
 		private void DownloadNewPriceListToCache(ILogger logger)
@@ -72,22 +91,14 @@ namespace Nop.Services.SiteParsers
 
 			this.mLogger.Debug("Start  DownloadNewPriceListToCache...");
 
-			HttpWebResponse myHttpWebResponse = null;
-
 			try
 			{
+				HttpWebResponse myHttpWebResponse = null;
+
 				// Ходим по страницам и логинимся
-				myHttpWebResponse = GetAutherisationPage();
-				myHttpWebResponse = PostAutherisation();
-
-				// Скачиваем файл
-				myHttpWebResponse = this.HttpQuery("http://shop.f5.ua/20861/client/price/export/",
-												   true,  //ispost
-												   "",     //params                               
-												   "application/x-www-form-urlencoded");     //contentType     	
-
-				var stream = myHttpWebResponse.GetResponseStream();
-				XlsProvider.SaveStreamToFile(this._f5PriceFullFileName, stream);
+				GetAutherisationPage();
+				PostAutherisation();
+				DownloadFile();
 			}
 			catch (Exception ex)
 			{
@@ -99,10 +110,25 @@ namespace Nop.Services.SiteParsers
 			this.mLogger.Debug("End  DownloadNewPriceListToCache.");
 		}
 
+		private void DownloadFile()
+		{
+			// Скачиваем файл
+			HttpWebResponse myHttpWebResponse = this.HttpQuery(
+				this.UrlDownload,
+				true,
+				//ispost
+				"",
+				//params                               
+				"application/x-www-form-urlencoded");
+
+			var stream = myHttpWebResponse.GetResponseStream();
+			XlsProvider.SaveStreamToFile(this.PriceFullFileName, stream);
+		}
+
 		private HttpWebResponse GetAutherisationPage()
 		{
 			HttpWebResponse myHttpWebResponse = this.HttpQuery(
-					"http://shop.f5.ua",
+					UrlAuthorization,
 					false,
 					"",
 					"");
@@ -115,16 +141,16 @@ namespace Nop.Services.SiteParsers
 		private HttpWebResponse PostAutherisation()
 		{			
 			HttpWebResponse myHttpWebResponse = this.HttpQuery(
-				"http://shop.f5.ua",
+				UrlAuthorization,
 				true,
-				"login=oleynic&password=18072008y&go=%D0%92%D1%85%D0%BE%D0%B4",
+				UrlAuthorizationPostParams,
 				"application/x-www-form-urlencoded");
 
 			CheckResponseCorrect(myHttpWebResponse, "", HttpStatusCode.Found);
 			return myHttpWebResponse;
 		}
 
-		private void CheckResponseCorrect(HttpWebResponse myHttpWebResponse, string originalStrInContent, HttpStatusCode status)
+		protected void CheckResponseCorrect(HttpWebResponse myHttpWebResponse, string originalStrInContent, HttpStatusCode status)
 		{
 			this._strHtmlLast = this.GetHtmlText(myHttpWebResponse);
 
@@ -167,7 +193,7 @@ namespace Nop.Services.SiteParsers
 			}
 		}
 
-		private HttpWebResponse HttpQuery(string uri, bool isPost, string postParams, string contentType)
+		protected HttpWebResponse HttpQuery(string uri, bool isPost, string postParams, string contentType)
 		{
 			ServicePointManager.Expect100Continue = false;
 			ServicePointManager.SetTcpKeepAlive(true, 6000000, 100000);
@@ -208,12 +234,12 @@ namespace Nop.Services.SiteParsers
 
 			//запоминаем полученные куки
 			if (!String.IsNullOrEmpty(myHttpWebResponse.Headers["Set-Cookie"]))
-				this._cookieCont.SetCookies(new Uri("http://shop.f5.ua"), myHttpWebResponse.Headers["Set-Cookie"]);
+				this._cookieCont.SetCookies(new Uri(UrlBase), myHttpWebResponse.Headers["Set-Cookie"]);
 
 			return myHttpWebResponse;
 		}
 	
-		private static int GetInt(string str)
+		protected static int GetInt(string str)
 		{
 			if (str == "") return 0;
 
@@ -222,32 +248,6 @@ namespace Nop.Services.SiteParsers
 			return result;
 		}
 				
-		private static ProductLineVendor GetProductLineVendorFromReader(IDataReader reader)
-		{
-			var newProductLineVendor = new ProductLineVendor();
-			
-			try
-			{
-				var artikul = XlsProvider.GetFieldValueFromReader<string>(reader, "Код товара");
-
-				if (artikul.Length != 7) // articul должен быть 7 символов
-					return null;
-
-				newProductLineVendor.Articul = artikul;
-				newProductLineVendor.Name = XlsProvider.GetFieldValueFromReader<string>(reader, "Название товара");
-
-				newProductLineVendor.PriceRaschet = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Расч# цена"));
-				newProductLineVendor.Price = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи"));
-				newProductLineVendor.PriceBase = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Базовая цена"));
-				newProductLineVendor.PriceDiff = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи – Базовая цена"));
-
-			}
-			catch (Exception ex)
-			{
-				// errors.Add(worksheet.Cells[currentRow, GetColumnIndex(properties, "Код товара")].Value as string);
-				return null;
-			}
-			return newProductLineVendor;
-		}
+		
 	}
 }
