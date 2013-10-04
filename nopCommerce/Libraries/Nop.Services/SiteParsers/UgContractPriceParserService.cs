@@ -27,15 +27,15 @@ namespace Nop.Services.SiteParsers
 		{ 
 			get
 			{
-				var today = DateTime.Now.ToString("dd.MM.yyyy");
-				return UrlBase + "/report-f5/trade-balances/date" + today + "/suppliers4,95/excel/";
+				var yesterday = DateTime.Now.AddDays(-1).ToString("dd.MM.yyyy");
+				return UrlBase + "/report-f5/trade-balances/date" + yesterday + "/suppliers4,95/excel/";
 			} 
 		}
 		
 		protected override void PostProcessing()
 		{
 			if (ResultList.Count() < 700)
-				throw new Exception("Hm... Price list less then 700 lines. Count=" + ResultList.Count());
+				throw new Exception("Hm... " + this.GetType().Name + ".Price list less then 700 lines. Count=" + ResultList.Count());
 		}
 
 		protected override ProductLineVendor GetObjectFromReader(IDataReader reader)
