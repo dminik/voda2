@@ -9,7 +9,8 @@
 
 <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
 <input type="button" id="parseAndShow" class="t-button" value="Шаг 1. Спарсить и Отобразить" /><br/>
-<input type="button" id="btnApplyImport" class="t-button" value="Шаг 1. Спарсить и Применить" />
+<input type="button" id="btnApplyImport" class="t-button" value="Шаг 2. Спарсить и Применить" />
+<input type="button" id="btnApplyImportAll" class="t-button" value="Шаг 3. Спарсить и Применить все цены и остатки" />
 
 <br/><br/>
 
@@ -93,6 +94,26 @@
                 }
             });
               return false;
-          });
+        });
+        
+
+        $('#btnApplyImportAll').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicator').show(); },
+                complete: function () { $('#parsingIndicator').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("ApplyImportAll", "OstatkiFileParser")',
+                @*data: { categoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                dataType: 'text',
+                success: function (data) {
+                    alert(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+            return false;
+        });
     });
 </script>

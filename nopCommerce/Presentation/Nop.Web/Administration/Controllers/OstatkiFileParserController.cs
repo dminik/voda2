@@ -27,6 +27,8 @@
 		private readonly IProductService _productService;
 		private readonly ILogger _logger;
 
+
+
 		public OstatkiFileParserController(IProductService productService, ILogger logger)
 		{
 			_productService = productService;
@@ -43,6 +45,16 @@
 		{
 			var newSpecsOnly = _Parse();
 			return Json(newSpecsOnly);
+		}
+
+		[HttpPost]
+		public ActionResult ApplyImportAll()
+		{
+			ApplyImport();
+
+			new VendorFileParserController(_productService, _logger).ApplyImport();
+
+			return Content("Success!");
 		}
 
 		[HttpPost]
