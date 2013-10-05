@@ -133,9 +133,12 @@ namespace Nop.Services.SiteParsers
 			if (productVariantList.Count > 0) // Вызываем сохранение всего контекста (всех вариантов)
 				_productService.UpdateProductVariant(productVariantList[0]);
 
+			var msg = "Success for " + successCounter + " from " + newSpecsOnly.ProductLineList.Count() + ". Success Articules"
+			          + foundArticules;
 
-			return "Success for " + successCounter + " from " + newSpecsOnly.ProductLineList.Count()
-				+ ". Success Articules" + foundArticules;
+			mLogger.Debug(msg);
+
+			return msg;
 		}
 	}
 }

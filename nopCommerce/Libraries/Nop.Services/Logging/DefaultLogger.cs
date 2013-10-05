@@ -217,7 +217,7 @@ namespace Nop.Services.Logging
 		{
 			try
 			{
-				if (log.LogLevel == LogLevel.Debug || log.PageUrl.Contains("localhost"))
+				if (log.LogLevel == LogLevel.Debug || log.PageUrl.Contains("localhost") || String.IsNullOrEmpty(log.IpAddress))
 					return;
 
 				var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);

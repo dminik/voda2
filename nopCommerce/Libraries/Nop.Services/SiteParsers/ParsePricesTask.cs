@@ -21,16 +21,23 @@
         /// </summary>
         public void Execute()
 		{
+
 			var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-			var scheduleTask = scheduleTaskService.GetTaskByType(typeof(ParsePricesTask).FullName);
+	        var name = typeof(ParsePricesTask).FullName + ", Nop.Services";
+			var scheduleTask = scheduleTaskService.GetTaskByType(name);
 
 	        if (scheduleTask.LastSuccessUtc != null)
 	        {
-		        if (scheduleTask.LastSuccessUtc.Value.ToString("ddMMyyyy") == DateTime.UtcNow.ToString("ddMMyyyy"))
+				if (scheduleTask.LastSuccessUtc.Value.Date < DateTime.UtcNow.Date)
 		        {
 			        _f5PriceParserService.ApplyImport(true);
 			        _ugContractPriceParserService.ApplyImport(true);
 		        }
+	        }
+	        else
+	        {
+				_f5PriceParserService.ApplyImport(true);
+				_ugContractPriceParserService.ApplyImport(true);
 	        }
 		}
     }

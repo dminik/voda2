@@ -1,10 +1,13 @@
 ﻿namespace Nop.Admin.Controllers
 {
+	using System;
 	using System.Web.Mvc;
 
+	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
 	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers;
+	using Nop.Services.Tasks;
 	using Nop.Web.Framework.Controllers;
 
 
@@ -39,7 +42,20 @@
 
 		[HttpPost]
 		public ActionResult ApplyImportAll()
-		{			
+		{
+			var name = typeof(ParsePricesTask).FullName + ", Nop.Services";
+			var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+			var scheduleTask = scheduleTaskService.GetTaskByType(name);
+
+			if (scheduleTask.LastSuccessUtc != null)
+			{
+				if (scheduleTask.LastSuccessUtc.Value.Date < DateTime.UtcNow.Date)
+				{
+					_f5PriceParserService.ApplyImport(true);
+					_ugContractPriceParserService.ApplyImport(true);
+				}
+			}
+
 			_f5PriceParserService.ApplyImport(true);
 			_ugContractPriceParserService.ApplyImport(true);
 

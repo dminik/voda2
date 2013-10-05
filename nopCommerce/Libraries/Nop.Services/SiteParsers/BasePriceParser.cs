@@ -76,7 +76,7 @@ namespace Nop.Services.SiteParsers
 				throw;
 			}
 
-			this.mLogger.Debug("End  " + this.GetType().Name + ".GetPriceListFromCache.");
+			this.mLogger.Debug("End " + this.GetType().Name + ".GetPriceListFromCache.");
 
 			var distinctedResult = this.ResultList.GroupBy(x => x.Articul).Select(grp => grp.First());
 			return distinctedResult;
@@ -94,8 +94,8 @@ namespace Nop.Services.SiteParsers
 		}
 
 		private void DownloadNewPriceListToCache()
-		{			
-			this.mLogger.Debug("Start  DownloadNewPriceListToCache...");
+		{
+			this.mLogger.Debug("Start " + this.GetType().Name + ".DownloadNewPriceListToCache...");
 
 			try
 			{
@@ -109,11 +109,11 @@ namespace Nop.Services.SiteParsers
 			catch (Exception ex)
 			{
 				this.mLogger.Debug(ex.Message, ex);
-				this.mLogger.Debug("Not success DownloadNewPriceListToCache.");
+				this.mLogger.Debug("Not success DownloadNewPriceListToCache for " + this.GetType().Name);
 				throw;
 			}
 
-			this.mLogger.Debug("End  DownloadNewPriceListToCache.");
+			this.mLogger.Debug("End " + this.GetType().Name + ". DownloadNewPriceListToCache.");
 		}
 
 		private void DownloadFile()

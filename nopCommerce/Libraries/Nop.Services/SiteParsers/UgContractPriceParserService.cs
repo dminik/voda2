@@ -26,8 +26,8 @@ namespace Nop.Services.SiteParsers
 		protected override string UrlDownload 
 		{ 
 			get
-			{
-				var yesterday = DateTime.Now.AddDays(-1).ToString("dd.MM.yyyy");
+			{				
+				var yesterday = DateTime.UtcNow.AddDays(-1).ToString("dd.MM.yyyy");
 				return UrlBase + "/report-f5/trade-balances/date" + yesterday + "/suppliers4,95/excel/";
 			} 
 		}
@@ -96,17 +96,19 @@ namespace Nop.Services.SiteParsers
 
 			*/
 
-			foreach (var curProductLine in list.ProductLineList)
+
+
+			var productVariantList = _productService.GetProductVariants().ToList();
+			foreach (var currentProductVariant in productVariantList)
 			{
-				var currentProductVariant = _productService.GetProductVariantBySku(curProductLine.Articul);
-				if (currentProductVariant == null)
+				var curProductLine = list.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
+			
+				if (curProductLine == null)
 				{
-					notFoundArticules += curProductLine.Articul + ", ";
+					notFoundArticules += currentProductVariant.Sku + ", ";
 					continue;
 				}
-
-				var isNeedUpdate = false;
-
+			
 				//if (currentProductVariant.StockQuantity != curProductLine.Amount)
 				//{
 				//	currentProductVariant.StockQuantity = curProductLine.Amount;
@@ -121,25 +123,32 @@ namespace Nop.Services.SiteParsers
 
 				if (currentProductVariant.AvailableForPreOrder != false)
 				{
-					currentProductVariant.AvailableForPreOrder = false;
-					isNeedUpdate = true;
+					currentProductVariant.AvailableForPreOrder = false;					
 				}
 
-				if (isNeedUpdate)
-					_productService.UpdateProductVariant(currentProductVariant);
+				//if (isNeedUpdate)
+				//	_productService.UpdateProductVariant(currentProductVariant);
 
 				successCounter++;
 				foundArticules += curProductLine.Articul + ", ";
 			}
 
+			if (productVariantList.Count > 0) // Вызываем сохранение всего контекста (всех вариантов)
+				_productService.UpdateProductVariant(productVariantList[0]);
+
+			var msg = "";
+
 			if (notFoundArticules == "")
-				return "Success for all!";
+				msg = "Success for all!";
 			else
 			{
-				return "Success for " + successCounter + " from " + list.ProductLineList.Count()
-					+ ". Not Found Articules in shop but they exist in file Ostatki:" + notFoundArticules
-					+ ". Success Articules" + foundArticules;
-			}	
+				msg = "Success for " + successCounter + " from " + list.ProductLineList.Count()
+				          + ". Not Found Articules in shop but they exist in file Ostatki:" + notFoundArticules
+				          + ". Success Articules" + foundArticules;
+			}
+
+			mLogger.Debug(msg);
+			return msg;
 		}
 
 		private OstatkiFileParserModel _Parse(bool isUpdateCacheFromInternet)

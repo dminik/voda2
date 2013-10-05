@@ -258,17 +258,13 @@ namespace Nop.Web.Controllers
 		[NonAction]
 		private bool IsSpecAllowedForShortDescription(int specificationAttributeOptionId)
 		{
-			var specOptsIdsAllowed = _cacheManager.Get("SpecOptsIdsAllowedForShortDescription", () =>
-                    {
-						var allowedSpecsForShortDescription = _catalogSettings.SpecToDisplayInShortDescription.Split(';').ToList();
+			var allowedSpecsForShortDescription = _catalogSettings.SpecToDisplayInShortDescription.Split(';').ToList();
 
-						var s = _specificationAttributeService.GetSpecificationAttributes()
+			var specOptsIdsAllowed =_specificationAttributeService.GetSpecificationAttributes()
 							.Where(x => allowedSpecsForShortDescription.Contains(x.Name))
 							.SelectMany(h => h.SpecificationAttributeOptions)
 							.Select(w => w.Id);
-						return s;
-					});
-
+						
 			var isAllowed = specOptsIdsAllowed.Contains(specificationAttributeOptionId);
 
 			return isAllowed;
@@ -278,9 +274,6 @@ namespace Nop.Web.Controllers
 		private string PrepareShortDescription(Product product)
 		{
 			var result = "";
-
-			var allowedSpecsForShortDescription = _catalogSettings.SpecToDisplayInShortDescription.Split(';').ToList();
-
 
 			var specShortDescription = new StringBuilder();
 
