@@ -899,6 +899,7 @@
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\fileuploader\fileuploader.css" />
     <Content Include="Content\fileuploader\images\fileuploader-loading.gif" />
+    <Content Include="Content\Images\uploaded\New Folder\Sorevnovania.jpg" />
     <Content Include="favicon.gif" />
     <Content Include="favicon.ico" />
     <Content Include="Scripts\2013.1.219\jquery-1.7.1.min.js" />
