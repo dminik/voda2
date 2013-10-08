@@ -76,7 +76,7 @@ namespace Nop.Services.SiteParsers
 				throw;
 			}
 
-			this.mLogger.Debug("End " + this.GetType().Name + ".GetPriceListFromCache.");
+			this.mLogger.Debug("End  " + this.GetType().Name + ".GetPriceListFromCache.");
 
 			var distinctedResult = this.ResultList.GroupBy(x => x.Articul).Select(grp => grp.First());
 			return distinctedResult;
@@ -252,6 +252,12 @@ namespace Nop.Services.SiteParsers
 			try
 			{
 				var partStr = str.Split('.', ',')[0];
+				var result = int.Parse(partStr);
+				return result;
+			}
+			catch
+			{
+				var partStr = str.Split(',')[0];
 				var result = int.Parse(partStr);
 				return result;
 			}

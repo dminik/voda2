@@ -1,4 +1,4 @@
-﻿namespace Nop.Services.SiteParsers
+namespace Nop.Services.SiteParsers
 {
 	using System;
 

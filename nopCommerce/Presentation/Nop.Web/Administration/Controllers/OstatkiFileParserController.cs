@@ -42,7 +42,7 @@
 
 		[HttpPost]
 		public ActionResult ApplyImportAll()
-		{
+		{			
 			var name = typeof(ParsePricesTask).FullName + ", Nop.Services";
 			var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
 			var scheduleTask = scheduleTaskService.GetTaskByType(name);
