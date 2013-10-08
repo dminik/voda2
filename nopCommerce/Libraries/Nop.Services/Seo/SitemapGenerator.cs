@@ -8,7 +8,9 @@ using Nop.Services.Topics;
 
 namespace Nop.Services.Seo
 {
-    /// <summary>
+	using System.Collections.Generic;
+
+	/// <summary>
     /// Represents a sitemap generator
     /// </summary>
     public partial class SitemapGenerator : BaseSitemapGenerator, ISitemapGenerator
@@ -92,9 +94,13 @@ namespace Nop.Services.Seo
 
         private void WriteProducts()
         {
-            var products = _productService.SearchProducts(
-                storeId: _storeContext.CurrentStore.Id,
-                orderBy: ProductSortingEnum.CreatedOn);
+			//var products = _productService.SearchProducts(
+			//	storeId: _storeContext.CurrentStore.Id,
+			//	orderBy: ProductSortingEnum.CreatedOn,
+			//	categoryIds: new List<int>(){81, 76});
+
+			var products = _productService.GetAllProducts();
+
             foreach (var product in products)
             {
                 //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)

@@ -347,7 +347,7 @@ namespace Nop.Services.Catalog
             pPositiveQuantityCount.DbType = DbType.Int32;
 
                 //invoke stored procedure
-			var products = _dbContext.ExecuteStoredProcedureList2<SpecificationAttributeOptionWithCount>(
+			var products = _dbContext.ExecuteStoredProcedureListWithoutAttach<SpecificationAttributeOptionWithCount>(
 				"ProductLoadAllPaged2",
 				pCategoryIds,				
 				pPriceMin,

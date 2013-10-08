@@ -36,6 +36,7 @@ namespace Nop.Services.Seo
         {
             _writer.WriteStartElement("url");
             string loc = XmlHelper.XmlEncode(url);
+	        loc = Uri.EscapeUriString(loc);
             _writer.WriteElementString("loc", loc);
             _writer.WriteElementString("changefreq", updateFrequency.ToString().ToLowerInvariant());
             _writer.WriteElementString("lastmod", lastUpdated.ToString(DateFormat));

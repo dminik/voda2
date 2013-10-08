@@ -7,7 +7,7 @@ namespace Nop.Data
 {
 	public interface IDbContext2 : IDbContext 
 	{
-		IList<TEntity> ExecuteStoredProcedureList2<TEntity>(string commandText, params object[] parameters)
+		IList<TEntity> ExecuteStoredProcedureListWithoutAttach<TEntity>(string commandText, params object[] parameters)
 			where TEntity : new();
 
 		void Detach(object entity);

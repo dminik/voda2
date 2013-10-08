@@ -572,8 +572,8 @@ namespace Nop.Services.Catalog
 
 
 			//invoke stored procedure
-			var prices = _dbContext.ExecuteStoredProcedureList2<int>(
-				"GetPriceAmountForFilter",
+			var prices = _dbContext.ExecuteStoredProcedureListWithoutAttach<int>(
+				"GetPriceAmountForFilter",				
 				pCategoryIds,				
 				pFilteredSpecs,
 				pShowWithPositiveQuantity);

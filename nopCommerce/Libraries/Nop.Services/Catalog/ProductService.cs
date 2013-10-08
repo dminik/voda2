@@ -198,6 +198,16 @@ namespace Nop.Services.Catalog
             var products = query.ToList();
             return products;
         }
+
+		public virtual IList<Product> GetAllProducts()
+		{
+			var query = from p in _productRepository.Table						
+						where p.Published &&
+						!p.Deleted
+						select p;
+			var products = query.ToList();
+			return products;
+		}
         
         /// <summary>
         /// Gets product

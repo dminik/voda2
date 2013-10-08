@@ -799,6 +799,9 @@ namespace Nop.Web.Controllers
                                                    "/viewpm",
                                                    "/uploadfileproductattribute",
                                                    "/wishlist",
+												   "/register",
+												   "/t/loginregistrationinfo",
+
                                                };
 
 
@@ -806,6 +809,12 @@ namespace Nop.Web.Controllers
             var sb = new StringBuilder();
             sb.Append("User-agent: *");
             sb.Append(newLine);
+
+
+
+			sb.Append("Sitemap: " + _storeContext.CurrentStore.Url + "sitemapseo");
+            sb.Append(newLine);
+
             //usual paths
             foreach (var path in disallowPaths)
             {
@@ -830,6 +839,11 @@ namespace Nop.Web.Controllers
                     }
                 }
             }
+
+			// Host: sitenew.ru"
+			sb.Append("Host: " + _storeContext.CurrentStore.Url.ToLower().Replace("http://", "").Replace("/", ""));
+            sb.Append(newLine);
+			
 
             Response.ContentType = "text/plain";
             Response.Write(sb.ToString());

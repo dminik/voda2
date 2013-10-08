@@ -25,6 +25,8 @@ namespace Nop.Services.Catalog
         /// <returns>Product collection</returns>
         IList<Product> GetAllProductsDisplayedOnHomePage();
 
+		IList<Product> GetAllProducts();
+
 	    IList<ProductVariant> GetProductVariants();
 
         /// <summary>

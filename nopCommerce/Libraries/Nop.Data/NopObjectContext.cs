@@ -178,7 +178,7 @@ namespace Nop.Data
             }
         }
 
-		public IList<TEntity> ExecuteStoredProcedureList2<TEntity>(string commandText, params object[] parameters) where TEntity : new()
+		public IList<TEntity> ExecuteStoredProcedureListWithoutAttach<TEntity>(string commandText, params object[] parameters) where TEntity : new()
 		{
 			//HACK: Entity Framework Code First doesn't support doesn't support output parameters
 			//That's why we have to manually create command and execute it.
