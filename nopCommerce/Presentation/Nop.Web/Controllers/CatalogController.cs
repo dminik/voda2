@@ -37,7 +37,6 @@ using Nop.Web.Framework.Events;
 using Nop.Services.Events;
 using Nop.Services.Stores;
 using System.Xml.Linq;
-using Nop.Core.Domain.Catalog;
 
 namespace Nop.Web.Controllers
 {

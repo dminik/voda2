@@ -98,9 +98,7 @@ namespace Nop.Services.SiteParsers
 			this.mLogger.Debug("Start " + this.GetType().Name + ".DownloadNewPriceListToCache...");
 
 			try
-			{
-				HttpWebResponse myHttpWebResponse = null;
-
+			{				
 				// Ходим по страницам и логинимся
 				GetAutherisationPage();
 				PostAutherisation();
@@ -260,13 +258,7 @@ namespace Nop.Services.SiteParsers
 				var partStr = str.Split(',')[0];
 				var result = int.Parse(partStr);
 				return result;
-			}
-			catch
-			{
-				var partStr = str.Split(',')[0];
-				var result = int.Parse(partStr);
-				return result;
-			}
+			}			
 		}
 				
 		

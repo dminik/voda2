@@ -69,7 +69,7 @@ namespace Nop.Services.SiteParsers
 				newProductLineVendor.PriceDiff = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи – Базовая цена"));
 
 			}
-			catch (Exception ex)
+			catch 
 			{
 				// errors.Add(worksheet.Cells[currentRow, GetColumnIndex(properties, "Код товара")].Value as string);
 				return null;

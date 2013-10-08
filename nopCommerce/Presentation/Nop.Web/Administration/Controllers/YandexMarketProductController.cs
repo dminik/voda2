@@ -238,24 +238,24 @@
 		{
 			return "";
 		
-			var attribsForShortDescription = new List<string>()
-				{
-					"Тип фильтра",
-					"Число ступеней очистки",
-					"Отдельный кран"
-				};
+			//var attribsForShortDescription = new List<string>()
+			//	{
+			//		"Тип фильтра",
+			//		"Число ступеней очистки",
+			//		"Отдельный кран"
+			//	};
 
-			var ulShortDescription = new XElement("ul");
-			var xmlShortDescription = 
-				new XElement("div", new XAttribute("class", "ShortDescription"),
-					ulShortDescription);
+			//var ulShortDescription = new XElement("ul");
+			//var xmlShortDescription = 
+			//	new XElement("div", new XAttribute("class", "ShortDescription"),
+			//		ulShortDescription);
 			
-			foreach (var yandexMarketSpecRecord in specList.Where(yandexMarketSpecRecord => attribsForShortDescription.Contains(yandexMarketSpecRecord.Key)))
-			{
-				ulShortDescription.Add(new XElement("li", yandexMarketSpecRecord.Key + ": " + yandexMarketSpecRecord.Value));
-			}
+			//foreach (var yandexMarketSpecRecord in specList.Where(yandexMarketSpecRecord => attribsForShortDescription.Contains(yandexMarketSpecRecord.Key)))
+			//{
+			//	ulShortDescription.Add(new XElement("li", yandexMarketSpecRecord.Key + ": " + yandexMarketSpecRecord.Value));
+			//}
 
-			return xmlShortDescription.ToString();
+			//return xmlShortDescription.ToString();
 		}
 
 		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList)
@@ -286,29 +286,14 @@
 		private int FindAttributeOptionId(string attrName, string attrOptName, IEnumerable<SpecificationAttribute> allSpecAttrList)
 		{
 			SpecificationAttribute resultAttrName;
-			try
-			{
-				resultAttrName = allSpecAttrList.FirstOrDefault(x => x.Name == attrName);
-			}
-			catch (Exception ex)
-			{				
-				throw;
-			}
 			
-
+			resultAttrName = allSpecAttrList.FirstOrDefault(x => x.Name == attrName);
+			
 			if (resultAttrName == null)
 				throw new Exception("Cant find Product attribute by name " + attrName);
 
-			SpecificationAttributeOption resultAttrOptName;
-			try
-			{
-				resultAttrOptName = resultAttrName.SpecificationAttributeOptions.FirstOrDefault(s => s.Name == attrOptName);
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
-
+			var resultAttrOptName = resultAttrName.SpecificationAttributeOptions.FirstOrDefault(s => s.Name == attrOptName);
+			
 			if (resultAttrOptName == null)
 				throw new Exception("Cant find Product attributeOpt by name " + attrOptName);
 

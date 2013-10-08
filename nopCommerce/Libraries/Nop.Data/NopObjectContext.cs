@@ -185,24 +185,7 @@ namespace Nop.Data
 			//just wait until EF Code First starts support them
 			//
 			//More info: http://weblogs.asp.net/dwahlin/archive/2011/09/23/using-entity-framework-code-first-with-stored-procedures-that-have-output-parameters.aspx
-
-			bool hasOutputParameters = false;
-			if (parameters != null)
-			{
-				foreach (var p in parameters)
-				{
-					var outputP = p as DbParameter;
-					if (outputP == null)
-						continue;
-
-					if (outputP.Direction == ParameterDirection.InputOutput ||
-						outputP.Direction == ParameterDirection.Output)
-						hasOutputParameters = true;
-				}
-			}
-
-
-
+			
 			var context = ((IObjectContextAdapter)(this)).ObjectContext;
 			
 			//var connection = context.Connection;

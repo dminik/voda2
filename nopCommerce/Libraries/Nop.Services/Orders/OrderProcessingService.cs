@@ -836,19 +836,19 @@ namespace Nop.Services.Orders
                 bool skipPaymentWorkflow = orderTotal.Value == decimal.Zero;
 
                 //payment workflow
-                IPaymentMethod paymentMethod = null;
+                //IPaymentMethod paymentMethod;
 				// dminikk
-                if (false) // !skipPaymentWorkflow)
-                {
-                    paymentMethod = _paymentService.LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
-                    if (paymentMethod == null)
-                        throw new NopException("Payment method couldn't be loaded");
+				//if (false) // !skipPaymentWorkflow)
+				//{
+				//	paymentMethod = _paymentService.LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
+				//	if (paymentMethod == null)
+				//		throw new NopException("Payment method couldn't be loaded");
 
-                    //ensure that payment method is active
-                    if (!paymentMethod.IsPaymentMethodActive(_paymentSettings))
-                        throw new NopException("Payment method is not active");
-                }
-                else
+				//	//ensure that payment method is active
+				//	if (!paymentMethod.IsPaymentMethodActive(_paymentSettings))
+				//		throw new NopException("Payment method is not active");
+				//}
+				//else
                     processPaymentRequest.PaymentMethodSystemName = "";
 
                 //recurring or standard shopping cart?
@@ -876,72 +876,72 @@ namespace Nop.Services.Orders
                 //process payment
                 ProcessPaymentResult processPaymentResult = null;
 				// dminikk 
-                if (false) //!skipPaymentWorkflow)
-                {
-                    if (!processPaymentRequest.IsRecurringPayment)
-                    {
-                        if (isRecurringShoppingCart)
-                        {
-                            //recurring cart
-                            var recurringPaymentType = _paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName);
-                            switch (recurringPaymentType)
-                            {
-                                case RecurringPaymentType.NotSupported:
-                                    throw new NopException("Recurring payments are not supported by selected payment method");
-                                case RecurringPaymentType.Manual:
-                                case RecurringPaymentType.Automatic:
-                                    processPaymentResult = _paymentService.ProcessRecurringPayment(processPaymentRequest);
-                                    break;
-                                default:
-                                    throw new NopException("Not supported recurring payment type");
-                            }
-                        }
-                        else
-                        {
-                            //standard cart
-                            processPaymentResult = _paymentService.ProcessPayment(processPaymentRequest);
-                        }
-                    }
-                    else
-                    {
-                        if (isRecurringShoppingCart)
-                        {
-                            //Old credit card info
-                            processPaymentRequest.CreditCardType = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardType) : "";
-                            processPaymentRequest.CreditCardName = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardName) : "";
-                            processPaymentRequest.CreditCardNumber = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardNumber) : "";
-                            //MaskedCreditCardNumber 
-                            processPaymentRequest.CreditCardCvv2 = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardCvv2) : "";
-                            try
-                            {
-                                processPaymentRequest.CreditCardExpireMonth = initialOrder.AllowStoringCreditCardNumber ? Convert.ToInt32(_encryptionService.DecryptText(initialOrder.CardExpirationMonth)) : 0;
-                                processPaymentRequest.CreditCardExpireYear = initialOrder.AllowStoringCreditCardNumber ? Convert.ToInt32(_encryptionService.DecryptText(initialOrder.CardExpirationYear)) : 0;
-                            }
-                            catch {}
+				//if (false) //!skipPaymentWorkflow)
+				//{
+				//	if (!processPaymentRequest.IsRecurringPayment)
+				//	{
+				//		if (isRecurringShoppingCart)
+				//		{
+				//			//recurring cart
+				//			var recurringPaymentType = _paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName);
+				//			switch (recurringPaymentType)
+				//			{
+				//				case RecurringPaymentType.NotSupported:
+				//					throw new NopException("Recurring payments are not supported by selected payment method");
+				//				case RecurringPaymentType.Manual:
+				//				case RecurringPaymentType.Automatic:
+				//					processPaymentResult = _paymentService.ProcessRecurringPayment(processPaymentRequest);
+				//					break;
+				//				default:
+				//					throw new NopException("Not supported recurring payment type");
+				//			}
+				//		}
+				//		else
+				//		{
+				//			//standard cart
+				//			processPaymentResult = _paymentService.ProcessPayment(processPaymentRequest);
+				//		}
+				//	}
+				//	else
+				//	{
+				//		if (isRecurringShoppingCart)
+				//		{
+				//			//Old credit card info
+				//			processPaymentRequest.CreditCardType = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardType) : "";
+				//			processPaymentRequest.CreditCardName = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardName) : "";
+				//			processPaymentRequest.CreditCardNumber = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardNumber) : "";
+				//			//MaskedCreditCardNumber 
+				//			processPaymentRequest.CreditCardCvv2 = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardCvv2) : "";
+				//			try
+				//			{
+				//				processPaymentRequest.CreditCardExpireMonth = initialOrder.AllowStoringCreditCardNumber ? Convert.ToInt32(_encryptionService.DecryptText(initialOrder.CardExpirationMonth)) : 0;
+				//				processPaymentRequest.CreditCardExpireYear = initialOrder.AllowStoringCreditCardNumber ? Convert.ToInt32(_encryptionService.DecryptText(initialOrder.CardExpirationYear)) : 0;
+				//			}
+				//			catch {}
 
-                            var recurringPaymentType = _paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName);
-                            switch (recurringPaymentType)
-                            {
-                                case RecurringPaymentType.NotSupported:
-                                    throw new NopException("Recurring payments are not supported by selected payment method");
-                                case RecurringPaymentType.Manual:
-                                    processPaymentResult = _paymentService.ProcessRecurringPayment(processPaymentRequest);
-                                    break;
-                                case RecurringPaymentType.Automatic:
-                                    //payment is processed on payment gateway site
-                                    processPaymentResult = new ProcessPaymentResult();
-                                    break;
-                                default:
-                                    throw new NopException("Not supported recurring payment type");
-                            }
-                        }
-                        else
-                        {
-                            throw new NopException("No recurring products");
-                        }
-                    }
-                }
-                else
+				//			var recurringPaymentType = _paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName);
+				//			switch (recurringPaymentType)
+				//			{
+				//				case RecurringPaymentType.NotSupported:
+				//					throw new NopException("Recurring payments are not supported by selected payment method");
+				//				case RecurringPaymentType.Manual:
+				//					processPaymentResult = _paymentService.ProcessRecurringPayment(processPaymentRequest);
+				//					break;
+				//				case RecurringPaymentType.Automatic:
+				//					//payment is processed on payment gateway site
+				//					processPaymentResult = new ProcessPaymentResult();
+				//					break;
+				//				default:
+				//					throw new NopException("Not supported recurring payment type");
+				//			}
+				//		}
+				//		else
+				//		{
+				//			throw new NopException("No recurring products");
+				//		}
+				//	}
+				//}
+				//else
                 {
                     //payment is not required
                     if (processPaymentResult == null)

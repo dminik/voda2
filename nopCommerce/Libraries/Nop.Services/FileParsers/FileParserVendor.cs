@@ -47,7 +47,7 @@ namespace Nop.Services.FileParsers
 					newProductLineVendor.PriceBase = GetInt(currentLineColumns[priceBaseColumnIndex]);
 					newProductLineVendor.PriceDiff = GetInt(currentLineColumns[priceDiffColumnIndex]);
 				}
-				catch (Exception ex)
+				catch
 				{
 					errors.Add(lines[i]);
 					continue;

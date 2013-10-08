@@ -39,7 +39,7 @@ namespace Nop.Services.FileParsers
 					//newProductLine.Amount = int.Parse(currentLineColumns[amountColumnIndex].Replace(",000", "").Replace(",00", "").Replace(",0", ""));
 					//newProductLine.Price = int.Parse(currentLineColumns[priceColumnIndex].Replace(",000", "").Replace(",00", "").Replace(",0", ""));
 				}
-				catch (Exception ex)
+				catch 
 				{
 					errors.Add(lines[i]);
 					continue;
