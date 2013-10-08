@@ -111,6 +111,21 @@ namespace Nop.Web
             }
         }
 
+		protected void Application_PreRequestHandlerExecute(Object sender, EventArgs e)
+		{
+			string currentUrl = HttpContext.Current.Request.Url.ToString().ToLower();
+
+			const string OldDomain = "http://f5-boyarka.com.ua";			
+			const string NewDomain = "http://fs-boyarka.com.ua";
+
+			if (currentUrl.StartsWith(OldDomain))
+			{
+				Response.Status = "301 Moved Permanently";
+				Response.AddHeader("Location", currentUrl.Replace(OldDomain, NewDomain));
+				Response.End();
+			}
+		}
+
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             //ignore static resources
