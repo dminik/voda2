@@ -40,7 +40,7 @@
 	left: 32px;
 	position: absolute;
 	text-decoration: none;
-	top: 38px;
+	top: 85px;
 	width: 10%;
 }
 
@@ -54,7 +54,7 @@
 	position: relative;	
 }
 .logo{
-	background: /*url("images/logo.jpg")*/ no-repeat scroll 9px 0px / 142px auto transparent;
+	background: url("images/logo.jpg") no-repeat scroll 10px 3px / 122px auto rgba(0, 0, 0, 0);
 	display: inline-block;
 	height: 100%;
 	opacity: 0.9;
