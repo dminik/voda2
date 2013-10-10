@@ -16,11 +16,11 @@
 	{
 		private readonly IProductService _productService;
 		private readonly ILogger _logger;
-		private readonly IUgContractPriceParserService _ugContractPriceParserService;
+		private readonly IOstatkiPriceParserService _ugContractPriceParserService;
 		private readonly IF5PriceParserService _f5PriceParserService;
 
 		public OstatkiFileParserController(IProductService productService, ILogger logger, 
-			IUgContractPriceParserService ugContractPriceParserService, IF5PriceParserService f5PriceParserService)
+			IOstatkiPriceParserService ugContractPriceParserService, IF5PriceParserService f5PriceParserService)
 		{
 			_productService = productService;
 			_logger = logger;
@@ -51,13 +51,13 @@
 			{
 				if (scheduleTask.LastSuccessUtc.Value.Date < DateTime.UtcNow.Date)
 				{
-					_f5PriceParserService.ApplyImport(true);
-					_ugContractPriceParserService.ApplyImport(true);
+					_f5PriceParserService.SetVendorPrices(true);
+					_ugContractPriceParserService.SetExistingInBoyarka(true);
 				}
 			}
 
-			_f5PriceParserService.ApplyImport(true);
-			_ugContractPriceParserService.ApplyImport(true);
+			_f5PriceParserService.SetVendorPrices(true);
+			_ugContractPriceParserService.SetExistingInBoyarka(true);
 
 			return Content("Success!");
 		}
@@ -65,7 +65,7 @@
 		[HttpPost]
 		public ActionResult ApplyImport()
 		{
-			var msg = _ugContractPriceParserService.ApplyImport(true);
+			var msg = _ugContractPriceParserService.SetExistingInBoyarka(true);
 			return Content(msg);			
 		}		
 	}

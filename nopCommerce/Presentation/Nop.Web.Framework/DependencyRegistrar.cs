@@ -255,7 +255,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();
 
 			
-			builder.RegisterType<UgContractPriceParserService>().As<IUgContractPriceParserService>().InstancePerHttpRequest();
+			builder.RegisterType<OstatkiPriceParserService>().As<IOstatkiPriceParserService>().InstancePerHttpRequest();
 			builder.RegisterType<F5PriceParserService>().As<IF5PriceParserService>().InstancePerHttpRequest();
 
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();

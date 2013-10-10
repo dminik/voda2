@@ -40,7 +40,7 @@
 		[HttpPost]
 		public ActionResult ApplyImport()
 		{
-			var msg = _f5PriceParserService.ApplyImport(true);
+			var msg = _f5PriceParserService.SetVendorPrices(true);
 			return Content(msg);			
 		}
 	}

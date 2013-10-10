@@ -24,5 +24,9 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a vaule indicating whether to hide admin menu items based on ACL
         /// </summary>
         public bool HideAdminMenuItemsBasedOnPermissions { get; set; }
+
+		public bool F5SiteLogin { get; set; }
+		public bool F5SitePassword { get; set; }
+
     }
 }

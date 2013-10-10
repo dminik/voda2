@@ -165,24 +165,24 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Common\FulltextService.cs" />
-    <Compile Include="SiteParsers\IF5PriceParserService.cs" />
-    <Compile Include="SiteParsers\IUgContractPriceParserService.cs" />
-    <Compile Include="SiteParsers\OstatkiFileParserModel.cs" />
-    <Compile Include="SiteParsers\VendorFileParserModel.cs" />
+    <Compile Include="SiteParsers\Xls\IF5PriceParserService.cs" />
+    <Compile Include="SiteParsers\Xls\IOstatkiPriceParserService.cs" />
+    <Compile Include="SiteParsers\Xls\OstatkiParserModel.cs" />
+    <Compile Include="SiteParsers\Xls\VendorParserModel.cs" />
     <Compile Include="SiteParsers\ParsePricesTask.cs" />
     <Compile Include="FileParsers\FileParserVendor.cs" />
     <Compile Include="FileParsers\ProductLineVendor.cs" />
     <Compile Include="FileParsers\FileParserOstatki.cs" />
     <Compile Include="FileParsers\ProductLine.cs" />
-    <Compile Include="SiteParsers\BaseParser.cs" />
-    <Compile Include="SiteParsers\BasePriceParser.cs" />
-    <Compile Include="SiteParsers\UgContractPriceParserService.cs" />
-    <Compile Include="SiteParsers\F5PriceParserService.cs" />
-    <Compile Include="SiteParsers\UgContractParser.cs" />
-    <Compile Include="SiteParsers\YandexMarketHelpers.cs" />
-    <Compile Include="SiteParsers\YandexMarketConstants.cs" />
-    <Compile Include="SiteParsers\YandexMarketSpecMapper.cs" />
-    <Compile Include="SiteParsers\YandexMarketParser.cs" />
+    <Compile Include="SiteParsers\Products\BaseParser.cs" />
+    <Compile Include="SiteParsers\Xls\BasePriceParser.cs" />
+    <Compile Include="SiteParsers\Xls\OstatkiPriceParserService.cs" />
+    <Compile Include="SiteParsers\Xls\F5PriceParserService.cs" />
+    <Compile Include="SiteParsers\Products\UgContractParser.cs" />
+    <Compile Include="SiteParsers\Products\YandexMarketHelpers.cs" />
+    <Compile Include="SiteParsers\Products\YandexMarketConstants.cs" />
+    <Compile Include="SiteParsers\Products\YandexMarketSpecMapper.cs" />
+    <Compile Include="SiteParsers\Products\YandexMarketParser.cs" />
     <Compile Include="Vendors\VendorService.cs" />
     <Compile Include="Vendors\IVendorService.cs" />
     <Compile Include="Customers\ICustomerRegistrationService.cs" />
@@ -437,6 +437,9 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>Nop_Services_EuropaCheckVatService_checkVatService</CachedSettingsPropName>
     </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SiteParsers\Txt\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

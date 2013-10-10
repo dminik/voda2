@@ -5,14 +5,16 @@ namespace Nop.Services.SiteParsers
 	using System.Data;
 	using System.Linq;
 
+	using Nop.Core.Domain.Security;
 	using Nop.Core.IO;
+	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
 	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
 
-	public class UgContractPriceParserService : BasePriceParser<ProductLineVendor>, IUgContractPriceParserService
+	public class OstatkiPriceParserService : BasePriceParser<ProductLineVendor>, IOstatkiPriceParserService
 	{		
-		public UgContractPriceParserService(IProductService productService, ILogger logger)
+		public OstatkiPriceParserService(IProductService productService, ILogger logger)
 			: base(productService, logger)
 		{
 			
@@ -22,7 +24,17 @@ namespace Nop.Services.SiteParsers
 
 		protected override string UrlBase { get { return "http://yugpartner.com.ua"; } }
 		protected override string UrlAuthorization { get { return UrlBase + "/auth/"; } }
-		protected override string UrlAuthorizationPostParams { get { return "login=Oleynic&password=18072008y"; } }
+		protected override string UrlAuthorizationPostParams
+		{
+			get
+			{
+				var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
+
+				return "login=" + securitySettings.F5SiteLogin
+					+ "&password=" + securitySettings.F5SitePassword;
+			}
+		}
+		
 		protected override string UrlDownload 
 		{ 
 			get
@@ -66,18 +78,23 @@ namespace Nop.Services.SiteParsers
 			return newProductLineVendor;
 		}
 
-		public OstatkiFileParserModel ParseAndShow(bool isUpdateCacheFromInternet)
+		public OstatkiParserModel ParseAndShow(bool isUpdateCacheFromInternet)
 		{
 			var newSpecsOnly = _Parse(isUpdateCacheFromInternet);
 			return newSpecsOnly;
 		}
 
-		public string ApplyImport(bool isUpdateCacheFromInternet)
+		/// <summary>
+		/// Set existing in Boyarka
+		/// </summary>
+		/// <param name="isUpdateCacheFromInternet"></param>
+		/// <returns></returns>
+		public string SetExistingInBoyarka(bool isUpdateCacheFromInternet)
 		{
-			var list = _Parse(isUpdateCacheFromInternet);
+			var priceList = _Parse(isUpdateCacheFromInternet);
 
-			string notFoundArticules = "";
-			string foundArticules = "";
+			string notFoundArticules = ""; 
+			string foundArticules = ""; 
 			int successCounter = 0;
 
 			/*
@@ -85,15 +102,7 @@ namespace Nop.Services.SiteParsers
 			 цена           0 (не показываем его на сайте)       есть                                       есть
 			 предзаказ              да                           да                                          нет
 		     доставка сейчас                     -               нет                                          да
-			 * 
-			 * 
-			 * Подправить:
-				Количество не отслеживаем ок
-				Отображение в 2 местах ок
-				При импорте, парсинге в двух файлах ок
-				Слово Заказать ок
-				Фильтр наличия - подправить хранимку
-
+			 
 			*/
 
 
@@ -101,9 +110,10 @@ namespace Nop.Services.SiteParsers
 			var productVariantList = _productService.GetProductVariants().ToList();
 			foreach (var currentProductVariant in productVariantList)
 			{
-				var curProductLine = list.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
+				var curProductLine = priceList.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
+				var isProductInPriceList = curProductLine == null;
 			
-				if (curProductLine == null)
+				if (isProductInPriceList)
 				{
 					notFoundArticules += currentProductVariant.Sku + ", ";
 					continue;
@@ -142,20 +152,20 @@ namespace Nop.Services.SiteParsers
 				msg = "Success for all!";
 			else
 			{
-				msg = "Success for " + successCounter + " from " + list.ProductLineList.Count();
+				msg = "Success for " + successCounter + " from " + priceList.ProductLineList.Count();
 			}
 
 			mLogger.Debug(msg);
 			return msg;
 		}
 
-		private OstatkiFileParserModel _Parse(bool isUpdateCacheFromInternet)
+		private OstatkiParserModel _Parse(bool isUpdateCacheFromInternet)
 		{			
 			List<string> errors;
 
-			var list = GetPriceListFromCache(out errors, true);
+			var list = GetPriceListFromCache(out errors, isUpdateCacheFromInternet);
 
-			var resultModel = new OstatkiFileParserModel { ProductLineList = list, ErrorList = errors };
+			var resultModel = new OstatkiParserModel { ProductLineList = list, ErrorList = errors };
 
 			return resultModel;			
 		}

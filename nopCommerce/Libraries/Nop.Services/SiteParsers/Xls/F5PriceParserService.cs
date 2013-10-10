@@ -13,8 +13,10 @@ namespace Nop.Services.SiteParsers
 	using System.Web;
 
 	using Nop.Core;
+	using Nop.Core.Domain.Security;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Core.IO;
+	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
 	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
@@ -40,7 +42,17 @@ namespace Nop.Services.SiteParsers
 
 		protected override string UrlBase { get { return "http://shop.f5.ua"; } }
 		protected override string UrlAuthorization { get { return UrlBase; } }
-		protected override string UrlAuthorizationPostParams { get { return "login=oleynic&password=18072008y&go=%D0%92%D1%85%D0%BE%D0%B4"; } }
+		protected override string UrlAuthorizationPostParams
+		{
+			get
+			{
+				var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
+				
+				return "login=" + securitySettings.F5SiteLogin 
+					+ "&password=" + securitySettings.F5SitePassword 
+					+ "&go=%D0%92%D1%85%D0%BE%D0%B4";
+			}
+		}
 		protected override string UrlDownload { get { return UrlBase + "/20861/client/price/export/"; } }
 
 		protected override void PostProcessing()
@@ -77,25 +89,25 @@ namespace Nop.Services.SiteParsers
 			return newProductLineVendor;
 		}
 
-		public VendorFileParserModel ParseAndShow(bool isUpdateCacheFromInternet)
+		public VendorParserModel ParseAndShow(bool isUpdateCacheFromInternet)
 		{			
 			List<string> errors;
 
 			var list = GetPriceListFromCache(out errors, isUpdateCacheFromInternet);
 
-			var newSpecsOnly = new VendorFileParserModel { ProductLineList = list, ErrorList = errors };
+			var newSpecsOnly = new VendorParserModel { ProductLineList = list, ErrorList = errors };
 
 			return newSpecsOnly;
 		}
 
-		public string ApplyImport(bool isUpdateCacheFromInternet)
+		public string SetVendorPrices(bool isUpdateCacheFromInternet)
 		{			
 			List<string> errors;
 
 			var list = GetPriceListFromCache(out errors, isUpdateCacheFromInternet);
 
 
-			var newSpecsOnly = new VendorFileParserModel { ProductLineList = list, ErrorList = errors };
+			var newSpecsOnly = new VendorParserModel { ProductLineList = list, ErrorList = errors };
 			string foundArticules = "";
 			int successCounter = 0;
 

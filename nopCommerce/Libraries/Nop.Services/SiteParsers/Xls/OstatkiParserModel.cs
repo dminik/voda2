@@ -4,9 +4,9 @@
 
 	using Nop.Services.FileParsers;
 
-	public class VendorFileParserModel
+	public class OstatkiParserModel
 	{
-		public IEnumerable<ProductLineVendor> ProductLineList { get; set; }
+		public IEnumerable<ProductLine> ProductLineList { get; set; }
 		public IEnumerable<string> ErrorList { get; set; }       
 	}
 }

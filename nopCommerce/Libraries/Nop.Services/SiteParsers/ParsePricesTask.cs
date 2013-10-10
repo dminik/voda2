@@ -7,10 +7,10 @@ namespace Nop.Services.SiteParsers
 
 	public partial class ParsePricesTask : ITask
     {
-		private readonly IUgContractPriceParserService _ugContractPriceParserService;
+		private readonly IOstatkiPriceParserService _ugContractPriceParserService;
 		private readonly IF5PriceParserService _f5PriceParserService;
 
-		public ParsePricesTask(IUgContractPriceParserService ugContractPriceParserService, IF5PriceParserService f5PriceParserService)
+		public ParsePricesTask(IOstatkiPriceParserService ugContractPriceParserService, IF5PriceParserService f5PriceParserService)
         {
 			_ugContractPriceParserService = ugContractPriceParserService;
 			_f5PriceParserService = f5PriceParserService;
@@ -30,14 +30,14 @@ namespace Nop.Services.SiteParsers
 	        {
 				if (scheduleTask.LastSuccessUtc.Value.Date < DateTime.UtcNow.Date)
 		        {
-			        _f5PriceParserService.ApplyImport(true);
-			        _ugContractPriceParserService.ApplyImport(true);
+			        _f5PriceParserService.SetVendorPrices(true);
+			        _ugContractPriceParserService.SetExistingInBoyarka(true);
 		        }
 	        }
 	        else
 	        {
-				_f5PriceParserService.ApplyImport(true);
-				_ugContractPriceParserService.ApplyImport(true);
+				_f5PriceParserService.SetVendorPrices(true);
+				_ugContractPriceParserService.SetExistingInBoyarka(true);
 	        }
 		}
     }
