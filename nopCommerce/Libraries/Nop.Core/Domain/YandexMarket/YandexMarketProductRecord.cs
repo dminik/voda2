@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations.Schema;
+	using System.Linq;
 	using System.Text;
 
 	using Nop.Core;
@@ -105,6 +106,23 @@
 				+ "FullDescription = " + FullDescription + Environment.NewLine);
 			
 			return result.ToString();
+		}
+
+		public YandexMarketProductRecord Clone()
+		{
+			var specifications = this.Specifications.Select(yandexMarketSpecRecord => yandexMarketSpecRecord.Clone()).ToList();
+
+			return new YandexMarketProductRecord()
+				{
+					Id = Id,
+					Articul = Articul,
+					FullDescription = FullDescription,
+					ImageUrl_1 = ImageUrl_1,
+					IsFormatted = IsFormatted,					
+					Name = Name,
+					Url = Url,
+					Specifications = specifications,
+				};
 		}
 	}
 }

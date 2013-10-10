@@ -85,10 +85,7 @@ namespace Nop.Services.YandexMarket
 				return new PagedList<YandexMarketProductRecord>(new List<YandexMarketProductRecord>(), 0, 1);
 			
 			
-			IQueryable<YandexMarketProductRecord> query = 
-								from tr in this._productRepository.Table
-				                orderby tr.Name				                   						
-				                select tr;
+			IQueryable<YandexMarketProductRecord> query = this._productRepository.Table.OrderBy(tr => tr.Name);
 				
 			if (!withFantoms)				
 				query = query.Where(tr => tr.Name != "NotInPriceList");
@@ -109,13 +106,16 @@ namespace Nop.Services.YandexMarket
 
 			var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);
 
+			var clonedRecords = new List<YandexMarketProductRecord>();
+
 			foreach (var curRecord in records)
 			{
-				_productRepository.Detach(curRecord);
-				curRecord.FormatMe();
+				var cloneCurRecord = curRecord.Clone().FormatMe();
+
+				clonedRecords.Add(cloneCurRecord);
 			}
 
-			return records;
+			return new PagedList<YandexMarketProductRecord>(clonedRecords, pageIndex, pageSize);
 			
 		}		
 

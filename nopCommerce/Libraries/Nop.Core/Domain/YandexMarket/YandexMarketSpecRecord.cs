@@ -29,5 +29,16 @@ namespace Nop.Core.Domain.YandexMarket
 		public int ProductRecordId { get; set; }
 		
 		public virtual YandexMarketProductRecord ProductRecord { get; set; }
+
+		public YandexMarketSpecRecord Clone()
+		{
+			return new YandexMarketSpecRecord()
+				{
+					Id = Id,
+					Key = Key,
+					ProductRecordId = ProductRecordId,
+					Value = Value,
+				};
+		}
 	}
 }
