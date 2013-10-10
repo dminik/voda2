@@ -341,9 +341,19 @@ namespace Nop.Core.Domain.YandexMarket
 				"Duracell",
 				"UFO",
 				"Новые Технологии",
-				
-				
 
+				"Canon",
+				"Casio",
+				"Fujifilm",
+				"Nikon",
+				"Olympus",
+				"Panasonic",
+				"Pentax",
+				"Sony",
+				"BBK",
+				"Sharp",
+
+				
 
 				};
 

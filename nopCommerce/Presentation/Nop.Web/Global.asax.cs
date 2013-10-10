@@ -115,10 +115,10 @@ namespace Nop.Web
 		{
 			string currentUrl = HttpContext.Current.Request.Url.ToString().ToLower();
 
-			const string OldDomain = "http://f5-boyarka.com.ua";			
-			const string NewDomain = "http://fs-boyarka.com.ua";
+			const string OldDomain = "f5-boyarka.com.ua";			
+			const string NewDomain = "fs-boyarka.com.ua";
 
-			if (currentUrl.StartsWith(OldDomain))
+			if (currentUrl.Contains(OldDomain))
 			{
 				Response.Status = "301 Moved Permanently";
 				Response.AddHeader("Location", currentUrl.Replace(OldDomain, NewDomain));

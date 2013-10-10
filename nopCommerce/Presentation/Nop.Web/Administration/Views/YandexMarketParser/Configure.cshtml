@@ -1,7 +1,7 @@
 ﻿@{
-        // Layout = "";
+    // Layout = "";
 
-        //Html.AddCssFileParts("~/Plugins/Misc.YandexMarketParser/Content/styles.css");   
+    //Html.AddCssFileParts("~/Plugins/Misc.YandexMarketParser/Content/styles.css");   
     Html.EnableClientValidation(); 
 }
 @model Nop.Admin.Models.YandexMarket.YandexMarketParserModel
@@ -17,8 +17,8 @@
 {
     @Html.Telerik().TabStrip().Name("googlebase-configure").Items(x =>
 {
-    x.Add().Text("Категории парсера").Content(TabCategory().ToHtmlString());
-    x.Add().Text("Парсер").Content(this.TabParser().ToHtmlString()).Selected(true);
+    x.Add().Text("Категории парсера").Content(TabCategory().ToHtmlString()).Selected(true);
+    x.Add().Text("Парсер").Content(this.TabParser().ToHtmlString());
 })   
 }
 
@@ -27,44 +27,7 @@
 
 @helper TabCategory()
 {
-@*Filters*@
-    <table class="adminContent">
-        <tr>
-            <td>
-                @* ReSharper disable ConvertToLambdaExpression *@
-                @{
-                    var routeDictionaryForGrid = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } };
-                    const string controllerNameForGrid = "YandexMarketCategory";
-                }
-                @(Html.Telerik().Grid<YandexMarketCategoryModel>().Name("YandexMarketCategory-grid").DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id")).Columns(columns =>
-            {
-                columns.Bound(x => x.Name).Width(200);
-                columns.Bound(x => x.Url).Width(200);
-                columns.Bound(x => x.ShopCategoryName).Width(200);
-                columns.Bound(x => x.IsActive).Width(20);
-                
-                columns.Command(commands =>
-                {
-                    commands.Edit().Text("Редактировать");
-                    commands.Delete().Text("Удалить");
-                }).Width(180);
-
-            }).Editable(x =>
-            { x.Mode(GridEditMode.InLine); }).DataBinding(dataBinding =>
-            {
-                dataBinding.Ajax()
-                           .Select("ListCategory", controllerNameForGrid)
-                           .Update("UpdateCategory", controllerNameForGrid)
-                           .Delete("DeleteCategory", controllerNameForGrid);
-            })
-                      .Pageable(settings => settings.PageSize(150).Position(GridPagerPosition.Both)).EnableCustomBinding(true))
-                @* ReSharper restore ConvertToLambdaExpression *@
-
-            </td>
-        </tr>
-    </table>
-    
-@*Parser categories*@
+    @* Add new Parser categories*@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -104,7 +67,43 @@
             </td>
         </tr>
     </table>
-    
+@*Filters*@
+    <table class="adminContent">
+        <tr>
+            <td>
+                @* ReSharper disable ConvertToLambdaExpression *@
+                @{
+                    var routeDictionaryForGrid = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.YandexMarketParser.Controllers" }, { "area", "" } };
+                    const string controllerNameForGrid = "YandexMarketCategory";
+                }
+                @(Html.Telerik().Grid<YandexMarketCategoryModel>().Name("YandexMarketCategory-grid").DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id")).Columns(columns =>
+            {
+                columns.Bound(x => x.Name).Width(200);
+                columns.Bound(x => x.Url).Width(200);
+                columns.Bound(x => x.ShopCategoryName).Width(200);
+                columns.Bound(x => x.IsActive).Width(20);
+
+                columns.Command(commands =>
+                {
+                    commands.Edit().Text("Редактировать");
+                    commands.Delete().Text("Удалить");
+                }).Width(180);
+
+            }).Editable(x =>
+            { x.Mode(GridEditMode.InLine); }).DataBinding(dataBinding =>
+            {
+                dataBinding.Ajax()
+                           .Select("ListCategory", controllerNameForGrid)
+                           .Update("UpdateCategory", controllerNameForGrid)
+                           .Delete("DeleteCategory", controllerNameForGrid);
+            })
+                      .Pageable(settings => settings.PageSize(150).Position(GridPagerPosition.Both)).EnableCustomBinding(true))
+                @* ReSharper restore ConvertToLambdaExpression *@
+
+            </td>
+        </tr>
+    </table>
+        
     <script type="text/javascript">
         $(function () {
             $('#add').click(function () {

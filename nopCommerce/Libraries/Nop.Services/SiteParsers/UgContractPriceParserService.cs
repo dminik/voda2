@@ -142,9 +142,7 @@ namespace Nop.Services.SiteParsers
 				msg = "Success for all!";
 			else
 			{
-				msg = "Success for " + successCounter + " from " + list.ProductLineList.Count()
-				          + ". Not Found Articules in shop but they exist in file Ostatki:" + notFoundArticules
-				          + ". Success Articules" + foundArticules;
+				msg = "Success for " + successCounter + " from " + list.ProductLineList.Count();
 			}
 
 			mLogger.Debug(msg);

@@ -10,6 +10,8 @@ namespace Nop.Services.SiteParsers
 	using System.Web;
 
 	using Nop.Core.Domain.YandexMarket;
+	using Nop.Core.Infrastructure;
+	using Nop.Services.Common;
 	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
 	using Nop.Services.YandexMarket;
@@ -473,10 +475,9 @@ namespace Nop.Services.SiteParsers
 
 		private static List<string> GetProductsArtikulsInPiceList()
 		{
-			string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductsCatalog"), "shop_f5.txt");
-			List<string> errors;
-			var productsArtikulsInPiceList = FileParserVendor.ParseFile(filePath, out errors).Select(x => x.Articul).ToList();
-			return productsArtikulsInPiceList;
+			var _f5PriceParserService = EngineContext.Current.Resolve<IF5PriceParserService>();
+			var productsArtikulsInPiceList = _f5PriceParserService.ParseAndShow(true);
+			return productsArtikulsInPiceList.ProductLineList.Select(x => x.Articul).ToList();
 		}
 
 		private void DeleteFromDbAppearedInPriceListFantoms(int parserCategoryId, List<string> productsArtikulsInPiceList)
