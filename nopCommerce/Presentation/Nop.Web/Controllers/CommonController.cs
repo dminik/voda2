@@ -671,6 +671,16 @@ namespace Nop.Web.Controllers
 		}
 
 		[ChildActionOnly]
+		public ActionResult SocialWidgets()
+		{
+//#if DEBUG
+//			return new EmptyResult();
+//#else
+			return View();
+//#endif
+		}
+
+		[ChildActionOnly]
 		public ActionResult OnLineConsultant()
 		{
 #if DEBUG

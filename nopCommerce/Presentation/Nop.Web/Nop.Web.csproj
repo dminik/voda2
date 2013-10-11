@@ -1642,6 +1642,7 @@
     <Content Include="Themes\Voda\Views\Web.config" />
     <Content Include="Views\Common\YandexGoogleCounters.cshtml" />
     <Content Include="Views\Common\OnLineConsultant.cshtml" />
+    <Content Include="Views\Common\SocialWidgets.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
