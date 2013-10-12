@@ -12,7 +12,6 @@ namespace Nop.Services.SiteParsers
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Common;
-	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
 	using Nop.Services.YandexMarket;
 

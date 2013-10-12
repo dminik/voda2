@@ -165,15 +165,17 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Common\FulltextService.cs" />
+    <Compile Include="SiteParsers\Xls\Copy of IOstatkiPriceParserService.cs" />
+    <Compile Include="SiteParsers\Xls\YugCatalogPriceParserService.cs" />
     <Compile Include="SiteParsers\Xls\IF5PriceParserService.cs" />
-    <Compile Include="SiteParsers\Xls\IOstatkiPriceParserService.cs" />
+    <Compile Include="SiteParsers\Xls\IYugCatalogPriceParserService.cs" />
     <Compile Include="SiteParsers\Xls\OstatkiParserModel.cs" />
     <Compile Include="SiteParsers\Xls\VendorParserModel.cs" />
     <Compile Include="SiteParsers\ParsePricesTask.cs" />
-    <Compile Include="FileParsers\FileParserVendor.cs" />
-    <Compile Include="FileParsers\ProductLineVendor.cs" />
-    <Compile Include="FileParsers\FileParserOstatki.cs" />
-    <Compile Include="FileParsers\ProductLine.cs" />
+    <Compile Include="SiteParsers\Txt\FileParserVendor.cs" />
+    <Compile Include="SiteParsers\Xls\ProductLineVendor.cs" />
+    <Compile Include="SiteParsers\Txt\FileParserOstatki.cs" />
+    <Compile Include="SiteParsers\Xls\ProductLine.cs" />
     <Compile Include="SiteParsers\Products\BaseParser.cs" />
     <Compile Include="SiteParsers\Xls\BasePriceParser.cs" />
     <Compile Include="SiteParsers\Xls\OstatkiPriceParserService.cs" />
@@ -438,9 +440,7 @@
       <CachedSettingsPropName>Nop_Services_EuropaCheckVatService_checkVatService</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SiteParsers\Txt\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

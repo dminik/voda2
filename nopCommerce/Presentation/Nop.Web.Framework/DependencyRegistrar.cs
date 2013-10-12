@@ -58,6 +58,7 @@ using Nop.Web.Framework.UI.Editor;
 namespace Nop.Web.Framework
 {
 	using Nop.Services.SiteParsers;
+	using Nop.Services.SiteParsers.Xls;
 	using Nop.Services.YandexMarket;
 
 	public class DependencyRegistrar : IDependencyRegistrar
@@ -257,6 +258,7 @@ namespace Nop.Web.Framework
 			
 			builder.RegisterType<OstatkiPriceParserService>().As<IOstatkiPriceParserService>().InstancePerHttpRequest();
 			builder.RegisterType<F5PriceParserService>().As<IF5PriceParserService>().InstancePerHttpRequest();
+			builder.RegisterType<YugCatalogPriceParserService>().As<IYugCatalogPriceParserService>().InstancePerHttpRequest();
 
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
             builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerHttpRequest();

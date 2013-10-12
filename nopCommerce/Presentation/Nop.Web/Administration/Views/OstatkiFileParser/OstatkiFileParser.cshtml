@@ -9,6 +9,7 @@
 
 <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
 <input type="button" id="parseAndShow" class="t-button" value="Шаг 1. Спарсить и Отобразить" /><br/>
+<input type="button" id="parseAndShowUgCatalog" class="t-button" value="Шаг 1. Спарсить и Отобразить UgCatalog" /><br/>
 <input type="button" id="btnApplyImport" class="t-button" value="Шаг 2. Спарсить и Применить" />
 <input type="button" id="btnApplyImportAll" class="t-button" value="Шаг 3. Спарсить и Применить все цены и остатки" />
 
@@ -76,6 +77,59 @@
         });
         
 
+        $('#parseAndShowUgCatalog').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicator').show(); },
+                complete: function () { $('#parsingIndicator').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("ParseAndShowyUgCatalog", "OstatkiFileParser")',
+                @*data: { categoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                dataType: 'json',
+                success: function (data) {
+
+                    var place = $('.placetags');
+                    place.html('');
+
+                    var i = 0;
+                    $.each(data.ProductLineList, function () {
+
+                        var artikul = $('<li>').append('Артикул: ' + data.ProductLineList[i].Articul);
+                        place.append(artikul);
+
+                        var price = $('<li>').append('Цена: ' + data.ProductLineList[i].Price);
+                        place.append(price);
+
+                        var amount = $('<li>').append('Количество: ' + data.ProductLineList[i].Amount);
+                        place.append(amount);
+
+                        place.append($('<br/>'));
+                        i++;
+                    });
+
+                    place.append($('<div>')).append('Всего: ' + data.ProductLineList.length);
+
+
+                    var place_errors = $('.placetags-errors');
+                    place_errors.html('');
+                    place_errors.append($('<div>')).append('Всего ошибок: ' + data.ErrorList.length);
+
+                    var k = 0;
+                    $.each(data.ErrorList, function () {
+
+                        var error = $('<li>').append(data.ErrorList[k]);
+                        place_errors.append(error);
+
+                        k++;
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+              return false;
+          });
 
         $('#btnApplyImport').click(function () {
             $.ajax({

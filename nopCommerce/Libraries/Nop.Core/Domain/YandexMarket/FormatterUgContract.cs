@@ -353,8 +353,34 @@ namespace Nop.Core.Domain.YandexMarket
 				"BBK",
 				"Sharp",
 
-				
+				"ColorWay",
+				"Lomond",
+				"Ballet",
+				"Kodak",
+				"Tetenal",
+				"Konica Minolta",
+				"Konica",				
+				"Baltea",
+				"Hi-Ti",
+				"ARDO",
+				"BEKO",
+				"Candy",
+				"Electrolux",
+				"Hotpoint",
+				"Indesit",
+				"Zanussi",
+				"Vestel",
+				"Vestfrost",
+				"Ariston",
+				"Hitachi",
+				"Liebherr",
+				"Sharp",
 
+
+				//Binatone (2) Ergo (7) Ariston (24) ATMOR (12) Atron (1) Garanterm (14) Gorenje (1) Thermex (20) Vestfrost (3)
+				// Beurer (1) Ergo (2) Maxwell (2) Vitek (7)
+				//  Atron (1) Ballet (3) BEKO (4) Ergo (6) Flamingo (11) Rotex (3)
+				//   Maxwell (2) Vitek (1)
 				};
 
 			name = name.ToUpper();

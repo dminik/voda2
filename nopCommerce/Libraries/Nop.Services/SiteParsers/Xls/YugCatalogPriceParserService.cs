@@ -4,6 +4,7 @@ namespace Nop.Services.SiteParsers
 	using System.Collections.Generic;
 	using System.Data;
 	using System.Linq;
+	using System.Net;
 
 	using Nop.Core.Domain.Security;
 	using Nop.Core.IO;
@@ -12,26 +13,37 @@ namespace Nop.Services.SiteParsers
 	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers.Xls;
 
-	public class OstatkiPriceParserService : BasePriceParser<ProductLineVendor>, IOstatkiPriceParserService
+	public class YugCatalogPriceParserService : BasePriceParser<ProductLineVendor>, IYugCatalogPriceParserService
 	{		
-		public OstatkiPriceParserService(IProductService productService, ILogger logger)
+		public YugCatalogPriceParserService(IProductService productService, ILogger logger)
 			: base(productService, logger)
 		{
 			
 		}
 
-		protected override string XlsFileName { get { return "Ostatki.xls"; } }
+		protected override string XlsFileName { get { return "YugCatalog.xls"; } }
 
-		protected override string UrlBase { get { return "http://yugpartner.com.ua"; } }
-		protected override string UrlAuthorizationGet { get { return UrlBase + "/auth/"; } }
+
+		//protected override string SheetNameFirst 
+		//{ 
+		//	get 
+		//	{
+		//		return "Прайс-лента на " + ; // Прайс-лента на 12-10-2013 15-22 
+		//	} 
+		//}
+
+		protected override string UrlBase { get { return "http://wholesale.yugcontract.ua"; } }
+		protected override string UrlAuthorizationGet { get { return UrlBase + "/login/?authen_dest=http://wholesale.yugcontract.ua/wholesale/main.html"; } }
+		protected override string UrlAuthorizationPost { get { return UrlBase + "/authen"; } }
 		protected override string UrlAuthorizationPostParams
 		{
 			get
 			{
 				var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
-
-				return "login=" + securitySettings.F5SiteLogin
-					+ "&password=" + securitySettings.F5SitePassword;
+				
+				return "authen_dest=%2Fwholesale%2Fmain.html&"
+					+ "user_login=" + securitySettings.F5SiteLogin
+					+ "&user_password=" + securitySettings.F5SitePassword;
 			}
 		}
 		
@@ -39,15 +51,40 @@ namespace Nop.Services.SiteParsers
 		{ 
 			get
 			{				
-				var yesterday = DateTime.UtcNow.AddDays(-1).ToString("dd.MM.yyyy");
-				return UrlBase + "/report-f5/trade-balances/date" + yesterday + "/suppliers4,95/excel/";
+				return UrlBase + "/xls_im/";
 			} 
 		}
-		
+
+		//protected override HttpWebResponse AfterAutherisation(HttpWebResponse httpWebResponse)
+		//{
+		//	httpWebResponse = this.HttpQuery(
+		//			UrlDownload,
+		//			false,
+		//			"",
+		//			"");
+
+		//	CheckResponseCorrect(httpWebResponse, "", HttpStatusCode.Redirect);
+
+
+		//	var redirectedUrl = httpWebResponse.ResponseUri.AbsoluteUri;
+
+		//	httpWebResponse = this.HttpQuery(
+		//			redirectedUrl,
+		//			false,
+		//			"",
+		//			"");
+
+
+
+
+
+		//	return httpWebResponse;
+		//}
+
 		protected override void PostProcessing()
 		{
-			if (ResultList.Count() < 700)
-				throw new Exception("Hm... " + this.GetType().Name + ".Price list less then 700 lines. Count=" + ResultList.Count());
+			if (ResultList.Count() < 6000)
+				throw new Exception("Hm... " + this.GetType().Name + ".Price list less then 6000 lines. Count=" + ResultList.Count());
 		}
 
 		protected override ProductLineVendor GetObjectFromReader(IDataReader reader)
@@ -56,15 +93,20 @@ namespace Nop.Services.SiteParsers
 			
 			try
 			{
-				var artikul = XlsProvider.GetFieldValueFromReader<string>(reader, "Код товара");
+				var existing = XlsProvider.GetFieldValueFromReader<string>(reader, "????? ????") == "есть";// Склад Киев
 
-				if (artikul.Length != 7) // articul должен быть 7 символов
+				if (!existing) 
+					return null;
+
+				var artikul = XlsProvider.GetFieldValueFromReader<string>(reader, "???"); // Код
+
+				if (artikul.Length < 4) // articul должен быть 7 символов
 					return null;
 
 				newProductLineVendor.Articul = artikul;
-				//newProductLineVendor.Name = XlsProvider.GetFieldValueFromReader<string>(reader, "Название товара");
+				newProductLineVendor.Name = XlsProvider.GetFieldValueFromReader<string>(reader, "?????");// Товар
 
-				//newProductLineVendor.PriceRaschet = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Расч# цена"));
+				//newProductLineVendor.PriceRaschet = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Склад Киев"));
 				//newProductLineVendor.Price = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи"));
 				//newProductLineVendor.PriceBase = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Базовая цена"));
 				//newProductLineVendor.PriceDiff = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи – Базовая цена"));
@@ -89,7 +131,7 @@ namespace Nop.Services.SiteParsers
 		/// </summary>
 		/// <param name="isUpdateCacheFromInternet"></param>
 		/// <returns></returns>
-		public string SetExistingInBoyarka(bool isUpdateCacheFromInternet)
+		public string SetExistingInVendor(bool isUpdateCacheFromInternet)
 		{
 			var priceList = _Parse(isUpdateCacheFromInternet);
 
@@ -98,10 +140,17 @@ namespace Nop.Services.SiteParsers
 			int successCounter = 0;
 
 			/*
-			                     Товара нет нигде               Товар есть у поставщика               Товар в Боярке
-			 цена           0 (не показываем его на сайте)       есть                                       есть
-			 предзаказ              да                           да                                          нет
-		     доставка сейчас                     -               нет                                          да
+			 * Порядок проставки флагов и цен
+			 * 1. Сбрасываем все цены и флаги в 0
+			 * 2. Если Товар есть у поставщика или в Боярке - ставим цену
+			 * 2. Если товар есть у поставщика, то ставим предзаказ "да"
+			 * 2. Если товар есть в Боярке, то ставим предзаказ "нет" и Доставка сейчас "Да"
+			 * 
+			 * 
+			                     Товара нет нигде               Товар есть у поставщика               Товар в Боярке  
+			 цена           0 (не показываем его на сайте)       100                                         100		
+			 предзаказ              да                           да                                          нет			
+		     доставка сейчас        нет                          нет                                          да
 			 
 			*/
 
@@ -111,9 +160,9 @@ namespace Nop.Services.SiteParsers
 			foreach (var currentProductVariant in productVariantList)
 			{
 				var curProductLine = priceList.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
-				var isProductInPriceList = curProductLine == null;
+				var isProductInPriceList = curProductLine != null;
 			
-				if (isProductInPriceList)
+				if (!isProductInPriceList)
 				{
 					notFoundArticules += currentProductVariant.Sku + ", ";
 					continue;
@@ -158,7 +207,7 @@ namespace Nop.Services.SiteParsers
 			mLogger.Debug(msg);
 			return msg;
 		}
-
+		
 		private OstatkiParserModel _Parse(bool isUpdateCacheFromInternet)
 		{			
 			List<string> errors;

@@ -97,5 +97,10 @@
       <path>Presentation\Nop.Web\Controllers\CatalogController.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Controllers\CatalogController.cs</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>DependencyRegistrar.cs</name>
+      <path>Presentation\Nop.Web.Framework\DependencyRegistrar.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web.Framework\DependencyRegistrar.cs</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>

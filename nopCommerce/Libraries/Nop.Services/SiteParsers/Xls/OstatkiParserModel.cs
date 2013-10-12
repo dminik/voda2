@@ -2,7 +2,7 @@
 {
 	using System.Collections.Generic;
 
-	using Nop.Services.FileParsers;
+	using Nop.Services.SiteParsers.Xls;
 
 	public class OstatkiParserModel
 	{

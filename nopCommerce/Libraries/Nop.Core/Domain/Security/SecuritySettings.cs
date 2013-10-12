@@ -25,8 +25,8 @@ namespace Nop.Core.Domain.Security
         /// </summary>
         public bool HideAdminMenuItemsBasedOnPermissions { get; set; }
 
-		public bool F5SiteLogin { get; set; }
-		public bool F5SitePassword { get; set; }
+		public string F5SiteLogin { get; set; }
+		public string F5SitePassword { get; set; }
 
     }
 }

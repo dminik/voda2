@@ -18,8 +18,8 @@ namespace Nop.Services.SiteParsers
 	using Nop.Core.IO;
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
-	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
+	using Nop.Services.SiteParsers.Xls;
 	using Nop.Services.YandexMarket;
 
 	using OfficeOpenXml;
@@ -41,7 +41,7 @@ namespace Nop.Services.SiteParsers
 		protected override string XlsFileName { get { return "f5_price.xls"; } }
 
 		protected override string UrlBase { get { return "http://shop.f5.ua"; } }
-		protected override string UrlAuthorization { get { return UrlBase; } }
+		protected override string UrlAuthorizationGet { get { return UrlBase; } }
 		protected override string UrlAuthorizationPostParams
 		{
 			get

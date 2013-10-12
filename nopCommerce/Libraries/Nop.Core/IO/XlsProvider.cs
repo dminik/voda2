@@ -7,11 +7,10 @@ using System.Web.Hosting;
 namespace Nop.Core.IO
 {
 	using System.Data;
+	using System.Data.OleDb;
 
 	public static class XlsProvider  
 	{
-		private const string DataSheetName = "Sheet1";
-
 		private delegate IEnumerable<T> GetListFromReader<out T>(IDataReader reader);
 		public delegate T GetObjectFromReader<out T>(IDataReader reader);
 
@@ -55,7 +54,7 @@ namespace Nop.Core.IO
 			}
 		}
 
-		public static IEnumerable<T> LoadFromFile<T>(string fullFileName, GetObjectFromReader<T> getObjectFromReaderFunc)
+		public static IEnumerable<T> LoadFromFile<T>(string fullFileName, GetObjectFromReader<T> getObjectFromReaderFunc, string sheetNameFirst = "")
 		{
 			string conString = FormatXlsConnectionString(fullFileName);
 			IEnumerable<T> result = null;
@@ -65,8 +64,19 @@ namespace Nop.Core.IO
 				using (var cmd = new System.Data.OleDb.OleDbCommand())
 				{
 					cmd.Connection = con;
+
+					if (string.IsNullOrEmpty(sheetNameFirst))
+					{
+						con.Open();
+
+						var dtExcelSchema = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+						sheetNameFirst = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+						
+						con.Close();
+					}
+
 					cmd.CommandType = CommandType.TableDirect;
-					cmd.CommandText = FormatXlsTableName(DataSheetName);
+					cmd.CommandText = sheetNameFirst;
 
 					con.Open();
 					using (var reader = cmd.ExecuteReader(CommandBehavior.CloseConnection))

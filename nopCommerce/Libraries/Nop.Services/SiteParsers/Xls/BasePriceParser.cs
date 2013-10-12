@@ -16,8 +16,8 @@ namespace Nop.Services.SiteParsers
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Core.IO;
 	using Nop.Services.Catalog;
-	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
+	using Nop.Services.SiteParsers.Xls;
 	using Nop.Services.YandexMarket;
 
 	using OfficeOpenXml;
@@ -41,11 +41,13 @@ namespace Nop.Services.SiteParsers
 		}
 
 		protected IEnumerable<T> ResultList { get; set; }
-
+		
 		protected virtual string UrlBase { get { throw new Exception("Not implemented"); } }
-		protected virtual string UrlAuthorization { get { throw new Exception("Not implemented"); } }
+		protected virtual string UrlAuthorizationGet { get { throw new Exception("Not implemented"); } }
+		protected virtual string UrlAuthorizationPost { get { return UrlAuthorizationGet; } }
 		protected virtual string UrlAuthorizationPostParams { get { throw new Exception("Not implemented"); } }
 		protected virtual string UrlDownload { get { throw new Exception("Not implemented"); } }
+		protected virtual string SheetNameFirst { get { return ""; } }
 
 
 		protected virtual string XlsFileName { get { throw new Exception("Not implemented"); } }
@@ -65,7 +67,7 @@ namespace Nop.Services.SiteParsers
 
 			try
 			{
-				this.ResultList = XlsProvider.LoadFromFile<T>(this.PriceFullFileName, GetObjectFromReader);
+				this.ResultList = XlsProvider.LoadFromFile<T>(this.PriceFullFileName, GetObjectFromReader, SheetNameFirst);
 
 				this.PostProcessing();
 			}
@@ -89,6 +91,11 @@ namespace Nop.Services.SiteParsers
 			throw new Exception("Not implemented");
 		}
 
+		protected virtual HttpWebResponse AfterAutherisation(HttpWebResponse httpWebResponse)
+		{
+			return httpWebResponse;
+		}
+
 		protected virtual void PostProcessing()
 		{
 		}
@@ -101,7 +108,8 @@ namespace Nop.Services.SiteParsers
 			{				
 				// Ходим по страницам и логинимся
 				GetAutherisationPage();
-				PostAutherisation();
+				var response =  PostAutherisation();
+				AfterAutherisation(response);
 				DownloadFile();
 			}
 			catch (Exception ex)
@@ -132,7 +140,7 @@ namespace Nop.Services.SiteParsers
 		private HttpWebResponse GetAutherisationPage()
 		{
 			HttpWebResponse myHttpWebResponse = this.HttpQuery(
-					UrlAuthorization,
+					UrlAuthorizationGet,
 					false,
 					"",
 					"");
@@ -145,7 +153,7 @@ namespace Nop.Services.SiteParsers
 		private HttpWebResponse PostAutherisation()
 		{			
 			HttpWebResponse myHttpWebResponse = this.HttpQuery(
-				UrlAuthorization,
+				UrlAuthorizationPost,
 				true,
 				UrlAuthorizationPostParams,
 				"application/x-www-form-urlencoded");
@@ -153,7 +161,7 @@ namespace Nop.Services.SiteParsers
 			CheckResponseCorrect(myHttpWebResponse, "", HttpStatusCode.Found);
 			return myHttpWebResponse;
 		}
-
+		
 		protected void CheckResponseCorrect(HttpWebResponse myHttpWebResponse, string originalStrInContent, HttpStatusCode status)
 		{
 			this._strHtmlLast = this.GetHtmlText(myHttpWebResponse);
@@ -231,10 +239,8 @@ namespace Nop.Services.SiteParsers
 			}
 
 			myHttpWebRequest.KeepAlive = true;
-
-			//progressBar.SetProcessProgress(requestID, "Info - Перед GetResponse;");
+			
 			HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
-			//progressBar.SetProcessProgress(requestID, "Info - После GetResponse;");
 
 			//запоминаем полученные куки
 			if (!String.IsNullOrEmpty(myHttpWebResponse.Headers["Set-Cookie"]))

@@ -13,7 +13,6 @@
 	using Nop.Core.Domain.Logging;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Catalog;
-	using Nop.Services.FileParsers;
 	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers;
 	using Nop.Services.YandexMarket;
