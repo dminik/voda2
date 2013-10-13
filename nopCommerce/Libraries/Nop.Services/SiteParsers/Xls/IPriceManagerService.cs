@@ -2,6 +2,6 @@ namespace Nop.Services.SiteParsers.Xls
 {
 	public interface IPriceManagerService
 	{
-		string ApplyImportAll();
+		string ApplyImportAll(bool isForceDownloadingNewData);
 	}
 }

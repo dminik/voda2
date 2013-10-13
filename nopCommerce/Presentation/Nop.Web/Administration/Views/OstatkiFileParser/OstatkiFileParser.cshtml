@@ -1,4 +1,4 @@
-﻿
+﻿@model Nop.Admin.Models.YandexMarket.OstatkiFileParserModel
 <br/><br/>
 <div>Parsed lines:</div>
 <div class="placetags">
@@ -7,11 +7,15 @@
 
 <br/><br/>
 
-<img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
-<input type="button" id="parseAndShow" class="t-button" value="Шаг 1. Спарсить и Отобразить" /><br/>
-<input type="button" id="parseAndShowUgCatalog" class="t-button" value="Шаг 1. Спарсить и Отобразить UgCatalog" /><br/>
-<input type="button" id="btnApplyImport" class="t-button" value="Шаг 2. Спарсить и Применить" />
-<input type="button" id="btnApplyImportAll" class="t-button" value="Шаг 3. Спарсить и Применить все цены и остатки" />
+@using (Html.BeginForm()) { 
+    <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />                 
+    <input type="button" id="parseAndShow" class="t-button" value="Шаг 1. Спарсить и Отобразить" /><br/>
+    <input type="button" id="parseAndShowUgCatalog" class="t-button" value="Шаг 1. Спарсить и Отобразить UgCatalog" /><br/>
+    <input type="button" id="btnApplyImport" class="t-button" value="Шаг 2. Спарсить и Применить" /><br/>
+    <input type="button" id="btnApplyImportAll" class="t-button" value="Шаг 3. Спарсить и Применить все цены и остатки" />
+    @Html.CheckBoxFor(model => model.IsForceDownloadingNewData)
+    @Html.LabelFor(model => model.IsForceDownloadingNewData)
+}
 
 <br/><br/>
 
@@ -159,7 +163,8 @@
                 type: 'POST',
                 url: '@Url.Action("ApplyImportAll", "OstatkiFileParser")',
                 @*data: { categoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
-                dataType: 'text',
+                data: $(this.form).serialize(),
+                dataType: 'json',
                 success: function (data) {
                     alert(data);
                 },

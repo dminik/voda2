@@ -29,17 +29,17 @@ namespace Nop.Services.SiteParsers
 	        {
 				if (scheduleTask.LastSuccessUtc.Value.Date < DateTime.UtcNow.Date)
 		        {
-			       _priceManagerService.ApplyImportAll(); //daily update
+			       _priceManagerService.ApplyImportAll(false); //daily update
 		        }
 				else
 				{
-					int x = 0;
+					// int x = 0;
 					// Skip because today already was successfull update
 				}
 	        }
 	        else
 	        {
-				_priceManagerService.ApplyImportAll();// first time update
+				_priceManagerService.ApplyImportAll(false);// first time update
 	        }
 		}
     }

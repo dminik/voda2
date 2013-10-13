@@ -4,6 +4,7 @@
 	using System.Linq;
 	using System.Web.Mvc;
 
+	using Nop.Admin.Models.YandexMarket;
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
 	using Nop.Services.Logging;
@@ -33,8 +34,8 @@
 		}
 
 		public ActionResult OstatkiFileParser()
-		{			
-			return View();
+		{
+			return View(new OstatkiFileParserModel());
 		}
 		
 		[HttpPost]
@@ -52,12 +53,12 @@
 		}
 
 		[HttpPost]
-		public ActionResult ApplyImportAll()
-		{			
-			var msgResult = _priceManagerService.ApplyImportAll();
+		public ActionResult ApplyImportAll(OstatkiFileParserModel model)
+		{
+			var msgResult = _priceManagerService.ApplyImportAll(model.IsForceDownloadingNewData);
 			return Content(msgResult);
 		}
-
+		
 		[HttpPost]
 		public ActionResult ApplyImport()
 		{

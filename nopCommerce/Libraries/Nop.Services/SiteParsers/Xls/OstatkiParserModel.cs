@@ -1,8 +1,6 @@
-﻿namespace Nop.Services.SiteParsers
+﻿namespace Nop.Services.SiteParsers.Xls
 {
 	using System.Collections.Generic;
-
-	using Nop.Services.SiteParsers.Xls;
 
 	public class OstatkiParserModel
 	{

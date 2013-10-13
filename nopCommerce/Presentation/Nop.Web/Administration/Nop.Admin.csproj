@@ -302,6 +302,7 @@
     <Compile Include="Models\Messages\QueuedEmailModel.cs" />
     <Compile Include="Models\Settings\TaxSettingsModel.cs" />
     <Compile Include="Models\Cms\WidgetModel.cs" />
+    <Compile Include="Models\YandexMarket\OstatkiFileParserModel.cs" />
     <Compile Include="Models\YandexMarket\ListExtention.cs" />
     <Compile Include="Models\YandexMarket\YandexMarketSpecImportModel.cs" />
     <Compile Include="Models\YandexMarket\YandexMarketCategoryModel.cs" />

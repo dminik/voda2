@@ -29,7 +29,7 @@ namespace Nop.Services.SiteParsers.Xls
 			this._yugCatalogPriceParserService = yugCatalogPriceParserService;
 		}
 		
-		public string ApplyImportAll()
+		public string ApplyImportAll(bool isForceDownloadingNewData)
 		{
 			this._logger.Debug("+++++ ApplyPriceImportAll start");
 			var name = typeof(ParsePricesTask).FullName + ", Nop.Services";
@@ -52,6 +52,9 @@ namespace Nop.Services.SiteParsers.Xls
 				this._logger.Debug("      Need first time update");
 				isNeedUpdate = true;
 			}
+
+			if(isForceDownloadingNewData)
+				isNeedUpdate = true;
 
 			/*
 			 * Порядок проставки флагов и цен
@@ -79,39 +82,52 @@ namespace Nop.Services.SiteParsers.Xls
 			var productsToSell = 0;
 			var productsToSellInBoyarka = 0;
 
+
+			this._logger.Debug("     Updating products...");
+
 			foreach (var currentProductVariant in productVariantList)
 			{
 				var productInVendor = ugCatalogPriceList.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
 				var isProductInVendor = productInVendor != null;
-
+				
+				var productInF5Price = f5PriceList.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
+				var isProductInF5Price = productInF5Price != null;
+				
 				var productInBoyarka = ostatkiPriceList.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
 				var isProductInBoyarka = productInBoyarka != null;
 
-				var productInF5Price = f5PriceList.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
-				var isProductInF5Price = productInF5Price != null;
 
 				//  2. Если Товар есть у поставщика или в Боярке - ставим цену				
 				if ((isProductInVendor || isProductInBoyarka) && isProductInF5Price)
 				{
 					var price = productInF5Price.Price > 5 ? productInF5Price.Price : 3; // товара дешевле 3 гривен быть не должно					
-					currentProductVariant.Price = price;
+
+					if (currentProductVariant.Price != price)
+						currentProductVariant.Price = price;
+
 					productsToSell++;
 				}
 				else
 				{
-					// 1. Сбрасываем все цены и флаги в 0					
-					currentProductVariant.Price = 0;
+					// 1. Сбрасываем все цены и флаги в 0	
+					if (currentProductVariant.Price != 0)
+						currentProductVariant.Price = 0;
 					continue;
 				}
 
 				// 3. Если товар есть у поставщика, то ставим предзаказ "да"
 				if (isProductInVendor)
-					currentProductVariant.AvailableForPreOrder = true;
+				{
+					if(currentProductVariant.AvailableForPreOrder != true)
+						currentProductVariant.AvailableForPreOrder = true;
+				}
 
 				// 4. Если товар есть в Боярке, то ставим предзаказ "нет" и Доставка сейчас "Да"
 				if (isProductInBoyarka)
 				{
-					currentProductVariant.AvailableForPreOrder = false;
+					if (currentProductVariant.AvailableForPreOrder != false)
+						currentProductVariant.AvailableForPreOrder = false;
+
 					productsToSellInBoyarka++;
 				}
 
