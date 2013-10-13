@@ -1103,7 +1103,7 @@ namespace Nop.Services.Catalog
 		public virtual IList<ProductVariant> GetProductVariants()
 		{			
 			var query = _productVariantRepository.Table;
-			query = query.Where(pv => pv.Published && !pv.Deleted);
+			query = query.Where(pv => !pv.Deleted);
 			var productVariants = query.ToList();
 			return productVariants;			
 		}

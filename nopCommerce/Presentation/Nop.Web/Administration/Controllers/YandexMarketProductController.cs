@@ -20,6 +20,7 @@
 	using Nop.Services.Security;
 	using Nop.Services.Seo;
 	using Nop.Services.SiteParsers;
+	using Nop.Services.SiteParsers.Xls;
 	using Nop.Services.YandexMarket;
 	using Nop.Web.Framework.Controllers;
 
@@ -37,6 +38,7 @@
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
 		private readonly ILogger _logger;
 		private readonly SeoSettings _seoSettings;
+		private readonly IPriceManagerService _priceManagerService;
 
 		public YandexMarketProductController(IYandexMarketProductService yandexMarketProductService,
 			IProductService productService,
@@ -46,7 +48,8 @@
 			ISpecificationAttributeService2 specificationAttributeService,
 			IYandexMarketCategoryService yandexMarketCategoryService,
 			ILogger logger,
-			SeoSettings seoSettings)
+			SeoSettings seoSettings,
+			IPriceManagerService priceManagerService)
 		{
 			_yandexMarketProductService = yandexMarketProductService;
 			_productService = productService;
@@ -57,6 +60,7 @@
 			_yandexMarketCategoryService = yandexMarketCategoryService;
 			_logger = logger;
 			_seoSettings = seoSettings;
+			_priceManagerService = priceManagerService;
 		}
 
 		#region Grid actions
@@ -142,6 +146,7 @@
 				
 			}
 
+			_priceManagerService.ApplyImportAll(false);
 			_logger.Debug("--- ImportProductList for End.");
 
 			return Content("Success");
