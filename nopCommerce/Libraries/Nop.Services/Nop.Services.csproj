@@ -165,7 +165,9 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Common\FulltextService.cs" />
-    <Compile Include="SiteParsers\Xls\Copy of IOstatkiPriceParserService.cs" />
+    <Compile Include="SiteParsers\Xls\PriceManagerService.cs" />
+    <Compile Include="SiteParsers\Xls\IOstatkiPriceParserService.cs" />
+    <Compile Include="SiteParsers\Xls\IPriceManagerService.cs" />
     <Compile Include="SiteParsers\Xls\YugCatalogPriceParserService.cs" />
     <Compile Include="SiteParsers\Xls\IF5PriceParserService.cs" />
     <Compile Include="SiteParsers\Xls\IYugCatalogPriceParserService.cs" />

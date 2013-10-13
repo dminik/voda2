@@ -11,6 +11,7 @@ namespace Nop.Services.SiteParsers
 	using Nop.Services.Catalog;
 	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers.Xls;
+	using Nop.Services.Tasks;
 
 	public class OstatkiPriceParserService : BasePriceParser<ProductLineVendor>, IOstatkiPriceParserService
 	{		
@@ -158,7 +159,7 @@ namespace Nop.Services.SiteParsers
 			mLogger.Debug(msg);
 			return msg;
 		}
-
+	
 		private OstatkiParserModel _Parse(bool isUpdateCacheFromInternet)
 		{			
 			List<string> errors;

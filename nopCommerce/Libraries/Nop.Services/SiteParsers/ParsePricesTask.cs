@@ -3,17 +3,16 @@ namespace Nop.Services.SiteParsers
 	using System;
 
 	using Nop.Core.Infrastructure;
+	using Nop.Services.SiteParsers.Xls;
 	using Nop.Services.Tasks;
 
 	public partial class ParsePricesTask : ITask
     {
-		private readonly IOstatkiPriceParserService _ugContractPriceParserService;
-		private readonly IF5PriceParserService _f5PriceParserService;
+		private readonly IPriceManagerService _priceManagerService;
 
-		public ParsePricesTask(IOstatkiPriceParserService ugContractPriceParserService, IF5PriceParserService f5PriceParserService)
+		public ParsePricesTask(IPriceManagerService priceManagerService)
         {
-			_ugContractPriceParserService = ugContractPriceParserService;
-			_f5PriceParserService = f5PriceParserService;
+			_priceManagerService = priceManagerService;
         }
 
         /// <summary>
@@ -30,14 +29,17 @@ namespace Nop.Services.SiteParsers
 	        {
 				if (scheduleTask.LastSuccessUtc.Value.Date < DateTime.UtcNow.Date)
 		        {
-			        _f5PriceParserService.SetVendorPrices(true);
-			        _ugContractPriceParserService.SetExistingInBoyarka(true);
+			       _priceManagerService.ApplyImportAll(); //daily update
 		        }
+				else
+				{
+					int x = 0;
+					// Skip because today already was successfull update
+				}
 	        }
 	        else
 	        {
-				_f5PriceParserService.SetVendorPrices(true);
-				_ugContractPriceParserService.SetExistingInBoyarka(true);
+				_priceManagerService.ApplyImportAll();// first time update
 	        }
 		}
     }

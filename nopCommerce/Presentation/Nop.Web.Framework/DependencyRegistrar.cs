@@ -138,6 +138,8 @@ namespace Nop.Web.Framework
 			builder.RegisterType<YandexMarketCategoryService>().As<IYandexMarketCategoryService>().InstancePerHttpRequest();
 			builder.RegisterType<YandexMarketSpecService>().As<IYandexMarketSpecService>().InstancePerHttpRequest();
 			builder.RegisterType<YandexMarketProductService>().As<IYandexMarketProductService>().InstancePerHttpRequest();
+			builder.RegisterType<PriceManagerService>().As<IPriceManagerService>().InstancePerHttpRequest();
+			
 
             builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerHttpRequest();
             builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();

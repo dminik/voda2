@@ -102,5 +102,10 @@
       <path>Presentation\Nop.Web.Framework\DependencyRegistrar.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web.Framework\DependencyRegistrar.cs</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>ParsePricesTask.cs</name>
+      <path>Libraries\Nop.Services\SiteParsers\ParsePricesTask.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\ParsePricesTask.cs</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>
