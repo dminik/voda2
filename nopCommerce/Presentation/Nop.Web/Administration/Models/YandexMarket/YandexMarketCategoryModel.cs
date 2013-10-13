@@ -25,5 +25,8 @@
 
 		[DisplayName("Активно")]				
 		public bool IsActive { get; set; }
+
+		[DisplayName("Импортировано уже в магазин")]
+		public int AlreadyImportedProducts { get; set; }
 	}
 }

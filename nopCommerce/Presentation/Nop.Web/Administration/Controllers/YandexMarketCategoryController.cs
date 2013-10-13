@@ -5,6 +5,7 @@
 	using System.Web.Mvc;
 
 	using Nop.Admin.Models.YandexMarket;
+	using Nop.Core;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Catalog;
 	using Nop.Services.YandexMarket;
@@ -17,13 +18,19 @@
 	{
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
 		private readonly ICategoryService _shopCategoryService;
+		private readonly IProductService _productService;
+		 private readonly IStoreContext _storeContext;
 
 		public YandexMarketCategoryController(
 			IYandexMarketCategoryService yandexMarketCategoryService, 
-			ICategoryService shopCategoryService)
+			ICategoryService shopCategoryService,
+			IProductService productService,
+			IStoreContext storeContext)
 		{
 			this._yandexMarketCategoryService = yandexMarketCategoryService;
 			_shopCategoryService = shopCategoryService;
+			this._productService = productService;
+			_storeContext = storeContext;
 		}
 
 
@@ -43,9 +50,17 @@
 					{
 						var shopCategory = availableShopCategories.SingleOrDefault(s => s.Id == x.ShopCategoryId);
 						var shopCategoryName = "";
+						var numberOfProducts = 0;
+
 						if (shopCategory != null)
 						{
 							shopCategoryName = shopCategory.Name;
+							numberOfProducts = this._productService.SearchProducts(
+																categoryIds: new List<int>(){shopCategory.Id}, 
+																priceMin: 1, 
+																storeId: _storeContext.CurrentStore.Id, 
+																pageSize: 1)
+													.TotalCount;
 						}
 						else
 						{
@@ -61,6 +76,7 @@
 							ShopCategoryId = x.ShopCategoryId,
 							ShopCategoryName = shopCategoryName,
 							IsActive = x.IsActive,
+							AlreadyImportedProducts = numberOfProducts,
 						};
 
 					return m;
