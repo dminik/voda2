@@ -19,6 +19,7 @@
 			ParserCategoryId = -1;
 			IsClearCategoryProductsBeforeParsing = false;
 			IsNotImportedOnly = false;
+			IsSetActiveAllParserCategoties = false;
 		}
 
 		[DisplayName("Имя категории магазина в которую импортнутся спарсенные товары")]
@@ -58,6 +59,9 @@
 
 		[DisplayName("Показать только новые найденные товары")]
 		public bool IsNotImportedOnly { get; set; }
+
+		[DisplayName("Активировать/Деактивировать все категории парсера")]
+		public bool IsSetActiveAllParserCategoties { get; set; }
 		
 	}
 }

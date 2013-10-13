@@ -66,6 +66,14 @@
                 <input type="button" id="add" class="t-button" value="Добавить" />
             </td>
         </tr>
+        
+         <tr>
+              <td colspan="2">
+                    @Html.CheckBoxFor(model => model.IsSetActiveAllParserCategoties)
+                    @Html.LabelFor(model => model.IsSetActiveAllParserCategoties)
+             </td> 
+        </tr>
+       
     </table>
 @*Filters*@
     <table class="adminContent">
@@ -106,6 +114,7 @@
         
     <script type="text/javascript">
         $(function () {
+            
             $('#add').click(function () {
                 $.ajax({
                     cache: false,
@@ -114,7 +123,7 @@
                     data: $(this.form).serialize(),
                     dataType: 'json',
                     success: function (data) {
-                        var grid = $("#YandexMarketCategory-grid");
+                        var grid = $("#YandexMarketCategory-grid");// refresh grid
                         grid.data('tGrid').ajaxRequest();
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -123,6 +132,25 @@
                 });
                 return false;
             });
+            
+            $("#@Html.FieldIdFor(model => model.IsSetActiveAllParserCategoties)").on('click', function () {
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.Action("SetActiveAllParserCategoties", "YandexMarketCategory")',
+                    data: { isNotImportedOnly: $('#@Html.FieldIdFor(model => model.IsSetActiveAllParserCategoties)').prop("checked")},
+                    dataType: 'json',
+                    success: function (data) {
+                        var grid = $("#YandexMarketCategory-grid");// refresh grid
+                        grid.data('tGrid').ajaxRequest();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to SetActiveAllParserCategoties.');
+                    }
+                 });
+                return true;
+               
+             });
         });
     </script>
         
@@ -373,7 +401,8 @@
                         $("#@Html.FieldIdFor(model => model.IsNotImportedOnly)").on('click', function () {
                             var grid = $("#@ProductGridName");
                              grid.data('tGrid').ajaxRequest();
-                         });
+                        });
+                                               
                     });
                 </script>
 

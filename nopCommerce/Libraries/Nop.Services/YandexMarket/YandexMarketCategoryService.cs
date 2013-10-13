@@ -155,6 +155,21 @@ namespace Nop.Services.YandexMarket
 			return result;
 		}
 
+		public void SetActiveAllParserCategoties(bool isActive)
+		{
+			var categories = GetAll();
+			foreach (var currentCategory in categories)
+			{
+				if (currentCategory.IsActive != isActive)
+				{
+					currentCategory.IsActive = isActive;
+					this._categoryRepository.Update(currentCategory);
+				}
+			}
+
+			this._cacheManager.RemoveByPattern(YANDEXMARKETCATEGORY_PATTERN_KEY);
+		}
+
 		#endregion
 	}
 }

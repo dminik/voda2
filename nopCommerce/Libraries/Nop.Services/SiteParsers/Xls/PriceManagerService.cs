@@ -100,18 +100,24 @@ namespace Nop.Services.SiteParsers.Xls
 				//  2. Если Товар есть у поставщика или в Боярке - ставим цену				
 				if ((isProductInVendor || isProductInBoyarka) && isProductInF5Price)
 				{
-					var price = productInF5Price.Price > 5 ? productInF5Price.Price : 3; // товара дешевле 3 гривен быть не должно					
+					const int minPrice = 5;
+					var price = productInF5Price.Price > minPrice ? productInF5Price.Price : minPrice; // товара дешевле 5 гривен быть не должно					
 
-					if (currentProductVariant.Price != price)
+					if (currentProductVariant.Price != price || currentProductVariant.Published != true)
+					{
 						currentProductVariant.Price = price;
-
+						currentProductVariant.Published = true;
+					}
 					productsToSell++;
 				}
 				else
 				{
 					// 1. Сбрасываем все цены и флаги в 0	
-					if (currentProductVariant.Price != 0)
+					if (currentProductVariant.Price != 0 || currentProductVariant.Published != false)
+					{
 						currentProductVariant.Price = 0;
+						currentProductVariant.Published = false;
+					}
 					continue;
 				}
 

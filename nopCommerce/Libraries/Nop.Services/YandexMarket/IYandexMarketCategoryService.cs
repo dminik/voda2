@@ -45,5 +45,7 @@ namespace Nop.Services.YandexMarket
 		void Update(YandexMarketCategoryRecord taxRate);
 
 		List<SelectListItem> GetCategoriesForDDL();
+
+		void SetActiveAllParserCategoties(bool isActive);
 	}
 }

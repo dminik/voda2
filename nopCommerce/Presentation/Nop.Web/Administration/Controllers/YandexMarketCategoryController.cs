@@ -117,5 +117,12 @@
 
 			return Json(new { Result = true });
 		}
+
+		[HttpPost]
+		public ActionResult SetActiveAllParserCategoties(bool isNotImportedOnly)
+		{
+			_yandexMarketCategoryService.SetActiveAllParserCategoties(isNotImportedOnly);
+			return Json(new { Result = true });
+		}
 	}
 }

@@ -526,7 +526,7 @@ namespace Nop.Web.Controllers
 				
 		private string GetSeoMetaTitleEnd()
 		{
-			return ". Доставка по Боярке.";
+			return ". Компьютерный Интернет-магазин | Доставка по Боярке.";
 		}
 
 		private void SetSeoMetaTags(Product item, ProductDetailsModel model)
