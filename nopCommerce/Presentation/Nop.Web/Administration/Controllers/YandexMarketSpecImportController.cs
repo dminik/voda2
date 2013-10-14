@@ -64,6 +64,36 @@
 		}
 
 		[HttpPost]
+		public ActionResult GetAllSpecs()
+		{
+			var activeParserCategoriesIdList = _yandexMarketCategoryService.GetActive().Select(x => x.Id);
+			//var newSpecsOnly = _GetNewSpecs(activeParserCategoriesIdList);
+
+			var mapper = new YandexMarketSpecMapper(_yandexMarketSpecService, EngineContext.Current.Resolve<ISpecificationAttributeService>());
+
+			var allSpecs = mapper.GetSumOfYandexSpecsAndShopSpecs(activeParserCategoriesIdList);
+
+			bool any = false;
+			var resultNewSpecsOnly = new List<SpecificationAttribute>();
+
+			foreach (SpecificationAttribute y in allSpecs)
+			{
+				if (y.SpecificationAttributeOptions.Any(r => r.DisplayOrder == 777))
+				{
+					resultNewSpecsOnly.Add(y);
+				}
+			}
+			
+
+			foreach (var specificationAttribute in resultNewSpecsOnly)
+			{
+				specificationAttribute.Order();
+			}
+
+			return Json(resultNewSpecsOnly);
+		}
+
+		[HttpPost]
 		public ActionResult ApplyImport()
 		{
 			_logger.Debug("--- ApplyImport START...");
@@ -83,7 +113,10 @@
 					{
 						curSpecAttrOpt.SpecificationAttributeId = curSpecAttrFromDb.Id;
 						if (!curSpecAttrFromDb.SpecificationAttributeOptions.Any(x => x.Name == curSpecAttrOpt.Name))
-							_specificationAttributeService.InsertSpecificationAttributeOption(curSpecAttrOpt);						
+						{
+							curSpecAttrOpt.DisplayOrder = 0; // сбрасываем с 777
+							_specificationAttributeService.InsertSpecificationAttributeOption(curSpecAttrOpt);
+						}
 					}
 				}
 				else

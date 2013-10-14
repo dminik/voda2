@@ -203,7 +203,7 @@
                                 complete: function () { $('#parsingIndicator').hide(); },
                                 cache: false,
                                 type: 'POST',
-                                url: '@Url.Action("GetNewSpecs", "YandexMarketSpecImport")',
+                                url: '@Url.Action("GetAllSpecs", "YandexMarketSpecImport")',
                                                                 @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
                                 dataType: 'json',
                                 success: function (data) {
@@ -216,12 +216,24 @@
 
                                         var specLi = $('<li>').append(data[i].Name);
                                         var specOptUl = $('<ul>');
+
                                         specLi.append(specOptUl);
                                         place.append(specLi);
 
                                         var k = 0;
                                         $.each(data[i].SpecificationAttributeOptions, function () {
-                                            specOptUl.append("<li>" + data[i].SpecificationAttributeOptions[k].Name + "</li>");
+
+                                            var curSpecOptData = data[i].SpecificationAttributeOptions[k];
+                                            var specOptLi = $('<li>').append(curSpecOptData.Name);
+
+                                            if (curSpecOptData.DisplayOrder == 777) {
+                                                specOptLi.css('color', 'blue');
+                                            } else {
+                                                specOptLi.css('color', 'gray');
+                                            }
+
+
+                                            specOptUl.append(specOptLi);
                                             k++;
                                         });
 

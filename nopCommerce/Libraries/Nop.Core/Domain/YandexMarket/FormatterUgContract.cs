@@ -76,6 +76,7 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "3D LED" }, "3D LED-телевизор", "Тип");
 			ReplaceByValue(product.Specifications, new List<string> { "LED телевизор", "LED" }, "LED-телевизор", "Тип");
 			ReplaceByValue(product.Specifications, new List<string> { "LED" }, "LED-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "Жидкокристалический", "ЖК-телевизор" }, "ЖК", "Тип");
 			ReplaceByValue(product.Specifications, new List<string> { "-телевизор-телевизор-телевизор" }, "-телевизор", "Тип");
 			ReplaceByValue(product.Specifications, new List<string> { "-телевизор-телевизор" }, "-телевизор", "Тип");
 			ReplaceByValue(product.Specifications, new List<string> { "\"" }, "", "Диагональ");

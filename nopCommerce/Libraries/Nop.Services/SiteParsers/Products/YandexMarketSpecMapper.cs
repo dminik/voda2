@@ -71,7 +71,7 @@ namespace Nop.Services.SiteParsers
 						//if (curYaSpecValue.Length >= 440) 
 							//curYaSpecValue = curYaSpecValue.Substring(0, 430);
 
-						existedShopSpecOpt = new SpecificationAttributeOption() { Name = curYaSpec.Value };
+						existedShopSpecOpt = new SpecificationAttributeOption() { Name = curYaSpec.Value, DisplayOrder = 777, };
 						existedShopSpec.SpecificationAttributeOptions.Add(existedShopSpecOpt);
 					}
 				}
@@ -82,8 +82,7 @@ namespace Nop.Services.SiteParsers
 
 				throw;
 			}
-
-			var antennas = shopSpecList.Where(x => x.Name == "Антенна").ToList();
+			
 			return shopSpecList;
 		}
 
