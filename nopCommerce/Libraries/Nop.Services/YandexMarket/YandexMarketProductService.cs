@@ -99,7 +99,8 @@ namespace Nop.Services.YandexMarket
 			{					
 				var shopCategory = _yandexMarketCategoryService.GetById(categoryId);
 				var shopCategoryId = shopCategory != null ? shopCategory.ShopCategoryId : 0;
-				var allShopProductsArtikuls = _productService.SearchProductVariants(shopCategoryId, 0, 0, "", false, 0, 2147483647).Select(x => x.Sku);
+				var allShopProductsArtikuls = _productService.SearchProductVariants(shopCategoryId, 0, 0, "", false, 0, 2147483647, showHidden: true)
+																	.Select(x => x.Sku);
 
 				query = query.Where(x => allShopProductsArtikuls.Contains(x.Articul) == false);
 			}
