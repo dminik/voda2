@@ -74,6 +74,7 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "Miditower", "Mediumtower", "Midi Tower" }, "MidiTower", "Тип оборудования");
 			ReplaceByValue(product.Specifications, new List<string> { "Горизонтально", "Горизонтальоне", "Горизонтальнео", "Горизонтальноее" }, "Горизонтальное", "Размещение блока питания");
 			ReplaceByValue(product.Specifications, new List<string> { "3D LED" }, "3D LED-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "3D Плазменный телевизор", "Плазменная 3D панель" }, "3D Плазменная панель", "Тип");
 			ReplaceByValue(product.Specifications, new List<string> { "LED телевизор", "LED" }, "LED-телевизор", "Тип");
 			ReplaceByValue(product.Specifications, new List<string> { "LED" }, "LED-телевизор", "Тип");
 			ReplaceByValue(product.Specifications, new List<string> { "Жидкокристалический", "ЖК-телевизор" }, "ЖК", "Тип");

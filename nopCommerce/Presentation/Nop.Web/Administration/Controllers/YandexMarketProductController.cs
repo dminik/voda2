@@ -20,6 +20,7 @@
 	using Nop.Services.Security;
 	using Nop.Services.Seo;
 	using Nop.Services.SiteParsers;
+	using Nop.Services.SiteParsers.Products;
 	using Nop.Services.SiteParsers.Xls;
 	using Nop.Services.YandexMarket;
 	using Nop.Web.Framework.Controllers;

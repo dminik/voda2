@@ -106,16 +106,10 @@ namespace Nop.Services.YandexMarket
 
 			var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);
 
-			var clonedRecords = new List<YandexMarketProductRecord>();
+			for (int i = 0; i < records.Count(); i++) 
+				records[i] = records[i].Clone().FormatMe();
 
-			foreach (var curRecord in records)
-			{
-				var cloneCurRecord = curRecord.Clone().FormatMe();
-
-				clonedRecords.Add(cloneCurRecord);
-			}
-
-			return new PagedList<YandexMarketProductRecord>(clonedRecords, pageIndex, pageSize);
+			return records;
 			
 		}		
 

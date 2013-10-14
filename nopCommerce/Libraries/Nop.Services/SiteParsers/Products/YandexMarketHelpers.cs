@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-
-namespace Nop.Services.SiteParsers
+namespace Nop.Services.SiteParsers.Products
 {
+	using System.Collections.Generic;
+
 	public static class YandexMarketHelpers
 	{
 		public static List<string> GetAllowFilteringForProductSelector()
@@ -126,6 +126,11 @@ namespace Nop.Services.SiteParsers
 					"Минимальная дистанция от стены, мм",
 					"Максимальный стандарт VESA",
 					"Типоразмер",
+					"Тип плеера",
+					"Комплект акустических систем",
+					"Мощность суммарная",
+					"Функция караоке",
+
 				};
 		}
 	}
