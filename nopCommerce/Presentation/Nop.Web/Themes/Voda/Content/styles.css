@@ -35,13 +35,11 @@
 
 .site-name{	
 	display: inline-block;
-	font-size: 24px;
-	height: 100%;
+	font-size: 24px;	
 	left: 32px;
 	position: absolute;
 	text-decoration: none;
-	top: 85px;
-	width: 10%;
+	top: 85px;	
 }
 
 .header-robot {
