@@ -265,9 +265,7 @@
 		}
 
 		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList)
-		{
-			
-
+		{			
 			var allSpecAttrList = _specificationAttributeService.GetSpecificationAttributes();
 			var psaList = new List<ProductSpecificationAttribute>();
 
@@ -275,11 +273,15 @@
 			{
 				var attributeOptionId = FindAttributeOptionId(yandexMarketSpecRecord.Key, yandexMarketSpecRecord.Value, allSpecAttrList);
 
+				var allowFiltering =
+					YandexMarketHelpers.GetAllowFilteringForProductSelector().Any(x => x.Name == yandexMarketSpecRecord.Key)
+					&& (product.ProductCategories.ToList()[0].CategoryId != 49 && yandexMarketSpecRecord.Key != "Сенсорный экран"); // для планшетов не показываем фильтр
+
 				var psa = new ProductSpecificationAttribute()
 				{
 					SpecificationAttributeOptionId = attributeOptionId,
 					ProductId = product.Id,
-					AllowFiltering = YandexMarketHelpers.GetAllowFilteringForProductSelector().Contains(yandexMarketSpecRecord.Key) && (product.ProductCategories.ToList()[0].CategoryId != 49 && yandexMarketSpecRecord.Key != "Сенсорный экран"), // для планшетов не показываем фильтр
+					AllowFiltering = allowFiltering,
 					ShowOnProductPage = true,
 				};
 

@@ -4,16 +4,14 @@ GO
 SELECT distinct
 	  pm.Id,
       s.Name,
-	  so.Name
-      ,[AllowFiltering]
+	  so.Name as Value,
+	  so.DisplayOrder,
+      AllowFiltering
             
   FROM [dbo].[Product_SpecificationAttribute_Mapping] pm
 	join [dbo].[SpecificationAttributeOption] so on so.Id = pm.SpecificationAttributeOptionId
 	join [dbo].[SpecificationAttribute] s on s.Id = so.SpecificationAttributeId
-where s.Name in ('Тип плеера',
-					'Комплект акустических систем',
-					'Мощность суммарная',
-					'Функция караоке')
+where s.Name in ('Диагональ, дюйм')
 GO
 
 
@@ -25,7 +23,12 @@ where Id in (
   FROM [dbo].[Product_SpecificationAttribute_Mapping] pm
 	join [dbo].[SpecificationAttributeOption] so on so.Id = pm.SpecificationAttributeOptionId
 	join [dbo].[SpecificationAttribute] s on s.Id = so.SpecificationAttributeId
-where s.Name = 'Объем памяти'
+where s.Name = 'Диагональ, дюйм'
 
 )
+
+
+UPDATE [dbo].[SpecificationAttributeOption]
+   SET [DisplayOrder] = 0
+ WHERE [DisplayOrder] = 777
 

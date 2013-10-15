@@ -43,6 +43,7 @@ namespace Nop.Web.Controllers
 	using System.Collections;
 	using System.Text;
 	using Nop.Core.Domain.Seo;
+	using Nop.Services.SiteParsers.Products;
 
 	using Filter = Nop.Core.Domain.Catalog.Filter;
 
@@ -258,8 +259,8 @@ namespace Nop.Web.Controllers
         }
 
 		[NonAction]
-		private bool IsSpecAllowedForShortDescription(int specificationAttributeOptionId)
-		{
+		private bool IsSpecAllowedForShortDescription(SpecificationAttributeOption specificationAttributeOption, IEnumerable<Category> categories)
+		{			
 			var allowedSpecsForShortDescription = _catalogSettings.SpecToDisplayInShortDescription.Split(';').ToList();
 
 			var specOptsIdsAllowed =_specificationAttributeService.GetSpecificationAttributes()
@@ -267,7 +268,26 @@ namespace Nop.Web.Controllers
 							.SelectMany(h => h.SpecificationAttributeOptions)
 							.Select(w => w.Id);
 						
-			var isAllowed = specOptsIdsAllowed.Contains(specificationAttributeOptionId);
+			var isAllowed = specOptsIdsAllowed.Contains(specificationAttributeOption.Id);
+
+			if (isAllowed)
+			{
+				// не показываем для некоторых категорий некоторые фильтры
+				var allowFilters = YandexMarketHelpers.GetAllowFilteringForProductSelector();
+
+				foreach (var allowFiltering in allowFilters)
+				{
+					if (allowFiltering.Name == specificationAttributeOption.SpecificationAttribute.Name)
+					{
+						foreach (var curCategory in categories.ToList())
+						{
+							if(allowFiltering.ExceptedCategotiesNames.Contains(curCategory.Name))
+								isAllowed = false;
+						}
+
+					}
+				}
+			}
 
 			return isAllowed;
 		}
@@ -280,8 +300,9 @@ namespace Nop.Web.Controllers
 			var specShortDescription = new StringBuilder();
 
 			foreach (var curProdSpec in product.ProductSpecificationAttributes)
-			{				
-				if (IsSpecAllowedForShortDescription(curProdSpec.SpecificationAttributeOptionId))
+			{
+				var categories = product.ProductCategories.Select(x => x.Category);
+				if (IsSpecAllowedForShortDescription(curProdSpec.SpecificationAttributeOption, categories))
 				{
 					specShortDescription.AppendFormat("<li>{0}: {1}</li>", curProdSpec.SpecificationAttributeOption.SpecificationAttribute.Name, curProdSpec.SpecificationAttributeOption.Name);
 				}
@@ -1132,6 +1153,7 @@ namespace Nop.Web.Controllers
 			model.PagingFilteringContext.ShowWithPositiveQuantityCount = positiveQuantityCount;
 
 			model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(
+				category,
 				products.TotalCount,
 				allOptionsCountTbl,
 				filter.AlreadyFilteredSpecOptionIds,

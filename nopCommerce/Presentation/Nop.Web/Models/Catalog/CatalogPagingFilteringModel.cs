@@ -13,6 +13,8 @@ using Nop.Web.Framework.UI.Paging;
 
 namespace Nop.Web.Models.Catalog
 {
+	using Nop.Services.SiteParsers.Products;
+
 	using Filter = Nop.Core.Domain.Catalog.Filter;
 
 	public class SpecOptionComp : IComparer<string>
@@ -387,6 +389,7 @@ namespace Nop.Web.Models.Catalog
             }
 
 			public virtual void PrepareSpecsFilters(
+				Category category,
 				int productsTotalAmount,
 				IEnumerable<SpecificationAttributeService.SpecificationAttributeOptionWithCount> allOptionsCountTbl,
 				IList<int> alreadyFilteredSpecOptionIds,
@@ -402,6 +405,8 @@ namespace Nop.Web.Models.Catalog
 		            // Для оптимизации нужно вытащить сразу все спецификации и их значения 
 		            var allSpecsAttribs = specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeList(filterableSpecificationAttributeOptionIds);
 
+		            var allowFilters = YandexMarketHelpers.GetAllowFilteringForProductSelector();
+
 		            foreach (var sao in allSpecsAttribs) // цикл по айдишникам значений
 		            {			            
 			            if (sao != null)
@@ -409,6 +414,10 @@ namespace Nop.Web.Models.Catalog
 				            var sa = sao.SpecificationAttribute; // вытаскиваем из БД спецификацию
 				            if (sa != null)
 				            {
+								// не показываем для некоторых категорий некоторые фильтры
+								if(allowFilters.Any(x => x.Name == sa.Name && x.ExceptedCategotiesNames.Contains(category.Name)))
+									continue;
+
 								int existTimes = GetSpecificationAttributeOptionExistTimesInFilteredProducts(allOptionsCountTbl, sao.Id);
 
 					            allFilters.Add(

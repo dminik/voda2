@@ -72,8 +72,7 @@
 			var mapper = new YandexMarketSpecMapper(_yandexMarketSpecService, EngineContext.Current.Resolve<ISpecificationAttributeService>());
 
 			var allSpecs = mapper.GetSumOfYandexSpecsAndShopSpecs(activeParserCategoriesIdList);
-
-			bool any = false;
+			
 			var resultNewSpecsOnly = new List<SpecificationAttribute>();
 
 			foreach (SpecificationAttribute y in allSpecs)
