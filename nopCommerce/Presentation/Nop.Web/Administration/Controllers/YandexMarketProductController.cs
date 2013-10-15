@@ -273,15 +273,16 @@
 			{
 				var attributeOptionId = FindAttributeOptionId(yandexMarketSpecRecord.Key, yandexMarketSpecRecord.Value, allSpecAttrList);
 
-				var allowFiltering =
-					YandexMarketHelpers.GetAllowFilteringForProductSelector().Any(x => x.Name == yandexMarketSpecRecord.Key)
-					&& (product.ProductCategories.ToList()[0].CategoryId != 49 && yandexMarketSpecRecord.Key != "Сенсорный экран"); // для планшетов не показываем фильтр
+
+				bool isShowInFilter;
+				bool isShowInShortDescription;
+				YandexMarketHelpers.IsSpecAllow(yandexMarketSpecRecord.Key, product.ProductCategories.Select(x => x.Category), out isShowInFilter, out isShowInShortDescription);
 
 				var psa = new ProductSpecificationAttribute()
 				{
 					SpecificationAttributeOptionId = attributeOptionId,
 					ProductId = product.Id,
-					AllowFiltering = allowFiltering,
+					AllowFiltering = isShowInFilter,
 					ShowOnProductPage = true,
 				};
 

@@ -1,151 +1,227 @@
 namespace Nop.Services.SiteParsers.Products
 {
 	using System.Collections.Generic;
+	using System.Linq;
+
+	using Nop.Core.Domain.Catalog;
 
 	public static class YandexMarketHelpers
 	{
-		public class AllowFiltering
+		private class AllowFiltering
 		{
 			public AllowFiltering()
 			{
-				ExceptedCategotiesNames = new List<string>();
+				ExceptedCategotiesNames = new List<ExceptedCategory>();
+				ShowInFilter = true;
+				ShowInShortDescription = true;
 			}
 
 
-			public string Name { get; set; }
+			public string FilterName { get; set; }
 
-			public List<string> ExceptedCategotiesNames { get; set; }
+			public bool ShowInFilter { get; set; }
+			public bool ShowInShortDescription { get; set; }
+
+			public List<ExceptedCategory> ExceptedCategotiesNames { get; set; }
+		}
+
+		private class ExceptedCategory
+		{
+			public ExceptedCategory()
+			{				
+				ShowInFilter = false;
+				ShowInShortDescription = false;
+			}
+
+			public string CategoryName { get; set; }
+
+			public bool ShowInFilter { get; set; }
+			public bool ShowInShortDescription { get; set; }
 		}
 
 
-		public static List<AllowFiltering> GetAllowFilteringForProductSelector()
-		{
+		private static IEnumerable<AllowFiltering> GetAllowFilteringForProductSelector()
+		{			
 			return new List<AllowFiltering>()
 				{					
-				 new AllowFiltering() { Name = "Производитель"},
-				 new AllowFiltering() { Name = "Bluetooth"},
-				 new AllowFiltering() { Name = "Количество SIM-карт"},
-				 new AllowFiltering() { Name = "Размер экрана, дюймы"},
-				 new AllowFiltering() { Name = "Количество мегапикселей камеры"},
-				 new AllowFiltering() { Name = "Тип корпуса"},
-				 new AllowFiltering() { Name = "Сенсорный экран"},
-				 new AllowFiltering() { Name = "FM-радио"},
-				 new AllowFiltering() { Name = "Android"},
-				 new AllowFiltering() { Name = "Количество клавиш"},
-				 new AllowFiltering() { Name = "Подключение"},
-				 new AllowFiltering() { Name = "Тип подключения"},
-				 new AllowFiltering() { Name = "Разрешение матрицы"},
-				 new AllowFiltering() { Name = "Тип матрицы"},
-				 new AllowFiltering() { Name = "Встроенный микрофон"},
-				 new AllowFiltering() { Name = "Формат акустики"},
-				 new AllowFiltering() { Name = "Общая выходная мощность колонок, RMS (Вт)"},
-				 new AllowFiltering() { Name = "Материал корпуса"},
-				 new AllowFiltering() { Name = "USB-подключение"},
-				 new AllowFiltering() { Name = "Совместимость"},
-				 new AllowFiltering() { Name = "Тип манипулятора"},
-				 new AllowFiltering() { Name = "Количество выходных разъемов питания"},
-				 new AllowFiltering() { Name = "Выходная мощность"},
-				 new AllowFiltering() { Name = "Время автономной работы"},
+				 new AllowFiltering() { FilterName = "Производитель"},
+				 new AllowFiltering() { FilterName = "Bluetooth"},
+				 new AllowFiltering() { FilterName = "Количество SIM-карт"},
+				 new AllowFiltering() { FilterName = "Размер экрана, дюймы"},
+				 new AllowFiltering() { FilterName = "Количество мегапикселей камеры"},
+				 new AllowFiltering() { FilterName = "Тип корпуса"},
+				 new AllowFiltering() { FilterName = "Сенсорный экран"},
+				 new AllowFiltering() { FilterName = "FM-радио"},
+				 new AllowFiltering() { FilterName = "Android"},
+				 new AllowFiltering() { FilterName = "Количество клавиш"},
+				 new AllowFiltering() { FilterName = "Подключение"},
+				 new AllowFiltering() { FilterName = "Тип подключения"},
+				 new AllowFiltering() { FilterName = "Разрешение матрицы"},
+				 new AllowFiltering() { FilterName = "Тип матрицы"},
+				 new AllowFiltering() { FilterName = "Встроенный микрофон"},
+				 new AllowFiltering() { FilterName = "Формат акустики"},
+				 new AllowFiltering() { FilterName = "Общая выходная мощность колонок, RMS (Вт)"},
+				 new AllowFiltering() { FilterName = "Материал корпуса"},
+				 new AllowFiltering() { FilterName = "USB-подключение"},
+				 new AllowFiltering() { FilterName = "Совместимость"},
+				 new AllowFiltering() { FilterName = "Тип манипулятора"},
+				 new AllowFiltering() { FilterName = "Количество выходных разъемов питания"},
+				 new AllowFiltering() { FilterName = "Выходная мощность"},
+				 new AllowFiltering() { FilterName = "Время автономной работы"},
 
-				 new AllowFiltering() { Name = "Мощность блока питания"},//блока питания
-				 new AllowFiltering() { Name = "Блок питания"},
-				 new AllowFiltering() { Name = "Коннектор питания мат.платы"},
-				 new AllowFiltering() { Name = "Коннектор питания видеокарт"},
-				 new AllowFiltering() { Name = "Разъемы для подключения HDD/FDD/SATA"},
+				 new AllowFiltering() { FilterName = "Мощность блока питания"},//блока питания
+				 new AllowFiltering() { FilterName = "Блок питания"},
+				 new AllowFiltering() { FilterName = "Коннектор питания мат.платы"},
+				 new AllowFiltering() { FilterName = "Коннектор питания видеокарт"},
+				 new AllowFiltering() { FilterName = "Разъемы для подключения HDD/FDD/SATA"},
+				 // 
+				 new AllowFiltering() { FilterName = "Материал"},//корпуса
+				 new AllowFiltering() { FilterName = "Тип оборудования"},
+				 new AllowFiltering() { FilterName = "Цвета, использованные в оформлении"},
+				 new AllowFiltering() { FilterName = "Внутренняя корзина для HDD"},
+				 new AllowFiltering() { FilterName = "Крепление HDD"},
+				 new AllowFiltering() { FilterName = "Порты"},
+				 new AllowFiltering() { FilterName = "Индикаторы"},
+				 new AllowFiltering() { FilterName = "Размещение блока питания"},
+				 new AllowFiltering() { FilterName = "Наличие блока питания"},
+				 new AllowFiltering() { FilterName = "Формат"},
 
-				 new AllowFiltering() { Name = "Материал"},//корпуса
-				 new AllowFiltering() { Name = "Тип оборудования"},
-				 new AllowFiltering() { Name = "Цвета, использованные в оформлении"},
-				 new AllowFiltering() { Name = "Внутренняя корзина для HDD"},
-				 new AllowFiltering() { Name = "Крепление HDD"},
-				 new AllowFiltering() { Name = "Порты"},
-				 new AllowFiltering() { Name = "Индикаторы"},
-				 new AllowFiltering() { Name = "Размещение блока питания"},
-				 new AllowFiltering() { Name = "Наличие блока питания"},
-				 new AllowFiltering() { Name = "Формат"},
-
-				 new AllowFiltering() { Name = "Чип"},
-				 new AllowFiltering() { Name = "Видеопамять"},
-				 new AllowFiltering() { Name = "Разрядность шины памяти"},
-				 new AllowFiltering() { Name = "Тип памяти"},
-				 new AllowFiltering() { Name = "Тип чипа"},
+				 new AllowFiltering() { FilterName = "Чип"},
+				 new AllowFiltering() { FilterName = "Видеопамять"},
+				 new AllowFiltering() { FilterName = "Разрядность шины памяти"},
+				 new AllowFiltering() { FilterName = "Тип памяти"},
+				 new AllowFiltering() { FilterName = "Тип чипа"},
+				 new AllowFiltering() { FilterName = "Тип", ShowInFilter = false, },
+				 new AllowFiltering() { FilterName = "Уровень шума", ShowInFilter = false, },
+				 new AllowFiltering() { FilterName = "Размеры вентилятора", ShowInFilter = false, },
 					
-				 new AllowFiltering() { Name = "Пропускная способность интерфейса"},
-				 new AllowFiltering() { Name = "Скорость вращения шпинделя"},
-				 new AllowFiltering() { Name = "Буфер"},
-				 new AllowFiltering() { Name = "Емкость", ExceptedCategotiesNames = new List<string>(){"Компактные цифровые фотокамеры"}},
+				 new AllowFiltering() { FilterName = "Пропускная способность интерфейса"},
+				 new AllowFiltering() { FilterName = "Скорость вращения шпинделя"},
+				 new AllowFiltering() { FilterName = "Буфер"},
+				 new AllowFiltering() { FilterName = "Емкость", ExceptedCategotiesNames = new List<ExceptedCategory>(){ new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"}}},
 					
-				 new AllowFiltering() { Name = "Частота работы процессора"},
-				 new AllowFiltering() { Name = "Частота шины CPU"},
-				 new AllowFiltering() { Name = "Ядро"},
-				 new AllowFiltering() { Name = "Количество ядер"},
-				 new AllowFiltering() { Name = "Гнездо процессора"},
+				 new AllowFiltering() { FilterName = "Частота работы процессора"},
+				 new AllowFiltering() { FilterName = "Частота шины CPU"},
+				 new AllowFiltering() { FilterName = "Ядро"},
+				 new AllowFiltering() { FilterName = "Количество ядер"},
+				 new AllowFiltering() { FilterName = "Гнездо процессора"},
 
-				 new AllowFiltering() { Name = "Питание", ExceptedCategotiesNames = new List<string>(){"Компактные цифровые фотокамеры"}},
+				 new AllowFiltering() { FilterName = "Питание", ExceptedCategotiesNames = new List<ExceptedCategory>(){ new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"}}},
 
-				 new AllowFiltering() { Name = "Внешний"},
+				 new AllowFiltering() { FilterName = "Внешний"},
 
-				 new AllowFiltering() { Name = "Гнездо процессора"},
-				 new AllowFiltering() { Name = "Чипсет материнской платы (Северный мост)"},
+				 new AllowFiltering() { FilterName = "Гнездо процессора"},
+				 new AllowFiltering() { FilterName = "Чипсет материнской платы (Северный мост)"},
 
-				 new AllowFiltering() { Name = "Частота функционирования"}, 
-				 new AllowFiltering() { Name = "Объем памяти"},
-				 new AllowFiltering() { Name = "Диагональ"},
-				 new AllowFiltering() { Name = "Разрешение"},
+				 new AllowFiltering() { FilterName = "Частота функционирования"}, 
+				 new AllowFiltering() { FilterName = "Объем памяти"},
+				 new AllowFiltering() { FilterName = "Диагональ"},
+				 new AllowFiltering() { FilterName = "Разрешение"},
 
-				 new AllowFiltering() { Name = "Тип наушников"}, 
-				 new AllowFiltering() { Name = "Регулятор громкости"},
-				 new AllowFiltering() { Name = "Допустимая мощность"},
-
-				 new AllowFiltering() { Name = "Цвет"}, 
-				 new AllowFiltering() { Name = "Материал"},
-				 new AllowFiltering() { Name = "Пыле-влаго защита"},
-				 new AllowFiltering() { Name = "Технологии"},
-				 new AllowFiltering() { Name = "Серия"},
-				 new AllowFiltering() { Name = "Соотношение сторон"},
-				 new AllowFiltering() { Name = "ТV-приемник"},
-				 new AllowFiltering() { Name = "Оптический привод"},
-				 new AllowFiltering() { Name = "Видимая область"},
-				 new AllowFiltering() { Name = "Операционная система"},
-				 new AllowFiltering() { Name = "Оперативная память"}, 
-				 new AllowFiltering() { Name = "Жесткий диск"},
-				 new AllowFiltering() { Name = "Процессор"},
-				 new AllowFiltering() { Name = "Видеосистема"},
+				 new AllowFiltering() { FilterName = "Тип наушников"}, 
+				 new AllowFiltering() { FilterName = "Регулятор громкости"},
+				 new AllowFiltering() { FilterName = "Допустимая мощность"},
+				 
+				 new AllowFiltering() { FilterName = "Цвет"}, 
+				 new AllowFiltering() { FilterName = "Материал"},
+				 new AllowFiltering() { FilterName = "Пыле-влаго защита"},
+				 new AllowFiltering() { FilterName = "Технологии"},
+				 new AllowFiltering() { FilterName = "Серия"},
+				 new AllowFiltering() { FilterName = "Соотношение сторон"},
+				 new AllowFiltering() { FilterName = "ТV-приемник"},
+				 new AllowFiltering() { FilterName = "Оптический привод"},
+				 new AllowFiltering() { FilterName = "Видимая область"},
+				 new AllowFiltering() { FilterName = "Операционная система"},
+				 new AllowFiltering() { FilterName = "Оперативная память"}, 
+				 new AllowFiltering() { FilterName = "Жесткий диск"},
+				 new AllowFiltering() { FilterName = "Процессор", ExceptedCategotiesNames = new List<ExceptedCategory>(){ new ExceptedCategory(){ CategoryName = "Электронные книги"}}},
+				 new AllowFiltering() { FilterName = "Видеосистема"},
 					
-				 new AllowFiltering() { Name = "Функция диктофона"},
-				 new AllowFiltering() { Name = "Использование в качестве внешней памяти"},
-				 new AllowFiltering() { Name = "Форматы записей"},
+				 new AllowFiltering() { FilterName = "Функция диктофона"},
+				 new AllowFiltering() { FilterName = "Использование в качестве внешней памяти"},
+				 new AllowFiltering() { FilterName = "Форматы записей"},
 
-				 new AllowFiltering() { Name = "Режим точки доступа (Soft AP)"},
-				 new AllowFiltering() { Name = "Скорость беспроводного соединения"},
-				 new AllowFiltering() { Name = "Количество портов LAN"},
-				 new AllowFiltering() { Name = "Корпус (материал)"},
-				 new AllowFiltering() { Name = "Цвета, использованные в оформлении"},
-				 new AllowFiltering() { Name = "Тип экрана"},
-				 new AllowFiltering() { Name = "Материал проводника"},
-				 new AllowFiltering() { Name = "Длина, м"},
-				 new AllowFiltering() { Name = "Покрытие разъемов"},
-				 new AllowFiltering() { Name = "Коннектор на входе"}, 
-				 new AllowFiltering() { Name = "Коннектор на выходе"}, 
-					
-
-				 new AllowFiltering() { Name = "Минимальная диагональ"},
-				 new AllowFiltering() { Name = "Максимальная диагональ"},
-				 new AllowFiltering() { Name = "Стандарт"},
-				 new AllowFiltering() { Name = "Максимальная нагрузка, кг"},
-				 new AllowFiltering() { Name = "Поворот, град."},
-				 new AllowFiltering() { Name = "Наклон, град."},
-				 new AllowFiltering() { Name = "Количество точек поворота (для поворотных креплений)"},
-				 new AllowFiltering() { Name = "Максимальная дистанция от стены, мм"},
-				 new AllowFiltering() { Name = "Минимальная дистанция от стены, мм"},
-				 new AllowFiltering() { Name = "Максимальный стандарт VESA"},
-				 new AllowFiltering() { Name = "Типоразмер", ExceptedCategotiesNames = new List<string>(){"Компактные цифровые фотокамеры"}},
-				 new AllowFiltering() { Name = "Тип плеера"},
-				 new AllowFiltering() { Name = "Комплект акустических систем"},
-				 new AllowFiltering() { Name = "Мощность суммарная"},
-				 new AllowFiltering() { Name = "Функция караоке"},
-				 new AllowFiltering() { Name = "Оптический зум"},
+				 new AllowFiltering() { FilterName = "Режим точки доступа (Soft AP)"},
+				 new AllowFiltering() { FilterName = "Скорость беспроводного соединения"},
+				 new AllowFiltering() { FilterName = "Количество портов LAN"},
+				 new AllowFiltering() { FilterName = "Корпус (материал)"},
+				 new AllowFiltering() { FilterName = "Цвета, использованные в оформлении"},
+				 new AllowFiltering() { FilterName = "Тип экрана"},
+				 new AllowFiltering() { FilterName = "Материал проводника"},
+				 new AllowFiltering() { FilterName = "Длина, м"},
+				 new AllowFiltering() { FilterName = "Покрытие разъемов"},
+				 new AllowFiltering() { FilterName = "Коннектор на входе"}, 
+				 new AllowFiltering() { FilterName = "Коннектор на выходе"}, 
+									 
+				 new AllowFiltering() { FilterName = "Минимальная диагональ"},
+				 new AllowFiltering() { FilterName = "Максимальная диагональ"},
+				 new AllowFiltering() { FilterName = "Стандарт"},
+				 new AllowFiltering() { FilterName = "Максимальная нагрузка, кг"},
+				 new AllowFiltering() { FilterName = "Поворот, град."},
+				 new AllowFiltering() { FilterName = "Наклон, град."},
+				 new AllowFiltering() { FilterName = "Количество точек поворота (для поворотных креплений)"},
+				 new AllowFiltering() { FilterName = "Максимальная дистанция от стены, мм"},
+				 new AllowFiltering() { FilterName = "Минимальная дистанция от стены, мм"},
+				 new AllowFiltering() { FilterName = "Максимальный стандарт VESA"},
+				 new AllowFiltering() { FilterName = "Типоразмер", ExceptedCategotiesNames = new List<ExceptedCategory>(){ new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"}}},
+				 new AllowFiltering() { FilterName = "Тип плеера"},
+				 new AllowFiltering() { FilterName = "Комплект акустических систем"},
+				 new AllowFiltering() { FilterName = "Мощность суммарная"},
+				 new AllowFiltering() { FilterName = "Функция караоке"},
+				 new AllowFiltering() { FilterName = "Оптический зум"},
+				 new AllowFiltering() { FilterName = "Интерфейс", ShowInFilter = false, ExceptedCategotiesNames = new List<ExceptedCategory>(){ new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"}}},
+				 new AllowFiltering() { FilterName = "Поддержка текстовых форматов", ShowInFilter = false, },
 				};
+		}
+
+		
+		public static void IsSpecAllow(string specName, IEnumerable<Category> categoriesOfProduct,
+									out bool isShowInFilter, out bool isShowInShortDescription)
+		{
+			isShowInFilter = false;
+			isShowInShortDescription = false;
+			
+			
+			// не показываем для некоторых категорий некоторые спецификации
+			var allowFilters = YandexMarketHelpers.GetAllowFilteringForProductSelector();
+			
+			foreach (var currentAllowFilter in allowFilters)
+			{
+				if (currentAllowFilter.FilterName == specName)
+				{
+					// ага, есть какое то правило для этой спецификации
+
+
+					ExceptedCategory exceptedCategory = null;
+
+					// это правило имеет исключение для проверяемой спецификации?
+					foreach (var curCategory in categoriesOfProduct)
+					{
+						exceptedCategory = currentAllowFilter.ExceptedCategotiesNames.FirstOrDefault(x => x.CategoryName == curCategory.Name);
+
+						if (exceptedCategory != null)
+							break;						
+					}
+
+
+					if (exceptedCategory != null)
+					{
+						// применяем исключение
+						isShowInShortDescription = exceptedCategory.ShowInShortDescription;
+						isShowInFilter = exceptedCategory.ShowInFilter;
+					}
+					else
+					{
+						// применяем основное правило
+						isShowInShortDescription = currentAllowFilter.ShowInShortDescription;
+						isShowInFilter = currentAllowFilter.ShowInFilter;
+					}
+
+					break;
+				}
+
+			}// end for
+			
 		}
 	}
 }

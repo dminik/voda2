@@ -404,9 +404,7 @@ namespace Nop.Web.Models.Catalog
 	            {		            
 		            // Для оптимизации нужно вытащить сразу все спецификации и их значения 
 		            var allSpecsAttribs = specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeList(filterableSpecificationAttributeOptionIds);
-
-		            var allowFilters = YandexMarketHelpers.GetAllowFilteringForProductSelector();
-
+		            
 		            foreach (var sao in allSpecsAttribs) // цикл по айдишникам значений
 		            {			            
 			            if (sao != null)
@@ -415,8 +413,14 @@ namespace Nop.Web.Models.Catalog
 				            if (sa != null)
 				            {
 								// не показываем для некоторых категорий некоторые фильтры
-								if(allowFilters.Any(x => x.Name == sa.Name && x.ExceptedCategotiesNames.Contains(category.Name)))
+								bool isShowInFilter;
+					            bool isShowInShortDescription;
+								YandexMarketHelpers.IsSpecAllow(sa.Name, new List<Category>() { category }, out isShowInFilter, out isShowInShortDescription);
+
+								if (!isShowInFilter)
 									continue;
+								
+
 
 								int existTimes = GetSpecificationAttributeOptionExistTimesInFilteredProducts(allOptionsCountTbl, sao.Id);
 

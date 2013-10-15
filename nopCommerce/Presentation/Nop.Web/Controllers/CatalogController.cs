@@ -259,37 +259,14 @@ namespace Nop.Web.Controllers
         }
 
 		[NonAction]
-		private bool IsSpecAllowedForShortDescription(SpecificationAttributeOption specificationAttributeOption, IEnumerable<Category> categories)
+		private bool IsSpecAllowedForShortDescription(string specName, IEnumerable<Category> categoriesOfProduct)
 		{			
-			var allowedSpecsForShortDescription = _catalogSettings.SpecToDisplayInShortDescription.Split(';').ToList();
+			// не показываем для некоторых категорий некоторые спецификации
+			bool isShowInFilter;
+			bool isShowInShortDescription;
+			YandexMarketHelpers.IsSpecAllow(specName, categoriesOfProduct, out isShowInFilter, out isShowInShortDescription);
 
-			var specOptsIdsAllowed =_specificationAttributeService.GetSpecificationAttributes()
-							.Where(x => allowedSpecsForShortDescription.Contains(x.Name))
-							.SelectMany(h => h.SpecificationAttributeOptions)
-							.Select(w => w.Id);
-						
-			var isAllowed = specOptsIdsAllowed.Contains(specificationAttributeOption.Id);
-
-			if (isAllowed)
-			{
-				// не показываем для некоторых категорий некоторые фильтры
-				var allowFilters = YandexMarketHelpers.GetAllowFilteringForProductSelector();
-
-				foreach (var allowFiltering in allowFilters)
-				{
-					if (allowFiltering.Name == specificationAttributeOption.SpecificationAttribute.Name)
-					{
-						foreach (var curCategory in categories.ToList())
-						{
-							if(allowFiltering.ExceptedCategotiesNames.Contains(curCategory.Name))
-								isAllowed = false;
-						}
-
-					}
-				}
-			}
-
-			return isAllowed;
+			return isShowInShortDescription;
 		}
 
 		[NonAction]
@@ -302,7 +279,7 @@ namespace Nop.Web.Controllers
 			foreach (var curProdSpec in product.ProductSpecificationAttributes)
 			{
 				var categories = product.ProductCategories.Select(x => x.Category);
-				if (IsSpecAllowedForShortDescription(curProdSpec.SpecificationAttributeOption, categories))
+				if (IsSpecAllowedForShortDescription(curProdSpec.SpecificationAttributeOption.SpecificationAttribute.Name, categories))
 				{
 					specShortDescription.AppendFormat("<li>{0}: {1}</li>", curProdSpec.SpecificationAttributeOption.SpecificationAttribute.Name, curProdSpec.SpecificationAttributeOption.Name);
 				}
