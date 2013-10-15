@@ -44,7 +44,7 @@ namespace Nop.Services.SiteParsers.Products
 		{			
 			return new List<AllowFiltering>()
 				{					
-				 new AllowFiltering() { FilterName = "Производитель"},
+				 new AllowFiltering() { FilterName = "Производитель", ShowInShortDescription = false, },
 				 new AllowFiltering() { FilterName = "Bluetooth"},
 				 new AllowFiltering() { FilterName = "Количество SIM-карт"},
 				 new AllowFiltering() { FilterName = "Размер экрана, дюймы"},
@@ -98,7 +98,11 @@ namespace Nop.Services.SiteParsers.Products
 				 new AllowFiltering() { FilterName = "Пропускная способность интерфейса"},
 				 new AllowFiltering() { FilterName = "Скорость вращения шпинделя"},
 				 new AllowFiltering() { FilterName = "Буфер"},
-				 new AllowFiltering() { FilterName = "Емкость", ExceptedCategotiesNames = new List<ExceptedCategory>(){ new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"}}},
+				 new AllowFiltering() { FilterName = "Емкость", ExceptedCategotiesNames = new List<ExceptedCategory>()
+					{ 
+						new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"}, 
+						new ExceptedCategory(){ CategoryName = "Смартфоны"}, 
+						new ExceptedCategory(){ CategoryName = "Планшеты"}}},
 					
 				 new AllowFiltering() { FilterName = "Частота работы процессора"},
 				 new AllowFiltering() { FilterName = "Частота шины CPU"},
@@ -106,7 +110,11 @@ namespace Nop.Services.SiteParsers.Products
 				 new AllowFiltering() { FilterName = "Количество ядер"},
 				 new AllowFiltering() { FilterName = "Гнездо процессора"},
 
-				 new AllowFiltering() { FilterName = "Питание", ExceptedCategotiesNames = new List<ExceptedCategory>(){ new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"}}},
+				 new AllowFiltering() { FilterName = "Питание", ExceptedCategotiesNames = new List<ExceptedCategory>()
+					 {
+						 new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"},
+						 new ExceptedCategory(){ CategoryName = "Зеркальные цифровые фотокамеры"}
+					 }},
 
 				 new AllowFiltering() { FilterName = "Внешний"},
 
@@ -169,8 +177,19 @@ namespace Nop.Services.SiteParsers.Products
 				 new AllowFiltering() { FilterName = "Мощность суммарная"},
 				 new AllowFiltering() { FilterName = "Функция караоке"},
 				 new AllowFiltering() { FilterName = "Оптический зум"},
-				 new AllowFiltering() { FilterName = "Интерфейс", ShowInFilter = false, ExceptedCategotiesNames = new List<ExceptedCategory>(){ new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"}}},
+				 new AllowFiltering() { FilterName = "Интерфейс", ShowInFilter = false, ExceptedCategotiesNames = new List<ExceptedCategory>()
+					 {
+						 new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"},
+						 new ExceptedCategory(){ CategoryName = "Зеркальные цифровые фотокамеры"}						 
+					 }},
 				 new AllowFiltering() { FilterName = "Поддержка текстовых форматов", ShowInFilter = false, },
+
+				 new AllowFiltering() { FilterName = "Поддержка носителей", ShowInFilter = false, },
+				 new AllowFiltering() { FilterName = "Воспроизведение форматов", ShowInFilter = false, },
+				 new AllowFiltering() { FilterName = "Мощность суммарная", ShowInFilter = false, },
+				 new AllowFiltering() { FilterName = "Функция караоке", ShowInFilter = false, }
+
+
 				};
 		}
 
