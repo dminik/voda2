@@ -44,6 +44,7 @@
                         x.Mode(GridEditMode.InLine);
                     })
                     .Filterable()
+                    .Sortable()
                     .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding =>
                     {
