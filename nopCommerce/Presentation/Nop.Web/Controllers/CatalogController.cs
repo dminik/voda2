@@ -248,7 +248,10 @@ namespace Nop.Web.Controllers
                     //if (breadCrumbIds[i] == category.Id)
                         categoryModel.SubCategories.AddRange(PrepareCategoryNavigationModel(category.Id));
 
-                result.Add(categoryModel);
+#if !DEBUG
+						if (categoryModel.NumberOfProducts > 0) 
+#endif
+							result.Add(categoryModel);
             }
 
             return result;

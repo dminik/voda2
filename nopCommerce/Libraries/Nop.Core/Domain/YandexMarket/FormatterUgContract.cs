@@ -210,6 +210,9 @@ namespace Nop.Core.Domain.YandexMarket
 			if (this.IsDisplaySensor(product) && product.Specifications.All(x => x.Key != "Сенсорный экран"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Сенсорный экран", "Да"));
 
+			if (this.IsOpticalZoom(product) && product.Specifications.All(x => x.Key != "Оптический зум"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Оптический зум", "Да"));
+
 			var simAmount = this.GetSimAmount(product);
 			if (simAmount > 1 && product.Specifications.All(x => x.Key != "Количество SIM-карт"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Количество SIM-карт", simAmount.ToString()));
@@ -416,13 +419,29 @@ namespace Nop.Core.Domain.YandexMarket
 				return megapixels;
 			}
 
-			var spec = product.Specifications.FirstOrDefault(x => x.Key.ToLower().Contains("камера") || x.Key.ToLower().Contains("дополнительные функции и возможности"));
+			var spec = product.Specifications.FirstOrDefault(x => 
+					x.Key.ToLower().Contains("камера") 
+				||	x.Key.ToLower().Contains("дополнительные функции и возможности")
+				|| x.Key.ToLower().Contains("сенсор изображения"));
 
 			if (spec != null)
 			{
 				string pattern = @"([0-9]+(?:\.[0-9]+)?) [МмMm]";
+
+				if (spec.Key.ToLower().Contains("сенсор изображения"))
+				{
+					pattern += "лн";
+				}
 							
 				var megapixels = this.GetValByRegExp(spec.Value, pattern);
+
+				double dMegapixels;
+				if (double.TryParse(megapixels, out dMegapixels))
+				{
+					if (dMegapixels > 5) 
+						megapixels = ((int)dMegapixels).ToString();
+				}
+
 				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
 				
 				return megapixels;
@@ -435,7 +454,8 @@ namespace Nop.Core.Domain.YandexMarket
 
 		private string GetCameraMegapixelsFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
 		{
-			var spec = specs.FirstOrDefault(x => x.Key.ToLower().Contains("разрешение матрицы"));
+			var spec = specs.FirstOrDefault(x => 
+				x.Key.ToLower().Contains("разрешение матрицы"));
 
 			if (spec != null)
 			{
@@ -444,7 +464,7 @@ namespace Nop.Core.Domain.YandexMarket
 				var megapixels = this.GetValByRegExp(spec.Value, pattern);
 				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
 
-				if (double.Parse(megapixels) > 30)
+				if (double.Parse(megapixels) > 40)
 					megapixels = "1.3";
 
 				return megapixels;
@@ -537,6 +557,23 @@ namespace Nop.Core.Domain.YandexMarket
 			if (!result) 
 				result = product.FullDescription.Contains("енсорный");
 
+			return result;
+		}
+
+		private bool IsOpticalZoom(YandexMarketProductRecord product)
+		{
+			var result = product.Specifications.FirstOrDefault(x => 
+				   x.Value.ToLower().Contains("оптический зум")
+				|| x.Value.ToLower().Contains("оптического зума")
+				|| x.Value.ToLower().Contains("оптическим зумом")
+				) != null;
+
+			if (!result)
+			{
+				result = product.FullDescription.ToLower().Contains("оптический зум")
+					|| product.FullDescription.ToLower().Contains("оптического зума")
+				|| product.FullDescription.ToLower().Contains("оптическим зумом");
+			}
 			return result;
 		}
 
