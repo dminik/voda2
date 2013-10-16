@@ -107,5 +107,10 @@
       <path>Libraries\Nop.Services\SiteParsers\ParsePricesTask.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\ParsePricesTask.cs</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>YandexMarketCategoryController.cs</name>
+      <path>Presentation\Nop.Web\Administration\Controllers\YandexMarketCategoryController.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\YandexMarketCategoryController.cs</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>

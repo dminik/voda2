@@ -113,6 +113,7 @@ namespace Nop.Services.SiteParsers.Products
 				 new AllowFiltering() { FilterName = "Питание", ExceptedCategotiesNames = new List<ExceptedCategory>()
 					 {
 						 new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"},
+						 new ExceptedCategory(){ CategoryName = "DVD и Blu-ray плееры"},
 						 new ExceptedCategory(){ CategoryName = "Зеркальные цифровые фотокамеры"}
 					 }},
 

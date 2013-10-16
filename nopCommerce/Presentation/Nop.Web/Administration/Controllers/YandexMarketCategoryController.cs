@@ -9,6 +9,7 @@
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Catalog;
 	using Nop.Services.YandexMarket;
+	using Nop.Web.Framework;
 	using Nop.Web.Framework.Controllers;
 
 	using Telerik.Web.Mvc;
@@ -81,6 +82,7 @@
 
 					return m;
 				})
+				.ForCommand(command)
 				.ToList();
 
 			var model = new GridModel<YandexMarketCategoryModel>
@@ -135,9 +137,9 @@
 		}
 
 		[HttpPost]
-		public ActionResult SetActiveAllParserCategoties(bool isNotImportedOnly)
+		public ActionResult SetActiveAllParserCategoties(bool isActive)
 		{
-			_yandexMarketCategoryService.SetActiveAllParserCategoties(isNotImportedOnly);
+			_yandexMarketCategoryService.SetActiveAllParserCategoties(isActive);
 			return Json(new { Result = true });
 		}
 	}
