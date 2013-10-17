@@ -122,6 +122,8 @@
 					Name = Name,
 					Url = Url,
 					Specifications = specifications,
+					YandexMarketCategoryRecordId = YandexMarketCategoryRecordId,
+					// IsNotInPriceList = IsNotInPriceList,					
 				};
 		}
 	}

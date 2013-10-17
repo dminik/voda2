@@ -1,5 +1,6 @@
 namespace Nop.Services.SiteParsers.Products
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 
@@ -102,6 +103,7 @@ namespace Nop.Services.SiteParsers.Products
 					{ 
 						new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"}, 
 						new ExceptedCategory(){ CategoryName = "Смартфоны"}, 
+						new ExceptedCategory(){ CategoryName = "Бумага"}, 
 						new ExceptedCategory(){ CategoryName = "Планшеты"}}},
 					
 				 new AllowFiltering() { FilterName = "Частота работы процессора"},
@@ -188,9 +190,20 @@ namespace Nop.Services.SiteParsers.Products
 				 new AllowFiltering() { FilterName = "Поддержка носителей", ShowInFilter = false, },
 				 new AllowFiltering() { FilterName = "Воспроизведение форматов", ShowInFilter = false, },
 				 new AllowFiltering() { FilterName = "Мощность суммарная", ShowInFilter = false, },
-				 new AllowFiltering() { FilterName = "Функция караоке", ShowInFilter = false, }
+				 new AllowFiltering() { FilterName = "Функция караоке", ShowInFilter = false, },
 
 
+				 new AllowFiltering() { FilterName = "Размер"},
+				 new AllowFiltering() { FilterName = "Количество, шт."},
+				 new AllowFiltering() { FilterName = "Плотность, г/м"},
+				 new AllowFiltering() { FilterName = "Двустроронняя"},
+				 new AllowFiltering() { FilterName = "Самоклеющаяся"},
+				 new AllowFiltering() { FilterName = "Art paper"},
+				 new AllowFiltering() { FilterName = "Магнитная"},
+				 new AllowFiltering() { FilterName = "Фотобумага"},
+
+				 
+				 
 				};
 		}
 
@@ -217,7 +230,15 @@ namespace Nop.Services.SiteParsers.Products
 					// это правило имеет исключение для проверяемой спецификации?
 					foreach (var curCategory in categoriesOfProduct)
 					{
-						exceptedCategory = currentAllowFilter.ExceptedCategotiesNames.FirstOrDefault(x => x.CategoryName == curCategory.Name);
+						//try
+						//{
+							exceptedCategory =
+								currentAllowFilter.ExceptedCategotiesNames.FirstOrDefault(x => x.CategoryName == curCategory.Name);
+						//}
+						//catch (Exception ex)
+						//{
+							
+						//}
 
 						if (exceptedCategory != null)
 							break;						

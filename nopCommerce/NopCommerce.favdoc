@@ -38,11 +38,6 @@
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Themes\Voda\Content\styles.css</absolutePath>
     </Favorite>
     <Favorite>
-      <name>YandexMarketHelpers.cs</name>
-      <path>Libraries\Nop.Services\SiteParsers\YandexMarketHelpers.cs</path>
-      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\YandexMarketHelpers.cs</absolutePath>
-    </Favorite>
-    <Favorite>
       <name>Menu.cshtml</name>
       <path>Presentation\Nop.Web\Views\Common\Menu.cshtml</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Views\Common\Menu.cshtml</absolutePath>
@@ -111,6 +106,11 @@
       <name>YandexMarketCategoryController.cs</name>
       <path>Presentation\Nop.Web\Administration\Controllers\YandexMarketCategoryController.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Controllers\YandexMarketCategoryController.cs</absolutePath>
+    </Favorite>
+    <Favorite>
+      <name>YandexMarketHelpers.cs</name>
+      <path>Libraries\Nop.Services\SiteParsers\Products\YandexMarketHelpers.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\Products\YandexMarketHelpers.cs</absolutePath>
     </Favorite>
   </favorites>
 </Favorites>

@@ -1,5 +1,6 @@
 namespace Nop.Core.Domain.YandexMarket
 {
+	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
@@ -185,7 +186,7 @@ namespace Nop.Core.Domain.YandexMarket
 			var displaySize = this.GetDisplaySize(product.Specifications);
 			if (displaySize != string.Empty && product.Specifications.All(x => x.Key != "Размер экрана, дюймы"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Размер экрана, дюймы", displaySize));
-
+			
 			if (this.IsBluetooth(product.Specifications) && product.Specifications.All(x => x.Key != "Bluetooth"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Bluetooth", "Есть"));
 
@@ -225,9 +226,8 @@ namespace Nop.Core.Domain.YandexMarket
 			if (chip != string.Empty && product.Specifications.All(x => x.Key != "Тип чипа"))
 				product.Specifications.Add(new YandexMarketSpecRecord("Тип чипа", chip));
 
-			//var toremove = product.Specifications.Where(x => x.Value.Trim() == "").Select(x => x.Id).ToList();
-			//foreach (var id in toremove)
-			//	product.Specifications.Remove(product.Specifications.Single(x => x.Id == id));
+			ProcessBumagaSize(product);
+			ProcessBumagaCount(product);
 
 			return product;
 		}
@@ -599,12 +599,13 @@ namespace Nop.Core.Domain.YandexMarket
 			{
 				if (specs.Any(x => x.Key == key))
 				{
-					var spec = specs.Single(x => x.Key == key);
-
-					foreach (var curToRepl in toReplaceValues)
-					{
-						spec.Value = spec.Value.Replace(curToRepl, replaceValue);
-					}
+					
+						var spec = specs.Single(x => x.Key == key);
+						foreach (var curToRepl in toReplaceValues)
+						{
+							spec.Value = spec.Value.Replace(curToRepl, replaceValue);
+						}
+										
 				}
 			}
 			else
@@ -673,5 +674,98 @@ namespace Nop.Core.Domain.YandexMarket
 
 		}
 
+		private void ProcessBumagaSize(YandexMarketProductRecord product)
+		{
+			if (product.YandexMarketCategoryRecordId != 69)
+				return;
+			
+			string tiporazmer = "";
+
+
+			string pattern = "([0-9]+\\s?[XxХх]\\s?[0-9]+)([\"']?)";
+
+			var values = this.GetValByRegExp(product.Name, pattern, 2); 
+			if (values != null)
+			{
+				var x = "x";
+				tiporazmer = values[0].Replace("X", x).Replace("x", x).Replace("Х", x).Replace("х", x);
+				var isInches = values[1].Length > 0;
+
+				if (isInches)
+				{
+					if (tiporazmer == "4x6") 
+						tiporazmer = "10x15";
+				}
+			}
+			else
+			{
+				if (product.Name.Contains(" A4") || product.Name.Contains(" А4")) 
+					tiporazmer = "A4";
+				else if (product.Name.Contains(" A3") || product.Name.Contains(" А3"))
+					tiporazmer = "A3";
+			}
+
+
+			if (tiporazmer != string.Empty && product.Specifications.All(x => x.Key != "Размер"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Размер", tiporazmer));
+
+			if (product.Specifications.All(x => x.Key != "Тип"))
+			{
+				if (product.Name.ToLower().Contains("глянцевая"))
+					product.Specifications.Add(new YandexMarketSpecRecord("Тип", "Глянцевая"));
+
+				if (product.Name.ToLower().Contains("матовая"))					
+						product.Specifications.Add(new YandexMarketSpecRecord("Тип", "Матовая"));
+
+				//if (IsProductContainString(product, "набор"))					
+				//		product.Specifications.Add(new YandexMarketSpecRecord("Тип", "Набор"));
+
+				//if (IsProductContainString(product, "офисная"))					
+				//		product.Specifications.Add(new YandexMarketSpecRecord("Тип", "Офисная"));
+			}
+
+			if (product.Name.ToLower().Contains("PHOTO".ToLower()) || product.Name.ToLower().Contains("фотобумаг".ToLower()))
+				if (product.Specifications.All(x => x.Key != "Фотобумага"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Фотобумага", "Да"));
+
+			if (product.Name.ToLower().Contains("магнит"))
+				if (product.Specifications.All(x => x.Key != "Магнитная"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Магнитная", "Да"));
+
+			if (product.Name.ToLower().Contains("art"))
+				if (product.Specifications.All(x => x.Key != "Art paper"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Art paper", "Да"));
+
+			if (product.Name.ToLower().Contains("ДВУСТОР".ToLower()))
+				if (product.Specifications.All(x => x.Key != "Двустроронняя"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Двустроронняя", "Да"));
+
+			if (product.Name.ToLower().Contains("САМОКЛЕЮЩАЯСЯ".ToLower()))
+				if (product.Specifications.All(x => x.Key != "Самоклеющаяся"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Самоклеющаяся", "Да"));
+			
+		}
+
+		private void ProcessBumagaCount(YandexMarketProductRecord product)
+		{			
+			if(product.YandexMarketCategoryRecordId != 69)
+				return;
+
+			string pattern = "([0-9]+)\\s?[шШ][тТ]";
+
+			var value = this.GetValByRegExp(product.Name, pattern);
+
+			if (value != string.Empty && product.Specifications.All(x => x.Key != "Количество, шт."))
+				product.Specifications.Add(new YandexMarketSpecRecord("Количество, шт.", value));
+
+
+			pattern = "([0-9]+)\\s?[гГ]/[мМ]";
+
+			value = this.GetValByRegExp(product.Name, pattern);
+
+			if (value != string.Empty && product.Specifications.All(x => x.Key != "Плотность, г/м"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Плотность, г/м", value));
+
+		}
 	}
 }

@@ -102,6 +102,14 @@
 			_logger.Debug("Will be imported specs: " + newSpecsOnly.Count);
 
 			var importedCounter = 0;
+
+
+			foreach (var specAttrOpt in newSpecsOnly.SelectMany(x => x.SpecificationAttributeOptions).ToList())
+			{
+				specAttrOpt.DisplayOrder = 0;// сбрасываем с 777
+			}
+			
+
 			foreach (var curSpecAttr in newSpecsOnly)
 			{
 				if (curSpecAttr.Id != 0)
@@ -111,9 +119,8 @@
 					foreach (var curSpecAttrOpt in curSpecAttr.SpecificationAttributeOptions)
 					{
 						curSpecAttrOpt.SpecificationAttributeId = curSpecAttrFromDb.Id;
-						if (!curSpecAttrFromDb.SpecificationAttributeOptions.Any(x => x.Name == curSpecAttrOpt.Name))
-						{
-							curSpecAttrOpt.DisplayOrder = 0; // сбрасываем с 777
+						if (curSpecAttrFromDb.SpecificationAttributeOptions.All(x => x.Name != curSpecAttrOpt.Name))
+						{							
 							_specificationAttributeService.InsertSpecificationAttributeOption(curSpecAttrOpt);
 						}
 					}
