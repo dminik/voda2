@@ -2,8 +2,11 @@
 @using Nop.Web.Models.Catalog;
 @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new { onsubmit = "return check_small_search_form()" }))
 {
-    <input type="text" class="search-box-text" id="small-searchterms" @(Model.AutoCompleteEnabled ? Html.Raw(" autocomplete=\"off\"") : null)
-           value="@T("Search.SearchBox.Tooltip")" name="q"  onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" onblur="if(this.value=='') {this.value = '@T("Search.SearchBox.Tooltip")';}" />
+    <div class="search-box-text-before">
+        <input type="text" class="search-box-text" id="small-searchterms" @(Model.AutoCompleteEnabled ? Html.Raw(" autocomplete=\"off\"") : null)
+                     value="@T("Search.SearchBox.Tooltip")" name="q"  onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" onblur="if(this.value=='') {this.value = '@T("Search.SearchBox.Tooltip")';}" />
+
+    </div>
     <input type="submit" class="button-1 search-box-button" value="@T("Search")" />
     //dminikk
     <div class="search-box-advanced"><a class="search-box-advanced-link" href="@Url.RouteUrl("ProductSearch")">Расширенный поиск</a></div>
