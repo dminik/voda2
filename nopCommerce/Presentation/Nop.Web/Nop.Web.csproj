@@ -1195,6 +1195,8 @@
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.css" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.min.css" />
+    <Content Include="Scripts\modernizr.custom.37797.js" />
+    <Content Include="Scripts\parallax.js" />
     <Content Include="Scripts\sitemapstyler\collapsed.gif" />
     <Content Include="Scripts\sitemapstyler\expanded.gif" />
     <Content Include="Scripts\sitemapstyler\sitemapstyler.css" />
@@ -1248,6 +1250,7 @@
     <Content Include="Themes\Voda\Content\images\Vodoochistka_Diagramma_big.png" />
     <Content Include="Themes\Voda\Content\images\Vodoochistka_Diagramma_small.png" />
     <Content Include="Themes\Voda\Content\images\wall.jpg" />
+    <Content Include="Themes\Voda\Content\parallax.css" />
     <Content Include="Themes\Voda\Content\styles_reset.css" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\Voda\Content\images\ajax_loader_small.gif" />

@@ -5,42 +5,56 @@
 @Html.Widget("body_start_html_tag_after")
 @Html.Partial("_Notifications")
 @Html.Action("AdminHeaderLinks", "Common")
-<div class="master-wrapper-page">
-    @Html.Action("JavaScriptDisabledWarning", "Common")
-    <div class="master-wrapper-content">
-        <script type="text/javascript">
-            AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
-        </script>       
-        <div class="header-menu">
-            @Html.Action("Menu", "Common")
-            <div class="header-links-wrapper">
-                @Html.Action("HeaderLinks", "Common")
-            </div> 
-        </div>
-        @Html.Partial("Header")
-        @Html.Widget("content_before")
-        @*ajax loading window*@
-        <div class="ajax-loading-block-window" style="display: none">
-            <div class="loading-image">
-            </div>
-        </div>
-        <div class="master-wrapper-main">
-            @RenderBody()
-        </div>
-        @Html.Widget("content_after")
-        @Html.Action("EuCookieLaw", "Common")
-    </div>
-    @Html.Action("Footer", "Common")
+
+<div id="wrapper-parallax">
     
-    <a id="toTop" style="display: block;">▲ Наверх</a>
+   
+            	
+            <div class="master-wrapper-page content-parallax" id="manned-flight-parallax">
+                @Html.Action("JavaScriptDisabledWarning", "Common")
+                <div class="master-wrapper-content">
+                    <script type="text/javascript">
+                        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+                    </script>       
+                    <div class="header-menu">
+                        @Html.Action("Menu", "Common")
+                        <div class="header-links-wrapper">
+                            @Html.Action("HeaderLinks", "Common")
+                        </div> 
+                    </div>
+                    @Html.Partial("Header")
+                    @Html.Widget("content_before")
+                    @*ajax loading window*@
+                    <div class="ajax-loading-block-window" style="display: none">
+                        <div class="loading-image">
+                        </div>
+                    </div>
+                    <div class="master-wrapper-main">
+                        @RenderBody()
+                    </div>
+                    @Html.Widget("content_after")
+                    @Html.Action("EuCookieLaw", "Common")
+                </div>
+                @Html.Action("Footer", "Common")
+    
+                <a id="toTop" style="display: block;">▲ Наверх</a>
 
-    <script type="text/javascript">
-        $(function () {
-            $("#toTop").scrollToTop();
-        });
-    </script>
+                <script type="text/javascript">
+                    $(function () {
+                        $("#toTop").scrollToTop();
+                    });
+                </script>
 
+            </div>
+            @Html.Widget("body_end_html_tag_before")
+    
+    
+      
+				
+	
+
+    <div id="parallax-bg1-parallax">
+        <div id="bg1-1" />				
+    </div>
+		
 </div>
-@Html.Widget("body_end_html_tag_before")
-
-
