@@ -6688,10 +6688,9 @@ pre
 	background-color: rgb(65, 105, 225);
 }
 
-.yandex-metrika
-{
-	position: relative;
-	bottom: 2px;
+.yandex-informer-block {
+  position: fixed;
+  top: 2%;
 }
 
 .parser-images

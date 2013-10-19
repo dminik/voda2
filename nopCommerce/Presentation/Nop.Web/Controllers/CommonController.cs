@@ -664,7 +664,7 @@ namespace Nop.Web.Controllers
 		public ActionResult YandexGoogleCounters()
 		{
 #if DEBUG
-			return new EmptyResult();
+			return new EmptyResult();			
 #else
 			return View();
 #endif
