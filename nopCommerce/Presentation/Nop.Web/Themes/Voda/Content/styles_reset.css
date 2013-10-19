@@ -25,7 +25,7 @@ input,select{vertical-align:middle;}
 body {
 	text-align:left;font-family:arial,verdana,helvetica,sans-serif;font-size:12px;
 	background: none no-repeat fixed center center/cover rgb(224, 224, 224);
-	/*background: url("../Content/images/wall.jpg") no-repeat fixed center center/cover transparent;*/
+	background: url("../Content/images/wall.jpg") no-repeat fixed center center/cover transparent;
 	/*background: url("../Content/images/wall.png") no-repeat scroll 1140px -117px / 577px auto rgb(224, 216, 197);*/
 	
 	 color:#5C5B5B;line-height:normal;
