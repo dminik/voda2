@@ -100,7 +100,7 @@ td.fieldname{font-size:12px;}
 
 
 
-.button-1,.button-2{color: rgb(250, 210, 210);font:normal 12px Helvetica,Arial,sans-serif;text-decoration:none;padding:3px 7px;/*position: relative;*/position:static;display:inline-block;text-shadow:0 1px 0 #fff;-webkit-transition:border-color .218s;-moz-transition:border .218s;-o-transition:border-color .218s;transition:border-color .218s;
+.button-1,.button-2{color: rgb(250, 210, 210);font:normal 14px Helvetica,Arial,sans-serif;text-decoration:none;padding:3px 7px;/*position: relative;*/position:static;display:inline-block;text-shadow:0 1px 0 #fff;-webkit-transition:border-color .218s;-moz-transition:border .218s;-o-transition:border-color .218s;transition:border-color .218s;
 					background:rgb(0, 151, 0);
 					background: -webkit-linear-gradient(top,#85d390 0%,#009700 50%,#007800 51%,#219b0c 75%,#31a517 100%);
 					background: -moz-linear-gradient(center top , rgb(133, 211, 144) 0%, rgb(0, 151, 0) 50%, rgb(0, 120, 0) 51%, rgb(33, 155, 12) 75%, rgb(49, 165, 23) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);

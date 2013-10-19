@@ -150,6 +150,7 @@
 	text-align: right;
 	width: 27.7%;
 	position: relative;
+	display: none;
 }
 
 .header-bottom-line
@@ -409,9 +410,10 @@ ul.language-list
 	top: -2px;
 }
 
-.search-box-text:hover {
-	border: 4px solid rgb(50, 154, 28)!important;
-}
+	.search-box-text:hover
+	{
+		border: 4px solid rgb(50, 154, 28)!important;
+	}
 
 .search-box
 {
@@ -1283,6 +1285,7 @@ a.eu-cookie-privacyinfo-tag
 		text-align: center;
 		vertical-align: middle;
 		font-size: 14px;
+		table-layout: auto;
 	}
 
 	.wishlist-content .cart
