@@ -38,9 +38,10 @@
 
 
 
-		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult ListCategory(GridCommand command)
-		{
+		[HttpPost]
+		[GridAction(EnableCustomBinding = true)]
+		public ActionResult ListCategory(bool isWithProductCountInCategories, GridCommand command)
+		{			
 			var availableShopCategories =
 				_shopCategoryService.GetAllCategories();//.Select(x => new Dictionary<int, string>( x.Id, x.Name)).ToList();
   
@@ -56,12 +57,16 @@
 						if (shopCategory != null)
 						{
 							shopCategoryName = shopCategory.Name;
-							numberOfProducts = this._productService.SearchProducts(
-																categoryIds: new List<int>(){shopCategory.Id}, 
-																priceMin: 1, 
-																storeId: _storeContext.CurrentStore.Id, 
-																pageSize: 1)
-													.TotalCount;
+
+							if (isWithProductCountInCategories)
+							{
+								numberOfProducts =
+									this._productService.SearchProducts(
+										categoryIds: new List<int>() { shopCategory.Id },
+										priceMin: 1,
+										storeId: _storeContext.CurrentStore.Id,
+										pageSize: 1).TotalCount;
+							}
 						}
 						else
 						{
@@ -107,7 +112,7 @@
 			
 			_yandexMarketCategoryService.Update(category);
 
-			return ListCategory(command);
+			return ListCategory(isWithProductCountInCategories: false, command: command);
 		}
 
 		[GridAction(EnableCustomBinding = true)]
@@ -117,7 +122,7 @@
 			if (category != null)
 				this._yandexMarketCategoryService.Delete(category);
 
-			return ListCategory(command);
+			return ListCategory(isWithProductCountInCategories: false, command: command);
 		}
 
 

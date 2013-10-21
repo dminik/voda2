@@ -20,6 +20,7 @@
 			IsClearCategoryProductsBeforeParsing = false;
 			IsNotImportedOnly = false;
 			IsSetActiveAllParserCategoties = false;
+			IsWithProductCountInCategories = false;
 		}
 
 		[DisplayName("Имя категории магазина в которую импортнутся спарсенные товары")]
@@ -62,6 +63,8 @@
 
 		[DisplayName("Активировать/Деактивировать все категории парсера")]
 		public bool IsSetActiveAllParserCategoties { get; set; }
-		
+
+		[DisplayName("Посчитать количество уже импортированных продуктов")]
+		public bool IsWithProductCountInCategories { get; set; }
 	}
 }

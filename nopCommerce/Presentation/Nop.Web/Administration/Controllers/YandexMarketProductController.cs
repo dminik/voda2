@@ -219,7 +219,7 @@
 					_productService.InsertProductVariant(variant);
 				
 					SaveCategory(shopCategoryId, product.Id);
-					SaveSpecList(product, yaProduct.Specifications);
+					SaveSpecList(product, yaProduct.Specifications, shopCategoryId);
 
 
 					SavePictures(product, yaProduct.ImageUrl_1);
@@ -264,10 +264,12 @@
 			//return xmlShortDescription.ToString();
 		}
 
-		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList)
+		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList, int shopCategoryId)
 		{			
 			var allSpecAttrList = _specificationAttributeService.GetSpecificationAttributes();
 			var psaList = new List<ProductSpecificationAttribute>();
+
+			var category = _categoryService.GetCategoryById(shopCategoryId);
 
 			foreach (var yandexMarketSpecRecord in specList)
 			{
@@ -276,7 +278,7 @@
 
 				bool isShowInFilter;
 				bool isShowInShortDescription;
-				YandexMarketHelpers.IsSpecAllow(yandexMarketSpecRecord.Key, product.ProductCategories.Select(x => x.Category), out isShowInFilter, out isShowInShortDescription);
+				YandexMarketHelpers.IsSpecAllow(yandexMarketSpecRecord.Key, new List<Category>() { category }, out isShowInFilter, out isShowInShortDescription);
 
 				var psa = new ProductSpecificationAttribute()
 				{
