@@ -20,19 +20,33 @@ html { overflow-y: scroll; /* always force a scrollbar in non-IE */	}
 	
 	
 
-
-
-#parallax-bg1-parallax {
-  height: 100%;
-  position: fixed;
-  width: 1914px;
-  z-index: 1;
+#parallax-bg {
+	height: 100%;
+	position: fixed;
+	width: 1914px;
+	z-index: 1;
 	left: 50%;
 	top: 0;
 }
+
+
+#parallax-bg1-parallax {
+  background: url("../Content/images/wall-robot2.png") no-repeat scroll 1px -33px / 487px auto rgba(0, 0, 0, 0);
+  display: inline-block;
+  height: 100%;
+  margin-left: -40%;
+  position: static;
+  width: 500px;
+  z-index: 1;
+}
 	
-#bg1-1 {
-  background: url("../Content/images/wall-robot.png") no-repeat scroll 327px -12px / 400px auto rgba(0, 0, 0, 0);
-  height: 300%;
-  width: 1500px;
+
+#parallax-bg2-parallax {
+  background: url("../Content/images/wall-robot.png") no-repeat scroll 3px -12px / 400px auto rgba(0, 0, 0, 0);
+  display: inline-block;
+  height: 100%;
+  left: 317px;
+  position: absolute;
+  width: 500px;
+  z-index: 1;
 }
