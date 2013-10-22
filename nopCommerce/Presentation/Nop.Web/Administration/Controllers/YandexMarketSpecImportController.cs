@@ -21,14 +21,14 @@
 	public class YandexMarketSpecImportController : Controller
 	{
 		private readonly IYandexMarketSpecService _yandexMarketSpecService;
-		private readonly ISpecificationAttributeService _specificationAttributeService;
+		private readonly ISpecificationAttributeService2 _specificationAttributeService;
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
 		private readonly ILogger _logger;
 
 		public YandexMarketSpecImportController(
 			IYandexMarketSpecService yandexMarketSpecService, 
 			IYandexMarketCategoryService yandexMarketCategoryService,
-			ISpecificationAttributeService specificationAttributeService,
+			ISpecificationAttributeService2 specificationAttributeService,
 			ILogger logger)
 		{
 			_yandexMarketSpecService = yandexMarketSpecService;
@@ -116,14 +116,17 @@
 				{
 					SpecificationAttribute curSpecAttrFromDb = _specificationAttributeService.GetSpecificationAttributeById(curSpecAttr.Id);
 
+					var specOptionsToInsert = new List<SpecificationAttributeOption>();
+
 					foreach (var curSpecAttrOpt in curSpecAttr.SpecificationAttributeOptions)
 					{
 						curSpecAttrOpt.SpecificationAttributeId = curSpecAttrFromDb.Id;
 						if (curSpecAttrFromDb.SpecificationAttributeOptions.All(x => x.Name != curSpecAttrOpt.Name))
-						{							
-							_specificationAttributeService.InsertSpecificationAttributeOption(curSpecAttrOpt);
+						{
+							specOptionsToInsert.Add(curSpecAttrOpt);							
 						}
 					}
+					_specificationAttributeService.InsertSpecificationAttributeOptionList(specOptionsToInsert);// save all at once
 				}
 				else
 				{
@@ -133,6 +136,7 @@
 
 				if(importedCounter%5 == 0) // через каждые 5 записей выводить в лог сообщение
 					_logger.Debug("Imported specs: " + importedCounter + "...");
+
 			}
 
 			_logger.Debug("--- ApplyImport End.");

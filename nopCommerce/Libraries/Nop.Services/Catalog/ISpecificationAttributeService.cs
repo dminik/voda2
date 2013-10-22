@@ -10,6 +10,8 @@ namespace Nop.Services.Catalog
 		/// </summary>
 		/// <param name="productSpecificationAttributeList">Product specification attribute mapping</param>
 		void InsertProductSpecificationAttributeList(IEnumerable<ProductSpecificationAttribute> productSpecificationAttributeList);
+
+		void InsertSpecificationAttributeOptionList(IEnumerable<SpecificationAttributeOption> specificationAttributeOptionList);
 	}
 
 	/// <summary>
