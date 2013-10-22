@@ -43,11 +43,6 @@
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Views\Common\Menu.cshtml</absolutePath>
     </Favorite>
     <Favorite>
-      <name>BaseParser.cs</name>
-      <path>Libraries\Nop.Services\SiteParsers\BaseParser.cs</path>
-      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\BaseParser.cs</absolutePath>
-    </Favorite>
-    <Favorite>
       <name>OstatkiFileParser.cshtml</name>
       <path>Presentation\Nop.Web\Administration\Views\OstatkiFileParser\OstatkiFileParser.cshtml</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Administration\Views\OstatkiFileParser\OstatkiFileParser.cshtml</absolutePath>

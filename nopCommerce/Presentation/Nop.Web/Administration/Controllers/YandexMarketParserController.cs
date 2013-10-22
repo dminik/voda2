@@ -82,9 +82,8 @@
 				var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, _logger, _yandexMarketProductService);				
 				var newProductList = parser.Parse();
 
-				foundNewProductsTotal += newProductList.Count;
-				_logger.Debug("Found new products: " + newProductList.Count);
-				_logger.Debug("+++ PARSE CATEGORY DONE.");
+				foundNewProductsTotal += newProductList.Count;				
+				_logger.Debug("+++ PARSE CATEGORY " + currentCategory.Name + " DONE. Found new products: " + newProductList.Count);
 
 			}// end for
 

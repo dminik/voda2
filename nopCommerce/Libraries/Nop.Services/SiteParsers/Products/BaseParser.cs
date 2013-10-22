@@ -475,7 +475,7 @@ namespace Nop.Services.SiteParsers
 		private static List<string> GetProductsArtikulsInPiceList()
 		{
 			var _f5PriceParserService = EngineContext.Current.Resolve<IF5PriceParserService>();
-			var productsArtikulsInPiceList = _f5PriceParserService.ParseAndShow(true);
+			var productsArtikulsInPiceList = _f5PriceParserService.ParseAndShow(false);
 			return productsArtikulsInPiceList.ProductLineList.Select(x => x.Articul).ToList();
 		}
 

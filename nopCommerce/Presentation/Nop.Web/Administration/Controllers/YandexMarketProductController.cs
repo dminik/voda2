@@ -132,7 +132,7 @@
 			{
 				var records = _yandexMarketProductService.GetByCategory(currentParserCategory.Id, isNotImportedOnly: true);
 
-				_logger.Debug("--- Category " + currentParserCategory.Name + ". Total not imported products: " + records.Count);
+				_logger.Debug("--- Category " + currentParserCategory.Name + ". Total not imported products: " + records.TotalCount);
 				foreach (var curYaProduct in records)
 				{
 					var isImported = ImportYaProduct(curYaProduct, currentParserCategory.ShopCategoryId);

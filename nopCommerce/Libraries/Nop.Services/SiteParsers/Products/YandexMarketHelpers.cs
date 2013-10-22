@@ -8,7 +8,7 @@ namespace Nop.Services.SiteParsers.Products
 
 	public static class YandexMarketHelpers
 	{
-		private class AllowFiltering
+		public class AllowFiltering
 		{
 			public AllowFiltering()
 			{
@@ -26,7 +26,7 @@ namespace Nop.Services.SiteParsers.Products
 			public List<ExceptedCategory> ExceptedCategotiesNames { get; set; }
 		}
 
-		private class ExceptedCategory
+		public class ExceptedCategory
 		{
 			public ExceptedCategory()
 			{				
@@ -40,10 +40,8 @@ namespace Nop.Services.SiteParsers.Products
 			public bool ShowInShortDescription { get; set; }
 		}
 
-
-		private static IEnumerable<AllowFiltering> GetAllowFilteringForProductSelector()
-		{			
-			return new List<AllowFiltering>()
+		public static readonly IEnumerable<AllowFiltering> GetAllowFilteringForProductSelector = 
+		 new List<AllowFiltering>()
 				{					
 				 new AllowFiltering() { FilterName = "Производитель", ShowInShortDescription = false, },
 				 new AllowFiltering() { FilterName = "Bluetooth"},
@@ -202,10 +200,15 @@ namespace Nop.Services.SiteParsers.Products
 				 new AllowFiltering() { FilterName = "Магнитная"},
 				 new AllowFiltering() { FilterName = "Фотобумага"},
 
+				 new AllowFiltering() { FilterName = "Максимальное разрешение изображения"},
+				 new AllowFiltering() { FilterName = "Скорость печати"},
+				 new AllowFiltering() { FilterName = "Технология печати"},
+
 				 
 				 
 				};
-		}
+
+		
 
 		
 		public static void IsSpecAllow(string specName, IEnumerable<Category> categoriesOfProduct,
@@ -216,7 +219,7 @@ namespace Nop.Services.SiteParsers.Products
 			
 			
 			// не показываем для некоторых категорий некоторые спецификации
-			var allowFilters = YandexMarketHelpers.GetAllowFilteringForProductSelector();
+			var allowFilters = YandexMarketHelpers.GetAllowFilteringForProductSelector;
 			
 			foreach (var currentAllowFilter in allowFilters)
 			{
