@@ -9,6 +9,7 @@ namespace Nop.Services.YandexMarket
 	using Nop.Core.Data;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Catalog;
+	using Nop.Services.SiteParsers.Xls;
 
 	/// <summary>
 	/// Tax rate service
@@ -27,26 +28,24 @@ namespace Nop.Services.YandexMarket
 		private readonly ICacheManager _cacheManager;
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
 		private readonly IProductService _productService;
+		private readonly IYugCatalogPriceParserService _yugCatalogPriceParserService;
 
 		#endregion
 
 		#region Ctor
-
-		/// <summary>
-		/// Ctor
-		/// </summary>
-		/// <param name="cacheManager">Cache manager</param>
-		/// <param name="productRepository">Tax rate repository</param>
+		
 		public YandexMarketProductService(
 			ICacheManager cacheManager,
 			IRepository2<YandexMarketProductRecord> productRepository,
 			IYandexMarketCategoryService yandexMarketCategoryService,
-			IProductService productService)
+			IProductService productService,
+			IYugCatalogPriceParserService yugCatalogPriceParserService)
 		{
 			this._cacheManager = cacheManager;
 			this._productRepository = productRepository;
 			this._yandexMarketCategoryService = yandexMarketCategoryService;
 			this._productService = productService;
+			_yugCatalogPriceParserService = yugCatalogPriceParserService;
 		}
 
 		#endregion
@@ -79,7 +78,7 @@ namespace Nop.Services.YandexMarket
 		/// Gets all tax rates
 		/// </summary>
 		/// <returns>Tax rates</returns>
-		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, bool isNotImportedOnly = false, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false)
+		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, bool isNotImportedOnly = false, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false, bool withVendorExisting = true)
 		{			
 			if(categoryId == -1)
 				return new PagedList<YandexMarketProductRecord>(new List<YandexMarketProductRecord>(), 0, 1);
@@ -104,6 +103,15 @@ namespace Nop.Services.YandexMarket
 
 				query = query.Where(x => allShopProductsArtikuls.Contains(x.Articul) == false);
 			}
+
+			if (withVendorExisting)
+			{
+				var vendorArtikultList = _yugCatalogPriceParserService.ParseAndShow(false).ProductLineList.Select(x => x.Articul).ToList();
+
+				query = query.Where(yaProduct => vendorArtikultList.Contains(yaProduct.Articul));
+			}
+
+			
 
 			var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);
 

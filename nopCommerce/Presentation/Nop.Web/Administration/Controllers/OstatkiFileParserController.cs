@@ -40,7 +40,7 @@
 		
 		[HttpPost]
 		public ActionResult ParseAndShow()
-		{
+		{			
 			var list = _ostatkiPriceParserService.ParseAndShow(true);
 			return Json(list);
 		}

@@ -69,7 +69,8 @@ namespace Nop.Services.SiteParsers
 			{
 				var artikul = XlsProvider.GetFieldValueFromReader<string>(reader, "Код товара");
 
-				if (artikul.Length != 7) // articul должен быть 7 символов
+				int intArticil;
+				if (!int.TryParse(artikul, out intArticil)) // articul должен быть 7 символов
 					return null;
 
 				newProductLineVendor.Articul = artikul;

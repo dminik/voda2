@@ -98,7 +98,8 @@ namespace Nop.Services.SiteParsers.Xls
 
 				var artikul = XlsProvider.GetFieldValueFromReader<string>(reader, "???"); // Êמה
 
-				if (artikul.Length < 4) // articul המכזום בûעü 7 סטלגמכמג
+				int intArticil;
+				if (!int.TryParse(artikul, out intArticil)) // articul המכזום בûעü 7 סטלגמכמג
 					return null;
 
 				newProductLineVendor.Articul = artikul;
