@@ -36,6 +36,6 @@ namespace Nop.Admin.Models.Logging
         public string ReferrerUrl { get; set; }
 
         [NopResourceDisplayName("Admin.System.Log.Fields.CreatedOn")]
-        public DateTime CreatedOn { get; set; }
+        public string CreatedOn { get; set; }
     }
 }

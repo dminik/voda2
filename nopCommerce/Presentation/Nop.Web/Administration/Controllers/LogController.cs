@@ -84,7 +84,7 @@ namespace Nop.Admin.Controllers
                         CustomerEmail = x.Customer != null ? x.Customer.Email : null,
                         PageUrl = x.PageUrl,
                         ReferrerUrl = x.ReferrerUrl,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+						CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString("dd.MM.yyyy HH:mm")
                     };
                 }),
                 Total = logItems.TotalCount
@@ -129,7 +129,7 @@ namespace Nop.Admin.Controllers
                 CustomerEmail = log.Customer != null ? log.Customer.Email : null,
                 PageUrl = log.PageUrl,
                 ReferrerUrl = log.ReferrerUrl,
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc)
+				CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc).ToString("dd.MM.yyyy HH:mm")
             };
 
             return View(model);
