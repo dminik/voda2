@@ -3,6 +3,7 @@ namespace Nop.Services.SiteParsers
 	using System;
 
 	using Nop.Core.Infrastructure;
+	using Nop.Services.Logging;
 	using Nop.Services.SiteParsers.Xls;
 	using Nop.Services.Tasks;
 
@@ -24,12 +25,13 @@ namespace Nop.Services.SiteParsers
 			var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
 	        var name = typeof(ParsePricesTask).FullName + ", Nop.Services";
 			var scheduleTask = scheduleTaskService.GetTaskByType(name);
+	        var isNeed = false;
 
 	        if (scheduleTask.LastSuccessUtc != null)
 	        {
 				if (scheduleTask.LastSuccessUtc.Value.Date < DateTime.UtcNow.Date)
-		        {
-			       _priceManagerService.ApplyImportAll(false); //daily update
+				{
+					isNeed = true; //daily update
 		        }
 				else
 				{
@@ -39,8 +41,16 @@ namespace Nop.Services.SiteParsers
 	        }
 	        else
 	        {
-				_priceManagerService.ApplyImportAll(false);// first time update
+				isNeed = true; // first time update
 	        }
+
+			if (isNeed)
+			{
+				var log = EngineContext.Current.Resolve<ILogger>();
+				log.Debug("Start ParsePricesTask...");
+				_priceManagerService.ApplyImportAll(false);
+				log.Debug("End ParsePricesTask.");
+			}
 		}
     }
 }

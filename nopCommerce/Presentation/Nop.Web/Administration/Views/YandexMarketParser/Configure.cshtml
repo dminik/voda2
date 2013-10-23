@@ -247,11 +247,17 @@
                 </div>
 
                 <img id="parsingIndicator" style="display: none" src="/administration/content/images/throbber-synchronizing.gif"><br />
+                <br />
                 <input type="submit" id="Parse" class="t-button" value="Шаг 1.  Спарсить продукты со страниц и сохранить в категорию парсера (для активных категорий парсера)" />
-                <br />                
+                <input type="submit" id="ParseStop" class="t-button" value="Parse stop" />
+                <br />       
+                <br />         
                 <input type="button" id="btnApplyImport" class="t-button" value="Шаг 3. Импортнуть новые спецификации в интернет-магазин (для активных категорий парсера)" />
+                <input type="button" id="btnApplyImportStop" class="t-button" value="Stop Import specs" />
                 <br />
                 <input type="submit" id="btnImportProductList" class="t-button" value="Шаг 4. Импортнуть новые товары в интернет-магазин  (для активных категорий парсера)" />
+                <input type="submit" id="btnImportProductListStop" class="t-button" value="Stop Import products" /><br />
+                <br />
                 <input type="button" id="btnApplyImportAll" class="t-button" value="Шаг 3 и 4. Импортнуть все" />
                 <br />
 
@@ -282,12 +288,26 @@
                             });
                             return false;
                         });
-                    });
-                </script>
-
-
-                <script type="text/javascript">
-                    $(function () {
+                        
+                        $('#btnApplyImportStop').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("ApplyImportStop", "YandexMarketSpecImport")',
+                                                                                                                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                                dataType: 'text',
+                                success: function (data) {
+                                    //alert(data);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.responseText);
+                                }
+                            });
+                             return false;
+                         });
+                   
 
                         $('#btnImportProductList').click(function () {
                             $.ajax({
@@ -310,6 +330,28 @@
                             });
                             return false;
                         });
+                        
+                        $('#btnImportProductListStop').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("ImportProductListStop", "YandexMarketProduct")',
+                                                                                                                                @*data: {
+                                    parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val(),
+                                    shopCategoryId: $('#@Html.FieldIdFor(model => model.ShopCategoryId)').val()
+                                },*@
+                                dataType: 'text',
+                                success: function (data) {
+                                    // alert(data);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.responseText);
+                                }
+                            });
+                            return false;
+                        });
 
                         $('#btnApplyImportAll').click(function () {
                             $.ajax({
@@ -322,22 +364,27 @@
                                 dataType: 'text',
                                 success: function (data) {
 
-                                    $.ajax({
-                                        beforeSend: function () { $('#parsingIndicator').show(); },
-                                        complete: function () { $('#parsingIndicator').hide(); },
-                                        cache: false,
-                                        type: 'POST',
-                                        url: '@Url.Action("ImportProductList", "YandexMarketProduct")',
-                                                                                                                                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
-                                        dataType: 'text',
-                                        success: function (data) {
-                                            alert(data);
-                                        },
-                                        error: function (xhr, ajaxOptions, thrownError) {
-                                            alert(xhr.responseText);
-                                        }
-                                    });
+                                    if (!data.contains('stop')) {
 
+                                        $.ajax({
+                                            beforeSend: function() { $('#parsingIndicator').show(); },
+                                            complete: function() { $('#parsingIndicator').hide(); },
+                                            cache: false,
+                                            type: 'POST',
+                                            url: '@Url.Action("ImportProductList", "YandexMarketProduct")',
+                                                                                        @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                                            dataType: 'text',
+                                            success: function(data) {
+                                                alert(data);
+                                            },
+                                            error: function(xhr, ajaxOptions, thrownError) {
+                                                alert(xhr.responseText);
+                                            }
+                                        });
+
+                                    } else {
+                                        alert(data);
+                                    }                                    
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
                                     alert(xhr.responseText);
@@ -359,7 +406,28 @@
                                 success: function (data) {
                                     var grid = $("#@ProductGridName");
                                     grid.data('tGrid').ajaxRequest();
-                                    alert('Success');
+                                    alert(data);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.responseText);
+                                }
+                            });
+                            return false;
+                        });
+                        
+                        $('#ParseStop').click(function () {
+                            $.ajax({
+                                beforeSend: function () { $('#parsingIndicator').show(); },
+                                complete: function () { $('#parsingIndicator').hide(); },
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("ParseStop", "YandexMarketParser")',
+                                data: $(this.form).serialize(),
+                                dataType: 'json',
+                                success: function (data) {
+                                    var grid = $("#@ProductGridName");
+                                    grid.data('tGrid').ajaxRequest();
+                                    // alert(data);
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
                                     alert(xhr.responseText);

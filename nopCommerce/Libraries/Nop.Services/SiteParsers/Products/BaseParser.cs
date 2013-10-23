@@ -89,8 +89,8 @@ namespace Nop.Services.SiteParsers
 		{
 			return product;
 		}
-		
-		public List<YandexMarketProductRecord> Parse()
+
+		public List<YandexMarketProductRecord> Parse(ref bool isStopProducsImport)
 		{
 			this.mLogger.Debug("Start Parsing...");
 
@@ -116,6 +116,9 @@ namespace Nop.Services.SiteParsers
 
 				do
 				{
+					if (isStopProducsImport)
+						throw new Exception("Stopped by user.");
+
 					// Найти все ссылки на товары			
 					var linksFromCurrentPage =
 						Enumerable.ToList<string>(

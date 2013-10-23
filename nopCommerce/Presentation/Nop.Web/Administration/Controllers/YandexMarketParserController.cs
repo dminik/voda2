@@ -22,6 +22,7 @@
 	[AdminAuthorize]
 	public class YandexMarketParserController : Controller
 	{
+		private static bool mIsStopProducsImport = false;
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
 		private readonly ICategoryService _shopCategoryService;
 		private readonly IYandexMarketProductService _yandexMarketProductService;
@@ -53,19 +54,29 @@
 			return View(model);
 		}
 
+		[HttpPost]
+		public ActionResult ParseStop()
+		{
+			mIsStopProducsImport = true;
+			return Content("Success");
+		}
 
 		//[AdminAuthorize]
 		//[ChildActionOnly]
 		[HttpPost]
 		public ActionResult Parse(YandexMarketParserModel model)
 		{
+			mIsStopProducsImport = false;
+
 			_logger.Debug("--- ALL PARSE START...");
 
 			int foundNewProductsTotal = 0;
 			var activeParserCategories = _yandexMarketCategoryService.GetActive();
 
 			foreach (var currentCategory in activeParserCategories)
-			{				
+			{
+				CheckStopAction();
+
 				_logger.Debug("---  PARSE START FOR CATEGORY " + currentCategory.Name + "...");
 
 				if (!this.ModelState.IsValid)
@@ -79,8 +90,8 @@
 
 							
 				var categoryName = currentCategory.Name;
-				var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, _logger, _yandexMarketProductService);				
-				var newProductList = parser.Parse();
+				var parser = BaseParser.Create(categoryName, currentCategory.Id, model.ParseNotMoreThen, currentCategory.Url, _logger, _yandexMarketProductService);
+				var newProductList = parser.Parse(ref mIsStopProducsImport);
 
 				foundNewProductsTotal += newProductList.Count;				
 				_logger.Debug("+++ PARSE CATEGORY " + currentCategory.Name + " DONE. Found new products: " + newProductList.Count);
@@ -123,6 +134,16 @@
 										}
 							)
 					};
+		}
+
+		private void CheckStopAction()
+		{
+			if (mIsStopProducsImport)
+			{
+				var msg = "Stopped by user.";
+				_logger.Debug(msg);
+				throw new Exception(msg);
+			}
 		}
 	}
 }

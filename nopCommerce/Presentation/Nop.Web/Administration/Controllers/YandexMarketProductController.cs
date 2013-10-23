@@ -30,6 +30,8 @@
 	[AdminAuthorize]
 	public class YandexMarketProductController : Controller
 	{
+		private static bool mIsStopProducsImport = false;
+
 		private readonly IYandexMarketProductService _yandexMarketProductService;
 		private readonly IProductService _productService;
 		private readonly IUrlRecordService _urlRecordService;
@@ -65,6 +67,13 @@
 		}
 
 		#region Grid actions
+
+		[HttpPost]
+		public ActionResult ImportProductListStop()
+		{
+			mIsStopProducsImport = true;
+			return Content("Success");
+		}
 
 		[HttpPost]
 		[GridAction(EnableCustomBinding = true)]
@@ -122,28 +131,42 @@
 		[HttpPost]
 		public ActionResult ImportProductList()
 		{
+			mIsStopProducsImport = false;
+
 			_logger.Debug("--- ImportProductList START...");
 
 			var parserCategories = _yandexMarketCategoryService.GetActive();
 			_logger.Debug("--- Will be import categories: " + parserCategories.Count);
-			var importedCounter = 0;
+			var totalImportedCounter = 0;
+
+			var allSpecAttrList = _specificationAttributeService.GetSpecificationAttributes();
+
 			// цикл по активным категориям						
 			foreach (var currentParserCategory in parserCategories)
-			{
+			{				
 				var records = _yandexMarketProductService.GetByCategory(currentParserCategory.Id, isNotImportedOnly: true);
 
-				_logger.Debug("--- Category " + currentParserCategory.Name + ". Total not imported products: " + records.TotalCount);
+				var categoryProductCounter = 0;
+
+				_logger.Debug("--- Start Category " + currentParserCategory.Name + ". Total not imported yet products: " + records.TotalCount);
 				foreach (var curYaProduct in records)
 				{
-					var isImported = ImportYaProduct(curYaProduct, currentParserCategory.ShopCategoryId);
-					if (importedCounter % 20 == 0) // через каждые 5 записей выводить в лог сообщение
-						_logger.Debug("Imported products in general: " + importedCounter + "...");
+					CheckStopAction();
+					
+					var isImported = ImportYaProduct(curYaProduct, currentParserCategory.ShopCategoryId, allSpecAttrList);
+
+
+					if (totalImportedCounter % 10 == 0) // через каждые 5 записей выводить в лог сообщение
+						_logger.Debug("... imported products in category " + categoryProductCounter + " in general: " + totalImportedCounter + "...");
 
 					if (isImported)
-						importedCounter++;
+					{
+						categoryProductCounter++;
+						totalImportedCounter++;
+					}
 				}
 
-				_logger.Debug("--- Category imported " + currentParserCategory.Name + ".Total imported products: " + importedCounter);
+				_logger.Debug("--- End Category imported " + currentParserCategory.Name + ".Total imported products: " + totalImportedCounter);
 				
 			}
 
@@ -153,10 +176,11 @@
 			return Content("Success");
 		}
 
-		private bool ImportYaProduct(YandexMarketProductRecord yaProduct, int shopCategoryId)
+		private bool ImportYaProduct(YandexMarketProductRecord yaProduct, int shopCategoryId, IEnumerable<SpecificationAttribute> allSpecAttrList)
 		{
 			Product product;
 			var variant = _productService.GetProductVariantBySku(yaProduct.Articul);
+
 			bool isUpdating = variant != null;
 
 			// create or update item
@@ -219,7 +243,7 @@
 					_productService.InsertProductVariant(variant);
 				
 					SaveCategory(shopCategoryId, product.Id);
-					SaveSpecList(product, yaProduct.Specifications, shopCategoryId);
+					SaveSpecList(product, yaProduct.Specifications, shopCategoryId, allSpecAttrList);
 
 
 					SavePictures(product, yaProduct.ImageUrl_1);
@@ -264,9 +288,9 @@
 			//return xmlShortDescription.ToString();
 		}
 
-		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList, int shopCategoryId)
+		private void SaveSpecList(Product product, IEnumerable<YandexMarketSpecRecord> specList, int shopCategoryId, IEnumerable<SpecificationAttribute> allSpecAttrList)
 		{			
-			var allSpecAttrList = _specificationAttributeService.GetSpecificationAttributes();
+			
 			var psaList = new List<ProductSpecificationAttribute>();
 
 			var category = _categoryService.GetCategoryById(shopCategoryId);
@@ -351,6 +375,16 @@
 					DisplayOrder = 1
 				};
 			_categoryService.InsertProductCategory(productCategory);
+		}
+
+		private void CheckStopAction()
+		{
+			if (mIsStopProducsImport)
+			{
+				var msg = "Stopped by user.";
+				_logger.Debug(msg);
+				throw new Exception(msg);
+			}
 		}
 	}
 }

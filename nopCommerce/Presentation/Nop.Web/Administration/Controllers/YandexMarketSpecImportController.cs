@@ -1,5 +1,6 @@
 ﻿namespace Nop.Admin.Controllers
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Web.Helpers;
@@ -20,6 +21,7 @@
 	[AdminAuthorize]
 	public class YandexMarketSpecImportController : Controller
 	{
+		private static bool mIsStopProducsImport = false;
 		private readonly IYandexMarketSpecService _yandexMarketSpecService;
 		private readonly ISpecificationAttributeService2 _specificationAttributeService;
 		private readonly IYandexMarketCategoryService _yandexMarketCategoryService;
@@ -93,8 +95,17 @@
 		}
 
 		[HttpPost]
+		public ActionResult ApplyImportStop()
+		{
+			mIsStopProducsImport = true;
+			return Content("Success");
+		}
+		
+		[HttpPost]
 		public ActionResult ApplyImport()
 		{
+			mIsStopProducsImport = false;
+
 			_logger.Debug("--- ApplyImport START...");
 			var activeParserCategoriesIdList = _yandexMarketCategoryService.GetActive().Select(x => x.Id);
 			var newSpecsOnly = _GetNewSpecs(activeParserCategoriesIdList);
@@ -106,12 +117,16 @@
 
 			foreach (var specAttrOpt in newSpecsOnly.SelectMany(x => x.SpecificationAttributeOptions).ToList())
 			{
+				CheckStopAction();
+
 				specAttrOpt.DisplayOrder = 0;// сбрасываем с 777
 			}
 			
 
 			foreach (var curSpecAttr in newSpecsOnly)
 			{
+				CheckStopAction();
+
 				if (curSpecAttr.Id != 0)
 				{
 					SpecificationAttribute curSpecAttrFromDb = _specificationAttributeService.GetSpecificationAttributeById(curSpecAttr.Id);
@@ -120,6 +135,8 @@
 
 					foreach (var curSpecAttrOpt in curSpecAttr.SpecificationAttributeOptions)
 					{
+						CheckStopAction();
+
 						curSpecAttrOpt.SpecificationAttributeId = curSpecAttrFromDb.Id;
 						if (curSpecAttrFromDb.SpecificationAttributeOptions.All(x => x.Name != curSpecAttrOpt.Name))
 						{
@@ -144,8 +161,6 @@
 			return Content("Success!");
 		}
 
-
-
 		private List<SpecificationAttribute> _GetNewSpecs(IEnumerable<int> parserCategoryIdList)
 		{
 			var mapper = new YandexMarketSpecMapper(_yandexMarketSpecService, EngineContext.Current.Resolve<ISpecificationAttributeService>());
@@ -154,6 +169,16 @@
 			var newSpecsOnly = mapper.GetNewYandexSpecsOnly(allSpecs);
 
 			return newSpecsOnly;
+		}
+
+		private void CheckStopAction()
+		{
+			if (mIsStopProducsImport)
+			{
+				var msg = "Stopped by user.";
+				_logger.Debug(msg);
+				throw new Exception(msg);
+			}
 		}
 	}
 }
