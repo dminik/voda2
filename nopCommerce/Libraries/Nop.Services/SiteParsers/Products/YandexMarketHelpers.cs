@@ -90,7 +90,15 @@ namespace Nop.Services.SiteParsers.Products
 				 new AllowFiltering() { FilterName = "Разрядность шины памяти"},
 				 new AllowFiltering() { FilterName = "Тип памяти"},
 				 new AllowFiltering() { FilterName = "Тип чипа"},
-				 new AllowFiltering() { FilterName = "Тип", ShowInFilter = false, },
+				 new AllowFiltering() { FilterName = "Тип", ShowInFilter = false, ExceptedCategotiesNames = new List<ExceptedCategory>()
+				 {				 
+						new ExceptedCategory(){ CategoryName = "Струйные цветные"},
+						 new ExceptedCategory(){ CategoryName = "Лазерные цветные"},
+						 new ExceptedCategory(){ CategoryName = "Лазерные черно-белые"},
+				 }
+				 },
+
+
 				 new AllowFiltering() { FilterName = "Уровень шума", ShowInFilter = false, },
 				 new AllowFiltering() { FilterName = "Размеры вентилятора", ShowInFilter = false, },
 					
@@ -114,6 +122,9 @@ namespace Nop.Services.SiteParsers.Products
 					 {
 						 new ExceptedCategory(){ CategoryName = "Компактные цифровые фотокамеры"},
 						 new ExceptedCategory(){ CategoryName = "DVD и Blu-ray плееры"},
+						 new ExceptedCategory(){ CategoryName = "Струйные цветные"},
+						 new ExceptedCategory(){ CategoryName = "Лазерные цветные"},
+						 new ExceptedCategory(){ CategoryName = "Лазерные черно-белые"},
 						 new ExceptedCategory(){ CategoryName = "Зеркальные цифровые фотокамеры"}
 					 }},
 

@@ -31,6 +31,10 @@ body {
 	 color:#5C5B5B;line-height:normal;
 }
 
+.mceContentBody {	
+	background-image: none!important;	 
+}
+
 a{color:#5C5B5B;text-decoration:none;font-weight:normal;}
 a:hover{color:#B80709;text-decoration:underline;}
 h1,h2,h3,h4,h5,h6{font-family:arial,helvetica,sans-serif;}

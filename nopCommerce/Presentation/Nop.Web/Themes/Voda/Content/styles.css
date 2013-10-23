@@ -6708,3 +6708,7 @@ div.news-list-homepage div.news-items div.item div.news-details a
 	text-decoration: underline;
 	color: blue;
 }
+
+div.news-list-homepage div.news-items div.item div.news-details li {	
+	list-style: disc inside none;
+}

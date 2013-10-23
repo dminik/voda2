@@ -1,4 +1,5 @@
-
+use [nopCommerceVoda2]
+go
 
 DECLARE @TableName VARCHAR(255)
 DECLARE @sql NVARCHAR(500)
