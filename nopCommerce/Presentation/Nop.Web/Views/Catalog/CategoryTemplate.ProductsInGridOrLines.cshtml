@@ -113,16 +113,18 @@
        
          @if (Model.SubCategories.Count == 0)
          {
-             <div class="products-amount">           
-                 <span>Найдено товаров: @Model.ProductsTotalAmount</span>         
-             </div>
-
              <div class="compare-list-count-block">
                  <a href="@Url.RouteUrl("CompareProducts")">
                      @T("Products.Compare.List")
                      (<span class="compare-list-count">@Model.CompareListCount</span>)
                  </a>
              </div>
+             
+             <div class="products-amount">           
+                 <span>Найдено товаров: @Model.ProductsTotalAmount</span>         
+             </div>
+
+            
          }
 
         @Html.Widget("categorydetails_before_product_list")

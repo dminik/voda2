@@ -3144,13 +3144,13 @@ div.product-filters div.filter-content div.available-items ul.group li.title
 
 .compare-list-count-block
 {
-	float: right;
+	float: left;
 	text-decoration: underline;
 }
 
 .products-amount
 {
-	float: left;
+	float: right;
 	text-decoration: none;
 }
 

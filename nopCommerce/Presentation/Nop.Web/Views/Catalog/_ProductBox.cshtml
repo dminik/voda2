@@ -20,6 +20,7 @@
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
+        @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
     </div>
     <div class="details">
         <h2 class="product-title">
@@ -53,7 +54,7 @@
                 {
                     <input type="button" value="@(Model.ProductPrice.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" class="button-2 product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart('@addtocartlink    ');return false;" />
                 }
-                @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
+                
             </div>
             @Html.Widget("productbox_add_info")
         </div>
