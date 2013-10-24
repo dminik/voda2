@@ -281,7 +281,10 @@ namespace Nop.Web.Controllers
 				var categories = product.ProductCategories.Select(x => x.Category);
 				if (IsSpecAllowedForShortDescription(curProdSpec.SpecificationAttributeOption.SpecificationAttribute.Name, categories))
 				{
-					specShortDescription.AppendFormat("<li>{0}: {1}</li>", curProdSpec.SpecificationAttributeOption.SpecificationAttribute.Name, curProdSpec.SpecificationAttributeOption.Name);
+					if (curProdSpec.SpecificationAttributeOption.Name.ToLower() != "нет")
+						specShortDescription.AppendFormat("<li>{0}: {1}</li>", 
+																curProdSpec.SpecificationAttributeOption.SpecificationAttribute.Name, 
+																curProdSpec.SpecificationAttributeOption.Name);
 				}
 			}
 
@@ -911,7 +914,7 @@ namespace Nop.Web.Controllers
 			SetSeoMetaTags(category, model);
 
 
-            //sorting
+            #region Sorting
             model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
             if (model.PagingFilteringContext.AllowProductSorting)
             {
@@ -928,12 +931,11 @@ namespace Nop.Web.Controllers
                             Selected = enumValue == (ProductSortingEnum)command.OrderBy
                         });
                 }
-            }
+			}
+			#endregion
 
-
-
-            //view mode
-            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+			#region View mode grid or list
+			model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
             var viewMode = !string.IsNullOrEmpty(command.ViewMode) 
                 ? command.ViewMode
                 : _catalogSettings.DefaultViewMode;
@@ -954,10 +956,11 @@ namespace Nop.Web.Controllers
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
                     Selected = viewMode == "list"
                 });
-            }
-                        
-            //page size
-            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
+			}
+			#endregion
+
+			#region Page size
+			model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
             if (category.AllowCustomersToSelectPageSize && category.PageSizeOptions != null)
             {
                 var pageSizes = category.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1022,22 +1025,25 @@ namespace Nop.Web.Controllers
 
             if (command.PageSize <= 0) command.PageSize = category.PageSize;
 
+			#endregion
+
 			var filter = new Nop.Core.Domain.Catalog.Filter();
 			filter.CategoryIds.Add(category.Id);
             if (_catalogSettings.ShowProductsFromSubcategories)
             {
                 //include subcategories
 				filter.CategoryIds.AddRange(GetChildCategoryIds(category.Id));
-            }
+			}
 
-			// exist quantity filter
-	        
+
+			#region Exist quantity filter
 			filter.ShowWithPositiveQuantity = model.PagingFilteringContext.GetSelectedQuantFilter(_webHelper);
 			model.PagingFilteringContext.PrepareQuantFilters(filter.ShowWithPositiveQuantity, _webHelper, _workContext);
+			#endregion
 
 			filter.AlreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
 
-            //price ranges			        
+			#region Price ranges			        
 			model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(_priceCalculationService, filter, category.PriceRanges, _webHelper, _priceFormatter);
             var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, category.PriceRanges);
             decimal? minPriceConverted = null;
@@ -1049,13 +1055,11 @@ namespace Nop.Web.Controllers
 
                 if (selectedPriceRange.To.HasValue)
                     maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
-            }
+			}
 
-
-
-
-
-            //category breadcrumb
+			#endregion
+		
+			#region Category breadcrumb
             model.DisplayCategoryBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled;
             if (model.DisplayCategoryBreadcrumb)
             {
@@ -1068,18 +1072,14 @@ namespace Nop.Web.Controllers
                         SeName = catBr.GetSeName()
                     });
                 }
-            }
+			}
 
+			#endregion
 
-
-
-            //subcategories
+			//subcategories
 			model.SubCategories = this.GetSubCategories(categoryId);
-
-
-
-
-            //featured products
+			
+            #region Featured products
             //Question: should we use '_catalogSettings.ShowProductsFromSubcategories' setting for displaying featured products?
             if (!_catalogSettings.IgnoreFeaturedProducts && _categoryService.GetTotalNumberOfFeaturedProducts(categoryId) > 0)
             {
@@ -1091,12 +1091,13 @@ namespace Nop.Web.Controllers
                         storeId: _storeContext.CurrentStore.Id, 
                         featuredProducts: true);
                 model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
-            }
+			}
 
+			#endregion
 
-	        if (minPriceConverted.IsNullOrDefault()) minPriceConverted = 1;
+			if (minPriceConverted.IsNullOrDefault()) minPriceConverted = 1;
 
-            //products
+            #region Products
             
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
@@ -1112,10 +1113,12 @@ namespace Nop.Web.Controllers
 			
             model.Products = PrepareProductOverviewModels(products).ToList();
 	        model.ProductsTotalAmount = products.TotalCount;
-            model.PagingFilteringContext.LoadPagedList(products);
+			#endregion
+
+			model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = viewMode;
 
-            //specs filters
+            #region Specs filters
 
 	        int positiveQuantityCount; // dminikk
 			var allOptionsCountTbl = _specificationAttributeService.SearchProductsCount(
@@ -1135,9 +1138,11 @@ namespace Nop.Web.Controllers
 				allOptionsCountTbl,
 				filter.AlreadyFilteredSpecOptionIds,
                 filterableSpecificationAttributeOptionIds, 
-                _specificationAttributeService, _webHelper, _workContext);			
+                _specificationAttributeService, _webHelper, _workContext);
 
-            //template
+			#endregion
+			
+			#region Template
             var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, category.CategoryTemplateId);
             var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
                 {
@@ -1148,11 +1153,13 @@ namespace Nop.Web.Controllers
                         throw new Exception("No default template could be loaded");
                     return template.ViewPath;
                 });
+			#endregion
 
-            //activity log
+			#region Activity log
             _customerActivityService.InsertActivity("PublicStore.ViewCategory", _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
+			#endregion
 
-	        model.CompareListCount = _compareProductsService.GetComparedProducts().Count;
+			model.CompareListCount = _compareProductsService.GetComparedProducts().Count;
             return View(templateViewPath, model);
         }
 

@@ -138,6 +138,7 @@
                                 keys.Add(x => x.Id).RouteKey("Id"))
                       .Columns(columns =>
                           {
+                              columns.Bound(x => x.Id).Width(10);
                               columns.Bound(x => x.Name).Width(200);
                               columns.Bound(x => x.Url).Width(200);
                               columns.Bound(x => x.ShopCategoryName).Width(200);

@@ -178,6 +178,7 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "папа" }, "папа", "Коннектор на выходе");
 
 			ReplaceByValue(product.Specifications, new List<string> { "Электронный" }, "Электронное", "Тип управления");
+			ReplaceByValue(product.Specifications, new List<string> { "Механический" }, "Механическое", "Тип управления");
 
 			
 			var tiporazmer = this.GetTiporazmer(product.FullDescription);
@@ -231,6 +232,7 @@ namespace Nop.Core.Domain.YandexMarket
 			ProcessBumagaSize(product);
 			ProcessBumagaCount(product);
 			ProcessHolodilnik(product);
+			ProcessPlitas(product);
 
 			return product;
 		}
@@ -816,6 +818,44 @@ namespace Nop.Core.Domain.YandexMarket
 
 			ProcessSpec(val, product, "Холодильная камера:?</p><p>([\\w\\s]+)", "Размораживание холодильной камеры");
 			ProcessSpec(val, product, "Морозильная камера:?</p><p>([\\w\\s]+)", "Размораживание морозильной камеры");			
+		}
+
+
+		private void ProcessPlitas(YandexMarketProductRecord product)
+		{
+			if (product.YandexMarketCategoryRecordId != 77)
+				return;
+
+			ReplaceByValue(product.Specifications, new List<string> { "Эмалированная сталь" }, "Эмаль", "Рабочая поверхность");
+			ReplaceByValue(product.Specifications, new List<string> { "Эмалированная" }, "Эмаль", "Рабочая поверхность");
+			ReplaceByValue(product.Specifications, new List<string> { "– электронные", "&amp;#8211; электрические" }, "- электрические", "Число конфорок");
+			ReplaceByValue(product.Specifications, new List<string> { "газовых" }, "газовые", "Число конфорок");
+			
+			ProcessPlitaGril(product);
+			ProcessPlitaPodzig(product);
+			
+		}
+
+		private void ProcessPlitaGril(YandexMarketProductRecord product)
+		{
+			var specToParse = product.Specifications.FirstOrDefault(x => x.Key == "Гриль");
+
+			if (specToParse == null)
+				return;
+
+			if (!specToParse.Value.ToLower().Contains("Нет")) 
+				AddNewSpec(product, "Наличие гриля", "Да");
+		}
+
+		private void ProcessPlitaPodzig(YandexMarketProductRecord product)
+		{
+			var specToParse = product.Specifications.FirstOrDefault(x => x.Key == "Электроподжиг");
+
+			if (specToParse == null)
+				return;
+
+			if (!specToParse.Value.ToLower().Contains("Нет"))
+				AddNewSpec(product, "Наличие электроподжига", "Да");
 		}
 
 	}
