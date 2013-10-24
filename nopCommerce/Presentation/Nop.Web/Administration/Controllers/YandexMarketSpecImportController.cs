@@ -65,6 +65,9 @@
 			return Json(newSpecsOnly);
 		}
 
+		/// <summary>
+		/// All new hilighted specs with old specs
+		/// </summary>		
 		[HttpPost]
 		public ActionResult GetAllSpecs()
 		{

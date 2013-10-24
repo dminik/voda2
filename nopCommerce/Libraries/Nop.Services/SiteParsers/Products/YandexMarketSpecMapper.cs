@@ -37,9 +37,13 @@ namespace Nop.Services.SiteParsers
 		{			
 			// Все спецификации парсера для выбранных категорий товаров
 			var yandexMarketSpecList = new List<YandexMarketSpecRecord>();
-			foreach (var currentCategoryId in categoryIdList)			
-				yandexMarketSpecList.AddRange(_yandexMarketSpecService.GetByCategory(currentCategoryId));	
-						
+			foreach (var currentCategoryId in categoryIdList)
+			{
+				var yaSpecsForCurCategory = _yandexMarketSpecService.GetByCategory(currentCategoryId);
+
+				yandexMarketSpecList.AddRange(yaSpecsForCurCategory);
+			}
+
 			// Все спецификации магазина
 			var shopSpecList = new List<SpecificationAttribute>();
 			foreach (var specificationAttribute in _shopSpecService.GetSpecificationAttributes())

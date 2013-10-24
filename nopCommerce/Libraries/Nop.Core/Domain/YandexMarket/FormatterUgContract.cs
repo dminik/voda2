@@ -177,6 +177,8 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "»" }, "\"", "Коннектор на выходе");
 			ReplaceByValue(product.Specifications, new List<string> { "папа" }, "папа", "Коннектор на выходе");
 
+			ReplaceByValue(product.Specifications, new List<string> { "Электронный" }, "Электронное", "Тип управления");
+
 			
 			var tiporazmer = this.GetTiporazmer(product.FullDescription);
 			if (tiporazmer != string.Empty && product.Specifications.All(x => x.Key != "Типоразмер"))
@@ -228,6 +230,7 @@ namespace Nop.Core.Domain.YandexMarket
 
 			ProcessBumagaSize(product);
 			ProcessBumagaCount(product);
+			ProcessHolodilnik(product);
 
 			return product;
 		}
@@ -767,5 +770,53 @@ namespace Nop.Core.Domain.YandexMarket
 				product.Specifications.Add(new YandexMarketSpecRecord("Плотность, г/м", value));
 
 		}
+
+		private void AddNewSpec(YandexMarketProductRecord product, string specNewName, string specValue)
+		{
+			if (specValue != string.Empty && specValue != "0" && product.Specifications.All(x => x.Key != specNewName))
+				product.Specifications.Add(new YandexMarketSpecRecord(specNewName, specValue));
+		}
+
+		private void ProcessSpec(string textToParse, YandexMarketProductRecord product, string pattern, string specNewName)
+		{
+			var value = this.GetValByRegExp(textToParse, pattern);
+			AddNewSpec(product, specNewName, value);
+		}
+
+		private void ProcessHolodilnik(YandexMarketProductRecord product)
+		{
+			if (product.YandexMarketCategoryRecordId != 76)
+				return;
+
+			ProcessHolodilnikObems(product);
+			ProcessHolodilnikRazmorozkas(product);
+		}
+
+		private void ProcessHolodilnikObems(YandexMarketProductRecord product)
+		{			
+			var specToParse = product.Specifications.FirstOrDefault(x => x.Key == "Объем");
+
+			if (specToParse == null)
+				return;
+
+			ProcessSpec(specToParse.Value, product, "Общий: ([0-9]+) л", "Объем общий, л.");
+			ProcessSpec(specToParse.Value, product, "Объем холодильной камеры: ([0-9]+) л", "Объем холодильной камеры, л.");
+			ProcessSpec(specToParse.Value, product, "Объем морозильной камеры: ([0-9]+) л", "Объем морозильной камеры, л.");						
+		}
+		
+		private void ProcessHolodilnikRazmorozkas(YandexMarketProductRecord product)
+		{
+			var specToParse = product.Specifications.FirstOrDefault(x => x.Key == "Размораживание");
+
+			if (specToParse == null)
+				return;
+
+			var val = specToParse.Value.Replace("\r", "").Replace("\n", "");
+			val = val.Replace("статическое", "Статическое").Replace(" размораживание", "").Replace("Нет", "Ручное").Replace("Капельная система", "Капельное");
+
+			ProcessSpec(val, product, "Холодильная камера:?</p><p>([\\w\\s]+)", "Размораживание холодильной камеры");
+			ProcessSpec(val, product, "Морозильная камера:?</p><p>([\\w\\s]+)", "Размораживание морозильной камеры");			
+		}
+
 	}
 }

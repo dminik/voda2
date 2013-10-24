@@ -29,7 +29,7 @@ namespace Nop.Services.SiteParsers.Products
 		public class ExceptedCategory
 		{
 			public ExceptedCategory()
-			{				
+			{
 				ShowInFilter = false;
 				ShowInShortDescription = false;
 			}
@@ -40,7 +40,7 @@ namespace Nop.Services.SiteParsers.Products
 			public bool ShowInShortDescription { get; set; }
 		}
 
-		public static readonly IEnumerable<AllowFiltering> GetAllowFilteringForProductSelector = 
+		public static readonly IEnumerable<AllowFiltering> GetAllowFilteringForProductSelector =
 		 new List<AllowFiltering>()
 				{					
 				 new AllowFiltering() { FilterName = "Производитель", ShowInShortDescription = false, },
@@ -125,6 +125,7 @@ namespace Nop.Services.SiteParsers.Products
 						 new ExceptedCategory(){ CategoryName = "Струйные цветные"},
 						 new ExceptedCategory(){ CategoryName = "Лазерные цветные"},
 						 new ExceptedCategory(){ CategoryName = "Лазерные черно-белые"},
+						 new ExceptedCategory(){ CategoryName = "Домашние кинотеатры"},
 						 new ExceptedCategory(){ CategoryName = "Зеркальные цифровые фотокамеры"}
 					 }},
 
@@ -215,23 +216,52 @@ namespace Nop.Services.SiteParsers.Products
 				 new AllowFiltering() { FilterName = "Скорость печати"},
 				 new AllowFiltering() { FilterName = "Технология печати"},
 
+				 new AllowFiltering() { FilterName = "Тип загрузки"},
+				 new AllowFiltering() { FilterName = "Класс потребления энергии"},
+				 new AllowFiltering() { FilterName = "Класс отжима"},
+				 new AllowFiltering() { FilterName = "Загрузка белья, кг"},
+				 new AllowFiltering() { FilterName = "Максимальная скорость вращения, об./мин."},
+				 new AllowFiltering() { FilterName = "Тип управления"},
+				 new AllowFiltering() { FilterName = "Материал бака"},
+				 new AllowFiltering() { FilterName = "Fuzzy Logic"},
+				 new AllowFiltering() { FilterName = "Сушка"},
+				 new AllowFiltering() { FilterName = "Уровень шума при отжиме, дБ"},
 				 
+				 new AllowFiltering() { FilterName = "Уровень шума"},
+				 new AllowFiltering() { FilterName = "Объем общий, л."},
+				 new AllowFiltering() { FilterName = "Объем холодильной камеры, л."},
+				 new AllowFiltering() { FilterName = "Объем морозильной камеры, л."},
+				 new AllowFiltering() { FilterName = "Количество камер"},
+				 new AllowFiltering() { FilterName = "Класс энергопотребления"},
+				 new AllowFiltering() { FilterName = "Тип управления"},
+				
+				
+				new AllowFiltering() { FilterName = "Расположение морозильной камеры"},
+				new AllowFiltering() { FilterName = "Антибактериальное покрытие"},
+				new AllowFiltering() { FilterName = "Перевешиваемые двери"},
+				new AllowFiltering() { FilterName = "Количество компрессоров"},
+				new AllowFiltering() { FilterName = "Суперзаморозка"},
+				new AllowFiltering() { FilterName = "Суперохлаждение"},
+				new AllowFiltering() { FilterName = "XXXX"},
+				new AllowFiltering() { FilterName = "XXXX"},
+				new AllowFiltering() { FilterName = "XXXX"},
+				new AllowFiltering() { FilterName = "XXXX"},
 				 
 				};
 
-		
 
-		
+
+
 		public static void IsSpecAllow(string specName, IEnumerable<Category> categoriesOfProduct,
 									out bool isShowInFilter, out bool isShowInShortDescription)
 		{
 			isShowInFilter = false;
 			isShowInShortDescription = false;
-			
-			
+
+
 			// не показываем для некоторых категорий некоторые спецификации
 			var allowFilters = YandexMarketHelpers.GetAllowFilteringForProductSelector;
-			
+
 			foreach (var currentAllowFilter in allowFilters)
 			{
 				if (currentAllowFilter.FilterName == specName)
@@ -246,16 +276,16 @@ namespace Nop.Services.SiteParsers.Products
 					{
 						//try
 						//{
-							exceptedCategory =
-								currentAllowFilter.ExceptedCategotiesNames.FirstOrDefault(x => x.CategoryName == curCategory.Name);
+						exceptedCategory =
+							currentAllowFilter.ExceptedCategotiesNames.FirstOrDefault(x => x.CategoryName == curCategory.Name);
 						//}
 						//catch (Exception ex)
 						//{
-							
+
 						//}
 
 						if (exceptedCategory != null)
-							break;						
+							break;
 					}
 
 
@@ -276,7 +306,7 @@ namespace Nop.Services.SiteParsers.Products
 				}
 
 			}// end for
-			
+
 		}
 	}
 }

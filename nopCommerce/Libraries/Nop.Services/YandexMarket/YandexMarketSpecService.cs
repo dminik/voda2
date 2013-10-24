@@ -52,11 +52,7 @@ namespace Nop.Services.YandexMarket
 		}
 
 		public virtual IPagedList<YandexMarketSpecRecord> GetByCategory(int categoryId, int pageIndex = 0, int pageSize = int.MaxValue)
-		{							
-			//var products = this._specRepository.Table.Where(tr => tr.ProductRecord.YandexMarketCategoryRecordId == categoryId).Select(x => x.ProductRecord);
-			//foreach (var currentProduct in products)	 // formatting			
-			//	currentProduct.FormatMe();
-
+		{										
 			var products = _yandexMarketProductService.GetByCategory(categoryId);
 
 			var allSpecs = new List<YandexMarketSpecRecord>();
