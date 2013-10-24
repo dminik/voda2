@@ -152,7 +152,7 @@ namespace Nop.Services.SiteParsers.Products
 				new AllowFiltering()
 					{
 						FilterName = "Тип",
-						ShowInFilter = false,
+						ShowInFilter = true,
 						ExceptedCategotiesNames =
 							new List<ExceptedCategory>()
 								{
@@ -197,6 +197,7 @@ namespace Nop.Services.SiteParsers.Products
 									new ExceptedCategory() { CategoryName = "Лазерные черно-белые" },
 									new ExceptedCategory() { CategoryName = "Домашние кинотеатры" },
 									new ExceptedCategory() { CategoryName = "Кухонные плиты" },
+									new ExceptedCategory() { CategoryName = "Увлажнители" },
 									new ExceptedCategory() { CategoryName = "Зеркальные цифровые фотокамеры" }
 								}
 					},
@@ -328,18 +329,51 @@ namespace Nop.Services.SiteParsers.Products
 				new AllowFiltering() { FilterName = "Расход воды, л" },
 				new AllowFiltering() { FilterName = "Количество температурных режимов" },
 				new AllowFiltering() { FilterName = "Вместимость" },
-				new AllowFiltering() { FilterName = "XXXX" },
-				new AllowFiltering() { FilterName = "XXXX" },
-				new AllowFiltering() { FilterName = "XXXX" },
-				new AllowFiltering() { FilterName = "XXXX" },
-				new AllowFiltering() { FilterName = "XXXX" },
-				new AllowFiltering() { FilterName = "XXXX" },
-				new AllowFiltering() { FilterName = "XXXX" },
+				new AllowFiltering() { FilterName = "Обогрев" },
+				new AllowFiltering() { FilterName = "Площадь (при h 2.8м)" },
+				new AllowFiltering() { FilterName = "Материал бака" },
+				new AllowFiltering() { FilterName = "Номинальная мощность, кВт" },
+				new AllowFiltering() { FilterName = "Объем, л" },
+				new AllowFiltering() { FilterName = "Температура нагрева" },
+				new AllowFiltering() { FilterName = "Производительность, л/мин" },
+
+				new AllowFiltering() { FilterName = "Площадь помещения" },
+				new AllowFiltering() { FilterName = "Способ увлажнения" },
+				new AllowFiltering() { FilterName = "Производительность увлажнения" },
+				new AllowFiltering() { FilterName = "Объём водяного бака" },
+				new AllowFiltering() { FilterName = "Индикация" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				new AllowFiltering() { FilterName = "XXXXXX" },
+				
 			};
-
-
-
-
-
 	}
 }

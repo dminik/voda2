@@ -47,7 +47,7 @@ namespace Nop.Core.Domain.Catalog
 				SpecificationAttributeOptions = new Collection<SpecificationAttributeOption>()
 			};
 
-			foreach (var specificationAttributeOption in SpecificationAttributeOptions)
+			foreach (var specificationAttributeOption in SpecificationAttributeOptions.ToList())
 			{
 				newOb.SpecificationAttributeOptions.Add(specificationAttributeOption.Clone());
 			}

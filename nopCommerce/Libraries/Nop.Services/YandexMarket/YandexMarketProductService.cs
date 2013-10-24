@@ -84,36 +84,39 @@ namespace Nop.Services.YandexMarket
 				return new PagedList<YandexMarketProductRecord>(new List<YandexMarketProductRecord>(), 0, 1);
 			
 			
-			IQueryable<YandexMarketProductRecord> query = this._productRepository.Table.OrderBy(tr => tr.Name);
-				
-			if (!withFantoms)				
+			IQueryable<YandexMarketProductRecord> query = this._productRepository.Table;
+
+			if (!withFantoms)
 				query = query.Where(tr => tr.Name != "NotInPriceList");
 
 			if (categoryId != 0)
 				query = query.Where(tr => tr.YandexMarketCategoryRecordId == categoryId);
-				
 
+
+			IEnumerable<YandexMarketProductRecord> res1 = query.ToList();
 
 			if (isNotImportedOnly)
 			{					
 				var shopCategory = _yandexMarketCategoryService.GetById(categoryId);
 				var shopCategoryId = shopCategory != null ? shopCategory.ShopCategoryId : 0;
 				var allShopProductsArtikuls = _productService.SearchProductVariants(shopCategoryId, 0, 0, "", false, 0, 2147483647, showHidden: true)
-																	.Select(x => x.Sku);
+																	.Select(x => x.Sku).ToList();
 
-				query = query.Where(x => allShopProductsArtikuls.Contains(x.Articul) == false);
+				res1 = res1.Where(x => allShopProductsArtikuls.Contains(x.Articul) == false);
 			}
 
 			if (withVendorExisting)
 			{
 				var vendorArtikultList = _yugCatalogPriceParserService.ParseAndShow(false).ProductLineList.Select(x => x.Articul).ToList();
 
-				query = query.Where(yaProduct => vendorArtikultList.Contains(yaProduct.Articul));
+				res1 = res1.Where(yaProduct => vendorArtikultList.Contains(yaProduct.Articul));
 			}
 
-			
 
-			var records = new PagedList<YandexMarketProductRecord>(query, pageIndex, pageSize);
+
+			res1 = res1.OrderBy(tr => tr.Name);
+
+			var records = new PagedList<YandexMarketProductRecord>(res1.ToList(), pageIndex, pageSize);
 
 			for (int i = 0; i < records.Count(); i++) 
 				records[i] = records[i].Clone().FormatMe();

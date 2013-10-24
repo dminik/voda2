@@ -357,7 +357,7 @@
                         $('#btnApplyImportAll').click(function () {
                             $.ajax({
                                 beforeSend: function () { $('#parsingIndicator').show(); },
-                                complete: function () { $('#parsingIndicator').hide(); },
+                                // complete: function () { $('#parsingIndicator').hide(); },
                                 cache: false,
                                 type: 'POST',
                                 url: '@Url.Action("ApplyImport", "YandexMarketSpecImport")',
@@ -375,10 +375,12 @@
                                             url: '@Url.Action("ImportProductList", "YandexMarketProduct")',
                                                                                         @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
                                             dataType: 'text',
-                                            success: function(data) {
+                                            success: function (data) {
+                                                $('#parsingIndicator').hide();
                                                 alert(data);
                                             },
-                                            error: function(xhr, ajaxOptions, thrownError) {
+                                            error: function (xhr, ajaxOptions, thrownError) {
+                                                $('#parsingIndicator').hide();
                                                 alert(xhr.responseText);
                                             }
                                         });
@@ -388,6 +390,7 @@
                                     }                                    
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
+                                    $('#parsingIndicator').hide();
                                     alert(xhr.responseText);
                                 }
                             });

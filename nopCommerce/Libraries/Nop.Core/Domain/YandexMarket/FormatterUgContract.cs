@@ -233,6 +233,7 @@ namespace Nop.Core.Domain.YandexMarket
 			ProcessBumagaCount(product);
 			ProcessHolodilnik(product);
 			ProcessPlitas(product);
+			ProcessHeaters(product);
 
 			return product;
 		}
@@ -384,13 +385,23 @@ namespace Nop.Core.Domain.YandexMarket
 				"Ariston",
 				"Hitachi",
 				"Liebherr",
+				"Binatone",
+				"ATMOR",
+				"Atron",
+				"Garanterm",
+				"Gorenje",
+				"Thermex",
+				"Beurer",
+				"Maxwell",
+				"Vitek",
+				"Ballet",
+				"Flamingo",
+				"Rotex",
 				"Sharp",
-
-
-				//Binatone (2) Ergo (7) Ariston (24) ATMOR (12) Atron (1) Garanterm (14) Gorenje (1) Thermex (20) Vestfrost (3)
-				// Beurer (1) Ergo (2) Maxwell (2) Vitek (7)
-				//  Atron (1) Ballet (3) BEKO (4) Ergo (6) Flamingo (11) Rotex (3)
-				//   Maxwell (2) Vitek (1)
+				"Sharp",
+				"Sharp",
+				"Sharp",
+				
 				};
 
 			name = name.ToUpper();
@@ -832,8 +843,7 @@ namespace Nop.Core.Domain.YandexMarket
 			ReplaceByValue(product.Specifications, new List<string> { "газовых" }, "газовые", "Число конфорок");
 			
 			ProcessPlitaGril(product);
-			ProcessPlitaPodzig(product);
-			
+			ProcessPlitaPodzig(product);						
 		}
 
 		private void ProcessPlitaGril(YandexMarketProductRecord product)
@@ -858,5 +868,26 @@ namespace Nop.Core.Domain.YandexMarket
 				AddNewSpec(product, "Наличие электроподжига", "Да");
 		}
 
+		private void ProcessHeaters(YandexMarketProductRecord product)
+		{
+			if (product.YandexMarketCategoryRecordId != 84)
+				return;
+
+			//ReplaceByValue(product.Specifications, new List<string> { "газовых" }, "газовые", "Число конфорок");
+
+			ProcessHeaterType(product);	
+		}
+		
+		private void ProcessHeaterType(YandexMarketProductRecord product)
+		{
+			var specToParse = product.FullDescription.ToLower();
+
+			if (specToParse.Contains("тепловентилятор"))
+				AddNewSpec(product, "Тип", "Tепловентилятор");
+			else if (specToParse.Contains("конвекторный"))
+				AddNewSpec(product, "Тип", "Конвекторный");
+			else if (specToParse.Contains("инфракрасн"))
+				AddNewSpec(product, "Тип", "Инфракрасный");			
+		}
 	}
 }

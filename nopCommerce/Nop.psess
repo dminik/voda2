@@ -48,7 +48,7 @@
       <LaunchProject>true</LaunchProject>
       <OverrideProjectSettings>false</OverrideProjectSettings>
       <LaunchMethod>Browser</LaunchMethod>
-      <LaunchUrl>http://localhost/Admin/OstatkiFileParser/OstatkiFileParser</LaunchUrl>
+      <LaunchUrl>http://localhost/</LaunchUrl>
       <SiteUrl>http://localhost/</SiteUrl>
       <LocalPath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\</LocalPath>
       <VRoot>
@@ -107,6 +107,18 @@
     </Report>
     <Report>
       <Path>Nop131022(1).vsp</Path>
+    </Report>
+    <Report>
+      <Path>localhost_Nop131024.vsp</Path>
+    </Report>
+    <Report>
+      <Path>localhost_Nop131024(1).vsp</Path>
+    </Report>
+    <Report>
+      <Path>localhost_Nop131024(2).vsp</Path>
+    </Report>
+    <Report>
+      <Path>localhost_Nop131024(3).vsp</Path>
     </Report>
   </Reports>
   <Launches>

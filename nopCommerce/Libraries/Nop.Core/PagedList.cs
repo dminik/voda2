@@ -19,7 +19,8 @@ namespace Nop.Core
         /// <param name="pageSize">Page size</param>
         public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
         {
-            int total = source.Count();
+	        var extractedData = source.ToList();
+			int total = extractedData.Count();
             this.TotalCount = total;
             this.TotalPages = total / pageSize;
 
@@ -28,7 +29,7 @@ namespace Nop.Core
 
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
-            this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
+			this.AddRange(extractedData.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
 
         /// <summary>
@@ -39,15 +40,17 @@ namespace Nop.Core
         /// <param name="pageSize">Page size</param>
         public PagedList(IList<T> source, int pageIndex, int pageSize)
         {
-            TotalCount = source.Count();
-            TotalPages = TotalCount / pageSize;
+			var extractedData = source.ToList();
+			int total = extractedData.Count();
+			this.TotalCount = total;
+			this.TotalPages = total / pageSize;
 
-            if (TotalCount % pageSize > 0)
-                TotalPages++;
+			if (total % pageSize > 0)
+				TotalPages++;
 
-            this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
-            this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
+			this.PageSize = pageSize;
+			this.PageIndex = pageIndex;
+			this.AddRange(extractedData.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
 
         /// <summary>
