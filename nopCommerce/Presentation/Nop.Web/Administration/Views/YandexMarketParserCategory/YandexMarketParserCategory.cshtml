@@ -13,7 +13,7 @@
 @using Telerik.Web.Mvc.UI
 
 
-Url Category For Parsing : <input id="txtUrlCategoryForParsing" type="text" value="yugcontract.ua/shop/kompyuternaya-tehnika-portal" ><br />
+Url Category For Parsing : <input id="txtUrlCategoryForParsing" type="text" style="width: 500px;" value="yugcontract.ua/shop/kompyuternaya-tehnika-portal" > Например: kompyuternaya-tehnika/it-komplektuyushie<br />
     
 <input type="button" id="ParseAndShow" class="t-button" value="Отобразить" /><br />
 <input type="button" id="ParseAndApply" class="t-button" value="Применить" /><br />
@@ -30,20 +30,21 @@ Result:
     
 <script type="text/javascript">
 
-    window.PrintCategories = function(categoryList, place) {
+    window.PrintCategory = function(category, place) {
 
-        var myUl = $('<ul>');
-        place.append(myUl);
+        var myLi = $('<li>').append(category.Name + ', Url: ' + category.Url);
+        place.append(myLi);
 
-        $.each(categoryList, function (index, value) {
-
-            var currentLi = $('<li>').append(value.Name + ', Url: ' + value.Url);
-            myUl.append(currentLi);
-                        
-            if (value.Children)
-                window.PrintCategories(value.Children, currentLi);
+        if (category.Children) {
             
-        });// end for
+            var myUl = $('<ul>');
+            myLi.append(myUl);
+            
+            $.each(category.Children, function(index, value) {                                              
+               window.PrintCategory(value, myUl);
+
+            }); // end for
+        }
     };
 
     $(function () {
@@ -58,12 +59,16 @@ Result:
                 url: '@Url.Action("CategoryParseAndShow", "YandexMarketParserCategory")',
                 data: { urlCategoryForParsing: $('#txtUrlCategoryForParsing').val() },
                 dataType: 'json',
-                success: function (data) {
+                success: function (category) {
 
                     var place = $('#accordion');
                     place.html('');
 
-                    window.PrintCategories(data, place);
+                    if (category)
+                        window.PrintCategory(category, place);
+                    else {
+                        alert("category == null");
+                    }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     $('#parsingIndicatorForParserCategoryTab').hide();
