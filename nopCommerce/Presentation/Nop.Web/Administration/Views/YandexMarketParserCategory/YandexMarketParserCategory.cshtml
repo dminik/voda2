@@ -13,10 +13,11 @@
 @using Telerik.Web.Mvc.UI
 
 
-Url Category For Parsing : <input id="txtUrlCategoryForParsing" type="text" value="" ><br />
+Url Category For Parsing : <input id="txtUrlCategoryForParsing" type="text" value="yugcontract.ua/shop/kompyuternaya-tehnika-portal" ><br />
     
 <input type="button" id="ParseAndShow" class="t-button" value="Отобразить" /><br />
 <input type="button" id="ParseAndApply" class="t-button" value="Применить" /><br />
+ <input type="submit" id="ParseStop" class="t-button" value="Parse stop" /><br />
     
     
 <img id="parsingIndicatorForParserCategoryTab" style="display: none" src="/administration/content/images/throbber-synchronizing.gif" /><br />
@@ -29,6 +30,8 @@ Result:
     
 <script type="text/javascript">
     $(function () {
+        
+
         $('#ParseAndShow').click(function () {
             $.ajax({
                 beforeSend: function () { $('#parsingIndicatorForParserCategoryTab').show(); },
@@ -56,6 +59,24 @@ Result:
 
       
 
+        $('#ParseStop').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicatorForParserCategoryTab').show(); },
+                complete: function () { $('#parsingIndicatorForParserCategoryTab').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("ParseStop", "YandexMarketParserCategory")',
+                                                                                                                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                                dataType: 'text',
+                                success: function (data) {
+                                    //alert(data);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.responseText);
+                                }
+                            });
+             return false;
+         });
     });
 
 

@@ -245,7 +245,7 @@ namespace Nop.Services.SiteParsers
 
 			// Artikul
 			if (CssSelectorForProductArticulInProductPage != string.Empty)
-				product.Articul = FindElement(CssSelectorForProductArticulInProductPage).Text.Replace(" од: ", "");
+				product.Articul = ParserHelper.FindElement(mDriver, CssSelectorForProductArticulInProductPage).Text.Replace(" од: ", "");
 			
 			// ≈сли продукта в прайсе нет, то создаем полупустой продукт с url и артикулом, что бы не заходить в него следующий раз
 			product.IsNotInPriceList = !ProductsArtikulsInPiceList.Contains(product.Articul);
@@ -272,7 +272,7 @@ namespace Nop.Services.SiteParsers
 					try
 					{
 						product.FullDescription =
-							GetInnerHtml(this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)));
+							ParserHelper.GetInnerHtml(this.mDriver.FindElement(By.CssSelector(CssSelectorForProductFullDescriptionInProductPage)));
 					}
 					catch (Exception ex)
 					{
@@ -299,31 +299,7 @@ namespace Nop.Services.SiteParsers
 			else			
 				return null;			
 		}
-
-		IWebElement FindElement(string cssSelector, int tryTimes = 3)
-		{
-			var time = 0;
-			do
-			{
-				time++;
-				try
-				{
-					return this.mDriver.FindElement(By.CssSelector(cssSelector));
-				}
-				catch (Exception ex)
-				{
-					if(!ex.Message.Contains("element timed out") || time == tryTimes)
-						throw;
-
-					Thread.Sleep(3000);
-				}
-			
-			}
-			while (time < tryTimes);
-			
-			throw new Exception("Error in my FindElement");
-		}
-
+		
 		private void GetSpecs(YandexMarketProductRecord product)
 		{
 			var specificationElements = this.mDriver.FindElements(By.CssSelector(this.CssSelectorForProductSpecsRowsInProductPage));
@@ -359,7 +335,7 @@ namespace Nop.Services.SiteParsers
 				// Value				
 				var currentValueElement =
 					currentSpecificationElement.FindElement(By.CssSelector(this.CssSelectorForProductSpecValInProductPage));
-				var currentValueHtml = this.GetInnerHtml(currentValueElement);
+				var currentValueHtml = ParserHelper.GetInnerHtml(currentValueElement);
 
 				product.Specifications.Add(new YandexMarketSpecRecord(currentKeyElement.Text.Trim(), currentValueHtml.Trim()));
 			}
@@ -414,7 +390,7 @@ namespace Nop.Services.SiteParsers
 			fileName += Path.GetExtension(remoteFileUrl);
 
 			var folderPath = Path.Combine(this.mImageFolderPathBase, this.mImageFolderPathForProductList);
-			var imageFolderPath = this.MakeFolder(folderPath);
+			var imageFolderPath = ParserHelper.MakeFolder(folderPath);
 
 			var fullFileName = Path.Combine(imageFolderPath, fileName);
 
@@ -425,26 +401,6 @@ namespace Nop.Services.SiteParsers
 			//this.mLogger.Debug("Image saved");
 
 			return Path.Combine(this.mImageFolderPathForProductList, fileName);
-		}
-
-		private string GetInnerHtml(IWebElement element)
-		{
-			var remoteWebDriver = (RemoteWebElement)element;
-			var javaScriptExecutor = (IJavaScriptExecutor)remoteWebDriver.WrappedDriver;
-			var innerHtml = javaScriptExecutor.ExecuteScript("return arguments[0].innerHTML;", element).ToString();
-
-			return innerHtml;
-		}
-
-		private string MakeFolder(string path)
-		{
-			var newFolder = new System.IO.DirectoryInfo(path);
-			if (!newFolder.Exists)
-			{
-				newFolder.Create();				
-			}
-
-			return path;
 		}
 
 		public static BaseParser Create(string catalogName, int parserCategoryId, int parseNotMoreThen, string productsPageUrl, ILogger logger, IYandexMarketProductService _yandexMarketProductService)
@@ -461,18 +417,6 @@ namespace Nop.Services.SiteParsers
 			parser.Init(catalogName, parserCategoryId, parseNotMoreThen, productsPageUrl, logger,  _yandexMarketProductService);
 
 			return parser;
-		}
-
-		protected string GetValByRegExp(string inputString, string pattern)
-		{
-			Match m = Regex.Match(inputString, pattern,
-								RegexOptions.IgnoreCase | RegexOptions.Compiled,
-								TimeSpan.FromSeconds(1));
-
-			if (m.Success)			
-				return m.Groups[1].ToString();							
-			else			
-				return "";			
 		}
 
 		private static List<string> GetProductsArtikulsInPiceList()
