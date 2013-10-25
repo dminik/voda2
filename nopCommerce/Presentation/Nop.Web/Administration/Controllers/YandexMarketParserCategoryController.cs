@@ -58,7 +58,7 @@
 			
 			_logger.Debug("+++ CategoryParse  DONE.");
 
-			return Json(new { Hehe="NeHehe" });
+			return Json(newCategoryList);
 		}
 
 		[HttpPost]

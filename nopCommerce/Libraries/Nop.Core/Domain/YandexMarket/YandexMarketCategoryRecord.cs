@@ -18,6 +18,9 @@ namespace Nop.Core.Domain.YandexMarket
 		public string Url { get; set; }
 		public int ShopCategoryId { get; set; }
 		public bool IsActive { get; set; }
-		public int ParentId { get; set; }		
+		public int ParentId { get; set; }
+
+		[NotMapped]
+		public List<YandexMarketCategoryRecord> Children{ get; set; }
 	}
 }

@@ -23,15 +23,32 @@ Url Category For Parsing : <input id="txtUrlCategoryForParsing" type="text" valu
 <img id="parsingIndicatorForParserCategoryTab" style="display: none" src="/administration/content/images/throbber-synchronizing.gif" /><br />
     
 Result:
-<div id="result"> 
+<div id="accordion"> 
      
 </div>
     
     
 <script type="text/javascript">
+
+    window.PrintCategories = function(categoryList, place) {
+
+        var myUl = $('<ul>');
+        place.append(myUl);
+
+        $.each(categoryList, function (index, value) {
+
+            var currentLi = $('<li>').append(value.Name + ', Url: ' + value.Url);
+            myUl.append(currentLi);
+                        
+            if (value.Children)
+                window.PrintCategories(value.Children, currentLi);
+            
+        });// end for
+    };
+
     $(function () {
         
-
+       
         $('#ParseAndShow').click(function () {
             $.ajax({
                 beforeSend: function () { $('#parsingIndicatorForParserCategoryTab').show(); },
@@ -43,12 +60,14 @@ Result:
                 dataType: 'json',
                 success: function (data) {
 
-                    var place = $('#result');
+                    var place = $('#accordion');
                     place.html('');
-                    place.append(data.Hehe);
 
+                    window.PrintCategories(data, place);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
+                    $('#parsingIndicatorForParserCategoryTab').hide();
+                    
                     var place = $('#result');
                     place.html('');
                     place.append(xhr.responseText);                    
@@ -66,19 +85,18 @@ Result:
                 cache: false,
                 type: 'POST',
                 url: '@Url.Action("ParseStop", "YandexMarketParserCategory")',
-                                                                                                                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
-                                dataType: 'text',
-                                success: function (data) {
-                                    //alert(data);
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                    alert(xhr.responseText);
-                                }
-                            });
-             return false;
-         });
+                                                                                                                                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                dataType: 'text',
+                success: function (data) {
+                    //alert(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+            return false;
+        });
     });
-
 
 </script>
     

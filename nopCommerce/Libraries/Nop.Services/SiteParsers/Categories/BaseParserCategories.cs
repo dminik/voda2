@@ -2,8 +2,11 @@ namespace Nop.Services.SiteParsers.Categories
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Text.RegularExpressions;
 	using System.Threading;
+
+	using Newtonsoft.Json;
 
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Logging;
@@ -43,11 +46,64 @@ namespace Nop.Services.SiteParsers.Categories
 			return productLink;
 		}
 		
+
+		class XXX
+		{
+		//	"id":"181",
+		//"level":0,
+		//"pid":"0",
+		//"expanded":false,
+		//"have_children":true,
+		//"name":"\u041a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440\u043d\u0430\u044f \u0442\u0435\u0445\u043d\u0438\u043a\u0430",
+		//"active":false,
+		//"is_first":false,
+		//"show":true,
+		//"url":"kompyuternaya-tehnika-portal"
+
+			public string id;
+			public int level;
+			public string pid;
+			public bool expanded;
+			public bool have_children;
+			public string name;
+			public bool active;
+			public bool is_first;
+			public bool show;
+			public string url;
+
+		}
+
+		private YandexMarketCategoryRecord ProcessCategory(XXX category, XXX[] categoriesArray)
+		{
+			var newCategory = new YandexMarketCategoryRecord()
+			{
+				IsActive = true,
+				Name = category.name,
+				ParentId = int.Parse(category.pid),
+				Url = category.url,
+				Id = int.Parse(category.id),
+				Children = new List<YandexMarketCategoryRecord>(),
+			};
+
+			if (category.have_children)
+			{
+				var children = categoriesArray.Where(x => x.pid == category.id);
+				foreach (var child in children)
+				{
+					var newChild = ProcessCategory(child, categoriesArray);
+					newCategory.Children.Add(newChild);
+				}
+			}
+				
+
+			return newCategory;
+		}
+
 		public List<YandexMarketCategoryRecord> Parse(ref bool isStopProducsImport)
 		{
 			this.mLogger.Debug("Start Parsing Category ...");
 
-			var resultProductList = new List<YandexMarketCategoryRecord>();
+			var resultCategoriesHierarchy = new List<YandexMarketCategoryRecord>();
 
 			try
 			{
@@ -57,7 +113,34 @@ namespace Nop.Services.SiteParsers.Categories
 				// —сылка на список товаров
 				this.mDriver.Navigate().GoToUrl(this.UrlCategoryForParsing);
 				//Thread.Sleep(3000);
-								
+
+				
+					// Ќайти все ссылки на товары	
+				//CssSelectorForProductLinkInProductList = ".cat-menu .level1 a.have-children em";
+				//var allcollapsedMenus = mDriver.FindElements(By.CssSelector(CssSelectorForProductLinkInProductList)));
+
+				string source = mDriver.PageSource;
+				var indexStart = source.IndexOf("var CATEGORIES = [", System.StringComparison.Ordinal) + "var CATEGORIES = [".Length - 1;
+				var indexEnd = source.IndexOf("}];", indexStart, System.StringComparison.Ordinal);
+
+				var categoriesText = source.Substring(indexStart, indexEnd - indexStart + 2);
+
+				var categoriesArray = JsonConvert.DeserializeObject<XXX[]>(categoriesText);
+
+				
+				// всем елементам меню верхнего уровн€
+				foreach (var currentCategory in categoriesArray.Where(x => x.level == 0))
+				{
+					var category = ProcessCategory(currentCategory, categoriesArray);
+
+					resultCategoriesHierarchy.Add(category);
+				}
+
+				//foreach (var allcollapsedMenu in allcollapsedMenus)
+				//{
+				//	allcollapsedMenu.Click();
+				//}
+
 				//bool isNextPage = false;				
 				//int pageLinksCounter = 1;
 
@@ -116,7 +199,7 @@ namespace Nop.Services.SiteParsers.Categories
 
 			this.mLogger.Debug("End Parsing.");
 
-			return resultProductList;
+			return resultCategoriesHierarchy;
 		}
 
 		
@@ -183,6 +266,67 @@ namespace Nop.Services.SiteParsers.Categories
 			parser.Init(productsPageUrl, logger,  _yandexMarketCategoryService);
 
 			return parser;
+		}
+
+		private List<YandexMarketCategoryRecord> GetTestData()
+		{
+			var resultProductList = new List<YandexMarketCategoryRecord>();
+
+			var level_0_1 = new YandexMarketCategoryRecord()
+			{
+				Id = 1,
+				IsActive = true,
+				Name = "level_0_1",
+				ParentId = 0,
+				ShopCategoryId = 0,
+				Url = "someUrl",
+				Children = new List<YandexMarketCategoryRecord>()
+			};
+			resultProductList.Add(level_0_1);
+
+			var level_1_1 = new YandexMarketCategoryRecord()
+			{
+				Id = 2,
+				IsActive = true,
+				Name = "level_1_1",
+				ParentId = 1,
+				ShopCategoryId = 0,
+				Url = "someUrl",
+				Children = new List<YandexMarketCategoryRecord>()
+			};
+
+
+
+			var level_0_2 = new YandexMarketCategoryRecord()
+			{
+				Id = 3,
+				IsActive = true,
+				Name = "level_0_2",
+				ParentId = 0,
+				ShopCategoryId = 0,
+				Url = "someUrl",
+				Children = new List<YandexMarketCategoryRecord>()
+			};
+			resultProductList.Add(level_0_2);
+
+
+			var level_1_2 = new YandexMarketCategoryRecord()
+			{
+				Id = 4,
+				IsActive = true,
+				Name = "level_1_2",
+				ParentId = 3,
+				ShopCategoryId = 0,
+				Url = "someUrl",
+				Children = new List<YandexMarketCategoryRecord>()
+			};
+
+
+
+			level_0_2.Children.Add(level_1_2);
+			level_0_1.Children.Add(level_1_1);
+
+			return resultProductList;
 		}
 	}
 }
