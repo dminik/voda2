@@ -155,7 +155,7 @@
 
 .header-bottom-line
 {
-	background: /*url("images/bg_topsection.jpg")*/ no-repeat scroll 0 0 / 100% auto transparent;
+	background: url("images/bg_topsection.jpg") no-repeat scroll 0 0 / 100% auto transparent;
 	display: block;
 	height: 16px;
 	width: 100%;
