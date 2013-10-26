@@ -16,6 +16,7 @@ namespace Nop.Services.YandexMarket
 	public partial class YandexMarketCategoryService : IYandexMarketCategoryService
 	{
 		#region Constants
+		private const string YANDEXMARKETCATEGORY_BY_ID_KEY = "Nop.YandexMarketCategory.id-{0}";
 		private const string YANDEXMARKETCATEGORY_ALL_KEY = "Nop.YandexMarketCategory.all-{0}-{1}";
 		private const string YANDEXMARKETCATEGORY_ACTIVE_KEY = "Nop.YandexMarketCategory.active-{0}-{1}";
 		private const string YANDEXMARKETCATEGORY_PATTERN_KEY = "Nop.YandexMarketCategory.";
@@ -101,6 +102,8 @@ namespace Nop.Services.YandexMarket
 			return result;
 		}
 
+		
+
 		/// <summary>
 		/// Gets a tax rate
 		/// </summary>
@@ -110,8 +113,9 @@ namespace Nop.Services.YandexMarket
 		{
 			if (categoryId == 0)
 				return null;
-
-			return this._categoryRepository.GetById(categoryId);
+			
+			string key = string.Format(YANDEXMARKETCATEGORY_BY_ID_KEY, categoryId);
+			return _cacheManager.Get(key, () => this._categoryRepository.GetById(categoryId));	
 		}
 
 		/// <summary>

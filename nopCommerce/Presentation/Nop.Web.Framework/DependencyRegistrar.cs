@@ -258,9 +258,17 @@ namespace Nop.Web.Framework
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();
 
 			
-			builder.RegisterType<OstatkiPriceParserService>().As<IOstatkiPriceParserService>().InstancePerHttpRequest();
-			builder.RegisterType<F5PriceParserService>().As<IF5PriceParserService>().InstancePerHttpRequest();
-			builder.RegisterType<YugCatalogPriceParserService>().As<IYugCatalogPriceParserService>().InstancePerHttpRequest();
+			builder.RegisterType<OstatkiPriceParserService>().As<IOstatkiPriceParserService>()
+				 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+				 .InstancePerHttpRequest();
+
+			builder.RegisterType<F5PriceParserService>().As<IF5PriceParserService>()
+				 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static")).
+				 InstancePerHttpRequest();
+
+			builder.RegisterType<YugCatalogPriceParserService>().As<IYugCatalogPriceParserService>()
+				 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+				 .InstancePerHttpRequest();
 
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
             builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerHttpRequest();

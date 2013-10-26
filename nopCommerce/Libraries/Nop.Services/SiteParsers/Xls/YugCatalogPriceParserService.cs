@@ -5,6 +5,7 @@ namespace Nop.Services.SiteParsers.Xls
 	using System.Data;
 	using System.Linq;
 
+	using Nop.Core.Caching;
 	using Nop.Core.Domain.Security;
 	using Nop.Core.IO;
 	using Nop.Core.Infrastructure;
@@ -12,9 +13,9 @@ namespace Nop.Services.SiteParsers.Xls
 	using Nop.Services.Logging;
 
 	public class YugCatalogPriceParserService : BasePriceParser<ProductLineVendor>, IYugCatalogPriceParserService
-	{		
-		public YugCatalogPriceParserService(IProductService productService, ILogger logger)
-			: base(productService, logger)
+	{
+		public YugCatalogPriceParserService(IProductService productService, ILogger logger, ICacheManager cacheManager)
+			: base(productService, logger, cacheManager)
 		{
 			
 		}

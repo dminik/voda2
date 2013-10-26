@@ -13,6 +13,7 @@ namespace Nop.Services.SiteParsers
 	using System.Web;
 
 	using Nop.Core;
+	using Nop.Core.Caching;
 	using Nop.Core.Domain.Security;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Core.IO;
@@ -32,8 +33,8 @@ namespace Nop.Services.SiteParsers
 
 	public class F5PriceParserService : BasePriceParser<ProductLineVendor>, IF5PriceParserService
 	{	
-		public F5PriceParserService(IProductService productService, ILogger logger)
-			: base(productService, logger)
+		public F5PriceParserService(IProductService productService, ILogger logger, ICacheManager cacheManager)
+			: base(productService, logger, cacheManager)
 		{
 			
 		}

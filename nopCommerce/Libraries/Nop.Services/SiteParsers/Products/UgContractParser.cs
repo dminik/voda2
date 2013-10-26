@@ -9,7 +9,7 @@ namespace Nop.Services.SiteParsers
 	public class UgContractParser : BaseParser
 	{
 		// List
-		protected override string CssSelectorForProductLinkInProductList { get { return ".goods-list:not(.goods-list-small) div.cat-item a"; } }
+		protected override string CssSelectorForProductLinkInProductList { get { return ".goods-list:not(.goods-list-small) div.cat-item > a"; } }
 		protected override string CssSelectorForNextLinkInProductList { get { return "[title=следующая]"; } }
 		protected override string NextLinkInProductListName { get { return "следующая"; } }
 		

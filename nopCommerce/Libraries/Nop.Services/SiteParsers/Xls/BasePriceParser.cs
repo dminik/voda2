@@ -13,6 +13,7 @@ namespace Nop.Services.SiteParsers
 	using System.Web;
 
 	using Nop.Core;
+	using Nop.Core.Caching;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Core.IO;
 	using Nop.Services.Catalog;
@@ -29,13 +30,16 @@ namespace Nop.Services.SiteParsers
 
 	public class BasePriceParser<T> where T : ProductLine 
 	{
+		protected readonly ICacheManager _cacheManager;
 		protected IProductService _productService;
 		protected ILogger mLogger; 
 		private readonly CookieContainer _cookieCont = new CookieContainer();
 		string _strHtmlLast = "";
+		private const string PRICE_LIST_BY_TYPE_KEY = "Nop.prycelist.type-{0}";
 
-		public BasePriceParser(IProductService productService, ILogger logger)
+		public BasePriceParser(IProductService productService, ILogger logger, ICacheManager cacheManager)
 		{
+			_cacheManager = cacheManager;
 			mLogger = logger;
 			_productService = productService;
 		}
@@ -59,29 +63,40 @@ namespace Nop.Services.SiteParsers
 		protected IEnumerable<T> GetPriceListFromCache(out List<string> errors, bool isUpdateCacheFromInternet)
 		{
 			errors = new List<string>();
+
+			string key = string.Format(PRICE_LIST_BY_TYPE_KEY, this.GetType().Name);
+
+			if(isUpdateCacheFromInternet)
+				_cacheManager.Remove(key);
 			
-			if (isUpdateCacheFromInternet)
-				DownloadNewPriceListToCache();
+			var result = _cacheManager.Get(key, -1, () => { 
 
-			this.mLogger.Debug("Start " + this.GetType().Name + ".GetPriceListFromCache...");
+				if (isUpdateCacheFromInternet)
+					DownloadNewPriceListToCache();
 
-			try
-			{
-				this.ResultList = XlsProvider.LoadFromFile<T>(this.PriceFullFileName, GetObjectFromReader, SheetNameFirst);
+				this.mLogger.Debug("Start " + this.GetType().Name + ".GetPriceListFromFileCache...");
 
-				this.PostProcessing();
-			}
-			catch (Exception ex)
-			{
-				this.mLogger.Debug(ex.Message, ex);
-				this.mLogger.Debug("Not success GetPriceListFromCache.");
-				throw;
-			}
+				try
+				{
+					this.ResultList = XlsProvider.LoadFromFile<T>(this.PriceFullFileName, GetObjectFromReader, SheetNameFirst);
 
-			this.mLogger.Debug("End  " + this.GetType().Name + ".GetPriceListFromCache.");
+					this.PostProcessing();
+				}
+				catch (Exception ex)
+				{
+					this.mLogger.Debug(ex.Message, ex);
+					this.mLogger.Debug("Not success GetPriceListFromCache.");
+					throw;
+				}
 
-			var distinctedResult = this.ResultList.GroupBy(x => x.Articul).Select(grp => grp.First());
-			return distinctedResult;
+				this.mLogger.Debug("End  " + this.GetType().Name + ".GetPriceListFromFileCache.");
+
+				var distinctedResult = this.ResultList.GroupBy(x => x.Articul).Select(grp => grp.First());
+				return distinctedResult;
+			
+			});
+
+			return result;
 		}
 
 		
@@ -103,6 +118,9 @@ namespace Nop.Services.SiteParsers
 		private void DownloadNewPriceListToCache()
 		{
 			this.mLogger.Debug("Start " + this.GetType().Name + ".DownloadNewPriceListToCache...");
+
+			string key = string.Format(PRICE_LIST_BY_TYPE_KEY, this.GetType().Name);
+			_cacheManager.Remove(key);
 
 			try
 			{				

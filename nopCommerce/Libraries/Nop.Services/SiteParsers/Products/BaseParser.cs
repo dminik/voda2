@@ -13,6 +13,7 @@ namespace Nop.Services.SiteParsers
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Common;
 	using Nop.Services.Logging;
+	using Nop.Services.SiteParsers.Xls;
 	using Nop.Services.YandexMarket;
 
 	using OpenQA.Selenium;
@@ -43,7 +44,7 @@ namespace Nop.Services.SiteParsers
 			// Удаляем фантомные продукты из базы, если они появились в прайсе
 			DeleteFromDbAppearedInPriceListFantoms(ParserCategoryId, ProductsArtikulsInPiceList);
 
-			ExistedProductUrlList = _yandexMarketProductService.GetByCategory(parserCategoryId, withFantoms: true)
+			ExistedProductUrlList = _yandexMarketProductService.GetByCategory(parserCategoryId, withFantoms: true, withVendorExisting: false)
 				.Select(s => new ExistedProduct { Url = s.Url, IsFantom = s.IsNotInPriceList })
 				.ToList();
 		}
@@ -421,15 +422,23 @@ namespace Nop.Services.SiteParsers
 
 		private static List<string> GetProductsArtikulsInPiceList()
 		{
+			var _yugCatalogPriceParserService = EngineContext.Current.Resolve<IYugCatalogPriceParserService>();
+			var vendorArtikultList = _yugCatalogPriceParserService.ParseAndShow(false).ProductLineList.Select(x => x.Articul).ToList();
+			
+
 			var _f5PriceParserService = EngineContext.Current.Resolve<IF5PriceParserService>();
 			var productsArtikulsInPiceList = _f5PriceParserService.ParseAndShow(false);
-			return productsArtikulsInPiceList.ProductLineList.Select(x => x.Articul).ToList();
+			var F5ArtikultList = productsArtikulsInPiceList.ProductLineList.Select(x => x.Articul).ToList();
+
+
+			var result = vendorArtikultList.Where(F5ArtikultList.Contains).ToList();
+			return result;
 		}
 
 		private void DeleteFromDbAppearedInPriceListFantoms(int parserCategoryId, List<string> productsArtikulsInPiceList)
 		{
 			var appearedInPriceListFantoms =
-				this._yandexMarketProductService.GetByCategory(parserCategoryId, withFantoms: true)
+				this._yandexMarketProductService.GetByCategory(parserCategoryId, withFantoms: true, withVendorExisting: false)
 										   .Where(x => x.IsNotInPriceList && productsArtikulsInPiceList.Contains(x.Articul));
 
 			appearedInPriceListFantoms.ToList().ForEach(this._yandexMarketProductService.Delete);

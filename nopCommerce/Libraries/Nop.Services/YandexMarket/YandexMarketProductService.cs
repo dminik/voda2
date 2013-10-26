@@ -68,7 +68,7 @@ namespace Nop.Services.YandexMarket
 
 		public void DeleteByCategory(int categoryId)
 		{
-			var itemsToDelete = GetByCategory(categoryId, withFantoms: true).ToList();
+			var itemsToDelete = GetByCategory(categoryId, withFantoms: true, withVendorExisting: false).ToList();
 			itemsToDelete.ForEach(Delete);			
 		}
 
@@ -96,9 +96,10 @@ namespace Nop.Services.YandexMarket
 			IEnumerable<YandexMarketProductRecord> res1 = query.ToList();
 
 			if (isNotImportedOnly)
-			{					
-				var shopCategory = _yandexMarketCategoryService.GetById(categoryId);
-				var shopCategoryId = shopCategory != null ? shopCategory.ShopCategoryId : 0;
+			{
+				var yaCategories = _yandexMarketCategoryService.GetAll();
+				var yaCategory = yaCategories.Single(x => x.Id == categoryId);
+				var shopCategoryId = yaCategory != null ? yaCategory.ShopCategoryId : 0;
 				var allShopProductsArtikuls = _productService.SearchProductVariants(shopCategoryId, 0, 0, "", false, 0, 2147483647, showHidden: true)
 																	.Select(x => x.Sku).ToList();
 

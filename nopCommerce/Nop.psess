@@ -120,6 +120,12 @@
     <Report>
       <Path>localhost_Nop131024(3).vsp</Path>
     </Report>
+    <Report>
+      <Path>localhost_Nop131026.vsp</Path>
+    </Report>
+    <Report>
+      <Path>localhost_Nop131026(1).vsp</Path>
+    </Report>
   </Reports>
   <Launches>
     <ProjBinary>
