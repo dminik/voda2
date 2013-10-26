@@ -28,5 +28,8 @@
 
 		[DisplayName("Импортировано уже в магазин")]
 		public int AlreadyImportedProducts { get; set; }
+
+		[DisplayName("Не Импортировано еще в магазин")]
+		public int NotImportedProducts { get; set; }
 	}
 }
