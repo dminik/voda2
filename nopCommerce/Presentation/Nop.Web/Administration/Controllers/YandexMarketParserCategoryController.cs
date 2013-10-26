@@ -1,11 +1,13 @@
 ﻿namespace Nop.Admin.Controllers
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Web.Mvc;
 
 	using Nop.Admin.Models.YandexMarket;
 	using Nop.Core;
+	using Nop.Core.Domain.Catalog;
 	using Nop.Core.Domain.YandexMarket;
 	using Nop.Services.Catalog;
 	using Nop.Services.Logging;
@@ -54,11 +56,70 @@
 			_logger.Debug("--- CategoryParse START...");
 			
 			var parser = BaseParserCategories.Create(urlCategoryForParsing, _logger, _yandexMarketCategoryService);
-			var newCategoryList = parser.Parse(ref mIsStopParsing);
+			var newCategory = parser.Parse(ref mIsStopParsing);
 			
 			_logger.Debug("+++ CategoryParse  DONE.");
 
-			return Json(newCategoryList);
+			return Json(newCategory);
+		}
+
+		private Category InsertShopCategoryHierarhy(YandexMarketCategoryRecord yaCategory)
+		{
+			var newShopCategory = new Category()
+			{
+				Name = yaCategory.Name,
+				ParentCategoryId = yaCategory.ParentId,
+				Published = true,
+				CategoryTemplateId = 1,
+				PageSize = 4,
+				CreatedOnUtc = DateTime.UtcNow,
+				UpdatedOnUtc = DateTime.UtcNow,
+				PageSizeOptions = "8, 4, 20, 50",
+				PriceRanges = "-10;10-30;30-70;70-100;100-150;150-200; 200-300;300-500;500-800;800-1000;1000-1500;1500-2000;2000-3000;3000-5000;5000-8000;8000-12000;12000-15000;15000-;",								
+			};	
+
+			_shopCategoryService.InsertCategory(newShopCategory);
+			yaCategory.ShopCategoryId = newShopCategory.Id;
+
+			foreach (var currentCategory in yaCategory.Children)
+			{
+				currentCategory.ParentId = newShopCategory.Id;
+				InsertShopCategoryHierarhy(currentCategory);
+			}
+
+			return newShopCategory;
+		}
+
+		private YandexMarketCategoryRecord InsertParserCategoryHierarhy(YandexMarketCategoryRecord yaCategory)
+		{			
+			_yandexMarketCategoryService.Insert(yaCategory);
+
+			foreach (var currentYaCategory in yaCategory.Children)
+			{
+				currentYaCategory.ParentId = yaCategory.Id;
+				InsertParserCategoryHierarhy(currentYaCategory);
+			}
+
+			return yaCategory;
+		}
+
+		[HttpPost]
+		public ActionResult CategoryParseAndApply(string urlCategoryForParsing)
+		{
+			mIsStopParsing = false;
+
+			_logger.Debug("--- CategoryParse START...");
+
+			var parser = BaseParserCategories.Create(urlCategoryForParsing, _logger, _yandexMarketCategoryService);
+			var newYaCategory = parser.Parse(ref mIsStopParsing);
+
+			newYaCategory.ParentId = 0;
+			var y = InsertShopCategoryHierarhy(newYaCategory);
+			var x = InsertParserCategoryHierarhy(newYaCategory);
+			
+			_logger.Debug("+++ CategoryParse  DONE.");
+
+			return Json(newYaCategory);
 		}
 
 		[HttpPost]

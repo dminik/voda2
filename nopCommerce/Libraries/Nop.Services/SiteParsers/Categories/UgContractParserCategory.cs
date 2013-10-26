@@ -32,17 +32,70 @@ namespace Nop.Services.SiteParsers.Categories
 
 		class JsonCategory
 		{
+#pragma warning disable 649
 			public string id;
+#pragma warning restore 649
+#pragma warning disable 649
+// ReSharper disable InconsistentNaming
 			public int level;
+// ReSharper restore InconsistentNaming
+#pragma warning restore 649
+#pragma warning disable 649
+// ReSharper disable InconsistentNaming
 			public string pid;
+// ReSharper restore InconsistentNaming
+#pragma warning restore 649
+// ReSharper disable InconsistentNaming
+#pragma warning disable 169
 			public bool expanded;
+#pragma warning restore 169
+// ReSharper restore InconsistentNaming
+#pragma warning disable 649
+// ReSharper disable InconsistentNaming
 			public bool have_children;
+// ReSharper restore InconsistentNaming
+#pragma warning restore 649
+#pragma warning disable 649
+// ReSharper disable InconsistentNaming
 			public string name;
+// ReSharper restore InconsistentNaming
+#pragma warning restore 649
+// ReSharper disable InconsistentNaming
 			public bool active;
+// ReSharper restore InconsistentNaming
+// ReSharper disable InconsistentNaming
 			public bool is_first;
+// ReSharper restore InconsistentNaming
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Local
 			public bool show;
+// ReSharper restore UnusedMember.Local
+// ReSharper restore InconsistentNaming
+#pragma warning disable 649
+// ReSharper disable InconsistentNaming
 			public string url;
+// ReSharper restore InconsistentNaming
+#pragma warning restore 649
 
+		}
+		
+		private string UrlCategoryForCompare
+		{
+			get
+			{
+				if (!base.UrlCategoryForParsing.Contains("yugcontract.ua/shop/"))
+					base.UrlCategoryForParsing = "yugcontract.ua/shop/" + base.UrlCategoryForParsing;
+
+				if (!base.UrlCategoryForParsing.Contains("http://"))
+					base.UrlCategoryForParsing = "http://" + base.UrlCategoryForParsing;
+
+				return base.UrlCategoryForParsing.TrimEnd('/');
+			}			
+		}
+
+		private string ToFulUrl(string partUrl)
+		{
+			return "http://yugcontract.ua/shop/" + partUrl;
 		}
 
 		protected override YandexMarketCategoryRecord GetParserCategory()
@@ -63,7 +116,7 @@ namespace Nop.Services.SiteParsers.Categories
 				var category = ProcessCategory(currentCategory, categoriesArray);
 				resultCategoriesHierarchy.Add(category);
 
-				if (category.Url == base.UrlCategoryForParsing.Replace("yugcontract.ua/shop/", ""))
+				if (category.Url == UrlCategoryForCompare)
 					mNeededCategory = category;
 			}
 
@@ -77,12 +130,12 @@ namespace Nop.Services.SiteParsers.Categories
 				IsActive = true,
 				Name = category.name,
 				ParentId = int.Parse(category.pid),
-				Url = category.url,
+				Url = ToFulUrl(category.url),
 				Id = int.Parse(category.id),
 				Children = new List<YandexMarketCategoryRecord>(),
 			};
 
-			if (newCategory.Url == base.UrlCategoryForParsing.Replace("yugcontract.ua/shop/", ""))
+			if (newCategory.Url == UrlCategoryForCompare)
 				mNeededCategory = newCategory;
 
 			if (category.have_children)

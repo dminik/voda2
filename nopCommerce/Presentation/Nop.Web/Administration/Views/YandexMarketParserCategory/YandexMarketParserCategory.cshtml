@@ -13,7 +13,8 @@
 @using Telerik.Web.Mvc.UI
 
 
-Url Category For Parsing : <input id="txtUrlCategoryForParsing" type="text" style="width: 500px;" value="yugcontract.ua/shop/kompyuternaya-tehnika-portal" > Например: kompyuternaya-tehnika/it-komplektuyushie<br />
+Url Category For Parsing : <input id="txtUrlCategoryForParsing" type="text" style="width: 500px;" 
+    value="http://yugcontract.ua/shop/bytovaya-tehnika/melkaya-bytovaya-tehnika/" > Например: http://yugcontract.ua/shop/bytovaya-tehnika/melkaya-bytovaya-tehnika/<br />
     
 <input type="button" id="ParseAndShow" class="t-button" value="Отобразить" /><br />
 <input type="button" id="ParseAndApply" class="t-button" value="Применить" /><br />
@@ -23,7 +24,7 @@ Url Category For Parsing : <input id="txtUrlCategoryForParsing" type="text" styl
 <img id="parsingIndicatorForParserCategoryTab" style="display: none" src="/administration/content/images/throbber-synchronizing.gif" /><br />
     
 Result:
-<div id="accordion"> 
+<div id="result"> 
      
 </div>
     
@@ -61,7 +62,7 @@ Result:
                 dataType: 'json',
                 success: function (category) {
 
-                    var place = $('#accordion');
+                    var place = $('#result');
                     place.html('');
 
                     if (category)
@@ -76,6 +77,38 @@ Result:
                     var place = $('#result');
                     place.html('');
                     place.append(xhr.responseText);                    
+                }
+            });
+            return false;
+        });
+        
+        $('#ParseAndApply').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicatorForParserCategoryTab').show(); },
+                complete: function () { $('#parsingIndicatorForParserCategoryTab').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("CategoryParseAndApply", "YandexMarketParserCategory")',
+                data: { urlCategoryForParsing: $('#txtUrlCategoryForParsing').val() },
+                dataType: 'json',
+                success: function (category) {
+
+                    var place = $('#result');
+                    place.html('');
+
+                    if (category) {
+                        window.PrintCategory(category, place);
+                        alert("Success");
+                    } else {
+                        alert("category == null");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $('#parsingIndicatorForParserCategoryTab').hide();
+
+                    var place = $('#result');
+                    place.html('');
+                    place.append(xhr.responseText);
                 }
             });
             return false;

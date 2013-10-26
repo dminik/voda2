@@ -402,6 +402,12 @@ namespace Nop.Core.Domain.YandexMarket
 				"Sharp",
 				"Sharp",
 				
+
+
+				 "ARDO", "Ariston", "ATMOR", "Atron", "Ballet", "BEKO", "Beurer", "Binatone", "BOSCH", "BRAUN", "Candy", "Daewoo", "Electrolux", "Ergo", "Flamingo", "Garanterm", "Gorenje", "Hitachi", "Hotpoint", "Indesit", "KRUPS", "LG", "Liberton", "Liebherr", "MAXELL", "Maxwell", "Moulinex", "Panasonic", "Philips", "Philips DLO", "Rondell", "Rotex", "Rowenta", "Samsung", "Tefal", "Thermex", "Thomas", "UFO", "Vestel", "Vestfrost", "Vitek", "Zanussi", "Zelmer",
+
+
+
 				};
 
 			name = name.ToUpper();

@@ -20,7 +20,7 @@ namespace Nop.Services.SiteParsers.Categories
 		}
 
 		private IYandexMarketCategoryService _yandexMarketCategoryService;		
-		protected string UrlCategoryForParsing { get; set; }
+		protected virtual string UrlCategoryForParsing { get; set; }
 		
 		protected ILogger mLogger;
 		protected IWebDriver mDriver;
