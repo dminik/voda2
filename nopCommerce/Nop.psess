@@ -36,7 +36,7 @@
   </PostinstrumentEvent>
   <Binaries>
     <ProjBinary>
-      <Path>Presentation\Nop.Web\\bin\Nop.Web.dll</Path>
+      <Path>Presentation\Nop.Web\bin\Nop.Web.dll</Path>
       <ArgumentTimestamp>01/01/0001 00:00:00</ArgumentTimestamp>
       <Instrument>true</Instrument>
       <Sample>true</Sample>
@@ -125,6 +125,9 @@
     </Report>
     <Report>
       <Path>localhost_Nop131026(1).vsp</Path>
+    </Report>
+    <Report>
+      <Path>localhost_Nop131027.vsp</Path>
     </Report>
   </Reports>
   <Launches>

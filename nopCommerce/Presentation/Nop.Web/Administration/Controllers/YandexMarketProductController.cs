@@ -135,20 +135,24 @@
 
 			_logger.Debug("--- ImportProductList START...");
 
+			var productsToImportTotalCount = _yandexMarketProductService.GetByCategory(categoryId: 0, isNotImportedOnly: true, isActiveOnly: true).TotalCount;
 			var parserCategories = _yandexMarketCategoryService.GetActive();
-			_logger.Debug("--- Will be import categories: " + parserCategories.Count);
+			_logger.Debug("--- Will be import categories: " + parserCategories.Count + ". Products: " + productsToImportTotalCount);
+
+			
 			var totalImportedCounter = 0;
 
 			var allSpecAttrList = _specificationAttributeService.GetSpecificationAttributes();
 
+			int currentCategoryIndex = 1;
 			// цикл по активным категориям						
 			foreach (var currentParserCategory in parserCategories)
 			{				
 				var records = _yandexMarketProductService.GetByCategory(currentParserCategory.Id, isNotImportedOnly: true);
 
-				var categoryProductCounter = 0;
+				var categoryProductCounter = 1;
 
-				_logger.Debug("--- Start Category " + currentParserCategory.Name + ". Total not imported yet products: " + records.TotalCount);
+				_logger.Debug("--- Start Category (" + currentCategoryIndex + " from " + parserCategories.Count + ") " + currentParserCategory.Name + ". Will be imported products: " + records.TotalCount);
 				foreach (var curYaProduct in records)
 				{
 					CheckStopAction();
@@ -157,7 +161,7 @@
 
 
 					if (totalImportedCounter % 10 == 0) // через каждые 5 записей выводить в лог сообщение
-						_logger.Debug("... imported products in category " + categoryProductCounter + " in general: " + totalImportedCounter + "...");
+						_logger.Debug("... imported products in current category: " + categoryProductCounter + ", in general: " + totalImportedCounter + " from " + productsToImportTotalCount + "...");
 
 					if (isImported)
 					{
@@ -166,8 +170,9 @@
 					}
 				}
 
-				_logger.Debug("--- End Category imported " + currentParserCategory.Name + ".Total imported products: " + totalImportedCounter);
-				
+				_logger.Debug("--- End Category imported " + currentParserCategory.Name + ". In general: " + totalImportedCounter + " from " + productsToImportTotalCount);
+
+				currentCategoryIndex++;
 			}
 
 			_priceManagerService.ApplyImportAll(false);

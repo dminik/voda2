@@ -673,11 +673,11 @@ namespace Nop.Web.Controllers
 		[ChildActionOnly]
 		public ActionResult SocialWidgets()
 		{
-//#if DEBUG
-//			return new EmptyResult();
-//#else
+#if DEBUG
+			return new EmptyResult();
+#else
 			return View();
-//#endif
+#endif
 		}
 
 		[ChildActionOnly]

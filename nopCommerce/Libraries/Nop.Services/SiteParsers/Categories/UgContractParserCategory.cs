@@ -47,7 +47,7 @@ namespace Nop.Services.SiteParsers.Categories
 #pragma warning restore 649
 // ReSharper disable InconsistentNaming
 #pragma warning disable 169
-			public bool expanded;
+			public bool expanded = false;
 #pragma warning restore 169
 // ReSharper restore InconsistentNaming
 #pragma warning disable 649
@@ -61,14 +61,14 @@ namespace Nop.Services.SiteParsers.Categories
 // ReSharper restore InconsistentNaming
 #pragma warning restore 649
 // ReSharper disable InconsistentNaming
-			public bool active;
+			public bool active = false;
 // ReSharper restore InconsistentNaming
 // ReSharper disable InconsistentNaming
-			public bool is_first;
+			public bool is_first = false;
 // ReSharper restore InconsistentNaming
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
-			public bool show;
+			public bool show = false;
 // ReSharper restore UnusedMember.Local
 // ReSharper restore InconsistentNaming
 #pragma warning disable 649

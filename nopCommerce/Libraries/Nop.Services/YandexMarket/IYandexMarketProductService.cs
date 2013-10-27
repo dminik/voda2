@@ -22,7 +22,7 @@ namespace Nop.Services.YandexMarket
 		/// Gets all tax rates
 		/// </summary>
 		/// <returns>Tax rates</returns>
-		IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, bool isNotImportedOnly = false, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false, bool withVendorExisting = true);
+		IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId = 0, bool isNotImportedOnly = false, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false, bool withVendorExisting = true, bool isActiveOnly = false);
 
 		
 		/// <summary>

@@ -78,7 +78,7 @@ namespace Nop.Services.YandexMarket
 		/// Gets all tax rates
 		/// </summary>
 		/// <returns>Tax rates</returns>
-		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId, bool isNotImportedOnly = false, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false, bool withVendorExisting = true)
+		public IPagedList<YandexMarketProductRecord> GetByCategory(int categoryId = 0, bool isNotImportedOnly = false, int pageIndex = 0, int pageSize = int.MaxValue, bool withFantoms = false, bool withVendorExisting = true, bool isActiveOnly = false)
 		{			
 			if(categoryId == -1)
 				return new PagedList<YandexMarketProductRecord>(new List<YandexMarketProductRecord>(), 0, 1);
@@ -92,13 +92,18 @@ namespace Nop.Services.YandexMarket
 			if (categoryId != 0)
 				query = query.Where(tr => tr.YandexMarketCategoryRecordId == categoryId);
 
+			if (isActiveOnly)
+			{
+				var activeYaCategoriesIds = _yandexMarketCategoryService.GetAll().Where(x => x.IsActive).Select(y => y.Id).ToList();
+				query = query.Where(tr => activeYaCategoriesIds.Contains(tr.YandexMarketCategoryRecordId));
+			}
 
 			IEnumerable<YandexMarketProductRecord> res1 = query.ToList();
 
 			if (isNotImportedOnly)
 			{
 				var yaCategories = _yandexMarketCategoryService.GetAll();
-				var yaCategory = yaCategories.Single(x => x.Id == categoryId);
+				var yaCategory = yaCategories.SingleOrDefault(x => x.Id == categoryId);
 				var shopCategoryId = yaCategory != null ? yaCategory.ShopCategoryId : 0;
 				var allShopProductsArtikuls = _productService.SearchProductVariants(shopCategoryId, 0, 0, "", false, 0, 2147483647, showHidden: true)
 																	.Select(x => x.Sku).ToList();
