@@ -148,19 +148,24 @@
 
                               columns.Command(commands =>
                                   {
-                                      commands.Edit().Text("Редактировать");
+                                      //commands.Edit().Text("Редактировать");
                                       commands.Delete().Text("Удалить");
                                   }).Width(180);
 
                           })
-                      .Editable(x => { x.Mode(GridEditMode.InLine); })
+                      .Editable(x => { x.Mode(GridEditMode.InCell); })
+                      .ToolBar(commands => {
+                        commands.Insert();
+                        commands.SubmitChanges();
+                        })
                       .Filterable()
                       .Sortable()
                       .DataBinding(dataBinding =>
                           {
                               dataBinding.Ajax()
                                          .Select("ListCategory", controllerNameForGrid)
-                                         .Update("UpdateCategory", controllerNameForGrid)
+                                         //.Update("UpdateCategory", controllerNameForGrid)
+                                         .Update("UpdateCategories", controllerNameForGrid)
                                          .Delete("DeleteCategory", controllerNameForGrid);
                           })
                       .Pageable(settings => settings.PageSize(150).Position(GridPagerPosition.Both))

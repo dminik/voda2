@@ -118,12 +118,50 @@
 		[GridAction(EnableCustomBinding = true)]
 		public ActionResult UpdateCategory(YandexMarketCategoryModel model, GridCommand command)
 		{
-			var category =_yandexMarketCategoryService.GetById(model.Id);
+			UpdateCategory(model);
+			return ListCategory(isWithProductCountInCategories: false, command: command);
+		}
+
+		private void UpdateCategory(YandexMarketCategoryModel model)
+		{
+			var category = _yandexMarketCategoryService.GetById(model.Id);
 			category.Name = model.Name;
 			category.Url = model.Url;
 			category.IsActive = model.IsActive;
-			
-			_yandexMarketCategoryService.Update(category);
+
+			_yandexMarketCategoryService.Update(category);			
+		}
+
+		public ActionResult UpdateCategories(
+			[Bind(Prefix = "inserted")]IEnumerable<YandexMarketCategoryModel> insertedCategorys,
+			[Bind(Prefix = "updated")]IEnumerable<YandexMarketCategoryModel> updatedCategorys,
+			[Bind(Prefix = "deleted")]IEnumerable<YandexMarketCategoryModel> deletedCategorys,
+			GridCommand command)
+		{
+			if (insertedCategorys != null)
+			{
+				foreach (var category in insertedCategorys)
+				{
+					// perform insert
+				}
+			}
+
+			if (updatedCategorys != null)
+			{
+				foreach (var category in updatedCategorys)
+				{
+					//perform update
+					UpdateCategory(category);
+				}
+			}
+
+			if (deletedCategorys != null)
+			{
+				foreach (var category in deletedCategorys)
+				{
+					//perform update
+				}
+			}
 
 			return ListCategory(isWithProductCountInCategories: false, command: command);
 		}
