@@ -66,14 +66,14 @@ namespace Nop.Services.SiteParsers
 
 			string key = string.Format(PRICE_LIST_BY_TYPE_KEY, this.GetType().Name);
 
-			if(isUpdateCacheFromInternet)
-				_cacheManager.Remove(key);
-			
+			if (isUpdateCacheFromInternet)
+			{
+				if(DownloadNewPriceListToCache())
+					_cacheManager.Remove(key);
+			}
+
 			var result = _cacheManager.Get(key, -1, () => { 
-
-				if (isUpdateCacheFromInternet)
-					DownloadNewPriceListToCache();
-
+				
 				this.mLogger.Debug("Start " + this.GetType().Name + ".GetPriceListFromFileCache...");
 
 				try
@@ -115,12 +115,13 @@ namespace Nop.Services.SiteParsers
 		{
 		}
 
-		private void DownloadNewPriceListToCache()
+		private bool DownloadNewPriceListToCache()
 		{
+			var result = false;
 			this.mLogger.Debug("Start " + this.GetType().Name + ".DownloadNewPriceListToCache...");
 
-			string key = string.Format(PRICE_LIST_BY_TYPE_KEY, this.GetType().Name);
-			_cacheManager.Remove(key);
+			
+			
 
 			try
 			{				
@@ -129,15 +130,22 @@ namespace Nop.Services.SiteParsers
 				var response =  PostAutherisation();
 				AfterAutherisation(response);
 				DownloadFile();
+
+				string key = string.Format(PRICE_LIST_BY_TYPE_KEY, this.GetType().Name);
+				_cacheManager.Remove(key);
+
+				result = true;
 			}
 			catch (Exception ex)
 			{
 				this.mLogger.Debug(ex.Message, ex);
 				this.mLogger.Debug("Not success DownloadNewPriceListToCache for " + this.GetType().Name);
-				throw;
+				result = false;
 			}
 
 			this.mLogger.Debug("End " + this.GetType().Name + ". DownloadNewPriceListToCache.");
+
+			return result;
 		}
 
 		private void DownloadFile()
