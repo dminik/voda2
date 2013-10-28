@@ -45,11 +45,31 @@ $(document).ready(function () {
 
 					span.onclick = function () // при клике по плюсику
 					{
-						ul.style.display = (ul.style.display == "none") ? "block" : "none"; //отображаем вложенный список или скрываем его
-						this.className = (ul.style.display == "none") ? "collapsed" : "expanded"; // отображеем минусик
+					    ul.style.display = (ul.style.display == "none") ? "block" : "none"; //отображаем вложенный список или скрываем его
+					    this.className = (ul.style.display == "none") ? "collapsed" : "expanded"; // отображеем минусик
 					};
 
-					li.appendChild(span);
+
+
+				    // ищем ссылку в текущем li, которая должна работать не как ссылка, а как экспандер expander
+					// var expander = $(li).find(".expander"); // нужно искать ссылку не по всему li а ближайшую li > a
+
+				    var liId = li.id;
+				    var expander = document.getElementById('a_categoryId_' + liId + 'expander');
+
+				    if (expander) {
+				        $(expander).click(function () // при клике по ссылке-экспандеру
+				        {
+				            ul.style.display = (ul.style.display == "none") ? "block" : "none"; //отображаем вложенный список или скрываем его
+				            span.className = (ul.style.display == "none") ? "collapsed" : "expanded"; // отображеем минусик
+				            return false;
+				        });
+				    } else {
+				       
+				    }
+
+
+				    li.appendChild(span);
 				}; //end if
 
 				// Select element if it is current
