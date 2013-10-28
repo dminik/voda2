@@ -10,8 +10,8 @@ visit http://cssglobe.com/lab/sitemap_styler/
 $(document).ready(function () {
 
 
-	console.log("window.location.href  -> " + window.location.href);
-	console.log("window.location.pathname  -> " + window.location.pathname);
+	// console.log("window.location.href  -> " + window.location.href);
+	// console.log("window.location.pathname  -> " + window.location.pathname);
 
 
 	var sitemap = document.getElementsByClassName("menu-my-menu");
@@ -76,7 +76,7 @@ $(document).ready(function () {
 				var currentPageUrl = window.location.pathname;
 
 				var thesearcherText = $(this).children(':first').attr('href');
-				console.log("founded menu link -> " + thesearcherText);
+				// console.log("founded menu link -> " + thesearcherText);
 
 				if(currentPageUrl == thesearcherText)
 					$(this).children(':first').addClass('my_nav_current');

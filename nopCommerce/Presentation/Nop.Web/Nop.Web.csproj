@@ -1195,6 +1195,7 @@
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.css" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.min.css" />
+    <Content Include="Scripts\vk.js" />
     <Content Include="Scripts\modernizr.custom.37797.js" />
     <Content Include="Scripts\parallax.js" />
     <Content Include="Scripts\sitemapstyler\collapsed.gif" />
