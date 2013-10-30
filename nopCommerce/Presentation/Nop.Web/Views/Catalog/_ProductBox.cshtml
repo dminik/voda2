@@ -34,10 +34,15 @@
         </div>
         
         <div class="stock">
-            @if (!@Model.AvailableForPreOrder)
+            @if (!Model.AvailableForPreOrder)
             {
                 <div class="is-exist-product-box"><span>Доставим в течении часа</span></div>
             }           
+            
+            @if (Model.AdminComment != "")
+            {
+                <div class="admin-comment"><span>@Html.Raw(@Model.AdminComment)</span></div>
+            }
         </div>     
         
         <div class="add-info">

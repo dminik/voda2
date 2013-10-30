@@ -4699,6 +4699,15 @@ div.product-filters div.filter-content div.available-items ul.group li.title
 	margin: 7px 8px;
 }
 
+.admin-comment
+{
+	color: rgb(65, 32, 218);
+	font-size: 12px;
+	margin: 22px 2px 3px 228px;
+}
+
+
+
 
 .product-details-page .full-description
 {

@@ -306,22 +306,25 @@ namespace Nop.Web.Controllers
 
             //performance optimization. let's load all variants at one go
             var allVariants = _productService.GetProductVariantsByProductIds(products.Select(x => x.Id).ToArray());
-
+			var isAdmin = _workContext.CurrentCustomer.IsAdmin();
 
             var models = new List<ProductOverviewModel>();
             foreach (var product in products)
             {
                 var model = new ProductOverviewModel();
-	            model.Id = product.Id;
+	            model.Id = product.Id;				
 	            model.Name = product.GetLocalized(x => x.Name);
 	            model.ShortDescription = this.PrepareShortDescription(product);
 	            model.FullDescription = product.GetLocalized(x => x.FullDescription);
 	            model.SeName = product.GetSeName();
-	            var singleOrDefault = allVariants.SingleOrDefault(x => x.ProductId == product.Id);
-	            if (singleOrDefault != null)
+
+	            var currentProductVariant = allVariants.SingleOrDefault(x => x.ProductId == product.Id);
+				if (currentProductVariant != null)
 	            {
-		            model.StockAvailability = singleOrDefault.StockQuantity;
-					model.AvailableForPreOrder = singleOrDefault.AvailableForPreOrder;
+					model.StockAvailability = currentProductVariant.StockQuantity;
+					model.AvailableForPreOrder = currentProductVariant.AvailableForPreOrder;
+					if (isAdmin)
+						model.AdminComment = currentProductVariant.AdminComment;
 	            }
 	            //price
                 if (preparePriceModel)

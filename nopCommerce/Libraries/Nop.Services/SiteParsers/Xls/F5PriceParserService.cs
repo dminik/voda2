@@ -77,10 +77,10 @@ namespace Nop.Services.SiteParsers
 				newProductLineVendor.Articul = artikul;
 				newProductLineVendor.Name = XlsProvider.GetFieldValueFromReader<string>(reader, "Название товара");
 
-				newProductLineVendor.PriceRaschet = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Расч# цена"));
-				newProductLineVendor.Price = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи"));
-				newProductLineVendor.PriceBase = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Базовая цена"));
-				newProductLineVendor.PriceDiff = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи – Базовая цена"));
+				newProductLineVendor.PriceRaschet = GetDecimal(XlsProvider.GetFieldValueFromReader<string>(reader, "Расч# цена"));
+				newProductLineVendor.Price = GetDecimal(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи"));
+				newProductLineVendor.PriceBase = GetDecimal(XlsProvider.GetFieldValueFromReader<string>(reader, "Базовая цена"));
+				newProductLineVendor.PriceDiff = GetDecimal(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи – Базовая цена"));
 
 			}
 			catch 

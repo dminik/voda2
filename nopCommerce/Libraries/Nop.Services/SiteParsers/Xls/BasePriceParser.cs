@@ -292,7 +292,23 @@ namespace Nop.Services.SiteParsers
 				return result;
 			}			
 		}
-				
+
+		protected static decimal GetDecimal(string str)
+		{
+			if (str == "") return 0;
+
+			try
+			{				
+				var result = decimal.Parse(str);
+				return result;
+			}
+			catch
+			{
+				var partStr = str.Replace(',', '.');
+				var result = decimal.Parse(partStr);
+				return result;
+			}
+		}
 		
 	}
 }

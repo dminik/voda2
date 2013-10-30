@@ -6,7 +6,7 @@
 	{
 		public string Articul { get; set; }
 		public string Name { get; set; }
-		public int Price { get; set; }
+		public decimal Price { get; set; }
 		public int Amount { get; set; }
 
 		public new string ToString()

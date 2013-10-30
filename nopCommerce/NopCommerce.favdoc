@@ -73,11 +73,6 @@
       <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\YandexMarketSpecMapper.cs</absolutePath>
     </Favorite>
     <Favorite>
-      <name>FileParserOstatki.cs</name>
-      <path>Libraries\Nop.Services\FileParsers\FileParserOstatki.cs</path>
-      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\FileParsers\FileParserOstatki.cs</absolutePath>
-    </Favorite>
-    <Favorite>
       <name>CatalogController.cs</name>
       <path>Presentation\Nop.Web\Controllers\CatalogController.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Presentation\Nop.Web\Controllers\CatalogController.cs</absolutePath>
@@ -101,6 +96,11 @@
       <name>YandexMarketHelpers.cs</name>
       <path>Libraries\Nop.Services\SiteParsers\Products\YandexMarketHelpers.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\Products\YandexMarketHelpers.cs</absolutePath>
+    </Favorite>
+    <Favorite>
+      <name>OstatkiPriceParserService.cs</name>
+      <path>Libraries\Nop.Services\SiteParsers\Xls\OstatkiPriceParserService.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\Xls\OstatkiPriceParserService.cs</absolutePath>
     </Favorite>
   </favorites>
 </Favorites>

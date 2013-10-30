@@ -26,7 +26,9 @@ namespace Nop.Web.Models.Catalog
         public PictureModel DefaultPictureModel { get; set; }
         //specification attributes
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
-	    
+
+		public string AdminComment { get; set; }
+	   
 	    #region Nested Classes
 
         public partial class ProductPriceModel : BaseNopModel

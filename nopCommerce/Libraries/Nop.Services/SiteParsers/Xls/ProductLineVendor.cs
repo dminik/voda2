@@ -5,9 +5,9 @@
 	public class ProductLineVendor : ProductLine
 	{
 		
-		public int PriceRaschet { get; set; }
-		public int PriceBase { get; set; }
-		public int PriceDiff { get; set; }
+		public decimal PriceRaschet { get; set; }
+		public decimal PriceBase { get; set; }
+		public decimal PriceDiff { get; set; }
 		
 
 		public new string ToString()
