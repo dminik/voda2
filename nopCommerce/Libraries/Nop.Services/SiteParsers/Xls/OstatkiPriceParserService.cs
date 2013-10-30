@@ -65,7 +65,7 @@ namespace Nop.Services.SiteParsers
 					return null;
 
 				newProductLineVendor.Articul = artikul;
-				//newProductLineVendor.Name = XlsProvider.GetFieldValueFromReader<string>(reader, "Название товара");
+				newProductLineVendor.Name = XlsProvider.GetFieldValueFromReader<string>(reader, "Товар");
 
 				//newProductLineVendor.PriceRaschet = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Расч# цена"));
 				//newProductLineVendor.Price = GetInt(XlsProvider.GetFieldValueFromReader<string>(reader, "Цена продажи"));

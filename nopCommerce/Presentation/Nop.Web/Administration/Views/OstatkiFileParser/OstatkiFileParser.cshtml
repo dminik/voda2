@@ -12,9 +12,13 @@
     <input type="button" id="parseAndShow" class="t-button" value="Шаг 1. Спарсить и Отобразить" /><br/>
     <input type="button" id="parseAndShowUgCatalog" class="t-button" value="Шаг 1. Спарсить и Отобразить UgCatalog" /><br/>
     <input type="button" id="btnApplyImport" class="t-button" value="Шаг 2. Спарсить и Применить" /><br/>
-    <input type="button" id="btnApplyImportAll" class="t-button" value="Шаг 3. Спарсить и Применить все цены и остатки" />
+    <input type="button" id="btnApplyImportAll" class="t-button" value="Шаг 3. Спарсить и Применить все цены и остатки" /><br/>
     @Html.CheckBoxFor(model => model.IsForceDownloadingNewData)
-    @Html.LabelFor(model => model.IsForceDownloadingNewData)
+    @Html.LabelFor(model => model.IsForceDownloadingNewData)<br/><br/>
+
+    <input type="button" id="btnShowProductsFromOstatkiWhichNotExistsInShop" class="t-button" value="Показать товары которые есть в Боярке, но нет в интернет магазине" />
+    
+    
 }
 
 <br/><br/>
@@ -174,5 +178,44 @@
             });
             return false;
         });
+        
+
+
+
+        $('#btnShowProductsFromOstatkiWhichNotExistsInShop').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicator').show(); },
+                complete: function () { $('#parsingIndicator').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("ShowProductsFromOstatkiWhichNotExistsInShop", "OstatkiFileParser")',
+                @*data: { categoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                dataType: 'json',
+                success: function (data) {
+
+                    var place = $('.placetags');
+                    place.html('');
+
+                    var i = 0;
+                    $.each(data, function () {
+
+                        var artikul = $('<li>').append('Имя: ' + data[i]);
+                        place.append(artikul);
+                        
+                        place.append($('<br/>'));
+                        i++;
+                    });
+
+                    place.append($('<div>')).append('Всего: ' + data.length);
+
+
+                   
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+             return false;
+         });
     });
 </script>

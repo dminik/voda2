@@ -21,12 +21,16 @@
 		private readonly IOstatkiPriceParserService _ostatkiPriceParserService;
 		private readonly IPriceManagerService _priceManagerService;
 		private readonly IYugCatalogPriceParserService _yugCatalogPriceParserService;
+		private readonly IProductService _productService;
 
-		public OstatkiFileParserController(IProductService productService, ILogger logger, 
+		public OstatkiFileParserController(
+			IProductService productService, 
+			ILogger logger, 
 			IOstatkiPriceParserService ugContractPriceParserService,
 			IPriceManagerService priceManagerService,
 			 IYugCatalogPriceParserService yugCatalogPriceParserService)
-		{			
+		{
+			_productService = productService;
 			_logger = logger;
 			_ostatkiPriceParserService = ugContractPriceParserService;		
 			_yugCatalogPriceParserService = yugCatalogPriceParserService;
@@ -50,6 +54,27 @@
 		{
 			var list = _yugCatalogPriceParserService.ParseAndShow(true);
 			return Json(list);
+		}
+
+		[HttpPost]
+		public ActionResult ShowProductsFromOstatkiWhichNotExistsInShop()
+		{
+			var listBoyarka = _ostatkiPriceParserService.ParseAndShow(false).ProductLineList.ToList();
+			var listBoyarkaSku = listBoyarka.Select(x => x.Articul).ToList();
+
+
+
+
+			// var productsVariantsSku = _productService.SearchProducts().SelectMany(x => x.ProductVariants).Select(s => s.Sku);
+
+			var productsVariantsSku = _productService.SearchProductVariants(0, 0, 0, "", false, 0, 999999).Select(s => s.Sku).ToList();
+
+			var orfinedBoyarkaSku = listBoyarkaSku.Where(s => !productsVariantsSku.Contains(s)).ToList();
+
+
+			var notFoundProducts = listBoyarka.Where(s => orfinedBoyarkaSku.Contains(s.Articul)).Select(x => x.Articul + " " + x.Name);
+
+			return Json(notFoundProducts);
 		}
 
 		[HttpPost]
