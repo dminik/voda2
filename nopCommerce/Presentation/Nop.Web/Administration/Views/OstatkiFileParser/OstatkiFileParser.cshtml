@@ -16,7 +16,8 @@
     @Html.CheckBoxFor(model => model.IsForceDownloadingNewData)
     @Html.LabelFor(model => model.IsForceDownloadingNewData)<br/><br/>
 
-    <input type="button" id="btnShowProductsFromOstatkiWhichNotExistsInShop" class="t-button" value="Показать товары которые есть в Боярке, но нет в интернет магазине" />
+    <input type="button" id="btnShowProductsFromOstatkiWhichNotExistsInShop" class="t-button" value="Показать товары которые есть в Боярке, но нет в интернет магазине" /><br/>
+    <input type="button" id="btnParseAndShowSpecialPrice" class="t-button" value="Показать спец-цены" />
     
     
 }
@@ -216,6 +217,44 @@
                 }
             });
              return false;
-         });
+        });
+        
+        $('#btnParseAndShowSpecialPrice').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicator').show(); },
+                complete: function () { $('#parsingIndicator').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("ParseAndShowSpecialPrice", "OstatkiFileParser")',
+                @*data: { categoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                dataType: 'json',
+                success: function (data) {
+
+                    var place = $('.placetags');
+                    place.html('');
+
+                    place.append($('<div>')).append('Всего: ' + data.length);
+                    
+                    var i = 0;
+                    $.each(data, function () {
+
+                        var artikul = $('<li>').append(data[i].ProductName + " : " + data[i].ProductPrice);
+                        place.append(artikul);
+
+                        place.append($('<br/>'));
+                        i++;
+                    });
+
+                    place.append($('<div>')).append('Всего: ' + data.length);
+
+
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+            return false;
+        });
     });
 </script>

@@ -262,6 +262,10 @@ namespace Nop.Web.Framework
 				 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
 				 .InstancePerHttpRequest();
 
+			builder.RegisterType<SpecialPriceService>().As<ISpecialPriceService>()
+				 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+				 .InstancePerHttpRequest();
+
 			builder.RegisterType<F5PriceParserService>().As<IF5PriceParserService>()
 				 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static")).
 				 InstancePerHttpRequest();

@@ -168,6 +168,7 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Common\FulltextService.cs" />
+    <Compile Include="SiteParsers\Page\SpecialPriceParser.cs" />
     <Compile Include="SiteParsers\ParserHelper.cs" />
     <Compile Include="SiteParsers\Categories\BaseParserCategories.cs" />
     <Compile Include="SiteParsers\Categories\UgContractParserCategory.cs" />
@@ -399,6 +400,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\SettingService.cs" />
     <Compile Include="Catalog\SpecificationAttributeService.cs" />
+    <Compile Include="YandexMarket\ISpecialPriceService.cs" />
+    <Compile Include="YandexMarket\SpecialPriceService.cs" />
     <Compile Include="YandexMarket\IYandexMarketSpecService.cs" />
     <Compile Include="YandexMarket\YandexMarketSpecService.cs" />
     <Compile Include="YandexMarket\IYandexMarketCategoryService.cs" />

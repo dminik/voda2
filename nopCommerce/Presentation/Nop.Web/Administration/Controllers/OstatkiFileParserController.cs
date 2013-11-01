@@ -11,6 +11,7 @@
 	using Nop.Services.SiteParsers;
 	using Nop.Services.SiteParsers.Xls;
 	using Nop.Services.Tasks;
+	using Nop.Services.YandexMarket;
 	using Nop.Web.Framework.Controllers;
 
 
@@ -19,6 +20,7 @@
 	{		
 		private readonly ILogger _logger;
 		private readonly IOstatkiPriceParserService _ostatkiPriceParserService;
+		private readonly ISpecialPriceService _specialPriceService;
 		private readonly IPriceManagerService _priceManagerService;
 		private readonly IYugCatalogPriceParserService _yugCatalogPriceParserService;
 		private readonly IProductService _productService;
@@ -28,13 +30,15 @@
 			ILogger logger, 
 			IOstatkiPriceParserService ugContractPriceParserService,
 			IPriceManagerService priceManagerService,
-			 IYugCatalogPriceParserService yugCatalogPriceParserService)
+			IYugCatalogPriceParserService yugCatalogPriceParserService,
+			ISpecialPriceService specialPriceService)
 		{
 			_productService = productService;
 			_logger = logger;
 			_ostatkiPriceParserService = ugContractPriceParserService;		
 			_yugCatalogPriceParserService = yugCatalogPriceParserService;
 			_priceManagerService = priceManagerService;
+			_specialPriceService = specialPriceService;
 		}
 
 		public ActionResult OstatkiFileParser()
@@ -76,6 +80,13 @@
 
 			return Json(notFoundProducts);
 		}
+		
+		[HttpPost]
+		public ActionResult ApplyImport()
+		{
+			var msg = _ostatkiPriceParserService.SetExistingInBoyarka(true);
+			return Content(msg);			
+		}
 
 		[HttpPost]
 		public ActionResult ApplyImportAll(OstatkiFileParserModel model)
@@ -83,12 +94,13 @@
 			var msgResult = _priceManagerService.ApplyImportAll(model.IsForceDownloadingNewData);
 			return Content(msgResult);
 		}
-		
+
 		[HttpPost]
-		public ActionResult ApplyImport()
+		public ActionResult ParseAndShowSpecialPrice()
 		{
-			var msg = _ostatkiPriceParserService.SetExistingInBoyarka(true);
-			return Content(msg);			
-		}		
+			var list = _specialPriceService.GetAll(true);
+			return Json(list);
+		}
+
 	}
 }
