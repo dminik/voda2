@@ -9,7 +9,9 @@ namespace Nop.Services.SiteParsers.Xls
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
 	using Nop.Services.Logging;
+	using Nop.Services.SiteParsers.Page;
 	using Nop.Services.Tasks;
+	using Nop.Services.YandexMarket;
 
 	public class PriceManagerService : IPriceManagerService
 	{
@@ -18,18 +20,21 @@ namespace Nop.Services.SiteParsers.Xls
 		private readonly IOstatkiPriceParserService _ostatkiPriceParserService;
 		private readonly IF5PriceParserService _f5PriceParserService;
 		private readonly IYugCatalogPriceParserService _yugCatalogPriceParserService;
+		private readonly ISpecialPriceService _specialPriceService;
 
 		public PriceManagerService(IProductService productService, 
 			ILogger logger, 
 			IOstatkiPriceParserService ugContractPriceParserService,
 			IF5PriceParserService f5PriceParserService,
-			 IYugCatalogPriceParserService yugCatalogPriceParserService)			
+			IYugCatalogPriceParserService yugCatalogPriceParserService,
+			ISpecialPriceService specialPriceService)			
 		{
 			this._productService = productService;
 			this._logger = logger;
 			this._ostatkiPriceParserService = ugContractPriceParserService;
 			this._f5PriceParserService = f5PriceParserService;
 			this._yugCatalogPriceParserService = yugCatalogPriceParserService;
+			_specialPriceService = specialPriceService;
 		}
 
 		private IEnumerable<Category> GetUsedCategories(IEnumerable<ProductLine> products, IEnumerable<ProductVariant> allProductVariantList)
@@ -91,12 +96,14 @@ namespace Nop.Services.SiteParsers.Xls
 			var f5PriceList = this._f5PriceParserService.ParseAndShow(isNeedUpdate);
 			var ostatkiPriceList = this._ostatkiPriceParserService.ParseAndShow(isNeedUpdate);
 			var ugCatalogPriceList = this._yugCatalogPriceParserService.ParseAndShow(isNeedUpdate);
+			var specialPriceList = _specialPriceService.GetAll(isNeedUpdate).ToList();
 
 			var boyarkaCategoriesIds = GetUsedCategories(ostatkiPriceList.ProductLineList, productVariantList).Select(x => x.Id).ToList();
 
 			var totalProducts = productVariantList.Count;
 			var productsToSell = 0;
 			var productsToSellInBoyarka = 0;
+			var counterProductInSpecialPrice = 0;
 
 
 			this._logger.Debug("     Updating products...");
@@ -123,7 +130,14 @@ namespace Nop.Services.SiteParsers.Xls
 
 				var productInVendor = ugCatalogPriceList.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
 				var isProductInVendorPrice = productInVendor != null;
-				
+
+				var productInSpecialPrice = specialPriceList.SingleOrDefault(x => currentProductVariant.Name.Contains(x.ProductName));
+				var isProductInSpecialPrice = productInSpecialPrice != null;
+				if (isProductInSpecialPrice)
+				{
+					counterProductInSpecialPrice++;
+				} 
+
 
 				//  2. Если Товар есть у поставщика или в Боярке - ставим цену				
 				if (isProductInVendorPrice || isProductInBoyarkaPrice)
@@ -138,6 +152,7 @@ namespace Nop.Services.SiteParsers.Xls
 						productInVendor, isProductInVendorPrice,
 						productInF5Price, 
 						productInBoyarka, isProductInBoyarkaPrice,
+						productInSpecialPrice, isProductInSpecialPrice,
 						boyarkaCategoriesIds,
 						out appliedTax,
 						out priceCalcInfo);
@@ -185,7 +200,8 @@ namespace Nop.Services.SiteParsers.Xls
 
 			var msgResult =	  "      totalProducts: " + totalProducts 
 							+ ", productsToSell: " + productsToSell
-			                + ", productsToSellInBoyarka: " + productsToSellInBoyarka;
+			                + ", productsToSellInBoyarka: " + productsToSellInBoyarka
+							+ ", productsInSpecialPrice: " + counterProductInSpecialPrice;
 
 			this._logger.Debug(msgResult);
 
@@ -197,7 +213,8 @@ namespace Nop.Services.SiteParsers.Xls
 		private decimal CalculatePrice(int productCategoryId, 
 						ProductLine productInVendor, bool isProductInVendorPrice,
 						ProductLineVendor productInF5Price,
-						ProductLine productInBoyarka, bool isProductInBoyarkaPrice, 
+						ProductLine productInBoyarka, bool isProductInBoyarkaPrice,
+						SpecialPrice productInSpecialPrice, bool isProductInSpecialPrice,
 						IEnumerable<int> boyarkaCategoriesIds,
 						out decimal appliedTaxPercent,
 						out string priceCalcInfo)
@@ -245,6 +262,14 @@ namespace Nop.Services.SiteParsers.Xls
 			else
 				throw new Exception("my Strange situation");
 
+
+			if (isProductInSpecialPrice)
+			{
+				// Товар имеет рекомендованную цену продажи. Расчитываем процент накрутки из конечной цены.
+				appliedTaxPercent = (productInSpecialPrice.ProductPrice - productInF5Price.PriceBase) / onePercentPrice;
+			}
+
+
 			// Вычисляем цену c учетом наценки
 			var totalFee = myBasePrice * (appliedTaxPercent / 100);
 			returnPrice = myBasePrice + totalFee;
@@ -252,6 +277,8 @@ namespace Nop.Services.SiteParsers.Xls
 
 			var natashasFee = productInF5Price.PriceBase * (MyNatashasFeePercent / 100); // это 2 процента от конечной стоимости 
 			var myFee = totalFee - natashasFee;
+
+			
 
 
 			//if (myFee < MyMinFee)// если моя прибыль меньше порога, то увеличиваем цену и пересчитваем общую наценку appliedTax
@@ -271,6 +298,8 @@ namespace Nop.Services.SiteParsers.Xls
 				+ "Отчисления Наташе = " + natashasFee.ToString("#.## грн") + "<br/>"
 				+ "Витринная цена F5 = " + productInF5Price.PriceRaschet.ToString("#.## грн") + "<br/>"				
 				+ "Процент выставленный на витрине F5= " + f5Percent.ToString("#.##") + "%<br/><br/>"
+				+ "Этот товар в рекомендованных ценах? = " + isProductInSpecialPrice + "<br/>"
+				+ (isProductInSpecialPrice ? "Рекомендованная цена = " + productInSpecialPrice.ProductPrice.ToString("#.## грн") + "<br/>" : "")
 				+ "Мой множитель на Процент выставленный на витрине F5 для присутсвующих товаров = " + MyDiscontMnozhitelForCategoriesInBoyarka.ToString("#.##") + "<br/><br/>"
 				+ "Мой множитель на Процент выставленный на витрине F5 для отсутсвующих сейчас товаров = " + MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts.ToString("#.##") + "<br/><br/>"
 				+ "Процент для непродающихся в Боярке вообще категорий товаров = " + MyPercentsForCategoriesNotInBoyarka.ToString("#.##") + "%<br/><br/>"
