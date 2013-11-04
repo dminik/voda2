@@ -306,7 +306,7 @@ namespace Nop.Web.Controllers
 
             //performance optimization. let's load all variants at one go
             var allVariants = _productService.GetProductVariantsByProductIds(products.Select(x => x.Id).ToArray());
-			var isAdmin = _workContext.CurrentCustomer.IsAdmin();
+			var isManager = _workContext.CurrentCustomer.IsManager();
 
             var models = new List<ProductOverviewModel>();
             foreach (var product in products)
@@ -323,7 +323,7 @@ namespace Nop.Web.Controllers
 	            {
 					model.StockAvailability = currentProductVariant.StockQuantity;
 					model.AvailableForPreOrder = currentProductVariant.AvailableForPreOrder;
-					if (isAdmin)
+					if (isManager)
 						model.AdminComment = currentProductVariant.AdminComment;
 	            }
 	            //price
@@ -533,7 +533,7 @@ namespace Nop.Web.Controllers
 				
 		private string GetSeoMetaTitleEnd()
 		{
-			return ". Компьютерный Интернет-магазин | Доставка по Боярке.";
+			return ". Компьютерный Интернет-магазин | Доставка по Боярке бесплатная";
 		}
 
 		private void SetSeoMetaTags(Product item, ProductDetailsModel model)
@@ -715,6 +715,10 @@ namespace Nop.Web.Controllers
                 model.BackInStockAlreadySubscribed = _backInStockSubscriptionService
                     .FindSubscription(_workContext.CurrentCustomer.Id, productVariant.Id, _storeContext.CurrentStore.Id) != null;
             }
+
+			var isManager = _workContext.CurrentCustomer.IsManager();
+			if (isManager)
+				model.AdminComment = productVariant.AdminComment;
 
             #endregion
 

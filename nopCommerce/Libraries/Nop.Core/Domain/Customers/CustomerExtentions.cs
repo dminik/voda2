@@ -89,6 +89,17 @@ namespace Nop.Core.Domain.Customers
             return IsInCustomerRole(customer, SystemCustomerRoleNames.ForumModerators, onlyActiveCustomerRoles);
         }
 
+		/// <summary>
+		/// Gets a value indicating whether customer is a forum moderator
+		/// </summary>
+		/// <param name="customer">Customer</param>
+		/// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+		/// <returns>Result</returns>
+		public static bool IsManager(this Customer customer, bool onlyActiveCustomerRoles = true)
+		{
+			return IsInCustomerRole(customer, SystemCustomerRoleNames.Manager, onlyActiveCustomerRoles);
+		}
+
         /// <summary>
         /// Gets a value indicating whether customer is registered
         /// </summary>
