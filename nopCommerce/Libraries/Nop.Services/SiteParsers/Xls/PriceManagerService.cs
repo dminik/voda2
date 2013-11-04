@@ -225,25 +225,23 @@ namespace Nop.Services.SiteParsers.Xls
 			decimal onePercentPrice = productInF5Price.PriceBase / 100;
 			decimal f5Percent = productInF5Price.PriceDiff / onePercentPrice;
 			f5Percent = decimal.Round(f5Percent, 2, MidpointRounding.AwayFromZero);
+
 			const decimal MyDiscontMnozhitelForCategoriesInBoyarka = 0.66m; // скидываем от цены в Наташином магазине (множитель на Наташину наценку)
 			const decimal MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts = 0.45m; // скидываем от цены в Наташином магазине (множитель на Наташину наценку)
 			const decimal MyPercentsForCategoriesNotInBoyarka = 5; // мой процент наценки для товаров, которыми Боярка не занимается
 			const decimal MyNatashasFeePercent = 2;// процент базовой стоимости, который отчисляется Наташе
-			//const decimal MyMinFee = 15;//
-			const int MinPrice = 5;
-
-			var myBasePrice = productInF5Price.PriceBase;
-			
-			myBasePrice = myBasePrice > MinPrice ? myBasePrice : MinPrice; // товара дешевле 5 гривен быть не должно
-
+			const decimal MyMinFee = 15;
+						
 			appliedTaxPercent = 0;
 
 			bool isboyarkaCategory = true;
+			var appliedRule = "Ни одно правило не сработало. Ошибка.";
 
 			// Товар есть в Боярке?
 			if (isProductInBoyarkaPrice)
 			{
-				appliedTaxPercent = f5Percent * MyDiscontMnozhitelForCategoriesInBoyarka;				
+				appliedTaxPercent = f5Percent * MyDiscontMnozhitelForCategoriesInBoyarka;
+				appliedRule = "Сработало правило: товар есть в Боярке, умножаем наценку на коэфициент " + MyDiscontMnozhitelForCategoriesInBoyarka.ToString("0.00");
 			}
 			else if(isProductInVendorPrice) // Товара нет в Бояке, но есть в Киеве
 			{				
@@ -252,11 +250,13 @@ namespace Nop.Services.SiteParsers.Xls
 				// Хотя товара нет, но Товарная категория Боярская (ноуты)
 				if (isboyarkaCategory)
 				{
-					appliedTaxPercent = f5Percent * MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts;										
+					appliedTaxPercent = f5Percent * MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts;
+					appliedRule = "Сработало правило: Хотя товара нет, но Товарная категория Боярская, умножаем наценку на коэфициент " + MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts.ToString("0.00");
 				}
 				else // Товарная категория в Боярке не продается (холодильники)
 				{
 					appliedTaxPercent = MyPercentsForCategoriesNotInBoyarka;
+					appliedRule = "Сработало правило: Товарная категория в Боярке не продается, фиксированная наценка " + MyPercentsForCategoriesNotInBoyarka.ToString("0.00") + "%";
 				}
 			}
 			else
@@ -267,45 +267,64 @@ namespace Nop.Services.SiteParsers.Xls
 			{
 				// Товар имеет рекомендованную цену продажи. Расчитываем процент накрутки из конечной цены.
 				appliedTaxPercent = (productInSpecialPrice.ProductPrice - productInF5Price.PriceBase) / onePercentPrice;
+				appliedRule = "Сработало правило рекомендованной цены производителя";
 			}
 
 
 			// Вычисляем цену c учетом наценки
-			var totalFee = myBasePrice * (appliedTaxPercent / 100);
-			returnPrice = myBasePrice + totalFee;
+			var totalFee = productInF5Price.PriceBase * (appliedTaxPercent / 100);
+
+			returnPrice = productInF5Price.PriceBase + totalFee;
 
 
 			var natashasFee = productInF5Price.PriceBase * (MyNatashasFeePercent / 100); // это 2 процента от конечной стоимости 
 			var myFee = totalFee - natashasFee;
 
 			
+			// если моя прибыль меньше порога, то увеличиваем цену и пересчитваем общую наценку appliedTax
+			if (myFee < MyMinFee)
+			{
+				appliedRule = "Сработало правило моей минимальной прибыли в " + MyMinFee.ToString("0.00 грн");
+				
+				var myFeePercent = MyMinFee / onePercentPrice;
+				appliedTaxPercent = myFeePercent + MyNatashasFeePercent;
+
+				totalFee = productInF5Price.PriceBase * (appliedTaxPercent / 100);
+				myFee = totalFee - natashasFee;
+
+				returnPrice = productInF5Price.PriceBase + totalFee;	
+			
+			}
 
 
-			//if (myFee < MyMinFee)// если моя прибыль меньше порога, то увеличиваем цену и пересчитваем общую наценку appliedTax
-			//{
-			//	var needToAdd = MyMinFee - myFee;
-			//	returnPrice += needToAdd;
-			//	// decimal f5Percent = productInF5Price.PriceDiff / onePercentPrice;
-			//	appliedTaxPercent = (returnPrice - productInF5Price.PriceBase) / onePercentPrice;
-			//}
+			priceCalcInfo = 
+				  "----- Выставленные мною настройки ------ <br/>"
+
+				+ "Процент Наташе = " + MyNatashasFeePercent.ToString("0.00") + "%<br/>"
+				+ "Мой множитель на Процент выставленный на витрине F5 для присутсвующих товаров = " + MyDiscontMnozhitelForCategoriesInBoyarka.ToString("0.00") + "<br/><br/>"
+				+ "Мой множитель на Процент выставленный на витрине F5 для отсутсвующих сейчас товаров = " + MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts.ToString("0.00") + "<br/><br/>"
+				+ "Процент для непродающихся в Боярке вообще категорий товаров = " + MyPercentsForCategoriesNotInBoyarka.ToString("0.00") + "%<br/>"
+				+ "Моя минимальная прибыль не меньше = " + MyMinFee.ToString("0.00 грн") + "<br/>"
 
 
-			priceCalcInfo =  "Есть в Боярке = " + isProductInBoyarkaPrice + "<br/>"				
+				+ "<br/>----- Что мы знаем о товаре  ------ <br/>"
+				
+				+ "Есть в Боярке = " + isProductInBoyarkaPrice + "<br/>"				
 				+ "Категория продается в Боярке = " + isboyarkaCategory + "<br/>"
-				+ "Закупочная цена = " + productInF5Price.PriceBase.ToString("#.## грн") + "<br/>"
-				+ "Моя базовая цена (для оччччень дешевых товаров до ~5 грн) = " + myBasePrice.ToString("#.## грн") + "<br/>"
-				+ "Процент Наташе = " + MyNatashasFeePercent.ToString("#.##") + "%<br/>"
-				+ "Отчисления Наташе = " + natashasFee.ToString("#.## грн") + "<br/>"
-				+ "Витринная цена F5 = " + productInF5Price.PriceRaschet.ToString("#.## грн") + "<br/>"				
-				+ "Процент выставленный на витрине F5= " + f5Percent.ToString("#.##") + "%<br/><br/>"
+				+ "Закупочная цена = " + productInF5Price.PriceBase.ToString("0.00 грн") + "<br/>"
+				+ "Витринная цена F5 = " + productInF5Price.PriceRaschet.ToString("0.00 грн") + "<br/>"
+				+ "Процент выставленный на витрине F5= " + f5Percent.ToString("0.00") + "%<br/>"
 				+ "Этот товар в рекомендованных ценах? = " + isProductInSpecialPrice + "<br/>"
-				+ (isProductInSpecialPrice ? "Рекомендованная цена = " + productInSpecialPrice.ProductPrice.ToString("#.## грн") + "<br/>" : "")
-				+ "Мой множитель на Процент выставленный на витрине F5 для присутсвующих товаров = " + MyDiscontMnozhitelForCategoriesInBoyarka.ToString("#.##") + "<br/><br/>"
-				+ "Мой множитель на Процент выставленный на витрине F5 для отсутсвующих сейчас товаров = " + MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts.ToString("#.##") + "<br/><br/>"
-				+ "Процент для непродающихся в Боярке вообще категорий товаров = " + MyPercentsForCategoriesNotInBoyarka.ToString("#.##") + "%<br/><br/>"
-				+ "Итог: Вычесленный процент для этого товара = " + appliedTaxPercent.ToString("#.##") + "%<br/>"
-				+ "Общая прибыль = " + totalFee.ToString("#.## грн") + "<br/>"
-				+ "Моя прибыль = " + myFee.ToString("#.## грн") + "<br/>";
+				+ (isProductInSpecialPrice ? "Рекомендованная цена = " + productInSpecialPrice.ProductPrice.ToString("0.00 грн") + "<br/>" : "")
+
+
+				+ "<br/>----- Вычисляем цену и накрутку  ------ <br/>"
+																
+				+ appliedRule + "<br/>"				
+				+ "Вычесленный процент для этого товара = " + appliedTaxPercent.ToString("0.00") + "%<br/>"
+				+ "Общая прибыль = " + totalFee.ToString("0.00 грн") + "<br/>" 
+				+ "Прибыль Наташи = " + natashasFee.ToString("0.00 грн") + "<br/>"
+				+ "Моя прибыль = " + myFee.ToString("0.00 грн") + "<br/>";
 
 			return returnPrice;
 		}

@@ -58,7 +58,7 @@ namespace Nop.Services.SiteParsers.Page
 		
 		public IEnumerable<SpecialPrice> Parse()
 		{
-			this.mLogger.Debug("Start Parsing SpecialPrice ...");
+			this.mLogger.Debug("Start HTML Parsing SpecialPrice ...");
 
 			IEnumerable<SpecialPrice> resultSpecialPriceList = null;
 
@@ -79,7 +79,7 @@ namespace Nop.Services.SiteParsers.Page
 				this.mDriver.Quit();
 			}
 
-			this.mLogger.Debug("End Parsing.");
+			this.mLogger.Debug("End HTML Parsing.");
 
 			return resultSpecialPriceList;
 		}
@@ -88,7 +88,6 @@ namespace Nop.Services.SiteParsers.Page
 		{
 			var resultSpecialPriceList = new List<SpecialPrice>();
 
-			bool result;
 			this.mLogger.Debug("Start " + this.GetType().Name + ".DownloadNewSpecialPriceListToCache...");
 
 			try
@@ -97,14 +96,11 @@ namespace Nop.Services.SiteParsers.Page
 				PostAutherisation();
 
 				resultSpecialPriceList = FindDataOnHtmlPage();
-				
-				result = true;
 			}
 			catch (Exception ex)
 			{
 				this.mLogger.Debug(ex.Message, ex);
 				this.mLogger.Debug("Not success DownloadNewSpecialPriceListToCache for " + this.GetType().Name);
-				result = false;
 			}
 
 			this.mLogger.Debug("End " + this.GetType().Name + ". DownloadNewSpecialPriceListToCache.");

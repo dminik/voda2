@@ -102,5 +102,10 @@
       <path>Libraries\Nop.Services\SiteParsers\Xls\OstatkiPriceParserService.cs</path>
       <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\Xls\OstatkiPriceParserService.cs</absolutePath>
     </Favorite>
+    <Favorite>
+      <name>PriceManagerService.cs</name>
+      <path>Libraries\Nop.Services\SiteParsers\Xls\PriceManagerService.cs</path>
+      <absolutePath>D:\!Work\voda2\nopCommerce\Libraries\Nop.Services\SiteParsers\Xls\PriceManagerService.cs</absolutePath>
+    </Favorite>
   </favorites>
 </Favorites>
