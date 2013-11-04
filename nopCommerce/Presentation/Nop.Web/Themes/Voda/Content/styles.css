@@ -4707,7 +4707,8 @@ div.product-filters div.filter-content div.available-items ul.group li.title
 {
 	color: rgb(65, 32, 218);
 	font-size: 12px;
-	margin: 22px 2px 3px 228px;
+	margin: 22px 2px 3px 153px;
+	clear: left;
 }
 
 

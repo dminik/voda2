@@ -71,7 +71,7 @@
                     </div>
                     
                     <div class="under-review">
-                        <div class="shipping-free"><span>Доставка по Боярке<br/> 20 грн.</span></div>
+                        <div class="shipping-free"><span>Доставка по Боярке<br/> бесплатная</span></div>
                         
                         <div class="stock">
                             @if (!@Model.ProductVariantModels[0].AvailableForPreOrder)
@@ -82,8 +82,16 @@
                             {
                                 <div class="is-exist"><span>Доставим завтра/послезавтра</span></div>
                             }
+
+                           
                         </div>                       
                     </div>
+                    
+                    @if (@Model.ProductVariantModels[0].AdminComment != "")
+                    {
+                        <div class="admin-comment"><span>@Html.Raw(@Model.ProductVariantModels[0].AdminComment)</span></div>
+                    }
+
                     @if (!String.IsNullOrEmpty(Model.FullDescription))
                     {
                         <div class="full-description" itemprop="description">

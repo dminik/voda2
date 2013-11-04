@@ -37,7 +37,9 @@ namespace Nop.Web.Models.Catalog
         //specification attributes
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
 
-		#region Nested Classes
+		
+
+	    #region Nested Classes
 
         public partial class ProductBreadcrumbModel : BaseNopModel
         {
@@ -94,7 +96,9 @@ namespace Nop.Web.Models.Catalog
             public PictureModel PictureModel { get; set; }
 
             public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
-	       
+
+			public string AdminComment { get; set; }
+
 	        #region Nested Classes
 
             public partial class AddToCartModel : BaseNopModel
