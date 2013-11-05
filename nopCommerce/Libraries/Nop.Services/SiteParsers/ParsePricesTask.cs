@@ -48,7 +48,8 @@ namespace Nop.Services.SiteParsers
 			{
 				var log = EngineContext.Current.Resolve<ILogger>();
 				log.Debug("Start ParsePricesTask...");
-				_priceManagerService.ApplyImportAll(false);
+				_priceManagerService.ApplyPriceDownloadAll();
+				_priceManagerService.ApplyImportAll();
 				log.Debug("End ParsePricesTask.");
 			}
 		}

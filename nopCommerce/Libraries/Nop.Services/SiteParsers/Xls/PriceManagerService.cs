@@ -49,33 +49,27 @@ namespace Nop.Services.SiteParsers.Xls
 			return usedCategories;
 		}
 
-		public string ApplyImportAll(bool isForceDownloadingNewData)
+
+		public void ApplyPriceDownloadAll()
+		{
+			this._logger.Debug("+++++ ApplyPriceDownloadAll start");
+
+			var isNeedUpdate = true;
+
+			var f5PriceList = this._f5PriceParserService.ParseAndShow(isNeedUpdate);
+			var ostatkiPriceList = this._ostatkiPriceParserService.ParseAndShow(isNeedUpdate);
+			var ugCatalogPriceList = this._yugCatalogPriceParserService.ParseAndShow(isNeedUpdate);
+			var specialPriceList = _specialPriceService.GetAll(isNeedUpdate).ToList();
+
+			this._logger.Debug("----- ApplyPriceDownloadAll start");
+
+		}
+
+		public string ApplyImportAll()
 		{
 			this._logger.Debug("+++++ ApplyPriceImportAll start");
-			var name = typeof(ParsePricesTask).FullName + ", Nop.Services";
-			var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-			var scheduleTask = scheduleTaskService.GetTaskByType(name);
-
-			var isNeedUpdate = false;
-
-			// Update prices if it need
-			if (scheduleTask.LastSuccessUtc != null)
-			{
-				if (scheduleTask.LastSuccessUtc.Value.Date < DateTime.UtcNow.Date)
-				{
-					isNeedUpdate = true;
-					this._logger.Debug("      Need daily update");
-				}
-			}
-			else
-			{
-				this._logger.Debug("      Need first time update");
-				isNeedUpdate = true;
-			}
-
-			if(isForceDownloadingNewData)
-				isNeedUpdate = true;
-
+					
+			
 			/*
 			 * Порядок проставки флагов и цен
 			 * 1. Сбрасываем все цены и флаги в 0
@@ -92,7 +86,8 @@ namespace Nop.Services.SiteParsers.Xls
 			*/
 			
 			var productVariantList = this._productService.GetProductVariants().ToList();
-			
+
+			var isNeedUpdate = false;
 			var f5PriceList = this._f5PriceParserService.ParseAndShow(isNeedUpdate);
 			var ostatkiPriceList = this._ostatkiPriceParserService.ParseAndShow(isNeedUpdate);
 			var ugCatalogPriceList = this._yugCatalogPriceParserService.ParseAndShow(isNeedUpdate);
@@ -226,10 +221,11 @@ namespace Nop.Services.SiteParsers.Xls
 			decimal f5Percent = productInF5Price.PriceDiff / onePercentPrice;
 			f5Percent = decimal.Round(f5Percent, 2, MidpointRounding.AwayFromZero);
 
-			const decimal MyDiscontMnozhitelForCategoriesInBoyarka = 0.66m; // скидываем от цены в Наташином магазине (множитель на Наташину наценку)
-			const decimal MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts = 0.45m; // скидываем от цены в Наташином магазине (множитель на Наташину наценку)
-			const decimal MyPercentsForCategoriesNotInBoyarka = 5; // мой процент наценки для товаров, которыми Боярка не занимается
-			const decimal MyNatashasFeePercent = 2;// процент базовой стоимости, который отчисляется Наташе
+			const decimal MyDiscontMnozhitelForCategoriesInBoyarka = 0.9m; // скидываем от цены в Наташином магазине (множитель на Наташину наценку)
+			const decimal MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts = 0.50m; // скидываем от цены в Наташином магазине (множитель на Наташину наценку)
+			const decimal MyPercentsForCategoriesNotInBoyarka = 20; // мой процент наценки для товаров, которыми Боярка не занимается
+			//const decimal MyNatashasFeePercent = 2;// процент базовой стоимости, который отчисляется Наташе
+			const decimal MyNatashasFeePercent = 50;// процент дохода, который отчисляется Наташе
 			const decimal MyMinFee = 15;
 						
 			appliedTaxPercent = 0;
@@ -241,7 +237,7 @@ namespace Nop.Services.SiteParsers.Xls
 			if (isProductInBoyarkaPrice)
 			{
 				appliedTaxPercent = f5Percent * MyDiscontMnozhitelForCategoriesInBoyarka;
-				appliedRule = "Сработало правило: товар есть в Боярке, умножаем наценку на коэфициент " + MyDiscontMnozhitelForCategoriesInBoyarka.ToString("0.00");
+				appliedRule = "Сработало правило: товар есть в Боярке, умножаем наценку F5 на коэфициент " + MyDiscontMnozhitelForCategoriesInBoyarka.ToString("0.00");
 			}
 			else if(isProductInVendorPrice) // Товара нет в Бояке, но есть в Киеве
 			{				
@@ -251,7 +247,7 @@ namespace Nop.Services.SiteParsers.Xls
 				if (isboyarkaCategory)
 				{
 					appliedTaxPercent = f5Percent * MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts;
-					appliedRule = "Сработало правило: Хотя товара нет, но Товарная категория Боярская, умножаем наценку на коэфициент " + MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts.ToString("0.00");
+					appliedRule = "Сработало правило: Хотя товара нет, но Товарная категория Боярская, умножаем наценку F5 на коэфициент " + MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts.ToString("0.00");
 				}
 				else // Товарная категория в Боярке не продается (холодильники)
 				{
@@ -277,19 +273,21 @@ namespace Nop.Services.SiteParsers.Xls
 			returnPrice = productInF5Price.PriceBase + totalFee;
 
 
-			var natashasFee = productInF5Price.PriceBase * (MyNatashasFeePercent / 100); // это 2 процента от конечной стоимости 
+			// var natashasFee = productInF5Price.PriceBase * (MyNatashasFeePercent / 100); // это 2 процента от конечной стоимости 
+			var natashasFee = (totalFee / 100) * MyNatashasFeePercent; // это 50 процента от дохода
 			var myFee = totalFee - natashasFee;
 
 			
 			// если моя прибыль меньше порога, то увеличиваем цену и пересчитваем общую наценку appliedTax
 			if (myFee < MyMinFee)
 			{
-				appliedRule = "Сработало правило моей минимальной прибыли в " + MyMinFee.ToString("0.00 грн");
+				appliedRule = "Сработало правило минимальной прибыли сайта в " + MyMinFee.ToString("0.00 грн");
 				
 				var myFeePercent = MyMinFee / onePercentPrice;
-				appliedTaxPercent = myFeePercent + MyNatashasFeePercent;
+				appliedTaxPercent = myFeePercent * 2;
 
 				totalFee = productInF5Price.PriceBase * (appliedTaxPercent / 100);
+				natashasFee = (totalFee / 100) * MyNatashasFeePercent;
 				myFee = totalFee - natashasFee;
 
 				returnPrice = productInF5Price.PriceBase + totalFee;	
@@ -298,13 +296,13 @@ namespace Nop.Services.SiteParsers.Xls
 
 
 			priceCalcInfo = 
-				  "----- Выставленные мною настройки ------ <br/>"
+				  "----- Выставленные на сайте настройки ------ <br/>"
 
-				+ "Процент Наташе = " + MyNatashasFeePercent.ToString("0.00") + "%<br/>"
-				+ "Мой множитель на Процент выставленный на витрине F5 для присутсвующих товаров = " + MyDiscontMnozhitelForCategoriesInBoyarka.ToString("0.00") + "<br/><br/>"
-				+ "Мой множитель на Процент выставленный на витрине F5 для отсутсвующих сейчас товаров = " + MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts.ToString("0.00") + "<br/><br/>"
+				+ "Процент Наташе и Диме от общего дохода = " + MyNatashasFeePercent.ToString("0.00") + "%<br/>"
+				+ "Множитель на Процент выставленный на витрине F5 для присутсвующих товаров = " + MyDiscontMnozhitelForCategoriesInBoyarka.ToString("0.00") + "<br/><br/>"
+				+ "Множитель на Процент выставленный на витрине F5 для отсутсвующих сейчас товаров = " + MyDiscontMnozhitelForCategoriesInBoyarkaForNotExistProducts.ToString("0.00") + "<br/><br/>"
 				+ "Процент для непродающихся в Боярке вообще категорий товаров = " + MyPercentsForCategoriesNotInBoyarka.ToString("0.00") + "%<br/>"
-				+ "Моя минимальная прибыль не меньше = " + MyMinFee.ToString("0.00 грн") + "<br/>"
+				+ "Минимальная прибыль сайта не меньше = " + MyMinFee.ToString("0.00 грн") + "<br/>"
 
 
 				+ "<br/>----- Что мы знаем о товаре  ------ <br/>"
@@ -323,8 +321,8 @@ namespace Nop.Services.SiteParsers.Xls
 				+ appliedRule + "<br/>"				
 				+ "Вычесленный процент для этого товара = " + appliedTaxPercent.ToString("0.00") + "%<br/>"
 				+ "Общая прибыль = " + totalFee.ToString("0.00 грн") + "<br/>" 
-				+ "Прибыль Наташи = " + natashasFee.ToString("0.00 грн") + "<br/>"
-				+ "Моя прибыль = " + myFee.ToString("0.00 грн") + "<br/>";
+				+ "Прибыль Наташи и Димы = " + natashasFee.ToString("0.00 грн") + "<br/>"
+				+ "Прибыль сайта = " + myFee.ToString("0.00 грн") + "<br/>";
 
 			return returnPrice;
 		}

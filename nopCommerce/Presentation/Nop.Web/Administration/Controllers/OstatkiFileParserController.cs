@@ -91,7 +91,10 @@
 		[HttpPost]
 		public ActionResult ApplyImportAll(OstatkiFileParserModel model)
 		{
-			var msgResult = _priceManagerService.ApplyImportAll(model.IsForceDownloadingNewData);
+			if(model.IsForceDownloadingNewData)
+				_priceManagerService.ApplyPriceDownloadAll();
+
+			var msgResult = _priceManagerService.ApplyImportAll();
 			return Content(msgResult);
 		}
 

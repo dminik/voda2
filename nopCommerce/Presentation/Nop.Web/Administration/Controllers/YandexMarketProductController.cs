@@ -175,7 +175,7 @@
 				currentCategoryIndex++;
 			}
 
-			_priceManagerService.ApplyImportAll(false);
+			_priceManagerService.ApplyImportAll();
 			_logger.Debug("--- ImportProductList for End.");
 
 			return Content("Success");
