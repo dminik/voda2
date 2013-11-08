@@ -89,7 +89,20 @@
                     
                     @if (@Model.ProductVariantModels[0].AdminComment != "")
                     {
-                        <div class="admin-comment"><span>@Html.Raw(@Model.ProductVariantModels[0].AdminComment)</span></div>
+                        <p class="expand-one"><a href="#">Скрыть/показать инфу о цене</a></p>     
+                        <div class="admin-comment content-one"><span>@Html.Raw(@Model.ProductVariantModels[0].AdminComment)</span></div>
+                        
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+
+                                $('.expand-one').click(function() {
+                                    $('.content-one').slideToggle('slow');                                    
+                                    return false;
+                                });
+                                
+                                $('.content-one').hide();
+                            });
+                        </script>
                     }
 
                     @if (!String.IsNullOrEmpty(Model.FullDescription))

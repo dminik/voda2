@@ -2184,6 +2184,19 @@ a.eu-cookie-privacyinfo-tag
 		display: none;
 	}
 
+	.shipping-info {
+		font-size: 18px;
+		color: #91bd09;		
+		text-align: center;
+	}
+
+	.prices .shipping-info {		
+		width: 100%;		
+	}
+
+	.add-info .shipping-info{		
+		width: 122px;		
+	}
 
 /* ORDER DETAILS */
 .order-details-page .order-details-page .page-title
@@ -4688,6 +4701,7 @@ div.product-filters div.filter-content div.available-items ul.group li.title
 {
 	font-size: 2em;
 	color: red;
+	display: none;
 }
 
 .product-details-page .is-exist

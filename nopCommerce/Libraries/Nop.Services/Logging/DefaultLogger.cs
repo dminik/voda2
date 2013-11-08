@@ -217,7 +217,10 @@ namespace Nop.Services.Logging
 		{
 			try
 			{
-				if (log.LogLevel == LogLevel.Debug || log.PageUrl.Contains("localhost") || String.IsNullOrEmpty(log.IpAddress))
+				if (log.LogLevel == LogLevel.Debug 
+					|| log.PageUrl.Contains("localhost") 
+					|| String.IsNullOrEmpty(log.IpAddress)
+					|| log.ShortMessage.Contains("was not found or does not implement IController"))
 					return;
 
 				var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);

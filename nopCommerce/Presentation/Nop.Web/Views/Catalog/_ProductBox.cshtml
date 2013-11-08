@@ -40,8 +40,21 @@
             }           
             
             @if (Model.AdminComment != "")
-            {
-                <div class="admin-comment"><span>@Html.Raw(@Model.AdminComment)</span></div>
+            {                
+                <p class="expand-one-@Model.Id"><a href="#">Скрыть/показать инфу о цене</a></p>     
+                <div class="admin-comment content-one-@Model.Id"><span>@Html.Raw(@Model.AdminComment)</span></div>
+                        
+                <script type="text/javascript">
+                    $(document).ready(function() {
+
+                        $('.expand-one-@Model.Id').click(function() {
+                            $('.content-one-@Model.Id').slideToggle('slow');                                    
+                            return false;
+                        });
+                                
+                        $('.content-one-@Model.Id').hide();
+                    });
+                </script>
             }
         </div>     
         
@@ -53,6 +66,7 @@
                 }
                 <span class="price actual-price">@Model.ProductPrice.Price</span>
             </div>
+            <div class="shipping-info">Доставка бесплатная</div>
             <div class="buttons">
                 @*<input type="button" value="@T("Products.Details")" class="button-1 product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = Model.SeName })')" />*@
                 @if (!Model.ProductPrice.DisableBuyButton)

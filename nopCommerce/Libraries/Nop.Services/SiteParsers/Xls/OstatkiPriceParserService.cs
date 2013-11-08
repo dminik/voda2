@@ -1,4 +1,4 @@
-namespace Nop.Services.SiteParsers
+namespace Nop.Services.SiteParsers.Xls
 {
 	using System;
 	using System.Collections.Generic;
@@ -11,8 +11,6 @@ namespace Nop.Services.SiteParsers
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Catalog;
 	using Nop.Services.Logging;
-	using Nop.Services.SiteParsers.Xls;
-	using Nop.Services.Tasks;
 
 	public class OstatkiPriceParserService : BasePriceParser<ProductLineVendor>, IOstatkiPriceParserService
 	{
@@ -25,7 +23,7 @@ namespace Nop.Services.SiteParsers
 		protected override string XlsFileName { get { return "Ostatki.xls"; } }
 
 		protected override string UrlBase { get { return "http://yugpartner.com.ua"; } }
-		protected override string UrlAuthorizationGet { get { return UrlBase + "/auth/"; } }
+		protected override string UrlAuthorizationGet { get { return this.UrlBase + "/auth/"; } }
 		protected override string UrlAuthorizationPostParams
 		{
 			get
@@ -42,14 +40,14 @@ namespace Nop.Services.SiteParsers
 			get
 			{				
 				var yesterday = DateTime.UtcNow.AddDays(-1).ToString("dd.MM.yyyy");
-				return UrlBase + "/report-f5/trade-balances/date" + yesterday + "/suppliers4,95/excel/";
+				return this.UrlBase + "/report-f5/trade-balances/date" + yesterday + "/suppliers4,95/excel/";
 			} 
 		}
 		
 		protected override void PostProcessing()
 		{
-			if (ResultList.Count() < 700)
-				throw new Exception("Hm... " + this.GetType().Name + ".Price list less then 700 lines. Count=" + ResultList.Count());
+			if (this.ResultList.Count() < 700)
+				throw new Exception("Hm... " + this.GetType().Name + ".Price list less then 700 lines. Count=" + this.ResultList.Count());
 		}
 
 		protected override ProductLineVendor GetObjectFromReader(IDataReader reader)
@@ -83,7 +81,7 @@ namespace Nop.Services.SiteParsers
 
 		public OstatkiParserModel ParseAndShow(bool isUpdateCacheFromInternet)
 		{
-			var newSpecsOnly = _Parse(isUpdateCacheFromInternet);
+			var newSpecsOnly = this._Parse(isUpdateCacheFromInternet);
 			return newSpecsOnly;
 		}
 
@@ -94,7 +92,7 @@ namespace Nop.Services.SiteParsers
 		/// <returns></returns>
 		public string SetExistingInBoyarka(bool isUpdateCacheFromInternet)
 		{
-			var priceList = _Parse(isUpdateCacheFromInternet);
+			var priceList = this._Parse(isUpdateCacheFromInternet);
 
 			string notFoundArticules = ""; 
 			string foundArticules = ""; 
@@ -110,7 +108,7 @@ namespace Nop.Services.SiteParsers
 
 
 
-			var productVariantList = _productService.GetProductVariants().ToList();
+			var productVariantList = this._productService.GetProductVariants().ToList();
 			foreach (var currentProductVariant in productVariantList)
 			{
 				var curProductLine = priceList.ProductLineList.SingleOrDefault(x => x.Articul == currentProductVariant.Sku);
@@ -147,7 +145,7 @@ namespace Nop.Services.SiteParsers
 			}
 
 			if (productVariantList.Count > 0) // Вызываем сохранение всего контекста (всех вариантов)
-				_productService.UpdateProductVariant(productVariantList[0]);
+				this._productService.UpdateProductVariant(productVariantList[0]);
 
 			var msg = "";
 
@@ -158,7 +156,7 @@ namespace Nop.Services.SiteParsers
 				msg = "Success for " + successCounter + " from " + priceList.ProductLineList.Count();
 			}
 
-			mLogger.Debug(msg);
+			this.mLogger.Debug(msg);
 			return msg;
 		}
 	
@@ -166,7 +164,7 @@ namespace Nop.Services.SiteParsers
 		{			
 			List<string> errors;
 
-			var list = GetPriceListFromCache(out errors, isUpdateCacheFromInternet);
+			var list = this.GetPriceListFromCache(out errors, isUpdateCacheFromInternet);
 
 			var resultModel = new OstatkiParserModel { ProductLineList = list, ErrorList = errors };
 
