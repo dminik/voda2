@@ -1,0 +1,128 @@
+nopCommerce/Deployable/
+
+
+# use glob syntax
+
+# reindex folder
+# git update-index --assume-unchanged dir-im-removing/
+# or a specific file
+# git update-index --assume-unchanged config/database.yml
+# or git rm --cached config.php
+
+
+
+
+
+syntax: glob
+
+*.ncrunchproject
+*.obj
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+
+*.cache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.scc
+
+[Dd]ebug*/
+
+[Bb]in
+*/bin/*
+!lib/Castle Windsor 2.0/bin/
+!lib/autofac-contrib/
+
+*/obj/*
+[Rr]elease*/
+_ReSharper*/
+_ReSharper*
+_ReSharper.voda/
+_ReSharper.XLN
+[Tt]humbs.db
+[Tt]est[Rr]esult*
+[Bb]uild[Ll]og.*
+*.[Pp]ublish.xml
+*.resharper
+*.ReSharper
+
+
+
+#ignore StyleCope cache
+#StyleCop.Cache
+[Ss]tyle[Cc]op.[Cc]ache
+
+#ignore merc merge temp files
+*.orig
+
+# ignore temp directories
+[Tt]emp/
+[Tt]mp/
+
+#winword temp files
+~$*.docx
+
+artifacts/
+
+buildtasks/
+
+
+
+src/Orchard.Web/App_Data/Dependencies/
+
+
+nopCommerce/Presentation/Nop.Web/Plugins/*/Nop.Pl*.dll
+ProductParser/Src/ProductsCatalog/
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Nop.Core.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Nop.Data.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Nop.Services.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Description.txt
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/Views/YandexMarketParser/Configure.cshtml
+nopCommerce/Presentation/Nop.Web/ProductsCatalog/
+nopCommerce/Presentation/Nop.Web/Plugins/Misc.YandexMarketParser/
+nopCommerce/Presentation/Nop.Web/Content/Images/Thumbs/
+nopCommerce/Presentation/Nop.Web/Plugins/Payments.AuthorizeNet/Nop.Plugin.Payments.AuthorizeNet.XmlSerializers.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Shipping.UPS/Nop.Plugin.Shipping.UPS.XmlSerializers.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Shipping.Fedex/Nop.Plugin.Shipping.Fedex.XmlSerializers.dll
+nopCommerce/Presentation/Nop.Web/Plugins/Payments.PayPalDirect/Nop.Plugin.Payments.PayPalDirect.XmlSerializers.dll
+nopCommerce/Deployable/*
+nopCommerce/Presentation/Nop.Web/VirtualTours/*
+PhotoSite/Publish/*
+ProductParser/ConsoleApplication1/*
+F5Shop/Publish/*
+nopCommerce/DB_Backup/2013-09-10 04-05-01 cameras and mouses imported.bak
+nopCommerce/DB_Backup/2013-09-09 17-17-11 with new price.bak
+nopCommerce/DB_Backup/2013-09-10 00-57-17 before parsing.bak
+nopCommerce/DB_Backup/2013-09-10 02-14-39 mauses parsed.bak
+nopCommerce/DB_Backup/2013-09-10 03-28-00 cameras parsed.bak
+nopCommerce/DB_Backup/2013-09-10 16-12-27 before parsing.bak
+nopCommerce/DB_Backup/2013-09-11 00-19-51 klaviatura imported .bak
+nopCommerce/DB_Backup/2013-09-12 02-52-35 before parsing.bak
+nopCommerce/DB_Backup/2013-09-12 15-41-50.bak
+nopCommerce/DB_Backup/2013-09-12 17-57-13 before blok pit.bak
+nopCommerce/DB_Backup/2013-09-13 01-01-14 after big parsing.bak
+nopCommerce/DB_Backup/2013-09-13 12-55-54 after bad import.bak
+nopCommerce/DB_Backup/2013-09-13 18-24-25 blok pitania imported.bak
+nopCommerce/DB_Backup/2013-09-14 00-13-58 Videokarta imported.bak
+nopCommerce/DB_Backup/2013-09-14 00-42-59.bak
+nopCommerce/DB_Backup/2013-09-14 01-54-48 korpus imported.bak
+nopCommerce/DB_Backup/2013-09-14 02-21-59 dvd and kulers imported.bak
+nopCommerce/DB_Backup/*.bak
+nopCommerce/*.vsp
+nopCommerce/Presentation/Nop.Web/Content/Images/Thumbs/*.jpeg
+nopCommerce/Deploy.zip
+F5Shop/Design/Images/Реклама/tif/
+
+*.psd
+*.tif
