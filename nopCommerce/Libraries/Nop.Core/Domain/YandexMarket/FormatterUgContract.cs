@@ -1,0 +1,899 @@
+namespace Nop.Core.Domain.YandexMarket
+{
+	using System;
+	using System.Collections;
+	using System.Collections.Generic;
+	using System.Linq;
+
+	public class FormatterUgContract : FormatterBase
+	{		
+		public override YandexMarketProductRecord Format(YandexMarketProductRecord product)
+		{			
+			const string toErase1 = "Если вы заметили некорректные данные в описании товара, выделите ошибку и нажмите";
+			const string toErase2 = "Ctrl+Enter";
+			const string toErase3 = ", чтобы сообщить нам об этом.";
+			product.FullDescription = product.FullDescription.Replace(toErase1, "").Replace(toErase2, "").Replace(toErase3, "");
+
+			product.Articul = product.Articul.Replace("Код: ", "");
+
+			//product.Name = product.Name.Replace("МОБИЛЬНЫЙ ТЕЛЕФОН ", "").Replace("СМАРТФОН ", "");
+
+			foreach (var curSpec in product.Specifications)
+			{								
+				var s2 = "<";
+
+				int i = 0;  // Числовая переменная, контролирующая итерации цикла
+				int x = -1; // Так как метод IndexOf() возвращает "-1" если первое вхождение подстроки не найдено, то приходится использовать вспомагательную, вместо і, что б начать цикл
+				int count = -1; // Записываем количество вхождений (итераций цикла)
+				while (i != -1)
+				{
+					i = curSpec.Value.IndexOf(s2, x + 1); // получаем индекс первого вхождения  х+1 говорит, что начинать нужно с 0-го индекса, тоесть с буквы "П"
+					x = i; // соответственно присваиваем номер индекса первого значения, что б потом (х+1) начать со следующего
+					count++;  // Увеличиваем на единицу наше количество
+				}
+
+				if (count <= 2)
+				{
+					curSpec.Value = curSpec.Value.Replace("<p>", "").Replace("</p>", "").Trim();
+				}
+			}
+
+
+			ReplaceByValue(product.Specifications, new List<string> { "MB", "МВ", "MВ", "Mb" }, "MB", "Видеопамять");
+
+
+			ReplaceByValue(product.Specifications, new List<string> { "бит", "-bit", "bit", "Mb", " ", "Bit" }, "", "Разрядность шины памяти");
+			ReplaceByValue(product.Specifications, new List<string> { "12 V"}, "12V", "Блок питания");
+			ReplaceByValue(product.Specifications, new List<string> { "v." }, "", "Блок питания");
+			ReplaceByValue(product.Specifications, new List<string> { "2.2 12V" }, "12V v.2.2", "Блок питания");
+
+			ReplaceByValue(product.Specifications, new List<string> { "От порта USB", "От сети USB", "От USB 2.0", "От USB" }, "От USB порта", "Питание");
+			ReplaceByValue(product.Specifications, new List<string> { " порта порта" }, " порта", "Питание");
+			ReplaceByValue(product.Specifications, new List<string> { "100-240 В" }, "От электросети", "Питание");
+
+
+			   
+    
+    
+
+			ReplaceByValue(product.Specifications, new List<string> { "оборотов/мин.", "об/мин", "оборотов/мин."}, "rpm", "Скорость вращения шпинделя");
+			ReplaceByValue(product.Specifications, new List<string> { " дюйма", "\"" }, "", "Формат");
+			ReplaceByValue(product.Specifications, new List<string> { " дюйма", "\"" }, "", "Формат");
+
+			ReplaceByValue(product.Specifications, new List<string> { "MB", "МВ", "MВ", "Mb", "МБ", "Мб", "МB", "MB", "MB", "МB",  }, "MB", "Буфер");
+
+			   
+
+			ReplaceByValue(product.Specifications, new List<string> { "-", " " }, "", "Интерфейс");
+			ReplaceByValue(product.Specifications, new List<string> { "3" }, "III", "Интерфейс");
+			ReplaceByValue(product.Specifications, new List<string> { "USBIII.0/2.0", "USB2.0/III.0" }, "USB2.0/3.0", "Интерфейс");
+
+			ReplaceByValue(product.Specifications, new List<string> { "m-ATX", "mATX", "MicroATX", "Micro-ATX", "microATX", "micro ATX",  }, "micro-ATX", "Формат");
+			ReplaceByValue(product.Specifications, new List<string> { "Mini-ITX", "miniITX", "MicroATX", "Micro-ATX",   }, "mini-ITX", "Формат");
+
+			ReplaceByValue(product.Specifications, new List<string> { "Minitower" }, "MiniTower", "Тип оборудования");
+			ReplaceByValue(product.Specifications, new List<string> { "Miditower", "Mediumtower", "Midi Tower" }, "MidiTower", "Тип оборудования");
+			ReplaceByValue(product.Specifications, new List<string> { "Горизонтально", "Горизонтальоне", "Горизонтальнео", "Горизонтальноее" }, "Горизонтальное", "Размещение блока питания");
+			ReplaceByValue(product.Specifications, new List<string> { "3D LED" }, "3D LED-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "3D Плазменный телевизор", "Плазменная 3D панель" }, "3D Плазменная панель", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "LED телевизор", "LED" }, "LED-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "LED" }, "LED-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "Жидкокристалический", "ЖК-телевизор" }, "ЖК", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "-телевизор-телевизор-телевизор" }, "-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "-телевизор-телевизор" }, "-телевизор", "Тип");
+			ReplaceByValue(product.Specifications, new List<string> { "\"" }, "", "Диагональ");
+			ReplaceByValue(product.Specifications, new List<string> { "пикселей", "Full HD", "(1080p)", "HD Ready", "(720p)", " ", "," }, "", "Разрешение");
+			ReplaceByValue(product.Specifications, new List<string> { "x" }, "х", "Разрешение");
+
+			ReplaceByValue(product.Specifications, new List<string> { "Беспроводные" }, "Беспроводное", "Тип подключения");
+			ReplaceByValue(product.Specifications, new List<string> { "С проводом", "с проводом", "Проводные", "C проводом", "С проодом", "Проводной" }, "Проводное", "Тип подключения");
+
+			ReplaceByValue(product.Specifications, new List<string> { "Вкладиши", "Наушники-вкладыши" }, "Вкладыши", "Тип наушников");
+			ReplaceByValue(product.Specifications, new List<string> { "Мониторный" }, "Мониторные", "Тип наушников");
+			ReplaceByValue(product.Specifications, new List<string> { "На шнуре", "Есть (на проводе)", "Есть (интегрированный в правую чашку наушников)" }, "Есть", "Регулятор громкости");
+
+			ReplaceByValue(product.Specifications, new List<string> { " DDR3", " RAM", " SDRAM оперативной памяти" }, "", "Оперативная память");
+			ReplaceByValue(product.Specifications, new List<string> { "1024 MB" }, "1 GB");
+			ReplaceByValue(product.Specifications, new List<string> { "2048 MB" }, "2 GB");
+			ReplaceByValue(product.Specifications, new List<string> { "3072 MB" }, "3 GB");
+			ReplaceByValue(product.Specifications, new List<string> { "2048 GB" }, "1 TB");
+			ReplaceByValue(product.Specifications, new List<string> { "HDD " }, "", "Жесткий диск");
+
+
+			ReplaceByValue(product.Specifications, new List<string> { "\"", " дюймов", ".0", " " }, "", "Видимая область");
+
+			ReplaceByValue(product.Specifications, new List<string> { "nVidia" }, "NVIDIA ", "Видеосистема");
+
+			ReplaceByValue(product.Specifications, new List<string> { "Boot-up Linux", "MeeGo (Linux)", "Linux (MeeGo)", "Linux", "Linux" }, "Linux", "Операционная система");
+			ReplaceByValue(product.Specifications, new List<string> { " 64-bit", " 64 bit", " (64-bit)", " (64 bit)", " (64bit)", " 64bit", " 32-bit" }, "", "Операционная система");
+			ReplaceByValue(product.Specifications, new List<string> { "Dos" }, "DOS", "Операционная система");
+			ReplaceByValue(product.Specifications, new List<string> { "Free DOS" }, "FreeDOS", "Операционная система");
+
+    
+			
+
+			var size = this.GetSize(product.Name);
+			if (size != string.Empty && product.Specifications.All(x => x.Key != "Емкость"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Емкость", size));
+
+			ReplaceByValue(product.Specifications, new List<string> { "TB", "ТВ", "TВ" }, "ТВ", "Емкость");
+			ReplaceByValue(product.Specifications, new List<string> { "Гб", "ГБ" }, "GB", "Емкость");
+			ReplaceByValue(product.Specifications, new List<string> { ".0" }, "", "Емкость");
+			ReplaceByValue(product.Specifications, new List<string> { "00" }, "", "Емкость");
+			
+
+			var manufactureName = this.GetManufactureFromName(product.Name);
+			if (manufactureName != string.Empty && product.Specifications.All(x => x.Key != "Производитель"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Производитель", manufactureName));
+
+			var megapixels = this.GetMegapixelsFromSpecs(product);
+			if (megapixels != string.Empty && product.Specifications.All(x => x.Key != "Количество мегапикселей камеры"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Количество мегапикселей камеры", megapixels));
+
+			if (product.Specifications.Any(x => x.Key == "Разрешение матрицы"))
+			{
+				megapixels = this.GetCameraMegapixelsFromSpecs(product.Specifications);
+				if (megapixels != string.Empty)
+					product.Specifications.Single(x => x.Key == "Разрешение матрицы").Value = megapixels;				
+			}
+
+			//var conObj = product.Specifications.FirstOrDefault(x => x.Key != "Коннектор на входе");
+			//if (conObj != null) product.Specifications.Remove(conObj);
+			//conObj = product.Specifications.FirstOrDefault(x => x.Key != "Коннектор на входе");
+			//if (conObj != null) product.Specifications.Remove(conObj);
+
+			if (product.Specifications.All(x => x.Key != "Коннектор на входе"))
+			{
+				var connector = this.GetConnectorPapa(product.FullDescription);
+				if (connector != string.Empty) product.Specifications.Add(new YandexMarketSpecRecord("Коннектор на входе", connector));
+			}
+
+			ReplaceByValue(product.Specifications, new List<string> { "HDMI-A «папа»", "HDMI A \"папа\"" }, "HDMI-A \"папа\"", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "3.0" }, "", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "3x" }, "3 x", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "2x" }, "2 x", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "«", "»" }, "\"", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "»" }, "\"", "Коннектор на входе");
+			ReplaceByValue(product.Specifications, new List<string> { "3.5 мм \"папа\"" }, "3.5 мм \"папа\"", "Коннектор на входе");
+
+			//var conObj2 = product.Specifications.FirstOrDefault(x => x.Key != "Коннектор на выходе");
+			//if (conObj2 != null) product.Specifications.Remove(conObj2);
+			//conObj2 = product.Specifications.FirstOrDefault(x => x.Key != "Коннектор на выходе");
+			//if (conObj2 != null) product.Specifications.Remove(conObj2);
+
+			if (product.Specifications.All(x => x.Key != "Коннектор на выходе"))
+			{
+				var connector = this.GetConnectorMama(product.FullDescription);
+				if (connector != string.Empty) product.Specifications.Add(new YandexMarketSpecRecord("Коннектор на выходе", connector));				
+			}
+
+			ReplaceByValue(product.Specifications, new List<string> { "HDMI-A «папа»", "HDMI A \"папа\"", "HDMI A \"папа\"" }, "HDMI-A \"папа\"", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "3.0" }, "", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "3x" }, "3 x", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "2x" }, "2 x", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "3.5 мм \"мама\"" }, "3.5 мм \"мама\"", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "USB -B" }, "USB-B", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "«", "»" }, "\"", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "»" }, "\"", "Коннектор на выходе");
+			ReplaceByValue(product.Specifications, new List<string> { "папа" }, "папа", "Коннектор на выходе");
+
+			ReplaceByValue(product.Specifications, new List<string> { "Электронный" }, "Электронное", "Тип управления");
+			ReplaceByValue(product.Specifications, new List<string> { "Механический" }, "Механическое", "Тип управления");
+
+			
+			var tiporazmer = this.GetTiporazmer(product.FullDescription);
+			if (tiporazmer != string.Empty && product.Specifications.All(x => x.Key != "Типоразмер"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Типоразмер", tiporazmer));
+
+
+			var displaySize = this.GetDisplaySize(product.Specifications);
+			if (displaySize != string.Empty && product.Specifications.All(x => x.Key != "Размер экрана, дюймы"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Размер экрана, дюймы", displaySize));
+			
+			if (this.IsBluetooth(product.Specifications) && product.Specifications.All(x => x.Key != "Bluetooth"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Bluetooth", "Есть"));
+
+			if (this.IsWiFi(product.Specifications) && product.Specifications.All(x => x.Key != "Wi-Fi"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Wi-Fi", "Есть"));
+
+			if (this.IsUsbAcustika(product.Specifications, product.FullDescription) && product.Specifications.All(x => x.Key != "USB-подключение"))
+				product.Specifications.Add(new YandexMarketSpecRecord("USB-подключение", "Да"));
+
+			if (this.IsExternal(product.Name) && product.Specifications.All(x => x.Key != "Внешний"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Внешний", "Да"));
+
+			if (this.IsAndroid(product.Specifications) && product.Specifications.All(x => x.Key != "Android"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Android", "Да"));
+
+			if (this.IsFlash(product.Specifications) && product.Specifications.All(x => x.Key != "Вспышка"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Вспышка", "Есть"));
+
+			if (this.IsRadio(product.Specifications) && product.Specifications.All(x => x.Key != "FM-радио"))
+				product.Specifications.Add(new YandexMarketSpecRecord("FM-радио", "Есть"));
+
+			if (this.IsDisplaySensor(product) && product.Specifications.All(x => x.Key != "Сенсорный экран"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Сенсорный экран", "Да"));
+
+			if (this.IsOpticalZoom(product) && product.Specifications.All(x => x.Key != "Оптический зум"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Оптический зум", "Да"));
+
+			var simAmount = this.GetSimAmount(product);
+			if (simAmount > 1 && product.Specifications.All(x => x.Key != "Количество SIM-карт"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Количество SIM-карт", simAmount.ToString()));
+
+			var buttons = this.GetMouseButtonsFromSpecs(product.Specifications);
+			if (buttons != string.Empty && product.Specifications.All(x => x.Key != "Количество клавиш"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Количество клавиш", buttons));
+
+			var chip = this.GetChipFromSpecs(product.Specifications);
+			if (chip != string.Empty && product.Specifications.All(x => x.Key != "Тип чипа"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Тип чипа", chip));
+
+			ProcessBumagaSize(product);
+			ProcessBumagaCount(product);
+			ProcessHolodilnik(product);
+			ProcessPlitas(product);
+			ProcessHeaters(product);
+
+			return product;
+		}
+
+
+		private string GetManufactureFromName(string name)
+		{
+			var manufactures = new List<string>() { 
+				"Acer",
+				"Asus", 
+				"Alcatel", 
+				"AMD",
+				"Biostar",
+				"ASRock",
+
+				"ELITEGROUP",
+				"Gigabyte",
+
+				"HTC", 
+				"Huawei",
+
+				"Genius",
+
+				"Fly", 		
+		
+				"LG", 
+				"Logitech",	
+			
+				"Nokia",
+
+				"Philips", 
+
+				"Samsung", 
+				"Sony",
+
+				"Trust",
+
+				"ZTE", 
+				
+				
+				
+				
+				"Intel",
+				"Kingston",
+				"Silicon Power",
+				
+				"HIS",
+				"Palit",
+				"SAPPHIRE",
+				"SPARKLE",
+				"Sandisk",
+				"Hitachi",
+				"Seagate",
+				"TOSHIBA",
+				"Western Digital",
+				"Lite-On",
+				"NEC",
+				"Pioneer",
+				"Chieftec",
+				"Codegen",
+				"DeLux",
+				"DTS",
+				"Gembird",
+				"Logicpower",
+				"Maxxtro",
+				"OKtet", 
+				"Sparkman", 
+				"Spire", 
+				"THULE", 
+				"AXES",
+				"Chieftec",
+				"Codegen",
+				"Coolermaster",
+				"FSP",
+				"LinkWorld",
+				"Logicpower",
+				"Tuncmatik", 
+				"Bandridge", 
+				"Valueline", 
+				"Sony", 
+				"Acme Made", 
+				"Case Logic", 
+				"Lowepro", 
+				"Olympus", 
+				"X-Digital", 
+				"Casio", 
+				"Nikon", 
+				"THULE", 
+				"Continent", 
+				"SUMDEX", 
+				"BOROFONE", 
+				"DiGi", 
+				"HOCO", 
+				"Vogels", 
+				"KOSS", 
+				"PLEOMAX", 
+				"SENNHEISER", 
+				"Sony Ericsson", 
+				"JVC", 
+				"Ergo", 
+				"Panasonic", 
+				"ViewSonic",
+				"Yarvik",
+				"AOC",
+				"Lenovo", 
+				"Iriver",
+				"Transcend",
+				"Kodak",
+				"teXet",
+				"GOODRAM",
+				"Hewlett Packard",
+				"PQI",
+				"Sandisk",
+				"TP-Link",
+				"TRENDnet",
+				"Duracell",
+				"UFO",
+				"Новые Технологии",
+
+				"Canon",
+				"Casio",
+				"Fujifilm",
+				"Nikon",
+				"Olympus",
+				"Panasonic",
+				"Pentax",
+				"Sony",
+				"BBK",
+				"Sharp",
+
+				"ColorWay",
+				"Lomond",
+				"Ballet",
+				"Kodak",
+				"Tetenal",
+				"Konica Minolta",
+				"Konica",				
+				"Baltea",
+				"Hi-Ti",
+				"ARDO",
+				"BEKO",
+				"Candy",
+				"Electrolux",
+				"Hotpoint",
+				"Indesit",
+				"Zanussi",
+				"Vestel",
+				"Vestfrost",
+				"Ariston",
+				"Hitachi",
+				"Liebherr",
+				"Binatone",
+				"ATMOR",
+				"Atron",
+				"Garanterm",
+				"Gorenje",
+				"Thermex",
+				"Beurer",
+				"Maxwell",
+				"Vitek",
+				"Ballet",
+				"Flamingo",
+				"Rotex",
+				"Sharp",
+				"Sharp",
+				"Sharp",
+				"Sharp",
+				
+
+
+				 "ARDO", "Ariston", "ATMOR", "Atron", "Ballet", "BEKO", "Beurer", "Binatone", "BOSCH", "BRAUN", "Candy", "Daewoo", "Electrolux", "Ergo", "Flamingo", "Garanterm", "Gorenje", "Hitachi", "Hotpoint", "Indesit", "KRUPS", "LG", "Liberton", "Liebherr", "MAXELL", "Maxwell", "Moulinex", "Panasonic", "Philips", "Philips DLO", "Rondell", "Rotex", "Rowenta", "Samsung", "Tefal", "Thermex", "Thomas", "UFO", "Vestel", "Vestfrost", "Vitek", "Zanussi", "Zelmer",
+
+
+
+				};
+
+			name = name.ToUpper();
+
+			foreach (var manufacture in manufactures.Where(manufacture => name.Contains(manufacture.ToUpper()))) 
+				return manufacture;
+
+			return "";
+		}
+
+		private string GetSize(string name)
+		{
+			
+				string pattern = @"([0-9]+) G";
+
+				var size = this.GetValByRegExp(name, pattern);
+
+
+				return size.Replace("00" , "");
+		}
+
+		private string GetMegapixelsFromSpecs(YandexMarketProductRecord product)
+		{
+			if (product.FullDescription.Contains("-мегапиксельная камера"))
+			{
+				string pattern = @"([0-9]+(?:\.[0-9]+)?)-мегапиксельная камер";
+
+				var megapixels = this.GetValByRegExp(product.FullDescription, pattern);
+				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
+
+				return megapixels;
+			}
+
+			var spec = product.Specifications.FirstOrDefault(x => 
+					x.Key.ToLower().Contains("камера") 
+				||	x.Key.ToLower().Contains("дополнительные функции и возможности")
+				|| x.Key.ToLower().Contains("сенсор изображения"));
+
+			if (spec != null)
+			{
+				string pattern = @"([0-9]+(?:\.[0-9]+)?) [МмMm]";
+
+				if (spec.Key.ToLower().Contains("сенсор изображения"))
+				{
+					pattern += "лн";
+				}
+							
+				var megapixels = this.GetValByRegExp(spec.Value, pattern);
+
+				double dMegapixels;
+				if (double.TryParse(megapixels, out dMegapixels))
+				{
+					if (dMegapixels > 5) 
+						megapixels = ((int)dMegapixels).ToString();
+				}
+
+				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
+				
+				return megapixels;
+			}
+			
+
+
+			return "";
+		}
+
+		private string GetCameraMegapixelsFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			var spec = specs.FirstOrDefault(x => 
+				x.Key.ToLower().Contains("разрешение матрицы"));
+
+			if (spec != null)
+			{
+				string pattern = @"([0-9]+(?:\.[0-9]+)?)";
+				
+				var megapixels = this.GetValByRegExp(spec.Value, pattern);
+				megapixels = megapixels.Replace(".0", "").Replace(".00", "");
+
+				if (double.Parse(megapixels) > 40)
+					megapixels = "1.3";
+
+				return megapixels;
+			}
+
+			return "";
+		}
+
+		private string GetMouseButtonsFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			const string pattern = @"([0-9]+) клавиш";
+
+			var spec = specs.FirstOrDefault(x => x.Key.ToLower().Contains("дополнительные характеристики"));
+
+			if (spec != null)
+			{
+				var foundValue = this.GetValByRegExp(spec.Value, pattern);
+				return foundValue;
+			}
+
+			return "";
+		}
+
+		private string GetChipFromSpecs(IEnumerable<YandexMarketSpecRecord> specs)
+		{			
+			if (specs.FirstOrDefault(x => x.Value.ToLower().Contains("geforce")) != null) 
+				return "GeForce";
+
+			if (specs.FirstOrDefault(x => x.Value.ToLower().Contains("radeon")) != null)
+				return "Radeon";
+
+			return "";
+		}
+
+		private string GetDisplaySize(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			const string pattern = "([0-9]+(?:\\.[0-9]+)?)";
+
+			var spec = specs.FirstOrDefault(x => x.Key == "Дисплей");
+
+			if (spec != null)
+			{
+				var result = this.GetValByRegExp(spec.Value, pattern).Replace(".0", "").Replace(".00", ""); 
+				return result;
+			}
+
+			return "";
+		}
+
+		private bool IsBluetooth(IEnumerable<YandexMarketSpecRecord> specs)
+		{			
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("bluetooth")) != null;
+		}
+
+		private bool IsWiFi(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("wi-fi")) != null;
+		}
+
+		private bool IsUsbAcustika(IEnumerable<YandexMarketSpecRecord> specs, string fullDescr)
+		{			
+			return (specs.FirstOrDefault(x => x.Value.ToLower().Contains("usb")) != null || fullDescr.ToLower().Contains("usb"))
+				&& specs.FirstOrDefault(x => x.Key.ToLower().Contains("формат акустики")) != null;
+		}
+
+		private bool IsAndroid(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("android")) != null;
+		}
+
+		private bool IsExternal(string name)
+		{
+			return name.ToLower().Contains("external");
+		}
+
+		private bool IsFlash(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("вспышка")) != null;
+		}
+
+		private bool IsRadio(IEnumerable<YandexMarketSpecRecord> specs)
+		{
+			return specs.FirstOrDefault(x => x.Value.ToLower().Contains("радио") && !x.Value.ToLower().Contains("радиосвязь")) != null; 
+		}
+
+		private bool IsDisplaySensor(YandexMarketProductRecord product)
+		{			
+			var result = product.Specifications.FirstOrDefault(x => x.Key == "Дисплей" && x.Value.ToLower().Contains("сенсорный")) != null;
+
+			if (!result) 
+				result = product.FullDescription.Contains("енсорный");
+
+			return result;
+		}
+
+		private bool IsOpticalZoom(YandexMarketProductRecord product)
+		{
+			var result = product.Specifications.FirstOrDefault(x => 
+				   x.Value.ToLower().Contains("оптический зум")
+				|| x.Value.ToLower().Contains("оптического зума")
+				|| x.Value.ToLower().Contains("оптическим зумом")
+				) != null;
+
+			if (!result)
+			{
+				result = product.FullDescription.ToLower().Contains("оптический зум")
+					|| product.FullDescription.ToLower().Contains("оптического зума")
+				|| product.FullDescription.ToLower().Contains("оптическим зумом");
+			}
+			return result;
+		}
+
+		private int GetSimAmount(YandexMarketProductRecord product)
+		{
+			if (product.YandexMarketCategoryRecordId != 7 || product.YandexMarketCategoryRecordId != 8) // smarts and mobils only
+				return 0;
+
+			if (product.Name.ToLower().Contains("dual")
+				|| product.Name.ToLower().Contains("duos")
+				|| product.FullDescription.ToLower().Contains("2 sim")
+				) return 2;
+
+			if (product.Name.ToLower().Contains("triple")) 
+				return 3;
+
+			return 1;
+		}
+
+		private void ReplaceByValue(IEnumerable<YandexMarketSpecRecord> specs, IEnumerable<string> toReplaceValues, string replaceValue, string key = "" )
+		{
+			if (key != "")
+			{
+				if (specs.Any(x => x.Key == key))
+				{
+					
+						var spec = specs.Single(x => x.Key == key);
+						foreach (var curToRepl in toReplaceValues)
+						{
+							spec.Value = spec.Value.Replace(curToRepl, replaceValue);
+						}
+										
+				}
+			}
+			else
+			{
+				foreach (var spec in specs)									
+				{					
+					foreach (var curToRepl in toReplaceValues)
+					{
+						spec.Value = spec.Value.Replace(curToRepl, replaceValue);
+					}
+				}
+			}
+		}
+
+		private string GetConnectorPapa(string description)
+		{
+			string pattern = "((?<=Коннектор на входе -)(?:.*)(?=</li>\\r\\n    <li>Коннектор на выходе))";
+
+				var connector = this.GetValByRegExp(description, pattern);
+
+				return connector.Replace("&nbsp;", "").Trim();	
+		}
+
+		private string GetConnectorMama(string description)
+		{
+			string pattern = "((?<=Коннектор на выходе -)(?:.*)(?=</li>\\r\\n\\s?))";
+
+			var connector = this.GetValByRegExp(description, pattern);
+
+			return connector.Replace("&nbsp;", "").Trim();
+		}
+
+		private string GetTiporazmer(string description)
+		{
+			string pattern = "((?<=Типоразмер)(?:.*)(?=<))";
+
+			var result = this.GetValByRegExp(description, pattern);
+
+			if (result.Any())
+			{
+				result = result.ToUpper();
+
+				result =
+					result
+						  .Replace("<span lang=\"EN-US\" style=\"mso-ansi-language EN-US;\">".ToUpper(), "")
+						  .Replace("<span lang=\"EN-US\" style=\"mso-ansi-language: EN-US;\">".ToUpper(), "")
+						  .Replace("<spanlang=\"en-us\"style=\"mso-ansi-languageen-us;\">".ToUpper(), "")
+						  .Replace("</spanlang=\"en-us\"style=\"mso-ansi-languageen-us;\">".ToUpper(), "")
+						  .Replace("</span>".ToUpper(), "")
+						  .Replace("</font>".ToUpper(), "");
+
+				result =
+					result					  
+						  .Replace(":", "")
+						  .Replace("&nbsp;".ToUpper(), "")
+						  .Replace(" ", "")
+						  .Replace("А", "A")
+						  .Replace("С", "C")
+						  .Replace("ЧACОВAЯ", "ЧACОВЫЕ")
+						  .Replace("ОВR03,R6,R14,R20,6F22ЭКОЛОГИЧЕCКИБЕЗОПACНЫНЕCОДЕРЖAТРТУТИИКAДМИЯ.ПРЕДЭКCПЛУAТAЦИОННЫЙCРОКХРAНЕНИЯ-ДО2ЛЕТ.", "");
+
+				
+			}
+
+			return result;
+
+		}
+
+		private void ProcessBumagaSize(YandexMarketProductRecord product)
+		{
+			if (product.YandexMarketCategoryRecordId != 69)
+				return;
+			
+			string tiporazmer = "";
+
+
+			string pattern = "([0-9]+\\s?[XxХх]\\s?[0-9]+)([\"']?)";
+
+			var values = this.GetValByRegExp(product.Name, pattern, 2); 
+			if (values != null)
+			{
+				var x = "x";
+				tiporazmer = values[0].Replace("X", x).Replace("x", x).Replace("Х", x).Replace("х", x);
+				var isInches = values[1].Length > 0;
+
+				if (isInches)
+				{
+					if (tiporazmer == "4x6") 
+						tiporazmer = "10x15";
+				}
+			}
+			else
+			{
+				if (product.Name.Contains(" A4") || product.Name.Contains(" А4")) 
+					tiporazmer = "A4";
+				else if (product.Name.Contains(" A3") || product.Name.Contains(" А3"))
+					tiporazmer = "A3";
+			}
+
+
+			if (tiporazmer != string.Empty && product.Specifications.All(x => x.Key != "Размер"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Размер", tiporazmer));
+
+			if (product.Specifications.All(x => x.Key != "Тип"))
+			{
+				if (product.Name.ToLower().Contains("глянцевая"))
+					product.Specifications.Add(new YandexMarketSpecRecord("Тип", "Глянцевая"));
+
+				if (product.Name.ToLower().Contains("матовая"))					
+						product.Specifications.Add(new YandexMarketSpecRecord("Тип", "Матовая"));
+
+				//if (IsProductContainString(product, "набор"))					
+				//		product.Specifications.Add(new YandexMarketSpecRecord("Тип", "Набор"));
+
+				//if (IsProductContainString(product, "офисная"))					
+				//		product.Specifications.Add(new YandexMarketSpecRecord("Тип", "Офисная"));
+			}
+
+			if (product.Name.ToLower().Contains("PHOTO".ToLower()) || product.Name.ToLower().Contains("фотобумаг".ToLower()))
+				if (product.Specifications.All(x => x.Key != "Фотобумага"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Фотобумага", "Да"));
+
+			if (product.Name.ToLower().Contains("магнит"))
+				if (product.Specifications.All(x => x.Key != "Магнитная"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Магнитная", "Да"));
+
+			if (product.Name.ToLower().Contains("art"))
+				if (product.Specifications.All(x => x.Key != "Art paper"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Art paper", "Да"));
+
+			if (product.Name.ToLower().Contains("ДВУСТОР".ToLower()))
+				if (product.Specifications.All(x => x.Key != "Двустроронняя"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Двустроронняя", "Да"));
+
+			if (product.Name.ToLower().Contains("САМОКЛЕЮЩАЯСЯ".ToLower()))
+				if (product.Specifications.All(x => x.Key != "Самоклеющаяся"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Самоклеющаяся", "Да"));
+			
+		}
+
+		private void ProcessBumagaCount(YandexMarketProductRecord product)
+		{			
+			if(product.YandexMarketCategoryRecordId != 69)
+				return;
+
+			string pattern = "([0-9]+)\\s?[шШ][тТ]";
+
+			var value = this.GetValByRegExp(product.Name, pattern);
+
+			if (value != string.Empty && product.Specifications.All(x => x.Key != "Количество, шт."))
+				product.Specifications.Add(new YandexMarketSpecRecord("Количество, шт.", value));
+
+
+			pattern = "([0-9]+)\\s?[гГ]/[мМ]";
+
+			value = this.GetValByRegExp(product.Name, pattern);
+
+			if (value != string.Empty && product.Specifications.All(x => x.Key != "Плотность, г/м"))
+				product.Specifications.Add(new YandexMarketSpecRecord("Плотность, г/м", value));
+
+		}
+
+		private void AddNewSpec(YandexMarketProductRecord product, string specNewName, string specValue)
+		{
+			if (specValue != string.Empty && specValue != "0" && product.Specifications.All(x => x.Key != specNewName))
+				product.Specifications.Add(new YandexMarketSpecRecord(specNewName, specValue));
+		}
+
+		private void ProcessSpec(string textToParse, YandexMarketProductRecord product, string pattern, string specNewName)
+		{
+			var value = this.GetValByRegExp(textToParse, pattern);
+			AddNewSpec(product, specNewName, value);
+		}
+
+		private void ProcessHolodilnik(YandexMarketProductRecord product)
+		{
+			if (product.YandexMarketCategoryRecordId != 76)
+				return;
+
+			ProcessHolodilnikObems(product);
+			ProcessHolodilnikRazmorozkas(product);
+		}
+
+		private void ProcessHolodilnikObems(YandexMarketProductRecord product)
+		{			
+			var specToParse = product.Specifications.FirstOrDefault(x => x.Key == "Объем");
+
+			if (specToParse == null)
+				return;
+
+			ProcessSpec(specToParse.Value, product, "Общий: ([0-9]+) л", "Объем общий, л.");
+			ProcessSpec(specToParse.Value, product, "Объем холодильной камеры: ([0-9]+) л", "Объем холодильной камеры, л.");
+			ProcessSpec(specToParse.Value, product, "Объем морозильной камеры: ([0-9]+) л", "Объем морозильной камеры, л.");						
+		}
+		
+		private void ProcessHolodilnikRazmorozkas(YandexMarketProductRecord product)
+		{
+			var specToParse = product.Specifications.FirstOrDefault(x => x.Key == "Размораживание");
+
+			if (specToParse == null)
+				return;
+
+			var val = specToParse.Value.Replace("\r", "").Replace("\n", "");
+			val = val.Replace("статическое", "Статическое").Replace(" размораживание", "").Replace("Нет", "Ручное").Replace("Капельная система", "Капельное");
+
+			ProcessSpec(val, product, "Холодильная камера:?</p><p>([\\w\\s]+)", "Размораживание холодильной камеры");
+			ProcessSpec(val, product, "Морозильная камера:?</p><p>([\\w\\s]+)", "Размораживание морозильной камеры");			
+		}
+
+
+		private void ProcessPlitas(YandexMarketProductRecord product)
+		{
+			if (product.YandexMarketCategoryRecordId != 77)
+				return;
+
+			ReplaceByValue(product.Specifications, new List<string> { "Эмалированная сталь" }, "Эмаль", "Рабочая поверхность");
+			ReplaceByValue(product.Specifications, new List<string> { "Эмалированная" }, "Эмаль", "Рабочая поверхность");
+			ReplaceByValue(product.Specifications, new List<string> { "– электронные", "&amp;#8211; электрические" }, "- электрические", "Число конфорок");
+			ReplaceByValue(product.Specifications, new List<string> { "газовых" }, "газовые", "Число конфорок");
+			
+			ProcessPlitaGril(product);
+			ProcessPlitaPodzig(product);						
+		}
+
+		private void ProcessPlitaGril(YandexMarketProductRecord product)
+		{
+			var specToParse = product.Specifications.FirstOrDefault(x => x.Key == "Гриль");
+
+			if (specToParse == null)
+				return;
+
+			if (!specToParse.Value.ToLower().Contains("Нет")) 
+				AddNewSpec(product, "Наличие гриля", "Да");
+		}
+
+		private void ProcessPlitaPodzig(YandexMarketProductRecord product)
+		{
+			var specToParse = product.Specifications.FirstOrDefault(x => x.Key == "Электроподжиг");
+
+			if (specToParse == null)
+				return;
+
+			if (!specToParse.Value.ToLower().Contains("Нет"))
+				AddNewSpec(product, "Наличие электроподжига", "Да");
+		}
+
+		private void ProcessHeaters(YandexMarketProductRecord product)
+		{
+			if (product.YandexMarketCategoryRecordId != 84)
+				return;
+
+			//ReplaceByValue(product.Specifications, new List<string> { "газовых" }, "газовые", "Число конфорок");
+
+			ProcessHeaterType(product);	
+		}
+		
+		private void ProcessHeaterType(YandexMarketProductRecord product)
+		{
+			var specToParse = product.FullDescription.ToLower();
+
+			if (specToParse.Contains("тепловентилятор"))
+				AddNewSpec(product, "Тип", "Tепловентилятор");
+			else if (specToParse.Contains("конвекторный"))
+				AddNewSpec(product, "Тип", "Конвекторный");
+			else if (specToParse.Contains("инфракрасн"))
+				AddNewSpec(product, "Тип", "Инфракрасный");			
+		}
+	}
+}

@@ -1,0 +1,50 @@
+﻿<div class="header">
+    @Html.Widget("header")
+    <div class="header-logo header-left">        
+        <a href="@Url.RouteUrl("HomePage")" class="logo">                    
+            <div class="header-favicon">
+                <img alt="favicon" src="/favicon.gif" />
+            </div>
+            <div class="site-name">Боярка</div>                                      
+        </a>
+        
+       
+        <div class="header-robot">
+                
+        </div>  
+
+        <div class="header-about">Боярский интернет-магазин компьютерной, мобильной и бытовой техники</div>      
+
+        <div class="header-phone-work-time">
+            <div class="header-phone" ><span class="phone-logo-life"></span><span>(093) 233-60-21 </span></div>
+            <div class="header-work-time">Без выходных с 10:00 до 21:00</div>
+            <div class="header-email">E-mail: ask.00@gmail.com</div>
+            <div class="header-skype">Skype: dminikk</div>
+        </div>
+
+        <div class="search-box">
+            @Html.Action("SearchBox", "Catalog")
+        </div>
+    </div>
+    
+    
+    
+    <div class="header-right">          
+
+        <div class="header-selectors-wrapper">
+            <div class="tax-display-type-selector">
+                @Html.Action("TaxTypeSelector", "Common")
+            </div>
+            <div class="currency-selector">
+                @Html.Action("CurrencySelector", "Common")
+            </div>
+            <div class="language-selector">
+                @Html.Action("LanguageSelector", "Common")
+            </div>
+            @Html.Widget("header_selectors")
+        </div>    
+    </div>    
+    
+   
+</div>
+<div class="header-bottom-line"></div>

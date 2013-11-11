@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+}
+@{
+    //current category ID
+    int currentCategoryId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+    }
+
+
+    //current manufacturer ID
+    int currentManufacturerId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
+    }
+
+
+    //current product ID
+    int currentProductId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+    }
+}
+
+<div class="leftside-3">
+    @if (IsSectionDefined("left"))
+    {
+        @RenderSection("left")
+    }
+    else
+    {
+        @Html.Widget("left_side_column_before")
+        @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
+        @Html.Widget("left_side_column_after_category_navigation")
+
+        //dminikk 
+        // @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
+        // @Html.Action("PopularProductTags", "Catalog")
+        
+        if (IsSectionDefined("product_filters"))
+        {
+            @RenderSection("product_filters")
+        }
+        
+        @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
+        @Html.Widget("left_side_column_after")
+    }
+</div>
+<div class="center-3">
+    @Html.Widget("main_column_before")
+    @RenderBody()
+    @Html.Widget("main_column_after")
+</div>
+<div class="rightside-3">
+   @if (IsSectionDefined("right"))
+    {
+        @RenderSection("right")
+    }
+    else
+    {
+        @Html.Widget("right_side_column_before")
+        @Html.Action("NewsletterBox", "Newsletter")
+
+        if (IsSectionDefined("featured_products"))
+        {
+            @RenderSection("featured_products")
+        }
+                
+        @Html.Action("RecentlyViewedProductsBlock", "Catalog")   
+        
+        
+         
+        <script type="text/javascript">(function () {
+    if (window.pluso) if (typeof window.pluso.start == "function") return;
+    if (window.ifpluso == undefined) {
+        window.ifpluso = 1;
+        var d = document, s = d.createElement('script'), g = 'getElementsByTagName';
+        s.type = 'text/javascript'; s.charset = 'UTF-8'; s.async = true;
+        s.src = ('https:' == window.location.protocol ? 'https' : 'http') + '://share.pluso.ru/pluso-like.js';
+        var h = d[g]('body')[0];
+        h.appendChild(s);
+    }
+})();</script>
+<div class="pluso" data-background="none;" data-options="small,square,line,horizontal,counter,sepcounter=1,theme=14" data-services="vkontakte,odnoklassniki,facebook,google"></div>
+        
+        
+        
+        
+    
+    
+    
+    
+    
+
+<!-- VK Widget -->
+<div id="vk_groups"></div>
+<script type="text/javascript">
+            
+
+    window.onload = function () {
+                VK.Widgets.Group("vk_groups", { mode: 0, width: "190", height: "400", color1: 'FFFFFF', color2: '2B587A', color3: '5B7FA6' }, 59549728);
+            };
+
+
+
+    
+</script> 
+        
+        
+       
+       
+        @*<a href="~/Views/Common/SocialWidgets.cshtml">~/Views/Common/SocialWidgets.cshtml</a>*@
+        
+        //dminikk    
+        // @Html.Action("InfoBlock", "Common")    
+        
+        @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
+        @Html.Widget("right_side_column_after")
+    }
+</div>

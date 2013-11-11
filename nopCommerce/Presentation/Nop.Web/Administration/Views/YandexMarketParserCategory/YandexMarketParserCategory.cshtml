@@ -1,0 +1,140 @@
+﻿@{    
+    ViewBag.Title = "CategoryParser";
+
+    Html.EnableClientValidation(); 
+}
+
+@using Nop.Admin.Models.YandexMarket
+
+@using Nop.Web.Framework;
+
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI
+@using Telerik.Web.Mvc.UI
+
+
+Url Category For Parsing : <input id="txtUrlCategoryForParsing" type="text" style="width: 500px;" 
+    value="http://yugcontract.ua/shop/bytovaya-tehnika/melkaya-bytovaya-tehnika/" > Например: http://yugcontract.ua/shop/bytovaya-tehnika/melkaya-bytovaya-tehnika/<br />
+    
+<input type="button" id="ParseAndShow" class="t-button" value="Отобразить" /><br />
+<input type="button" id="ParseAndApply" class="t-button" value="Применить" /><br />
+ <input type="submit" id="ParseStop" class="t-button" value="Parse stop" /><br />
+    
+    
+<img id="parsingIndicatorForParserCategoryTab" style="display: none" src="/administration/content/images/throbber-synchronizing.gif" /><br />
+    
+Result:
+<div id="result"> 
+     
+</div>
+    
+    
+<script type="text/javascript">
+
+    window.PrintCategory = function(category, place) {
+
+        var myLi = $('<li>').append(category.Name + ', Url: ' + category.Url);
+        place.append(myLi);
+
+        if (category.Children) {
+            
+            var myUl = $('<ul>');
+            myLi.append(myUl);
+            
+            $.each(category.Children, function(index, value) {                                              
+               window.PrintCategory(value, myUl);
+
+            }); // end for
+        }
+    };
+
+    $(function () {
+        
+       
+        $('#ParseAndShow').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicatorForParserCategoryTab').show(); },
+                complete: function () { $('#parsingIndicatorForParserCategoryTab').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("CategoryParseAndShow", "YandexMarketParserCategory")',
+                data: { urlCategoryForParsing: $('#txtUrlCategoryForParsing').val() },
+                dataType: 'json',
+                success: function (category) {
+
+                    var place = $('#result');
+                    place.html('');
+
+                    if (category)
+                        window.PrintCategory(category, place);
+                    else {
+                        alert("category == null");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $('#parsingIndicatorForParserCategoryTab').hide();
+                    
+                    var place = $('#result');
+                    place.html('');
+                    place.append(xhr.responseText);                    
+                }
+            });
+            return false;
+        });
+        
+        $('#ParseAndApply').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicatorForParserCategoryTab').show(); },
+                complete: function () { $('#parsingIndicatorForParserCategoryTab').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("CategoryParseAndApply", "YandexMarketParserCategory")',
+                data: { urlCategoryForParsing: $('#txtUrlCategoryForParsing').val() },
+                dataType: 'json',
+                success: function (category) {
+
+                    var place = $('#result');
+                    place.html('');
+
+                    if (category) {
+                        window.PrintCategory(category, place);
+                        alert("Success");
+                    } else {
+                        alert("category == null");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $('#parsingIndicatorForParserCategoryTab').hide();
+
+                    var place = $('#result');
+                    place.html('');
+                    place.append(xhr.responseText);
+                }
+            });
+            return false;
+        });
+
+      
+
+        $('#ParseStop').click(function () {
+            $.ajax({
+                beforeSend: function () { $('#parsingIndicatorForParserCategoryTab').show(); },
+                complete: function () { $('#parsingIndicatorForParserCategoryTab').hide(); },
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("ParseStop", "YandexMarketParserCategory")',
+                                                                                                                                                @*data: { parserCategoryId: $('#@Html.FieldIdFor(model => model.ParserCategoryId)').val() },*@
+                dataType: 'text',
+                success: function (data) {
+                    //alert(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.responseText);
+                }
+            });
+            return false;
+        });
+    });
+
+</script>
+    

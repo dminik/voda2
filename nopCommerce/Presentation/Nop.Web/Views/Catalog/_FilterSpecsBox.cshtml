@@ -1,0 +1,76 @@
+﻿@model CatalogPagingFilteringModel.SpecificationFilterModel
+@using Nop.Web.Models.Catalog;
+@{
+    var notFilteredItemsGroups = Model.NotFilteredItems.GroupBy(x => x.SpecificationAttributeName);
+}
+@if (Model.Enabled)
+{    
+    <div class="product-filters product-spec-filter">
+        
+        <div class="filter-content">
+
+            @if (Model.AlreadyFilteredItems.Count > 0)
+            {
+                <div class="already-filtered-items">
+                    <div class="filter-title">
+                        @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
+                    </div>
+                    @foreach (var spec in Model.AlreadyFilteredItems)
+                    {
+                        @*<div class="item">
+                            <strong>@(spec.SpecificationAttributeName):</strong> @spec.SpecificationAttributeOptionName
+                        </div>*@
+                        
+                        <div>
+                            <strong>@(spec.SpecificationAttributeName):</strong><br/>
+                            <input type="checkbox" checked="checked" onclick="displayAjaxLoading(true); window.location.href = '@spec.FilterUrl    '"/>
+                            <span>@Html.Raw(@spec.SpecificationAttributeOptionName)</span>                            
+                        </div>
+                    }
+
+                    <div class="remove-filter">
+                        @*<a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>*@
+                        <a href="@Model.RemoveFilterUrl">Сбросить все фильтры</a>
+                    </div>
+                </div>
+            }
+
+            @if (Model.NotFilteredItems.Count > 0)
+            {
+                <div class="available-items">
+                    @foreach (var group in notFilteredItemsGroups)
+                    {
+                        var groupList = group.ToList();
+                        
+                        <ul class="group">
+                            <li class="spec-title">
+                                <strong>@groupList[0].SpecificationAttributeName</strong>
+                            </li>
+
+                            @foreach (var spec in groupList)
+                            {
+                                <table class="spec-values">
+                                    
+                                    <tr>
+                                        <td class="spec-check-control">
+                                            <input type="checkbox" onclick="displayAjaxLoading(true); window.location.href = '@spec.FilterUrl    '"/>
+                                        </td>
+
+                                        <td class="spec-check-control-name">
+                                            <span class="spec-value">@Html.Raw(@spec.SpecificationAttributeOptionName)</span>
+                                            <span class="spec-value-exist-times"> (@spec.SpecificationAttributeOptionExistTimesInFilteredProducts шт.)</span>
+                                        </td>
+                                    
+                                    </tr>
+
+                                </table>
+                            }
+                        </ul> 
+                    }
+                </div>
+            }
+
+        </div>
+    </div>
+}
+
