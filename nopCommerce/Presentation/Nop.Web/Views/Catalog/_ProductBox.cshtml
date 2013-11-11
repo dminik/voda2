@@ -39,7 +39,7 @@
                 <div class="is-exist-product-box"><span>Доставим в течении часа</span></div>
             }           
             
-            @if (Model.AdminComment != "")
+            @if (!String.IsNullOrEmpty(Model.AdminComment))
             {                
                 <p class="expand-one-@Model.Id"><a href="#">Скрыть/показать инфу о цене</a></p>     
                 <div class="admin-comment content-one-@Model.Id"><span>@Html.Raw(@Model.AdminComment)</span></div>

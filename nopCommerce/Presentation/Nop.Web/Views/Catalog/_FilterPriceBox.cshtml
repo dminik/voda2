@@ -16,7 +16,7 @@
     }
     else
     {
-        rangeText = string.Format("<span class=\"PriceRange\">{0}</span> - <span class=\"PriceRange\">{1}</span>", filterItem.From, filterItem.To);
+        rangeText = string.Format("<span class=\"PriceRange\">{0}</span> - <span class=\"PriceRange\">{1}</span>", filterItem.From.Replace(" грн", ""), filterItem.To);
     }
     <text>@Html.Raw(rangeText)</text>
 }

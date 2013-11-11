@@ -16,11 +16,7 @@
                         @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
                     </div>
                     @foreach (var spec in Model.AlreadyFilteredItems)
-                    {
-                        @*<div class="item">
-                            <strong>@(spec.SpecificationAttributeName):</strong> @spec.SpecificationAttributeOptionName
-                        </div>*@
-                        
+                    {                                              
                         <div>
                             <strong>@(spec.SpecificationAttributeName):</strong><br/>
                             <input type="checkbox" checked="checked" onclick="displayAjaxLoading(true); window.location.href = '@spec.FilterUrl    '"/>
@@ -38,17 +34,33 @@
             @if (Model.NotFilteredItems.Count > 0)
             {
                 <div class="available-items">
+                    @{
+                        var curSpecGroupIndex = 0;
+                    }
+
                     @foreach (var group in notFilteredItemsGroups)
                     {
+                        curSpecGroupIndex++;
+                        
                         var groupList = group.ToList();
                         
                         <ul class="group">
                             <li class="spec-title">
                                 <strong>@groupList[0].SpecificationAttributeName</strong>
                             </li>
+                            
+                            @{
+                                var counter = 0;
+                                const int MaxVisibleSpecs = 4;
+                            }
 
                             @foreach (var spec in groupList)
                             {
+                                counter++;
+                                                   
+                                if (counter > MaxVisibleSpecs)
+                                { break; }
+
                                 <table class="spec-values">
                                     
                                     <tr>
@@ -65,6 +77,57 @@
 
                                 </table>
                             }
+                            
+                            
+                            @if (MaxVisibleSpecs < groupList.Count)
+                            {
+                                var countElse = groupList.Count - MaxVisibleSpecs;
+                                var curSpecId = curSpecGroupIndex;
+                                <p class="expand-one expand-one-@curSpecId"><a class="extended-visible-specs-link" href="#">Еще (+@countElse)...</a></p>  
+                                <div class="extended-visible-specs content-one-@curSpecId">
+                                
+                                    <script type="text/javascript">
+                                        $(document).ready(function() {
+
+                                            $('.expand-one-@curSpecId').click(function() {
+                                                $('.content-one-@curSpecId').slideToggle('slow');                                    
+                                                return false;
+                                            });
+                                
+                                            $('.content-one-@curSpecId').hide();
+                                        });
+                                    </script>
+                                    
+
+                                    @{ counter = 0; }
+                                    @foreach (var spec in groupList)
+                                    {
+                                        counter++;
+
+                                        if (counter <= MaxVisibleSpecs)
+                                        { continue; }
+                                
+                                        <table class="spec-values">
+                                    
+                                            <tr>
+                                                <td class="spec-check-control">
+                                                    <input type="checkbox" onclick="displayAjaxLoading(true); window.location.href = '@spec.FilterUrl    '"/>
+                                                </td>
+
+                                                <td class="spec-check-control-name">
+                                                    <span class="spec-value">@Html.Raw(@spec.SpecificationAttributeOptionName)</span>
+                                                    <span class="spec-value-exist-times"> (@spec.SpecificationAttributeOptionExistTimesInFilteredProducts шт.)</span>
+                                                </td>
+                                    
+                                            </tr>
+
+                                        </table>
+                                    }
+                                </div>
+                            }
+                            
+                            
+
                         </ul> 
                     }
                 </div>

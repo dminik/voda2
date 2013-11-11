@@ -43,11 +43,45 @@
         //dminikk 
         // @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
         // @Html.Action("PopularProductTags", "Catalog")
-        
-        if (IsSectionDefined("product_filters"))
+               
+        if (IsSectionDefined("featured_products"))
         {
-            @RenderSection("product_filters")
+            @RenderSection("featured_products")
         }
+                
+        @Html.Action("RecentlyViewedProductsBlock", "Catalog")   
+        
+                <script type="text/javascript">(function () {
+    if (window.pluso) if (typeof window.pluso.start == "function") return;
+    if (window.ifpluso == undefined) {
+        window.ifpluso = 1;
+        var d = document, s = d.createElement('script'), g = 'getElementsByTagName';
+        s.type = 'text/javascript'; s.charset = 'UTF-8'; s.async = true;
+        s.src = ('https:' == window.location.protocol ? 'https' : 'http') + '://share.pluso.ru/pluso-like.js';
+        var h = d[g]('body')[0];
+        h.appendChild(s);
+    }
+})();</script>
+<div class="pluso" data-background="none;" data-options="small,square,line,horizontal,counter,sepcounter=1,theme=14" data-services="vkontakte,odnoklassniki,facebook,google"></div>
+        
+  
+<!-- VK Widget -->
+<div id="vk_groups"></div>
+<script type="text/javascript">
+  window.onload = function () {
+                VK.Widgets.Group("vk_groups", { mode: 0, width: "190", height: "400", color1: 'FFFFFF', color2: '2B587A', color3: '5B7FA6' }, 59549728);
+            };
+</script> 
+        
+        
+       
+       
+        @*<a href="~/Views/Common/SocialWidgets.cshtml">~/Views/Common/SocialWidgets.cshtml</a>*@
+        
+        //dminikk    
+        // @Html.Action("InfoBlock", "Common")    
+        
+        
         
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
         @Html.Widget("left_side_column_after")
@@ -66,61 +100,14 @@
     else
     {
         @Html.Widget("right_side_column_before")
-        @Html.Action("NewsletterBox", "Newsletter")
 
-        if (IsSectionDefined("featured_products"))
+        if (IsSectionDefined("product_filters"))
         {
-            @RenderSection("featured_products")
+            @RenderSection("product_filters")
         }
-                
-        @Html.Action("RecentlyViewedProductsBlock", "Catalog")   
         
-        
+        @Html.Action("NewsletterBox", "Newsletter")
          
-        <script type="text/javascript">(function () {
-    if (window.pluso) if (typeof window.pluso.start == "function") return;
-    if (window.ifpluso == undefined) {
-        window.ifpluso = 1;
-        var d = document, s = d.createElement('script'), g = 'getElementsByTagName';
-        s.type = 'text/javascript'; s.charset = 'UTF-8'; s.async = true;
-        s.src = ('https:' == window.location.protocol ? 'https' : 'http') + '://share.pluso.ru/pluso-like.js';
-        var h = d[g]('body')[0];
-        h.appendChild(s);
-    }
-})();</script>
-<div class="pluso" data-background="none;" data-options="small,square,line,horizontal,counter,sepcounter=1,theme=14" data-services="vkontakte,odnoklassniki,facebook,google"></div>
-        
-        
-        
-        
-    
-    
-    
-    
-    
-
-<!-- VK Widget -->
-<div id="vk_groups"></div>
-<script type="text/javascript">
-            
-
-    window.onload = function () {
-                VK.Widgets.Group("vk_groups", { mode: 0, width: "190", height: "400", color1: 'FFFFFF', color2: '2B587A', color3: '5B7FA6' }, 59549728);
-            };
-
-
-
-    
-</script> 
-        
-        
-       
-       
-        @*<a href="~/Views/Common/SocialWidgets.cshtml">~/Views/Common/SocialWidgets.cshtml</a>*@
-        
-        //dminikk    
-        // @Html.Action("InfoBlock", "Common")    
-        
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
         @Html.Widget("right_side_column_after")
     }
