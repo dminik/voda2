@@ -1,0 +1,66 @@
+﻿@model ProductDetailsModel
+@using Nop.Web.Models.Catalog;
+@{   
+	<link rel="stylesheet" href="/Content/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+	<script type="text/javascript" src="/Content/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+	
+	int productPerRow = 4;
+}
+<div class="gallery">
+	<div class="picture">
+		@if (Model.DefaultPictureZoomEnabled)
+		{
+			<a class="fancyboxProductPic" href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.Name">
+				<img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" />
+			</a>
+		}
+		else
+		{
+			<img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" />
+		}
+	</div>
+
+	@if (Model.PictureModels.Count > 1)
+	{
+		<div class="picture-thumbs">
+			@for (int i = 0; i < Model.PictureModels.Count; i++)
+			{
+				var picture = Model.PictureModels[i];
+
+				if (i % productPerRow == 0)
+				{
+				@Html.Raw("<div>")
+				}
+				<a class="fancyboxGallery" href="@picture.FullSizeImageUrl" rel="galary_group" title="@Model.Name">
+					<img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+				</a>                 
+				if ((i % productPerRow == (productPerRow - 1)) ||
+					//last image
+					(i == (Model.PictureModels.Count - 1)))
+				{
+				@Html.Raw("</div>")
+				}
+			}
+		</div>
+	}
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".fancyboxGallery").fancybox({
+			openEffect: 'none',
+			closeEffect: 'none'
+		});
+	    
+		
+		$(".fancyboxProductPic").fancybox({		   
+		    helpers: {
+		        title: {
+		            type: 'float'
+		        }
+		    }
+		});
+		
+	    
+	});
+</script>

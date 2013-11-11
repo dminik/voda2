@@ -1,0 +1,95 @@
+﻿@model ContactUsModel
+@using Nop.Web.Models.Common;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ContactUs").Text);
+}
+<div class="page contact-page">
+    <div class="page-title">
+        <h1>@T("PageTitle.ContactUs")</h1>
+    </div>
+    @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })
+    <div class="page-body">
+        @Html.Widget("contactus_top")
+        @if (Model.SuccessfullySent)
+        {
+            <div class="result">
+                @Model.Result
+            </div>        
+        }
+        else
+        {
+            using (Html.BeginForm())
+            {
+            <div class="message-error">
+                @Html.ValidationSummary(true)
+            </div>
+            <div class="form-fields">
+                <div class="inputs-left">
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.FullName)
+                        <div class="input-box">
+                            @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactUs.FullName.Hint") })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.FullName)
+                    </div>
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.Email)
+                        <div class="input-box">
+                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactUs.Email.Hint") })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            @Html.Raw(Html.GenerateCaptcha())
+                        </div>
+                    }
+                </div>
+                <div class="inputs-right inputs">
+                    @Html.LabelFor(model => model.Enquiry)
+                    <div class="input-box">
+                        @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactUs.Enquiry.Hint") })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Enquiry)
+                </div>
+            </div>
+            <div class="buttons">
+                <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactUs.Button")" />
+            </div>
+            }
+        }
+        @Html.Widget("contactus_bottom")
+    </div>
+</div>
+
+
+@*<script src="http://api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU" type="text/javascript"></script>*@
+@*<script type="text/javascript" charset="utf-8" src="//api-maps.yandex.ru/services/constructor/1.0/js/?sid=pUeNo6Mglk1QtvGXwGYHUKR_qhXnnza0&width=390&height=240"></script>*@
+
+<script type="text/javascript">
+var myMap;
+
+// Дождёмся загрузки API и готовности DOM.
+ymaps.ready(init);
+
+function init () {
+    // Создание экземпляра карты и его привязка к контейнеру с
+    // заданным id ("map").
+    myMap = new ymaps.Map('map', {
+        // При инициализации карты обязательно нужно указать
+        // её центр и коэффициент масштабирования.
+        center:[55.76, 37.64], // Москва
+        zoom:10
+    });
+
+    document.getElementById('destroyButton').onclick = function () {
+        // Для уничтожения используется метод destroy.
+        myMap.destroy();
+    };
+
+}
+</script>

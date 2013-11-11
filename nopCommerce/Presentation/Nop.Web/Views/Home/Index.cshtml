@@ -1,0 +1,47 @@
+﻿@model Nop.Web.Models.Home.HomeModel
+@{
+	Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+ 
+	<link rel="stylesheet" href="/Content/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+    <script type="text/javascript" src="/Content/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    
+    Html.AddTitleParts(Model.MetaTitle);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+}
+
+<div class="page home-page">
+	<div class="page-body">
+		@Html.Widget("home_page_top")
+		@*@Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })*@
+        @Html.Partial("~\\Views\\Topic\\TopicBlock.cshtml", Model.Topic)
+        @Html.Action("HomePageNews", "News")
+		@Html.Action("HomepageCategories", "Catalog")
+		@Html.Action("HomepageProducts", "Catalog")
+		@Html.Action("HomepageBestSellers", "Catalog")
+		
+		@Html.Action("HomePagePolls", "Poll")
+		@Html.Widget("home_page_bottom")		
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+	    $(".Vodoochistka_Diagramma_a").fancybox({
+	        type: 'iframe',
+	        autoSize : false,
+	        beforeLoad : function() {         
+	            this.width  = parseInt(this.element.data('fancybox-width'));  
+	            this.height = parseInt(this.element.data('fancybox-height'));
+	        },
+			helpers: {
+				title: {
+					type: 'float'
+				}
+			}
+		});
+	});
+</script>
+
+

@@ -1,0 +1,50 @@
+﻿@model CatalogPagingFilteringModel.PriceRangeFilterModel
+@using Nop.Web.Models.Catalog;
+@{
+    var selectedItem = Model.Items.FirstOrDefault(x => x.Selected);
+}
+@helper FormatPriceRangeText(CatalogPagingFilteringModel.PriceRangeFilterItem filterItem)
+{
+    string rangeText = "";
+    if (String.IsNullOrWhiteSpace(filterItem.From))
+    {
+        rangeText = string.Format(T("Filtering.PriceRangeFilter.Under").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.To));
+    }
+    else if (String.IsNullOrWhiteSpace(filterItem.To))
+    {
+        rangeText = string.Format(T("Filtering.PriceRangeFilter.Over").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.From));
+    }
+    else
+    {
+        rangeText = string.Format("<span class=\"PriceRange\">{0}</span> - <span class=\"PriceRange\">{1}</span>", filterItem.From.Replace(" грн", ""), filterItem.To);
+    }
+    <text>@Html.Raw(rangeText)</text>
+}
+@if (Model.Enabled)
+{
+    <div class="product-filters price-range-filter">
+        <div class="filter-title">
+            <strong>@T("Filtering.PriceRangeFilter")</strong>
+        </div>
+        <div class="filter-content">
+            @if (selectedItem == null)
+            {
+                <ul class="price-range-selector">
+                    @foreach (var item in Model.Items)
+                    {
+                        <li>
+                            <input type="checkbox" onclick="displayAjaxLoading(true); window.location.href = '@item.FilterUrl'"/>
+                            <span>@FormatPriceRangeText(item) (@item.Amount шт.)</span> 
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {                
+                 <input type="checkbox" checked="checked" onclick="displayAjaxLoading(true); window.location.href = '@Model.RemoveFilterUrl'"/>
+                 <span>@FormatPriceRangeText(selectedItem)</span>                 
+            }
+        </div>
+
+    </div>
+}
