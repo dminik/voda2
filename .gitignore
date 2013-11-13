@@ -121,3 +121,6 @@ nopCommerce/*.vsp
 nopCommerce/Presentation/Nop.Web/Content/Images/Thumbs/*.jpeg
 nopCommerce/Deploy.zip
 F5Shop/Design/Images/Реклама/tif/
+
+*.psd
+*.tif
