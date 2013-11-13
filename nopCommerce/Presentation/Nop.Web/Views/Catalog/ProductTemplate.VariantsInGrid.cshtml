@@ -87,7 +87,7 @@
                         </div>                       
                     </div>
                     
-                    @if (@Model.ProductVariantModels[0].AdminComment != "")
+                    @if (!String.IsNullOrEmpty(@Model.ProductVariantModels[0].AdminComment))
                     {
                         <p class="expand-one"><a href="#">Скрыть/показать инфу о цене</a></p>     
                         <div class="admin-comment content-one"><span>@Html.Raw(@Model.ProductVariantModels[0].AdminComment)</span></div>
