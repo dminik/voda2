@@ -83,8 +83,8 @@ namespace Nop.Services.SiteParsers
 				}
 				catch (Exception ex)
 				{
-					this.mLogger.Debug(ex.Message, ex);
-					this.mLogger.Debug("Not success GetPriceListFromCache.");
+					this.mLogger.Error(ex.Message, ex);
+					this.mLogger.Error("Not success GetPriceListFromCache.");
 					throw;
 				}
 
@@ -137,8 +137,8 @@ namespace Nop.Services.SiteParsers
 			}
 			catch (Exception ex)
 			{
-				this.mLogger.Debug(ex.Message, ex);
-				this.mLogger.Debug("Not success DownloadNewPriceListToCache for " + this.GetType().Name);
+				this.mLogger.Error(ex.Message, ex);
+				this.mLogger.Error("Not success DownloadNewPriceListToCache for " + this.GetType().Name);
 				result = false;
 			}
 

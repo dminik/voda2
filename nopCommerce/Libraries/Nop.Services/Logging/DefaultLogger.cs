@@ -217,8 +217,8 @@ namespace Nop.Services.Logging
 		{
 			try
 			{
-				if (log.LogLevel == LogLevel.Debug 
-					|| log.PageUrl.Contains("localhost") 
+				if (log.LogLevel == LogLevel.Debug
+					|| (log.PageUrl.Contains("localhost") && !log.PageUrl.Contains("WebDriver"))  // can be The HTTP request to the remote WebDriver server for URL http://localhost:52410/session/695f07f1-7d4e-43a2-83b5-817a8e0c0e83/elements timed out after 60 seconds.
 					|| String.IsNullOrEmpty(log.IpAddress)
 					|| log.ShortMessage.Contains("was not found or does not implement IController"))
 					return;

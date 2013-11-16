@@ -1,12 +1,15 @@
 namespace Nop.Services.SiteParsers
 {
 	using System;
+	using System.Collections.ObjectModel;
 	using System.IO;
 	using System.Net;
 	using System.Text;
 	using System.Text.RegularExpressions;
 	using System.Threading;
 
+	using Nop.Core.Infrastructure;
+	using Nop.Services.Logging;
 
 	using OpenQA.Selenium;
 	using OpenQA.Selenium.Remote;
@@ -36,6 +39,67 @@ namespace Nop.Services.SiteParsers
 			while (time < tryTimes);
 			
 			throw new Exception("Error in my FindElement");
+		}
+
+		public static ReadOnlyCollection<IWebElement> FindElements(IWebDriver driver, string cssSelector, int tryTimes = 3)
+		{
+			var time = 0;
+			var logger = EngineContext.Current.Resolve<ILogger>();
+
+			do
+			{
+				time++;
+				try
+				{
+					var elements = driver.FindElements(By.CssSelector(cssSelector));
+					
+					var count = elements.Count;
+					logger.Debug("FindElements=" + count); 
+
+					return elements;
+				}
+				catch (Exception ex)
+				{
+					if (!ex.Message.Contains("elements timed out") || time == tryTimes)
+						throw;
+
+					Thread.Sleep(10000);
+				}
+
+			}
+			while (time < tryTimes);
+
+			throw new Exception("Error in my FindElements");
+		}
+
+		public static string GetPageSource(IWebDriver driver, int tryTimes = 6)
+		{
+			var time = 0;
+			do
+			{
+				time++;
+				try
+				{
+					var source = driver.PageSource;
+
+					var logger = EngineContext.Current.Resolve<ILogger>();
+					if (source.Length != 0)
+						logger.Debug(source);
+
+					return source;
+				}
+				catch (Exception ex)
+				{
+					if (!ex.Message.Contains("source timed out") || time == tryTimes)
+						throw;
+
+					Thread.Sleep(10000);
+				}
+
+			}
+			while (time < tryTimes);
+
+			throw new Exception("Error in my GetPageSource");
 		}
 
 		public static string GetInnerHtml(IWebElement element)

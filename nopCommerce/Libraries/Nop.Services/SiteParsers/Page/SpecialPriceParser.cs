@@ -2,15 +2,13 @@ namespace Nop.Services.SiteParsers.Page
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
+	using System.Collections.ObjectModel;
 	using System.Net;
+	using System.Threading;
 
 	using Nop.Core.Domain.Security;
-	using Nop.Core.Domain.YandexMarket;
 	using Nop.Core.Infrastructure;
 	using Nop.Services.Logging;
-	using Nop.Services.SiteParsers.Categories;
-	using Nop.Services.YandexMarket;
 
 	using OpenQA.Selenium;
 	using OpenQA.Selenium.IE;
@@ -65,13 +63,17 @@ namespace Nop.Services.SiteParsers.Page
 			try
 			{
 				this.mDriver = new InternetExplorerDriver();
-				this.mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(60));
+				this.mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(260));
 				
+#if DEBUG
 				resultSpecialPriceList = this.GetParserSpecialPriceList();
+#else 
+				resultSpecialPriceList = new List<SpecialPrice>();
+#endif
 			}
 			catch (Exception ex)
 			{
-				this.mLogger.Debug(ex.Message, ex);
+				this.mLogger.Error(ex.Message, ex);
 				throw;
 			}
 			finally
@@ -92,17 +94,21 @@ namespace Nop.Services.SiteParsers.Page
 
 			try
 			{
+				this.mLogger.Debug("1");
 				// ’одим по страницам и логинимс€				
 				PostAutherisation();
-
+				this.mLogger.Debug("2");
 				resultSpecialPriceList = FindDataOnHtmlPage();
+				this.mLogger.Debug("22");
 			}
 			catch (Exception ex)
 			{
-				this.mLogger.Debug(ex.Message, ex);
-				this.mLogger.Debug("Not success DownloadNewSpecialPriceListToCache for " + this.GetType().Name);
+				this.mLogger.Error(ex.Message, ex);
+				this.mLogger.Error("Not success DownloadNewSpecialPriceListToCache for " + this.GetType().Name);
+				throw;
 			}
 
+		
 			this.mLogger.Debug("End " + this.GetType().Name + ". DownloadNewSpecialPriceListToCache.");
 
 
@@ -115,15 +121,51 @@ namespace Nop.Services.SiteParsers.Page
 			var resultSpecialPriceList = new List<SpecialPrice>();
 
 			// —сылка рекомендованные цены
+
+			Thread.Sleep(70000);
 			this.mDriver.Navigate().GoToUrl(this.UrlSpecialPriceForParsing);
+			this.mLogger.Debug("25");
+		
+			
+			this.mLogger.Debug("3");
+			Thread.Sleep(70000);
 
-			var allTables = mDriver.FindElements(By.CssSelector(".MsoNormalTable"));
+			var source =  ParserHelper.GetPageSource(mDriver, 20);
 
+			if(source.Length != 0)
+				this.mLogger.Debug(source);
+
+			ReadOnlyCollection<IWebElement> allTables;
+			this.mLogger.Debug("35");
+			try
+			{								
+				allTables = ParserHelper.FindElements(mDriver, ".MsoNormalTable", 20);
+
+
+				Thread.Sleep(70000);
+				this.mLogger.Debug("4");
+			}
+			catch (Exception ex)
+			{
+				this.mLogger.Debug(source);
+				throw;
+			}
+			
+
+			var index = 0;
 			foreach (var curTbl in allTables)
 			{
+				index++;
+				this.mLogger.Debug("index=" + index);
 				var dataList = ExtractDataFromTbl(curTbl);
 				resultSpecialPriceList.AddRange(dataList);
 			}
+
+			this.mLogger.Debug(this.mDriver.PageSource);
+			this.mLogger.Debug("5 resultSpecialPriceList.Count=" + resultSpecialPriceList.Count);
+
+			var x = this.mDriver.PageSource;
+			this.mLogger.Debug(x);
 
 			return resultSpecialPriceList;
 		}
@@ -159,15 +201,43 @@ namespace Nop.Services.SiteParsers.Page
 		{
 			var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
 
+			this.mLogger.Debug("44");
+			this.mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(260));
 			mDriver.Navigate().GoToUrl(UrlAuthorizationGet);
-			
-			var txtLogin = mDriver.FindElement(By.Name("login"));
-			txtLogin.SendKeys(securitySettings.F5SiteLogin);
 
-			var txtPass = mDriver.FindElement(By.Name("password"));
-			txtPass.SendKeys(securitySettings.F5SitePassword);
-			
-			txtPass.Submit();
+			var source = ParserHelper.GetPageSource(mDriver, 20);
+
+			if (source.Length != 0)
+				this.mLogger.Debug(source);
+
+			try
+			{
+				this.mLogger.Debug("45");
+				var txtLogin = mDriver.FindElement(By.Name("login"));
+				this.mLogger.Debug("46");
+				txtLogin.SendKeys(securitySettings.F5SiteLogin);
+				this.mLogger.Debug("47");
+				this.mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(260));
+				var txtPass = mDriver.FindElement(By.Name("password"));
+				this.mLogger.Debug("48");
+				this.mDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(260));
+				txtPass.SendKeys(securitySettings.F5SitePassword);
+				this.mLogger.Debug("49");
+
+				
+				txtPass.Submit();
+
+				Thread.Sleep(5000);
+				
+			}
+			catch (Exception ex)
+			{
+				this.mLogger.Debug("499");
+				this.mLogger.Debug("51 mDriver=" + source);
+				throw;
+			}
+
+			this.mLogger.Debug("50");
 		}
 	}
 }
